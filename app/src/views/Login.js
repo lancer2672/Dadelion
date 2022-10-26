@@ -7,6 +7,8 @@ import * as SecureStore from 'expo-secure-store';
 import Auth from './layouts/Auth.js';
 import { increment, setAuth} from '../redux/features//auth/authSlice.js'
 import { AppSlogan } from '../slogan.js';
+import Color from '../color.js';
+
 const axios = require('axios').default;
 
 const Login = ({navigation}) => {
@@ -14,7 +16,6 @@ const Login = ({navigation}) => {
   const dispatch = useDispatch()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  console.log('username',username, '\n','password:',password);
 
   const handleSubmitForm =  () => {
       axios.post('http://172.17.18.158:3000/api/auth/login',{username, password})
@@ -30,7 +31,7 @@ const Login = ({navigation}) => {
   const navigateToRegisterScreen = () =>{
     navigation.navigate('Register');
   }
-
+  console.log(Color.mainColor);
   // async function saveToken(username, token){
   //   await SecureStore.setItemAsync(username, token);
   //   console.log('success');
@@ -42,8 +43,8 @@ const Login = ({navigation}) => {
       source={require('./../../assets/imgs/Logo.png')}
       />
       <Text>{AppSlogan}</Text>
-      <TextInput  onChangeText={newUsername => setUsername(newUsername)} placeholder='Tên đăng nhập' ></TextInput>
-      <TextInput  onChangeText={newPassword => setPassword(newPassword)} secureTextEntry={true} placeholder='Mật khẩu'></TextInput>
+      <TextInput style = {styles.textInput} onChangeText={newUsername => setUsername(newUsername)} placeholder='Tên đăng nhập' ></TextInput>
+      <TextInput style = {styles.textInput} onChangeText={newPassword => setPassword(newPassword)} secureTextEntry={true} placeholder='Mật khẩu'></TextInput>
       <Button
         onPress={handleSubmitForm}
         title="Đăng nhập"
@@ -64,9 +65,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textInput:{
+    borderRadius:25,
+    height: 25,
+    color: Color.textColor,
+  },
   tinyLogo: {
-      width: "100px",
-      height: "100px",
+      width: 100,
+      height: 100,
       resizeMode: 'center'
   },
 })
