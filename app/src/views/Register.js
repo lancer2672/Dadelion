@@ -1,8 +1,9 @@
-import { StyleSheet,TextInput,Button, ImageBackground, Text, View } from 'react-native'
+import { StyleSheet,TextInput ,Button, Image, ImageBackground, Text, View } from 'react-native'
 import { useState } from 'react'
 import React from 'react'
 import axios from 'axios'
 
+import { AppSlogan } from '../slogan'
 const Register = ({navigation}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -29,6 +30,11 @@ const Register = ({navigation}) => {
   return (
   
     <ImageBackground source = {require('../../assets/imgs/Auth.jpg')} style = {styles.container}>
+      <Image
+        style={styles.tinyLogo}
+        source={require('./../../assets/imgs/Logo.png')}
+      />
+      <Text>{AppSlogan}</Text>
       <TextInput onChangeText={email => setEmail(email)} placeholder='Email'></TextInput>
       <Text placeholder='Email'></Text>
       <TextInput onChangeText={username => setUsername(username)} placeholder='Tên đăng nhập' ></TextInput>
@@ -56,6 +62,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    width: "100%",
-  }
+  },
+  tinyLogo: {
+      width: "100px",
+      height: "100px",
+      resizeMode: 'center'
+  },
 })

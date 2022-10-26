@@ -1,11 +1,12 @@
-import { View, Text, TextInput, Button, ImageBackground, StyleSheet } from 'react-native'
+import { View, Image, Text, TextInput, Button, ImageBackground, StyleSheet } from 'react-native'
 import React from 'react'
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as SecureStore from 'expo-secure-store';
 
+import Auth from './layouts/Auth.js';
 import { increment, setAuth} from '../redux/features//auth/authSlice.js'
-
+import { AppSlogan } from '../slogan.js';
 const axios = require('axios').default;
 
 const Login = ({navigation}) => {
@@ -35,31 +36,38 @@ const Login = ({navigation}) => {
   //   console.log('success');
   // }
   return (
-
     <ImageBackground source = {require('../../assets/imgs/Auth.jpg')} style = {styles.container}>
+    <Image
+      style={styles.tinyLogo}
+      source={require('./../../assets/imgs/Logo.png')}
+      />
+      <Text>{AppSlogan}</Text>
       <TextInput  onChangeText={newUsername => setUsername(newUsername)} placeholder='Tên đăng nhập' ></TextInput>
       <TextInput  onChangeText={newPassword => setPassword(newPassword)} secureTextEntry={true} placeholder='Mật khẩu'></TextInput>
-      <Text></Text>
       <Button
         onPress={handleSubmitForm}
         title="Đăng nhập"
         color="#841584"
-      />
+        />
       <Button
         onPress={navigateToRegisterScreen}
         title="Đăng ký"
         color="#841584"
-      />
-    </ImageBackground>
+        />
+  </ImageBackground>
   )
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: "100%",
-    }
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tinyLogo: {
+      width: "100px",
+      height: "100px",
+      resizeMode: 'center'
+  },
 })
 export default Login
