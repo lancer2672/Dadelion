@@ -2,7 +2,8 @@ import { View, Text, TextInput, Button, ImageBackground, StyleSheet } from 'reac
 import React from 'react'
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {useNavigation} from '@react-navigation/native'
+import * as SecureStore from 'expo-secure-store';
+
 import { increment, setAuth} from '../redux/features//auth/authSlice.js'
 
 const axios = require('axios').default;
@@ -14,21 +15,25 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState('')
   console.log('username',username, '\n','password:',password);
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm =  () => {
       axios.post('http://172.17.18.158:3000/api/auth/login',{username, password})
       .then(function (response) {
-        
-        console.log(response.data)
+        const {token, user} = response.data;
+        // saveToken(user.username, token);
         navigation.navigate('Home');
       })
       .catch(function (error) {
-          console.log(error)
+          console.log(error.response.data)
       });
-      
   }
-  const handleRegistration = () =>{
+  const navigateToRegisterScreen = () =>{
     navigation.navigate('Register');
   }
+
+  // async function saveToken(username, token){
+  //   await SecureStore.setItemAsync(username, token);
+  //   console.log('success');
+  // }
   return (
 
     <ImageBackground source = {require('../../assets/imgs/Auth.jpg')} style = {styles.container}>
@@ -41,7 +46,7 @@ const Login = ({navigation}) => {
         color="#841584"
       />
       <Button
-        onPress={handleRegistration}
+        onPress={navigateToRegisterScreen}
         title="Đăng ký"
         color="#841584"
       />

@@ -1,18 +1,41 @@
 import { StyleSheet,TextInput,Button, ImageBackground, Text, View } from 'react-native'
+import { useState } from 'react'
 import React from 'react'
+import axios from 'axios'
 
 const Register = ({navigation}) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const [replicatedPassword, setReplicatedPassword] = useState('')
+
+
   const navigateToLoginScreen = () =>{
     navigation.navigate('Login');
+  }
+  const handleRegistration = () =>{
+      if(password != replicatedPassword){
+        return;
+      }
+      axios.post('http://172.17.18.158:3000/api/auth/register',{email, username, password})
+      .then(function (response) {
+        console.log(response);
+        navigation.navigate('Login');
+      })
+      .catch(function (error) {
+          console.log(error.response.data)
+      });
   }
   return (
   
     <ImageBackground source = {require('../../assets/imgs/Auth.jpg')} style = {styles.container}>
-      <TextInput placeholder='Email'></TextInput>
-      <TextInput placeholder='Tên đăng nhập' ></TextInput>
-      <TextInput placeholder='Mật khẩu'></TextInput>
-      <TextInput placeholder='Nhập lại mật khẩu'></TextInput>
+      <TextInput onChangeText={email => setEmail(email)} placeholder='Email'></TextInput>
+      <Text placeholder='Email'></Text>
+      <TextInput onChangeText={username => setUsername(username)} placeholder='Tên đăng nhập' ></TextInput>
+      <TextInput onChangeText={password => setPassword(password)} placeholder='Mật khẩu'></TextInput>
+      <TextInput onChangeText={replicatedPassword => setReplicatedPassword(replicatedPassword)} placeholder='Nhập lại mật khẩu'></TextInput>
       <Button
+        onPress={handleRegistration}
         title="Đăng ký"
         color="#841584"
       />
