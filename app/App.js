@@ -1,13 +1,27 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import AuthScreen from './src/views/Auth';
+import { StyleSheet, View } from 'react-native';
+import { Provider } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { store } from './src/redux/store';
+import LoginScreen from './src/views/Login';
+import RegisterScreen from './src/views/Register';
+import HomeScreen from './src/views/Home';
+
+const Stack = createNativeStackNavigator();
 export default function App() {
   return (
-    <View style ={styles.container}>
-      <StatusBar style="auto" />
-      <AuthScreen></AuthScreen>
-    </View>
+
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" options={{headerShown: false}} component={LoginScreen} />
+          <Stack.Screen name="Register" options={{headerShown: false}} component={RegisterScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
