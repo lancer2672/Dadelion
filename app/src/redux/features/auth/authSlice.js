@@ -4,7 +4,6 @@ const initialState = {
   authLoading:false,
   isAuthenticated:false,
   user:null,
-  value:0,
 }
 
 export const authSlice = createSlice({
@@ -14,16 +13,10 @@ export const authSlice = createSlice({
   reducers: {
     setAuth: (state, action) => {
       const {isAuthenticated} = action.payload
-      console.log("before", state);
       state = {
         ...state,
         isAuthenticated
       }
-      console.log("after", state);
-
-    },
-    increment: (state) => {
-      state.value -= 1
     },
     // increment1: (state, action) => {
     //   state.value -= 1

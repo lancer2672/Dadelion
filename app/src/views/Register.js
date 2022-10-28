@@ -66,6 +66,5 @@ const styles = StyleSheet.create({
   tinyLogo: {
       width: 100,
       height: 100,
-      resizeMode: 'center'
   },
 })

@@ -11,6 +11,7 @@ import HomeScreen from './src/views/Home';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+
   return (
 
     <Provider store={store}>
@@ -18,7 +19,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" options={{headerShown: false}} component={LoginScreen} />
           <Stack.Screen name="Register" options={{headerShown: false}} component={RegisterScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Home" options={{headerShown: false}} component={HomeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
