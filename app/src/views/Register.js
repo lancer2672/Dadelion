@@ -18,7 +18,7 @@ const Register = ({navigation}) => {
       if(password != replicatedPassword){
         return;
       }
-      axios.post('http://172.17.18.158:3000/api/auth/register',{email, username, password})
+      axios.post('http://localhost:3000/api/auth/register',{email, username, password})
       .then(function (response) {
         console.log(response);
         navigation.navigate('Login');

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { store } from './src/redux/store';
+import { store } from './src/features/store';
 import LoginScreen from './src/views/Login';
 import RegisterScreen from './src/views/Register';
 import HomeScreen from './src/views/Home';

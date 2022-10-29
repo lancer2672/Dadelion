@@ -4,8 +4,6 @@ import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as SecureStore from 'expo-secure-store';
 
-import Auth from './layouts/Auth.js';
-import { increment, setAuth} from '../redux/features/auth/authSlice.js'
 import { AppSlogan } from '../slogan.js';
 import Color from '../color.js';
 
@@ -16,22 +14,17 @@ const Login = ({navigation}) => {
   const dispatch = useDispatch()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  console.log("LoginScreen")
   const handleSubmitForm = async () => {
-    console.log("LoginScreenCallAPI")
-      await axios.post('http://172.17.18.158:3000/api/auth/login',{username, password})
+      await axios.post('http://localhost:3000/api/auth/login',{username, password})
       .then(function (response) {
         const {token, user} = response.data;
         // saveToken(user.username, token);
-        console.log("Waiting to login")
+        console.log("Navigating")
         navigation.navigate('Home');
-        console.log("Navigated to home")
-
       })
       .catch(function (error) {
          console.log(error)
-      });
-    console.log("called API")
+      }); 
   }
   const navigateToRegisterScreen = () =>{
     navigation.navigate('Register');

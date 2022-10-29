@@ -22,7 +22,7 @@ const Home = () => {
   useEffect( ()=>{
       const fetchData = async () =>{
           console.log("HomeScreen calling API")
-          await axios.get('http://172.17.18.158:3000/',{
+          await axios.get('http://localhost:3000/',{
             headers: {
             Authorization: "Bearer asdf"
             }
@@ -32,7 +32,6 @@ const Home = () => {
             setPosts(response.data.posts);
           })  
           .catch(err => console.log(err))
-
           console.log("HomeScreen called API")
       }
       fetchData();
