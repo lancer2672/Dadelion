@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useState, useEffect, Component } from 'react';
-import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview'
 import {
   StyleSheet,
   Text,
@@ -13,15 +12,10 @@ import {
 
 import Post from '../components/post';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-
 const Home = () => {
   const [posts,setPosts] = useState([]);
-  
-  console.log("HomeScreen");
   useEffect( ()=>{
       const fetchData = async () =>{
-          console.log("HomeScreen calling API")
           await axios.get('http://localhost:3000/',{
             headers: {
             Authorization: "Bearer asdf"
@@ -32,19 +26,19 @@ const Home = () => {
             setPosts(response.data.posts);
           })  
           .catch(err => console.log(err))
-          console.log("HomeScreen called API")
       }
       fetchData();
   },[])
-
+  
   console.log(posts);
+  const FakePosts = [{title:"Title",description:"Description"}]
   return (
     <View>
         <Text></Text> 
         {/* {posts.map((post)=>{
             return Post(post);
         })} */}
-        <Post posts = {posts}></Post>
+        <Post posts = {FakePosts}></Post>
         <Button 
         title = "SomeThing"
         ></Button>
