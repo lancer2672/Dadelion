@@ -1,15 +1,20 @@
-import { StyleSheet, Text, Image, View, Dimensions } from "react-native";
-import React, { Component } from "react";
+import { StyleSheet, Text, Button, Image, View, Dimensions, TouchableOpacity } from "react-native";
+import React, {useState } from "react";
 import {
   RecyclerListView,
   DataProvider,
   LayoutProvider,
 } from "recyclerlistview";
 import { useSelector, useDispatch } from "react-redux";
+import { AntDesign } from "@expo/vector-icons";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_WIDTH_WITH_MARGIN_12 = SCREEN_WIDTH - 24;
 
 const Post = () => {
+
+    const [heart,setHeart] = useState(false);
+
     const posts = useSelector((state) => state.post.posts);
     console.log("posts",posts);
     const items = posts.map((post, index) => {
@@ -21,6 +26,10 @@ const Post = () => {
         },
       };
     });
+
+    const handleReact = () =>{
+      setHeart(!heart);
+    }
     const dataProvider = new DataProvider((r1, r2) => r1 != r2).cloneWithRows(
       items
     );
@@ -32,7 +41,8 @@ const Post = () => {
         switch (type) {
           case "NORMAL":
             dim.width = SCREEN_WIDTH;
-            dim.height = 100;
+            //Tuỳ thuộc vào độ dài của phần text mà set độ cao cho thẻ
+            dim.height = 500;
             break;
           default:
             dim.width = 0;
@@ -40,27 +50,104 @@ const Post = () => {
         }
       }
     );
+      /*#endregion*/
 
     const rowRenderer = (type, data) => {
-      const { title, description } = data.item;
+      const { description } = data.item;
       return (
-        <View>
-          <Text>{title}</Text>
-          <Text>{description}</Text>
+        <View style = {styles.postContainer}>
+          <View style = {styles.header}>
+            <Image source={require("./../../../assets/imgs/24.jpg")} style={styles.avatar} ></Image>
+            <View style = {styles.userDescription}>
+              <Text style = {{fontWeight:600}}>Username</Text>
+              <Text>Time</Text>
+            </View>
+          </View>
+          <View style = {styles.content}>
+            <Text>{description}</Text>
+          </View>
+          <Image source={require("./../../../assets/imgs/24.jpg")} style={{width:SCREEN_WIDTH_WITH_MARGIN_12,height:350, resizeMode:"stretch"}}></Image>
+          <View style= {styles.reactSection}>
+          <TouchableOpacity onPress={handleReact} style = {styles.icon}>
+              {heart == true? <AntDesign name="heart" size={24} color="red" />: 
+                    <AntDesign name="hearto" size={24} color="black" />}
+              {/* <AntDesign name="hearto" size={24} color="black" /> */}
+              {/* <AntDesign name="heart" size={24} color="black" /> */}
+            </TouchableOpacity>
+            <TouchableOpacity >
+                <Text style = {styles.comment}>Comment</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       );
     };
   
     return (
+      <>
       <RecyclerListView
-        style={{ minHeight: 100, minWidth: 100 }}
+        style={{ minWidth: 200, minHeight:200 }}
         rowRenderer={rowRenderer}
         dataProvider={dataProvider}
         layoutProvider={layoutProvider}
       ></RecyclerListView>
+      
+      </>
     );  
 }
 
 export default Post
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  postContainer:{
+    margin:12,
+    borderWidth: 1,
+    borderRadius: 2,
+    borderColor: '#ddd',
+    borderBottomWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 1,
+  }
+  ,
+  reactSection:{
+    marginLeft:12,
+    marginTop:8,
+    flexDirection: "row",
+    alignItems:'center',
+    justifyContent: "space-evenly"
+  },
+  containerReact:{
+    alignItems:'center'
+  }
+  ,
+  comment:{
+    height:16,
+    backgroundColor:"red"
+  },
+  icon:{
+
+  },
+  avatar:{
+    marginRight:12,
+    width:40,
+    height:40, 
+    resizeMode:"stretch",
+    borderRadius:50,
+  },
+  userDescription:{
+    justifyContent:"center"
+  },
+
+  content:{
+    marginTop:8,
+    marginLeft:8,
+    marginBottom:8,
+  },
+  header:{
+    marginTop:8,
+    marginLeft:8,
+    flexDirection: "row",
+  }
+})

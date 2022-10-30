@@ -4,6 +4,7 @@ import {
   Button,
   Image,
   ImageBackground,
+  TouchableOpacity,
   Text,
   View,
 } from "react-native";
@@ -12,6 +13,9 @@ import React from "react";
 import axios from "axios";
 
 import { AppSlogan } from "../utils/slogan";
+import { space } from "../utils/size";
+import Color from "../utils/color";
+
 const Register = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -49,31 +53,37 @@ const Register = ({ navigation }) => {
         source={require("./../../assets/imgs/Logo.png")}
       />
       <Text>{AppSlogan}</Text>
-      <TextInput
+      <TextInput  style = {styles.textInput}
         onChangeText={(email) => setEmail(email)}
         placeholder="Email"
       ></TextInput>
       <Text placeholder="Email"></Text>
-      <TextInput
+      <TextInput style = {styles.textInput}
         onChangeText={(username) => setUsername(username)}
         placeholder="Tên đăng nhập"
       ></TextInput>
-      <TextInput
+      <TextInput style = {styles.textInput}
         onChangeText={(password) => setPassword(password)}
         placeholder="Mật khẩu"
       ></TextInput>
-      <TextInput
+      <TextInput style = {styles.textInput}
         onChangeText={(replicatedPassword) =>
           setReplicatedPassword(replicatedPassword)
         }
         placeholder="Nhập lại mật khẩu"
       ></TextInput>
-      <Button onPress={handleRegistration} title="Đăng ký" color="#841584" />
-      <Button
-        onPress={navigateToLoginScreen}
-        title="Quay lại đăng nhập"
-        color="#841584"
-      />
+      <TouchableOpacity
+          style={styles.button}
+          onPress={handleRegistration}
+        >
+          <Text style={styles.textOfButton}>Đăng ký</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, {marginTop:space.s}]}
+          onPress={navigateToLoginScreen}
+        >
+          <Text style={styles.textOfButton}>Quay lại đăng nhập</Text>
+        </TouchableOpacity>
     </ImageBackground>
   );
 };
@@ -83,12 +93,39 @@ export default Register;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
-  tinyLogo: {
-    width: 100,
-    height: 100,
+  textInput: {
+    borderRadius: 25,
+    height: 32,
+    padding:10,
+    marginTop: space.s,
+    color: Color.textColor,
   },
+  tinyLogo: {
+    width: 200,
+    height: 200,
+    resizeMode: "contain"
+  },
+  button: {
+    minWidth: 200,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: "#fff",
+    borderRadius: 25,
+  },
+  textOfButton: {
+    alignSelf: "center",
+    fontWeight: "bold",
+    color: Color.textColor,
+  },
+  forgetText:{
+    fontWeight: "bold",
+  },
+  slogan:{
+    fontStyle: "italic",
+    textColor: Color.textColor,
+    fontWeight: "500"
+  }
 });

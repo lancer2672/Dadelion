@@ -16,6 +16,7 @@ import * as SecureStore from "expo-secure-store";
 import { AppSlogan } from "../utils/slogan"
 import Color from "../utils/color";
 import { setPosts } from "../features/post/postSlice.js";
+import { space } from "../utils/size";
 
 const axios = require("axios").default;
 
@@ -70,7 +71,7 @@ const Login = ({ navigation }) => {
         style={styles.tinyLogo}
         source={require("./../../assets/imgs/Logo.png")}
       />
-      <Text>{AppSlogan}</Text>
+      <Text style = {styles.slogan}>{AppSlogan}</Text>
       <TextInput
         style={styles.textInput}
         onChangeText={(newUsername) => setUsername(newUsername)}
@@ -82,39 +83,41 @@ const Login = ({ navigation }) => {
         secureTextEntry={true}
         placeholder="Mật khẩu"
       ></TextInput>
-      <TouchableOpacity style={styles.button} onPress={handleSubmitForm}>
-        <Text style={styles.textOfButton}>Đăng nhập</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={navigateToRegisterScreen}
-      >
-        <Text style={styles.textOfButton}>Đăng ký</Text>
-      </TouchableOpacity>
-      <Text>Quên mật khẩu ?</Text>
+      <View style = {{margin:space.xl}}>
+        <TouchableOpacity style={styles.button} onPress={handleSubmitForm}>
+          <Text style={styles.textOfButton}>Đăng nhập</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, {marginTop:space.s}]}
+          onPress={navigateToRegisterScreen}
+        >
+          <Text style={styles.textOfButton}>Đăng ký</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style = {styles.forgetText}>Quên mật khẩu ?</Text>
     </ImageBackground>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
     alignItems: "center",
     justifyContent: "center",
   },
   textInput: {
     borderRadius: 25,
-    height: 25,
-    marginTop: 10,
+    height: 32,
+    padding:10,
+    marginTop: space.s,
     color: Color.textColor,
   },
   tinyLogo: {
     width: 200,
     height: 200,
+    resizeMode: "contain"
   },
   button: {
     minWidth: 200,
-    marginTop: 10,
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: "#fff",
@@ -125,5 +128,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Color.textColor,
   },
+  forgetText:{
+    fontWeight: "bold",
+  },
+  slogan:{
+    fontStyle: "italic",
+    textColor: Color.textColor,
+    fontWeight: "500"
+  }
 });
 export default Login;
