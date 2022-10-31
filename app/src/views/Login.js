@@ -17,26 +17,36 @@ import { AppSlogan } from "../utils/slogan"
 import Color from "../utils/color";
 import { setPosts } from "../features/post/postSlice.js";
 import { space } from "../utils/size";
+import setAuthToken from "../utils/setAuthToken"
+import { useEffect } from "react";
 
 const axios = require("axios").default;
 
 const Login = ({ navigation }) => {
-  const counter = useSelector((state) => state.auth);
   const posts = useSelector(state => state.post.posts)
+  const {user, isAuthenticated} = useSelector(state=> state.auth)
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // useEffect(()=>{
+  //     getUserFromLocalStore()  
+  // },[])
+
+  // const getUserFromLocalStore = ()=>{
+  //   const token = getValueFor("token");
+  // }
   const handleSubmitForm = async () => {
     await axios
       .post("http://localhost:3000/api/auth/login", { username, password })
       .then(function (response) {
         const { token, user } = response.data;
-        // saveToken(user.username, token);
-        console.log("Navigating");
+
+        // save("token",token);
+        setAuthToken(token);
         fetchData()
         .then(()=>navigation.navigate("Home"))
-        // navigation.navigate("Home");
-        
+        .catch(err => {console.log("can not load data from database",err)})
       })
       .catch(function (error) {
         console.log(error);
@@ -61,6 +71,20 @@ const Login = ({ navigation }) => {
       })
       .catch((err) => console.log(err));
   }
+  
+  async function save(key, value) {
+    await SecureStore.setItemAsync(key, value);
+  }
+
+  async function getValueFor(key) {
+    let result = await SecureStore.getItemAsync(key);
+  if (result) {
+    return result
+  } else {
+    return null
+  }
+}
+
 
   return (
     <ImageBackground

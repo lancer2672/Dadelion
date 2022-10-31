@@ -12,20 +12,18 @@ export const authSlice = createSlice({
   //passed to createReducer
   reducers: {
     setAuth: (state, action) => {
-      const { isAuthenticated } = action.payload;
+      const { isAuthenticated,user } = action.payload;
       state = {
         ...state,
         isAuthenticated,
+        user,
       };
     },
-    // increment1: (state, action) => {
-    //   state.value -= 1
-    //   console.log(action.payload);
-    // },
+    
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setAuth, increment } = authSlice.actions;
+export const { setAuth } = authSlice.actions;
 
 export default authSlice.reducer;

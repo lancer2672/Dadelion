@@ -11,7 +11,7 @@ import { AntDesign } from "@expo/vector-icons";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_12 = SCREEN_WIDTH - 24;
 
-const Post = () => {
+const Post = ({navigation}) => {
 
     const [heart,setHeart] = useState(false);
 
@@ -57,7 +57,9 @@ const Post = () => {
       return (
         <View style = {styles.postContainer}>
           <View style = {styles.header}>
-            <Image source={require("./../../../assets/imgs/24.jpg")} style={styles.avatar} ></Image>
+            <TouchableOpacity onPress = {() => navigation.navigate("User")}>
+              <Image source={require("./../../../assets/imgs/24.jpg")} style={styles.avatar} ></Image>
+            </TouchableOpacity>
             <View style = {styles.userDescription}>
               <Text style = {{fontWeight:600}}>Username</Text>
               <Text>Time</Text>
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
   postContainer:{
     margin:12,
     borderWidth: 1,
-    borderRadius: 2,
+    borderRadius: 5,
     borderColor: '#ddd',
     borderBottomWidth: 0,
     shadowColor: '#000',
