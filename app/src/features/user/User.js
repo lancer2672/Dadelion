@@ -2,14 +2,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, {useState} from 'react'
 import  DocumentPicker, {types} from 'react-native-document-picker'
 import { useSelector, useDispatch } from "react-redux";
-import axios from 'axios'
 
 import { setAuth } from '../auth/authSlice';
+import UserPost from './UserPost';
+import { useEffect } from 'react';
 
-const User = () => {
-    const {user,isAuthenticated} = useSelector(state => state.auth)
+const axios = require("axios").default;
+const User = ({navigation}) => {
+    const {user} = useSelector(state => state.auth)
     const [fileResponse, setFileResponse] = useState([]);
-
     const dispatch = useDispatch();
     const handleDocumentSelection = async () => {
     try {
@@ -23,16 +24,17 @@ const User = () => {
   };
   const handleLogOut =  () =>{
       dispatch(setAuth({isAuthenticated:false,user:null}))
+      navigation.navigate("Login");
   }
   return (
     <View style = {{flex:1}}>
-      <Text>User</Text>
       <TouchableOpacity  style ={{width:50, height:50}}>
         <Text>Click to choose</Text>
       </TouchableOpacity>
         <TouchableOpacity onPress = {handleLogOut}>
           <Text>Log out</Text>
         </TouchableOpacity>
+        <UserPost style = {styles.userPost}></UserPost>
     </View>
   )
 }
@@ -40,5 +42,7 @@ const User = () => {
 export default User
 
 const styles = StyleSheet.create({
-
+  userPost:{
+    flex:1,
+  }
 })

@@ -19,6 +19,7 @@ import { setPosts } from "../features/post/postSlice.js";
 import { space } from "../utils/size";
 import setAuthToken from "../utils/setAuthToken"
 import { useEffect } from "react";
+import { setAuth } from "../features/auth/authSlice";
 
 const axios = require("axios").default;
 
@@ -37,41 +38,37 @@ const Login = ({ navigation }) => {
   //   const token = getValueFor("token");
   // }
   const handleSubmitForm = async () => {
-    await axios
-      .post("http://localhost:3000/api/auth/login", { username, password })
-      .then(function (response) {
-        const { token, user } = response.data;
-
-        // save("token",token);
-        setAuthToken(token);
-        fetchData()
-        .then(()=>navigation.navigate("Home"))
-        .catch(err => {console.log("can not load data from database",err)})
+    // await axios
+      axios.post("http://localhost:3000/api/auth/login", { username, password })
+      .then(handleLogin)
+      .then((response) => {
+         // save("token",token);
+        dispatch(setPosts(response.data.posts));
+        navigation.navigate("Home")
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+  const handleLogin = (res) =>{
+    const { token, user } = res.data;
+    setAuthToken(token);
+    dispatch(setAuth({isAuthenticated:true,user}))
+    return getPosts();
+  }
+  //get posts
+  const getPosts = async () => {
+    return await axios
+    .get("http://localhost:3000/", {
+      headers: {
+        Authorization: "Bearer asdf",
+      },
+    })
+  }
+  
   const navigateToRegisterScreen = () => {
     navigation.navigate("Register");
   };
-
-  const fetchData = async () => {
-    console.log("fetching")
-    await axios
-      .get("http://localhost:3000/", {
-        headers: {
-          Authorization: "Bearer asdf",
-        },
-      })
-      .then((response) => {
-        dispatch(setPosts(response.data.posts));
-        console.log("fetched")
-
-      })
-      .catch((err) => console.log(err));
-  }
-  
   async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
   }

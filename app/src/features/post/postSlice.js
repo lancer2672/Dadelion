@@ -12,7 +12,6 @@ export const postSlice = createSlice({
     setPosts: (state, action) => {
       const newPosts = action.payload;
       state.posts = newPosts;
-      console.log("new state", state.posts);
     },
   },
 });

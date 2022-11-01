@@ -9,14 +9,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_WIDTH_WITH_MARGIN_12 = SCREEN_WIDTH - 24;
+const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 
 const Post = ({navigation}) => {
 
     const [heart,setHeart] = useState(false);
-
     const posts = useSelector((state) => state.post.posts);
-    console.log("posts",posts);
     const items = posts.map((post, index) => {
       return {
         type: "NORMAL",
@@ -26,10 +24,10 @@ const Post = ({navigation}) => {
         },
       };
     });
-
-    const handleReact = () =>{
-      setHeart(!heart);
-    }
+    
+        const handleReact = () =>{
+          setHeart(!heart);
+        }
     const dataProvider = new DataProvider((r1, r2) => r1 != r2).cloneWithRows(
       items
     );
@@ -68,7 +66,9 @@ const Post = ({navigation}) => {
           <View style = {styles.content}>
             <Text>{description}</Text>
           </View>
-          <Image source={require("./../../../assets/imgs/24.jpg")} style={{width:SCREEN_WIDTH_WITH_MARGIN_12,height:350, resizeMode:"stretch"}}></Image>
+          <View style={{width:SCREEN_WIDTH_WITH_MARGIN_L_R_12,height:350, elevation: 1}}>
+            <Image source={require("./../../../assets/imgs/24.jpg")} style={ {flex:1,resizeMode:"stretch"}}></Image>
+          </View>
           <View style= {styles.reactSection}>
           <TouchableOpacity onPress={handleReact} style = {styles.icon}>
               {heart == true? <AntDesign name="heart" size={24} color="red" />: 
@@ -85,15 +85,12 @@ const Post = ({navigation}) => {
     };
   
     return (
-      <>
       <RecyclerListView
         style={{ minWidth: 200, minHeight:200 }}
         rowRenderer={rowRenderer}
         dataProvider={dataProvider}
         layoutProvider={layoutProvider}
       ></RecyclerListView>
-      
-      </>
     );  
 }
 

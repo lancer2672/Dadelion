@@ -38,7 +38,6 @@ const Home = () => {
       tabBarInactiveTintColor: 'gray',
     })}
   >
-      
        <Tab.Screen name="Post" options={{headerShown: false}} component={Post} />
        <Tab.Screen name="User" options={{headerShown: false}} component={User} />
      </Tab.Navigator>
