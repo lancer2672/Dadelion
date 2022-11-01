@@ -41,7 +41,7 @@ const Login = ({ navigation }) => {
   const handleSubmitForm = async () => {
     // await axios
     axios
-      .post(`${UrlAPI}api/auth/login`, { username, password })
+      .post(`${UrlAPI}/api/auth/login`, { username, password })
       .then(handleLogin)
       .then((response) => {
         // save("token",token);
@@ -60,7 +60,7 @@ const Login = ({ navigation }) => {
   };
   //get posts
   const getPosts = async () => {
-    return await axios.get(`${UrlAPI}Post`, {});
+    return await axios.get(`${UrlAPI}/Post`, {});
   };
 
   const navigateToRegisterScreen = () => {

@@ -10,22 +10,53 @@ import {
 import React, { useState, useEffect } from "react";
 
 import { AntDesign } from "@expo/vector-icons";
+import axios from "axios";
+import { UrlAPI } from "../constants/constants";
 
 const dayjs = require("dayjs");
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 
-const RecordListView = (props) => {
+const RecordListView = ({ navigation, props }) => {
   const [heart, setHeart] = useState(false);
+  const [numberOfHearts, setNumberOfHearts] = useState(
+    props.reactionNumber + 1
+  );
   const handleReact = () => {
     setHeart(!heart);
   };
-  useEffect(() => {}, [heart]);
+  useEffect(() => {
+    if (heart == true) {
+      console.log("addHeart");
+      axios
+        .put(`${UrlAPI}/post/:${props._id}`, {
+          reactionNumber: props.reactionNumber + 1,
+          description: props.description,
+        })
+        .then((res) => {
+          console.log("data", res);
+          setNumberOfHearts((preValue) => {
+            return preValue + 1;
+          });
+        });
+    } else {
+      axios
+        .put(`${UrlAPI}/post/:${props._id}`, {
+          reactionNumber: props.reactionNumber - 1,
+        })
+        .then((res) => {
+          setNumberOfHearts((preValue) => {
+            return preValue - 1;
+          });
+        });
+    }
+  }, [heart]);
+
   const handleNavigation = () => {
-    if (!props.navigation) {
+    if (!navigation) {
       return;
     }
-    props.navigation.navigate("User");
+    navigation.navigate("User");
   };
   return (
     <View style={styles.postContainer}>
@@ -37,7 +68,7 @@ const RecordListView = (props) => {
           ></Image>
         </TouchableOpacity>
         <View style={styles.userDescription}>
-          <Text style={{ fontWeight: 600 }}>{props.username}</Text>
+          <Text style={{ fontWeight: 600 }}>{props.creatorName}</Text>
           <Text>
             {dayjs(props.createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}
           </Text>
@@ -63,7 +94,7 @@ const RecordListView = (props) => {
           onPress={handleReact}
           style={styles.reactSection_heart}
         >
-          <Text style={styles.numberOfHearts}>{props.reactionNumber}</Text>
+          <Text style={styles.numberOfHearts}>{numberOfHearts}</Text>
           {heart == true ? (
             <AntDesign name="heart" size={24} color="red" />
           ) : (

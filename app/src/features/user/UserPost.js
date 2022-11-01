@@ -12,15 +12,11 @@ import {
   DataProvider,
   LayoutProvider,
 } from "recyclerlistview";
-import axios from "axios";
 import { useSelector } from "react-redux";
-import { AntDesign } from "@expo/vector-icons";
 
 import RecordListView from "../../components/RecordListView";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
-
 const UserPost = () => {
   const user = useSelector((state) => state.auth.user);
   const posts = useSelector((state) => state.post.posts);
@@ -36,25 +32,7 @@ const UserPost = () => {
   useEffect(() => {
     // getUserPosts()
   }, []);
-  const getUserPosts = async () => {
-    await axios
-      .get("http://localhost:3000/post", {
-        params: {
-          user,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.posts);
-        if (!res) {
-          setUserPosts([{ description: "aa" }]);
-        } else {
-          console.log(res.data);
-          setUserPosts(res.data.posts);
-        }
-        setLoading(false);
-      })
-      .catch((err) => console.error("co loi gi do roi", err));
-  };
+
   const items = userPosts.map((post, index) => {
     return {
       type: "NORMAL",
@@ -91,13 +69,7 @@ const UserPost = () => {
 
   const rowRenderer = (type, data) => {
     const { description, createdAt, creatorName } = data.item;
-    return (
-      <RecordListView
-        description={description}
-        createdAt={createdAt}
-        username={creatorName}
-      ></RecordListView>
-    );
+    return <RecordListView props={data.item}></RecordListView>;
   };
   console.count("RENDER");
   return (

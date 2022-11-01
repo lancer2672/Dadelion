@@ -31,7 +31,7 @@ const Register = ({ navigation }) => {
       return;
     }
     axios
-      .post(`${UrlAPI}api/auth/register`, {
+      .post(`${UrlAPI}/api/auth/register`, {
         email,
         username,
         password,
@@ -54,37 +54,38 @@ const Register = ({ navigation }) => {
         source={require("./../../assets/imgs/Logo.png")}
       />
       <Text>{AppSlogan}</Text>
-      <TextInput  style = {styles.textInput}
+      <TextInput
+        style={styles.textInput}
         onChangeText={(email) => setEmail(email)}
         placeholder="Email"
       ></TextInput>
       <Text placeholder="Email"></Text>
-      <TextInput style = {styles.textInput}
+      <TextInput
+        style={styles.textInput}
         onChangeText={(username) => setUsername(username)}
         placeholder="Tên đăng nhập"
       ></TextInput>
-      <TextInput style = {styles.textInput}
+      <TextInput
+        style={styles.textInput}
         onChangeText={(password) => setPassword(password)}
         placeholder="Mật khẩu"
       ></TextInput>
-      <TextInput style = {styles.textInput}
+      <TextInput
+        style={styles.textInput}
         onChangeText={(replicatedPassword) =>
           setReplicatedPassword(replicatedPassword)
         }
         placeholder="Nhập lại mật khẩu"
       ></TextInput>
+      <TouchableOpacity style={styles.button} onPress={handleRegistration}>
+        <Text style={styles.textOfButton}>Đăng ký</Text>
+      </TouchableOpacity>
       <TouchableOpacity
-          style={styles.button}
-          onPress={handleRegistration}
-        >
-          <Text style={styles.textOfButton}>Đăng ký</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, {marginTop:space.s}]}
-          onPress={navigateToLoginScreen}
-        >
-          <Text style={styles.textOfButton}>Quay lại đăng nhập</Text>
-        </TouchableOpacity>
+        style={[styles.button, { marginTop: space.s }]}
+        onPress={navigateToLoginScreen}
+      >
+        <Text style={styles.textOfButton}>Quay lại đăng nhập</Text>
+      </TouchableOpacity>
     </ImageBackground>
   );
 };
@@ -100,14 +101,14 @@ const styles = StyleSheet.create({
   textInput: {
     borderRadius: 25,
     height: 32,
-    padding:10,
+    padding: 10,
     marginTop: space.s,
     color: Color.textColor,
   },
   tinyLogo: {
     width: 200,
     height: 200,
-    resizeMode: "contain"
+    resizeMode: "contain",
   },
   button: {
     minWidth: 200,
@@ -121,12 +122,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Color.textColor,
   },
-  forgetText:{
+  forgetText: {
     fontWeight: "bold",
   },
-  slogan:{
+  slogan: {
     fontStyle: "italic",
     textColor: Color.textColor,
-    fontWeight: "500"
-  }
+    fontWeight: "500",
+  },
 });

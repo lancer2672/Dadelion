@@ -59,13 +59,15 @@ const Post = ({ navigation }) => {
   /*#endregion*/
 
   const rowRenderer = (type, data) => {
-    const { description, createdAt, creatorName, reactionNumber } = data.item;
+    const { description, createdAt, creatorName, reactionNumber, _id } =
+      data.item;
     return (
       <RecordListView
-        description={description}
-        createdAt={createdAt}
-        username={creatorName}
-        reactionNumber={reactionNumber}
+        props={data.item}
+        // description={description}
+        // createdAt={createdAt}
+        // username={creatorName}
+        // reactionNumber={reactionNumber}
         navigation={navigation}
       ></RecordListView>
     );
