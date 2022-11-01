@@ -26,6 +26,7 @@ const User = ({navigation}) => {
       dispatch(setAuth({isAuthenticated:false,user:null}))
       navigation.navigate("Login");
   }
+  console.count("render");
   return (
     <View style = {{flex:1}}>
       <TouchableOpacity  style ={{width:50, height:50}}>

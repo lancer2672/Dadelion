@@ -13,25 +13,26 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as SecureStore from "expo-secure-store";
 
-import { AppSlogan } from "../utils/slogan"
+import { AppSlogan } from "../utils/slogan";
 import Color from "../utils/color";
 import { setPosts } from "../features/post/postSlice.js";
 import { space } from "../utils/size";
-import setAuthToken from "../utils/setAuthToken"
+import setAuthToken from "../utils/setAuthToken";
 import { useEffect } from "react";
 import { setAuth } from "../features/auth/authSlice";
+import { UrlAPI } from "../constants/constants";
 
 const axios = require("axios").default;
 
 const Login = ({ navigation }) => {
-  const posts = useSelector(state => state.post.posts)
-  const {user, isAuthenticated} = useSelector(state=> state.auth)
+  const posts = useSelector((state) => state.post.posts);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   // useEffect(()=>{
-  //     getUserFromLocalStore()  
+  //     getUserFromLocalStore()
   // },[])
 
   // const getUserFromLocalStore = ()=>{
@@ -39,33 +40,29 @@ const Login = ({ navigation }) => {
   // }
   const handleSubmitForm = async () => {
     // await axios
-      axios.post("http://localhost:3000/api/auth/login", { username, password })
+    axios
+      .post(`${UrlAPI}api/auth/login`, { username, password })
       .then(handleLogin)
       .then((response) => {
-         // save("token",token);
+        // save("token",token);
         dispatch(setPosts(response.data.posts));
-        navigation.navigate("Home")
+        navigation.navigate("Home");
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  const handleLogin = (res) =>{
+  const handleLogin = (res) => {
     const { token, user } = res.data;
     setAuthToken(token);
-    dispatch(setAuth({isAuthenticated:true,user}))
+    dispatch(setAuth({ isAuthenticated: true, user }));
     return getPosts();
-  }
+  };
   //get posts
   const getPosts = async () => {
-    return await axios
-    .get("http://localhost:3000/", {
-      headers: {
-        Authorization: "Bearer asdf",
-      },
-    })
-  }
-  
+    return await axios.get(`${UrlAPI}Post`, {});
+  };
+
   const navigateToRegisterScreen = () => {
     navigation.navigate("Register");
   };
@@ -75,13 +72,12 @@ const Login = ({ navigation }) => {
 
   async function getValueFor(key) {
     let result = await SecureStore.getItemAsync(key);
-  if (result) {
-    return result
-  } else {
-    return null
+    if (result) {
+      return result;
+    } else {
+      return null;
+    }
   }
-}
-
 
   return (
     <ImageBackground
@@ -92,7 +88,7 @@ const Login = ({ navigation }) => {
         style={styles.tinyLogo}
         source={require("./../../assets/imgs/Logo.png")}
       />
-      <Text style = {styles.slogan}>{AppSlogan}</Text>
+      <Text style={styles.slogan}>{AppSlogan}</Text>
       <TextInput
         style={styles.textInput}
         onChangeText={(newUsername) => setUsername(newUsername)}
@@ -104,18 +100,18 @@ const Login = ({ navigation }) => {
         secureTextEntry={true}
         placeholder="Mật khẩu"
       ></TextInput>
-      <View style = {{margin:space.xl}}>
+      <View style={{ margin: space.xl }}>
         <TouchableOpacity style={styles.button} onPress={handleSubmitForm}>
           <Text style={styles.textOfButton}>Đăng nhập</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, {marginTop:space.s}]}
+          style={[styles.button, { marginTop: space.s }]}
           onPress={navigateToRegisterScreen}
         >
           <Text style={styles.textOfButton}>Đăng ký</Text>
         </TouchableOpacity>
       </View>
-      <Text style = {styles.forgetText}>Quên mật khẩu ?</Text>
+      <Text style={styles.forgetText}>Quên mật khẩu ?</Text>
     </ImageBackground>
   );
 };
@@ -128,14 +124,14 @@ const styles = StyleSheet.create({
   textInput: {
     borderRadius: 25,
     height: 32,
-    padding:10,
+    padding: 10,
     marginTop: space.s,
     color: Color.textColor,
   },
   tinyLogo: {
     width: 200,
     height: 200,
-    resizeMode: "contain"
+    resizeMode: "contain",
   },
   button: {
     minWidth: 200,
@@ -149,13 +145,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Color.textColor,
   },
-  forgetText:{
+  forgetText: {
     fontWeight: "bold",
   },
-  slogan:{
+  slogan: {
     fontStyle: "italic",
     textColor: Color.textColor,
-    fontWeight: "500"
-  }
+    fontWeight: "500",
+  },
 });
 export default Login;

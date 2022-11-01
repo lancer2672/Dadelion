@@ -14,6 +14,7 @@ import axios from "axios";
 
 import { AppSlogan } from "../utils/slogan";
 import { space } from "../utils/size";
+import { UrlAPI } from "../constants/constants";
 import Color from "../utils/color";
 
 const Register = ({ navigation }) => {
@@ -30,7 +31,7 @@ const Register = ({ navigation }) => {
       return;
     }
     axios
-      .post("http://localhost:3000/api/auth/register", {
+      .post(`${UrlAPI}api/auth/register`, {
         email,
         username,
         password,
