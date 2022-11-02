@@ -18,7 +18,6 @@ import Color from "../utils/color";
 import { setPosts } from "../features/post/postSlice.js";
 import { space } from "../utils/size";
 import setAuthToken from "../utils/setAuthToken";
-import { useEffect } from "react";
 import { setAuth } from "../features/auth/authSlice";
 import { UrlAPI } from "../constants/constants";
 

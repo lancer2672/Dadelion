@@ -8,7 +8,6 @@ import {
   ImageBackground,
 } from "react-native";
 import React, { useState } from "react";
-import DocumentPicker, { types } from "react-native-document-picker";
 import { useSelector, useDispatch } from "react-redux";
 
 import { setAuth } from "../auth/authSlice";
