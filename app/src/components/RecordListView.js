@@ -17,6 +17,7 @@ const dayjs = require("dayjs");
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 
+// đây là container cho mỗi post trong recyclerListView của post
 const RecordListView = ({ navigation, props }) => {
   const [heart, setHeart] = useState(false);
   const [numberOfHearts, setNumberOfHearts] = useState(
@@ -53,6 +54,7 @@ const RecordListView = ({ navigation, props }) => {
   }, [heart]);
 
   const handleNavigation = () => {
+    return;
     if (!navigation) {
       return;
     }
@@ -68,7 +70,7 @@ const RecordListView = ({ navigation, props }) => {
           ></Image>
         </TouchableOpacity>
         <View style={styles.userDescription}>
-          <Text style={{ fontWeight: 600 }}>{props.creatorName}</Text>
+          <Text>{props.creatorName}</Text>
           <Text>
             {dayjs(props.createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}
           </Text>
@@ -101,6 +103,7 @@ const RecordListView = ({ navigation, props }) => {
             <AntDesign name="hearto" size={24} color="black" />
           )}
         </TouchableOpacity>
+        <Text style={{ fontSize: 24, marginBottom: 8 }}>|</Text>
         <TouchableOpacity>
           <Text style={styles.comment}>Comment</Text>
         </TouchableOpacity>
@@ -136,7 +139,6 @@ const styles = StyleSheet.create({
   },
   comment: {
     height: 16,
-    backgroundColor: "red",
   },
   icon: {},
   reactSection_heart: {

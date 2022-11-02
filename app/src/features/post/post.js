@@ -32,10 +32,6 @@ const Post = ({ navigation }) => {
       },
     };
   });
-
-  const handleReact = () => {
-    setHeart(!heart);
-  };
   const dataProvider = new DataProvider((r1, r2) => r1 != r2).cloneWithRows(
     items
   );
@@ -72,7 +68,6 @@ const Post = ({ navigation }) => {
       ></RecordListView>
     );
   };
-  console.log(items);
   return (
     <RecyclerListView
       style={{ minWidth: 200, minHeight: 200 }}

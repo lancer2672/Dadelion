@@ -1,49 +1,29 @@
 import axios from "axios";
-import React, { useState, useEffect, Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  Button,
-  View,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, Button, View } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import {Feather } from '@expo/vector-icons'
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
-
+import { Feather } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 // import { setPosts } from "../features/post/postSlice";
 import Post from "../features/post/Post";
-import User from "../features/user/User";
+import HomeHeader from "../components/HomeHeader";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const Tab = createBottomTabNavigator();
   return (
-    <Tab.Navigator
-    initialRouteName="Post"
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
-        if (route.name === 'Post') {
-          iconName = 'home'
-        } else if (route.name === 'User') {
-          iconName = focused ? 'user-check' : 'user';
-        }
-        // You can return any component that you like here!
-        return <Feather name={iconName} size={size} color={color} />;
-      },
-      tabBarActiveTintColor: 'tomato',
-      tabBarInactiveTintColor: 'gray',
-    })}
-  >
-       <Tab.Screen name="Post" options={{headerShown: false}} component={Post} />
-       <Tab.Screen name="User" options={{headerShown: false}} component={User} />
-     </Tab.Navigator>
+    <SafeAreaView>
+      <HomeHeader style={styles.header} navigation={navigation}></HomeHeader>
+      <Post style={styles.postContainer} navigation={navigation}></Post>
+    </SafeAreaView>
   );
 };
 
 export default Home;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  postContainer: {
+    marginTop: 20,
+  },
+  header: {},
+});

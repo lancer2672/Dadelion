@@ -31,25 +31,32 @@ const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // useEffect(()=>{
-  //     getUserFromLocalStore()
-  // },[])
-
-  // const getUserFromLocalStore = ()=>{
-  //   const token = getValueFor("token");
-  // }
   const handleSubmitForm = async () => {
-    // await axios
     axios
       .post(`${UrlAPI}/api/auth/login`, { username, password })
       .then(handleLogin)
       .then((response) => {
         // save("token",token);
         dispatch(setPosts(response.data.posts));
-        navigation.navigate("Home");
+        navigation.navigate("Navigation");
       })
       .catch(function (error) {
-        console.log(error);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", error.message);
+        }
+        console.log(error.config);
       });
   };
   const handleLogin = (res) => {
