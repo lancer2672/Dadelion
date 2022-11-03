@@ -26,7 +26,7 @@ const CreatePost = ({ setIsvisible }) => {
     newPostData.append("testImage", image);
     newPostData.append("description", description);
     await axios
-      .post(`${UrlAPI}/post/image`, newPostData, {
+      .post(`${UrlAPI}/post/create`, newPostData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
