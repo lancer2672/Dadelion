@@ -21,7 +21,6 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 
 const Post = ({ navigation }) => {
-  const [heart, setHeart] = useState(false);
   const posts = useSelector((state) => state.post.posts);
   const items = posts.map((post, index) => {
     return {
@@ -32,6 +31,7 @@ const Post = ({ navigation }) => {
       },
     };
   });
+  console.log("Posts", posts);
   const dataProvider = new DataProvider((r1, r2) => r1 != r2).cloneWithRows(
     items
   );

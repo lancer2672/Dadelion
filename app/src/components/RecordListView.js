@@ -23,6 +23,12 @@ const RecordListView = ({ navigation, props }) => {
   const [numberOfHearts, setNumberOfHearts] = useState(
     props.reactionNumber + 1
   );
+  console.log("IMAGE", props.image.data.data);
+  const blob = new Blob([Int8Array.from(props.image.data.data)], {
+    type: props.image.contentType,
+  });
+  const image = window.URL.createObjectURL(blob);
+  console.log("URL", image);
   const handleReact = () => {
     setHeart(!heart);
   };
@@ -64,10 +70,11 @@ const RecordListView = ({ navigation, props }) => {
     <View style={styles.postContainer}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleNavigation}>
-          <Image
+          {/* <Image
             source={require("./../../assets/imgs/24.jpg")}
             style={styles.avatar}
-          ></Image>
+          ></Image> */}
+          <Image source={{ uri: image }} style={styles.avatar}></Image>
         </TouchableOpacity>
         <View style={styles.userDescription}>
           <Text>{props.creatorName}</Text>
@@ -87,7 +94,7 @@ const RecordListView = ({ navigation, props }) => {
         }}
       >
         <Image
-          source={require("./../../assets/imgs/24.jpg")}
+          source={{ uri: image }}
           style={{ flex: 1, resizeMode: "stretch" }}
         ></Image>
       </View>

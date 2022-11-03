@@ -52,7 +52,10 @@ const HomeHeader = ({ navigation }) => {
           }}
         >
           <View style={styles.centeredView}>
-            <CreatePost style={styles.postCreateContainer}></CreatePost>
+            <CreatePost
+              setIsvisible={setModalVisible}
+              style={styles.postCreateContainer}
+            ></CreatePost>
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
               onPress={handleCreatePost}
@@ -82,7 +85,8 @@ const styles = StyleSheet.create({
     left: 48,
   },
   description: {
-    backgroundColor: "green",
+    backgroundColor: "#b8b5b0",
+    opacity: 0.5,
     padding: 8,
     borderRadius: 25,
   },
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
   //Modal
   postCreateContainer: {},
   centeredView: {
-    backgroundColor: "#666",
+    backgroundColor: "rgba(1, 1, 1, 0.2)",
     flex: 1,
     alignItems: "center",
     marginTop: 22,
