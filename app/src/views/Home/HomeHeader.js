@@ -9,7 +9,8 @@ import {
 import React, { useState } from "react";
 
 import SearchBar from "./SearchBar";
-import CreatePost from "../features/post/CreatePost";
+import CreatePost from "../../features/post/CreatePost";
+import Color from "../../utils/color";
 
 const HomeHeader = ({ navigation }) => {
   const [isVisidbleCreatePost, setIsVisidbleCreatePost] = useState(false);
@@ -20,16 +21,13 @@ const HomeHeader = ({ navigation }) => {
   const openCreatePostScreen = () => {
     setModalVisible(true);
   };
-  const handleCreatePost = () => {
-    setModalVisible(false);
-  };
   return (
     <View>
       <SearchBar></SearchBar>
       <View style={styles.container}>
         <TouchableOpacity onPress={handleNavigationUser}>
           <Image
-            source={require("./../../assets/imgs/24.jpg")}
+            source={require("./../../../assets/imgs/24.jpg")}
             style={styles.avatar}
           ></Image>
         </TouchableOpacity>
@@ -56,12 +54,6 @@ const HomeHeader = ({ navigation }) => {
               setIsvisible={setModalVisible}
               style={styles.postCreateContainer}
             ></CreatePost>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={handleCreatePost}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </TouchableOpacity>
           </View>
         </Modal>
       </View>
@@ -85,7 +77,7 @@ const styles = StyleSheet.create({
     left: 48,
   },
   description: {
-    backgroundColor: "#b8b5b0",
+    backgroundColor: Color.descriptionBackground,
     opacity: 0.5,
     padding: 8,
     borderRadius: 25,

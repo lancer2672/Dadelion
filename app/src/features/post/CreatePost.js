@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   View,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
@@ -15,14 +16,16 @@ import axios from "axios";
 import { UrlAPI } from "../../constants/constants";
 import Color from "../../utils/color";
 
+const SCREEN_WIDTH = Dimensions.get("window").width;
+
 const CreatePost = ({ setIsvisible }) => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState({});
-  const [hasImage, setHasImage] = useState(false);
-  let uriImage = false;
+  const [imageUri, setImageUri] = useState("");
+
+  console.count("render");
   const handleCreatePost = async () => {
     const newPostData = new FormData();
-    console.log("IMAGE", image);
     newPostData.append("testImage", image);
     newPostData.append("description", description);
     await axios
@@ -57,8 +60,7 @@ const CreatePost = ({ setIsvisible }) => {
       type: "image/*",
     })
       .then((result) => {
-        setHasImage(true);
-        uriImage = result.uri;
+        setImageUri(result.uri);
         setImage(result.file);
       })
       .catch(function (error) {
@@ -83,7 +85,7 @@ const CreatePost = ({ setIsvisible }) => {
   };
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TextInput
           style={styles.descriptionText}
           onChangeText={(newDescript) => setDescription(newDescript)}
@@ -93,7 +95,7 @@ const CreatePost = ({ setIsvisible }) => {
           <Entypo name="images" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      {hasImage == false ? (
+      {imageUri == false ? (
         <Image
           style={styles.image}
           source={require("./../../../assets/imgs/ChooseAnImage.png")}
@@ -102,7 +104,7 @@ const CreatePost = ({ setIsvisible }) => {
         <Image
           style={styles.image}
           source={{
-            uri: uriImage,
+            uri: imageUri,
           }}
         ></Image>
       )}
@@ -114,7 +116,7 @@ const CreatePost = ({ setIsvisible }) => {
           onPress={() => setIsvisible(false)}
           style={styles.button}
         >
-          <Text>Cancle</Text>
+          <Text>Cancel</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -129,17 +131,26 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     color: "white",
+    flex: 1,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: Color.descriptionBackground,
   },
   image: {
-    height: 300,
-    width: 300,
+    marginTop: 16,
+    height: (SCREEN_WIDTH * 2) / 3,
     resizeMode: "stretch",
+    borderRadius: 10,
+    width: SCREEN_WIDTH - 40,
   },
   button: {
     minWidth: 80,
     height: 40,
     backgroundColor: Color.subColor,
     borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 16,
   },
   buttonContainer: {
     marginTop: 12,

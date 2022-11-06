@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { setAuth } from "../auth/authSlice";
+import { setAuth } from "../../features/auth/authSlice";
 import UserPost from "./UserPost";
 import { useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";

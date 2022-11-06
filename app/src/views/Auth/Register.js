@@ -12,10 +12,10 @@ import { useState } from "react";
 import React from "react";
 import axios from "axios";
 
-import { AppSlogan } from "../utils/slogan";
-import { space } from "../utils/size";
-import { UrlAPI } from "../constants/constants";
-import Color from "../utils/color";
+import { AppSlogan } from "../../utils/slogan";
+import { space } from "../../utils/size";
+import { UrlAPI } from "../../constants/constants";
+import Color from "../../utils/color";
 
 const Register = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -46,12 +46,12 @@ const Register = ({ navigation }) => {
   };
   return (
     <ImageBackground
-      source={require("../../assets/imgs/Auth.jpg")}
+      source={require("../../../assets/imgs/Auth.jpg")}
       style={styles.container}
     >
       <Image
         style={styles.tinyLogo}
-        source={require("./../../assets/imgs/Logo.png")}
+        source={require("./../../../assets/imgs/Logo.png")}
       />
       <Text>{AppSlogan}</Text>
       <TextInput

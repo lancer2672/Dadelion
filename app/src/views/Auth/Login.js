@@ -13,15 +13,15 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as SecureStore from "expo-secure-store";
 
-import { AppSlogan } from "../utils/slogan";
-import Color from "../utils/color";
-import { setPosts } from "../features/post/postSlice.js";
-import { space } from "../utils/size";
-import setAuthToken from "../utils/setAuthToken";
-import { setAuth } from "../features/auth/authSlice";
-import { UrlAPI } from "../constants/constants";
+import { AppSlogan } from "../../utils/slogan";
+import Color from "../../utils/color";
+import { setPosts } from "../../features/post/postSlice.js";
+import { space } from "../../utils/size";
+import setAuthToken from "../../utils/setAuthToken";
+import { setAuth } from "../../features/auth/authSlice";
+import { UrlAPI } from "../../constants/constants";
 
-const axios = require("axios").default;
+import axios from "axios";
 
 const Login = ({ navigation }) => {
   const posts = useSelector((state) => state.post.posts);
@@ -87,12 +87,12 @@ const Login = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../../assets/imgs/Auth.jpg")}
+      source={require("../../../assets/imgs/Auth.jpg")}
       style={styles.container}
     >
       <Image
         style={styles.tinyLogo}
-        source={require("./../../assets/imgs/Logo.png")}
+        source={require("./../../../assets/imgs/Logo.png")}
       />
       <Text style={styles.slogan}>{AppSlogan}</Text>
       <TextInput

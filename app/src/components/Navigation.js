@@ -3,8 +3,8 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-import User from "../features/user/User";
-import Home from "../views/Home";
+import User from "../views/User/User";
+import Home from "../views/Home/Home";
 const Navigation = () => {
   const Tab = createBottomTabNavigator();
   return (
