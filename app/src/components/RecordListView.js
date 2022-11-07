@@ -68,10 +68,6 @@ const RecordListView = ({ navigation, props }) => {
     <View style={styles.postContainer}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleNavigation}>
-          {/* <Image
-            source={require("./../../assets/imgs/24.jpg")}
-            style={styles.avatar}
-          ></Image> */}
           <Image source={{ uri: image }} style={styles.avatar}></Image>
         </TouchableOpacity>
         <View style={styles.userDescription}>

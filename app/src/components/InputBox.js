@@ -1,14 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-
-const Dashboard = () => {
+const InputBox = () => {
   return (
     <View>
-      <Text>Dashboard</Text>
+      <Text>InputBox</Text>
     </View>
   );
 };
 
-export default Dashboard;
+export default InputBox;
 
 const styles = StyleSheet.create({});

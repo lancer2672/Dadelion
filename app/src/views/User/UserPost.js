@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import RecordListView from "../../components/RecordListView";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
+
 const UserPost = () => {
   const user = useSelector((state) => state.auth.user);
   const posts = useSelector((state) => state.post.posts);

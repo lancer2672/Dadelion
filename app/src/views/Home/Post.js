@@ -70,7 +70,7 @@ const Post = ({ navigation }) => {
   };
   return (
     <RecyclerListView
-      style={{ minWidth: 200, minHeight: 200 }}
+      style={{ minWidth: 1, minHeight: 1 }}
       rowRenderer={rowRenderer}
       dataProvider={dataProvider}
       layoutProvider={layoutProvider}
@@ -80,53 +80,4 @@ const Post = ({ navigation }) => {
 
 export default Post;
 
-const styles = StyleSheet.create({
-  postContainer: {
-    margin: 12,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "#ddd",
-    borderBottomWidth: 0,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 1,
-  },
-  reactSection: {
-    marginLeft: 12,
-    marginTop: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-  },
-  containerReact: {
-    alignItems: "center",
-  },
-  comment: {
-    height: 16,
-    backgroundColor: "red",
-  },
-  icon: {},
-  avatar: {
-    marginRight: 12,
-    width: 40,
-    height: 40,
-    resizeMode: "stretch",
-    borderRadius: 50,
-  },
-  userDescription: {
-    justifyContent: "center",
-  },
-
-  content: {
-    marginTop: 8,
-    marginLeft: 8,
-    marginBottom: 8,
-  },
-  header: {
-    marginTop: 8,
-    marginLeft: 8,
-    flexDirection: "row",
-  },
-});
+const styles = StyleSheet.create({});

@@ -13,6 +13,7 @@ export const postSlice = createSlice({
       const newPosts = action.payload;
       state.posts = newPosts;
     },
+    
   },
 });
 

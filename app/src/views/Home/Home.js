@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, Button, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Post from "../../features/post/Post";
+
+import Post from "./Post";
 import HomeHeader from "./HomeHeader";
 
 const Home = ({ navigation }) => {

@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import User from "../views/User/User";
 import Home from "../views/Home/Home";
-const Navigation = () => {
+const MainTabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
@@ -39,6 +39,6 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
+export default MainTabNavigator;
 
 const styles = StyleSheet.create({});

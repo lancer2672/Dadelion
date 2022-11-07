@@ -14,6 +14,7 @@ import { setAuth } from "../../features/auth/authSlice";
 import UserPost from "./UserPost";
 import { useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
+
 const axios = require("axios").default;
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -90,10 +91,10 @@ const User = ({ navigation }) => {
           </View>
         </ImageBackground>
       </View>
-
       <TouchableOpacity onPress={handleLogOut}>
         <Text>Log out</Text>
       </TouchableOpacity>
+
       <UserPost style={styles.userPost}></UserPost>
     </View>
   );
@@ -104,5 +105,7 @@ export default User;
 const styles = StyleSheet.create({
   userPost: {
     flex: 1,
+    minHeight: 300,
+    minWidth: 300,
   },
 });
