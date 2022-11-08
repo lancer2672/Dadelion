@@ -31,7 +31,6 @@ const Post = ({ navigation }) => {
       },
     };
   });
-  console.log("Posts", posts);
   const dataProvider = new DataProvider((r1, r2) => r1 != r2).cloneWithRows(
     items
   );

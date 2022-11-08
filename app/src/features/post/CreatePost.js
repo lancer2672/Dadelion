@@ -23,10 +23,9 @@ const CreatePost = ({ setIsvisible }) => {
   const [image, setImage] = useState({});
   const [imageUri, setImageUri] = useState("");
 
-  console.count("render");
   const handleCreatePost = async () => {
     const newPostData = new FormData();
-    newPostData.append("testImage", image);
+    newPostData.append("postImage", image);
     newPostData.append("description", description);
     await axios
       .post(`${UrlAPI}/post/create`, newPostData, {
@@ -34,7 +33,7 @@ const CreatePost = ({ setIsvisible }) => {
           "Content-Type": "multipart/form-data",
         },
       })
-      .then((res) => {})
+      .then((res) => setIsvisible(false))
       .catch(function (error) {
         console.log("err");
         if (error.response) {

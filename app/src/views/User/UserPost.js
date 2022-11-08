@@ -27,12 +27,10 @@ const UserPost = () => {
     return post.user == user._id;
   });
 
-  // const [userPosts, setUserPosts] = useState([]);
-  console.log("userPosts", userPosts);
   const [heart, setHeart] = useState(false);
-  useEffect(() => {
-    // getUserPosts()
-  }, []);
+  // useEffect(() => {
+  //   // getUserPosts()
+  // }, []);
 
   const items = userPosts.map((post, index) => {
     return {
@@ -67,19 +65,19 @@ const UserPost = () => {
     }
   );
   /*#endregion*/
-
   const rowRenderer = (type, data) => {
     const { description, createdAt, creatorName } = data.item;
     return <RecordListView props={data.item}></RecordListView>;
   };
-  console.count("RENDER");
   return (
     <>
       {isLoading == true ? (
         <Text>LOading...</Text>
+      ) : userPosts.length < 0 ? (
+        <></>
       ) : (
         <RecyclerListView
-          style={{ minWidth: 200, minHeight: 200 }}
+          style={{ minWidth: 1, minHeight: 1 }}
           rowRenderer={rowRenderer}
           dataProvider={dataProvider}
           layoutProvider={layoutProvider}
