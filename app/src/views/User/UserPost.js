@@ -14,7 +14,7 @@ import {
 } from "recyclerlistview";
 import { useSelector } from "react-redux";
 
-import RecordListView from "../../components/RecordListView";
+import RecordListView from "../../components/ListViewItem";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 

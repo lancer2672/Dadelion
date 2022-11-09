@@ -13,6 +13,7 @@ import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { UrlAPI } from "../constants/constants";
 
+const base64 = require("base-64");
 const dayjs = require("dayjs");
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
@@ -20,13 +21,26 @@ const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 // đây là container cho mỗi post trong recyclerListView của post
 const RecordListView = ({ navigation, props }) => {
   const [heart, setHeart] = useState(false);
+  const [imageUriData, setImageUriData] = useState("");
   const [numberOfHearts, setNumberOfHearts] = useState(
     props.reactionNumber + 1
   );
-  const blob = new Blob([Int8Array.from(props.image.data.data)], {
-    type: props.image.contentType,
-  });
-  const image = window.URL.createObjectURL(blob);
+  const arrayBufferToBase64 = (buffer) => {
+    let binary = "";
+    let bytes = new Uint8Array(buffer);
+    let len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    //window.btoa is not working as I want
+    return base64.encode(binary);
+  };
+  useEffect(() => {
+    setImageUriData(
+      () =>
+        "data:image/jpeg;base64," + arrayBufferToBase64(props.image.data.data)
+    );
+  }, []);
   const handleReact = () => {
     setHeart(!heart);
   };
@@ -66,9 +80,15 @@ const RecordListView = ({ navigation, props }) => {
   };
   return (
     <View style={styles.postContainer}>
+      {/* post header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleNavigation}>
-          <Image source={{ uri: image }} style={styles.avatar}></Image>
+          <Image
+            source={{
+              uri: imageUriData || null, //data.data in your case
+            }}
+            style={styles.avatar}
+          ></Image>
         </TouchableOpacity>
         <View style={styles.userDescription}>
           <Text>{props.creatorName}</Text>
@@ -77,21 +97,30 @@ const RecordListView = ({ navigation, props }) => {
           </Text>
         </View>
       </View>
+
+      {/* post content */}
       <View style={styles.content}>
         <Text numberOfLines={2}>{props.description}</Text>
       </View>
       <View
         style={{
-          width: SCREEN_WIDTH_WITH_MARGIN_L_R_12,
+          //to fit image in post => property: SCREEN_WIDTH_WITH_MARGIN_L_R_12 - 6
+          width: SCREEN_WIDTH_WITH_MARGIN_L_R_12 - 6,
           height: 350,
-          elevation: 1,
         }}
       >
         <Image
-          source={{ uri: image }}
-          style={{ flex: 1, resizeMode: "stretch" }}
+          // source={{ uri: image }}
+
+          source={{
+            uri: imageUriData || null,
+          }}
+          //to fit image in post => marginLeft 4;
+          style={{ flex: 1, resizeMode: "stretch", marginLeft: 4 }}
         ></Image>
       </View>
+
+      {/* reaction area */}
       <View style={styles.reactSection}>
         <TouchableOpacity
           onPress={handleReact}

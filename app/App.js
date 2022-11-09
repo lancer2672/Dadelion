@@ -8,9 +8,9 @@ import Navigator from "./src/navigation";
 export default function App() {
   return (
     <Provider store={store}>
-      <SafeAreaProvider>
-        <Navigator></Navigator>
-      </SafeAreaProvider>
+      {/* <SafeAreaProvider> */}
+      <Navigator></Navigator>
+      {/* </SafeAreaProvider> */}
     </Provider>
   );
 }

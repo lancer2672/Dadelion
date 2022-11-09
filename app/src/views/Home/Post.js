@@ -15,7 +15,7 @@ import {
 } from "recyclerlistview";
 import { useSelector, useDispatch } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
-import RecordListView from "../../components/RecordListView";
+import RecordListView from "../../components/ListViewItem";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;

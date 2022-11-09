@@ -16,6 +16,7 @@ import { setAuth } from "../../features/auth/authSlice";
 import UserPost from "./UserPost";
 import { UrlAPI } from "../../constants/constants";
 
+const base64 = require("base-64");
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const User = ({ navigation }) => {
@@ -23,12 +24,20 @@ const User = ({ navigation }) => {
   const user = useSelector((state) => state.auth.user);
   const [imageUri, setImageUri] = useState("");
 
+  const arrayBufferToBase64 = (buffer) => {
+    let binary = "";
+    let bytes = new Uint8Array(buffer);
+    let len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return base64.encode(binary);
+  };
+
   useEffect(() => {
-    const blob = new Blob([Int8Array.from(user.avatar.data.data)], {
-      type: user.avatar.contentType,
-    });
-    const img = window.URL.createObjectURL(blob);
-    setImageUri(img);
+    setImageUri(
+      "data:image/jpeg;base64," + arrayBufferToBase64(user.avatar.data.data)
+    );
   }, []);
 
   const handleUpdateAvatar = async () => {
@@ -36,9 +45,10 @@ const User = ({ navigation }) => {
       type: "image/*",
     })
       .then((result) => {
-        setImageUri(result.uri);
         const newUserData = new FormData();
+        console.log(result);
         newUserData.append("avatar", result.file);
+        console.log(newUserData);
         return (
           axios
             .put(`${UrlAPI}/user/:id`, newUserData, {
@@ -50,7 +60,7 @@ const User = ({ navigation }) => {
               },
             })
             //set uriImage after calling API using result form documentPicker
-            .then((res) => {})
+            .then((res) => setImageUri(result.uri))
             .catch(function (error) {
               console.log("err");
               if (error.response) {
@@ -92,17 +102,19 @@ const User = ({ navigation }) => {
         >
           {/* avatar */}
           <ImageBackground
+            // source={
+            //   imageUri != ""
+            //     ? { uri: imageUri }
+            //     : require("./../../../assets/imgs/DefaultAvatar.png")
+            // }
             source={
               imageUri != ""
-                ? { uri: imageUri }
+                ? { uri: imageUri || null }
                 : require("./../../../assets/imgs/DefaultAvatar.png")
             }
             style={styles.avatar}
           >
-            <TouchableOpacity
-              style={{ backgroundColor: "red" }}
-              onPress={handleUpdateAvatar}
-            >
+            <TouchableOpacity onPress={handleUpdateAvatar}>
               <View
                 style={{
                   justifyContent: "center",

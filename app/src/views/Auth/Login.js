@@ -72,18 +72,6 @@ const Login = ({ navigation }) => {
   const navigateToRegisterScreen = () => {
     navigation.navigate("Register");
   };
-  async function save(key, value) {
-    await SecureStore.setItemAsync(key, value);
-  }
-
-  async function getValueFor(key) {
-    let result = await SecureStore.getItemAsync(key);
-    if (result) {
-      return result;
-    } else {
-      return null;
-    }
-  }
 
   return (
     <ImageBackground
@@ -130,6 +118,7 @@ const styles = StyleSheet.create({
   textInput: {
     borderRadius: 25,
     height: 32,
+    lineHeight: 20,
     padding: 10,
     marginTop: space.s,
     color: Color.textColor,
