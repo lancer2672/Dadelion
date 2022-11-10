@@ -10,8 +10,11 @@ import {
 import React, { useState, useEffect } from "react";
 
 import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import axios from "axios";
 import { UrlAPI } from "../constants/constants";
+import CommentListView from "./CommentListView";
+import InputBar from "./InputBar";
 
 const base64 = require("base-64");
 const dayjs = require("dayjs");
@@ -19,7 +22,7 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 
 // đây là container cho mỗi post trong recyclerListView của post
-const RecordListView = ({ navigation, props }) => {
+const RecordListView = ({ navigation, props, postId }) => {
   const [heart, setHeart] = useState(false);
   const [imageUriData, setImageUriData] = useState("");
   const [numberOfHearts, setNumberOfHearts] = useState(
@@ -36,40 +39,42 @@ const RecordListView = ({ navigation, props }) => {
     return base64.encode(binary);
   };
   useEffect(() => {
-    setImageUriData(
-      () =>
-        "data:image/jpeg;base64," + arrayBufferToBase64(props.image.data.data)
-    );
+    if (props.image) {
+      setImageUriData(
+        () =>
+          "data:image/jpeg;base64," + arrayBufferToBase64(props.image.data.data)
+      );
+    }
   }, []);
   const handleReact = () => {
     setHeart(!heart);
   };
-  useEffect(() => {
-    if (heart == true) {
-      console.log("addHeart");
-      axios
-        .put(`${UrlAPI}/post/:${props._id}`, {
-          reactionNumber: props.reactionNumber + 1,
-          description: props.description,
-        })
-        .then((res) => {
-          console.log("data", res);
-          setNumberOfHearts((preValue) => {
-            return preValue + 1;
-          });
-        });
-    } else {
-      axios
-        .put(`${UrlAPI}/post/:${props._id}`, {
-          reactionNumber: props.reactionNumber - 1,
-        })
-        .then((res) => {
-          setNumberOfHearts((preValue) => {
-            return preValue - 1;
-          });
-        });
-    }
-  }, [heart]);
+  // useEffect(() => {
+  //   if (heart == true) {
+  //     console.log("addHeart");
+  //     axios
+  //       .put(`${UrlAPI}/post/:${props._id}`, {
+  //         reactionNumber: props.reactionNumber + 1,
+  //         description: props.description,
+  //       })
+  //       .then((res) => {
+  //         console.log("data", res);
+  //         setNumberOfHearts((preValue) => {
+  //           return preValue + 1;
+  //         });
+  //       });
+  //   } else {
+  //     axios
+  //       .put(`${UrlAPI}/post/:${props._id}`, {
+  //         reactionNumber: props.reactionNumber - 1,
+  //       })
+  //       .then((res) => {
+  //         setNumberOfHearts((preValue) => {
+  //           return preValue - 1;
+  //         });
+  //       });
+  //   }
+  // }, [heart]);
 
   const handleNavigation = () => {
     return;
@@ -90,12 +95,15 @@ const RecordListView = ({ navigation, props }) => {
             style={styles.avatar}
           ></Image>
         </TouchableOpacity>
-        <View style={styles.userDescription}>
+        <View style={styles.postInfo}>
           <Text>{props.creatorName}</Text>
           <Text>
             {dayjs(props.createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}
           </Text>
         </View>
+        <TouchableOpacity style={styles.moreBtn}>
+          <Feather name="more-horizontal" size={24} color="black" />
+        </TouchableOpacity>
       </View>
 
       {/* post content */}
@@ -110,8 +118,6 @@ const RecordListView = ({ navigation, props }) => {
         }}
       >
         <Image
-          // source={{ uri: image }}
-
           source={{
             uri: imageUriData || null,
           }}
@@ -138,6 +144,8 @@ const RecordListView = ({ navigation, props }) => {
           <Text style={styles.comment}>Comment</Text>
         </TouchableOpacity>
       </View>
+      {/* <CommentListView style={styles.comments}></CommentListView> */}
+      <InputBar style={styles.inputBar} postId={postId}></InputBar>
     </View>
   );
 };
@@ -156,13 +164,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 1,
+    backgroundColor: "yellow",
+  },
+  moreBtn: {
+    paddingRight: 4,
+    paddingLeft: 4,
   },
   reactSection: {
-    marginLeft: 12,
     marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
+    borderBottomColor: "#dedede",
+    borderBottomWidth: 2,
   },
   containerReact: {
     alignItems: "center",
@@ -184,19 +198,32 @@ const styles = StyleSheet.create({
     resizeMode: "stretch",
     borderRadius: 50,
   },
-  userDescription: {
+  postInfo: {
     justifyContent: "center",
+    flex: 1,
   },
 
   content: {
-    marginTop: 8,
     marginLeft: 8,
-    marginBottom: 8,
   },
   reactionNumber: {},
   header: {
     marginTop: 8,
     marginLeft: 8,
     flexDirection: "row",
+    alignItems: "center",
+  },
+
+  // commentList: {
+  //   minHeight: 200,
+  //   backgroundColor: "red",
+  // },
+  comments: {
+    height: 40,
+    marginTop: 5,
+  },
+  inputBar: {
+    height: 40,
+    marginTop: 5,
   },
 });

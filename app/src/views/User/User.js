@@ -47,6 +47,8 @@ const User = ({ navigation }) => {
       .then((result) => {
         const newUserData = new FormData();
         console.log(result);
+        if (!result.file) {
+        }
         newUserData.append("avatar", result.file);
         console.log(newUserData);
         return (
@@ -109,7 +111,7 @@ const User = ({ navigation }) => {
             // }
             source={
               imageUri != ""
-                ? { uri: imageUri || null }
+                ? { uri: imageUri }
                 : require("./../../../assets/imgs/DefaultAvatar.png")
             }
             style={styles.avatar}
@@ -133,12 +135,7 @@ const User = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           </ImageBackground>
-          <View
-            style={{
-              marginLeft: 108,
-              marginBottom: 25,
-            }}
-          >
+          <View style={styles.userDescription}>
             <Text>UserName "ICON"</Text>
             <Text>User description "ICON"</Text>
           </View>
@@ -170,6 +167,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   avatar: {
+    marginLeft: 4,
+    marginBottom: 4,
     borderRadius: 50,
     borderWidth: 2,
     borderColor: "#555",
@@ -180,5 +179,9 @@ const styles = StyleSheet.create({
     left: 0,
     overflow: "hidden",
     justifyContent: "flex-end",
+  },
+  userDescription: {
+    marginLeft: 108,
+    marginBottom: 29,
   },
 });

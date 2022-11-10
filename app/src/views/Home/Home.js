@@ -19,7 +19,7 @@ export default Home;
 
 const styles = StyleSheet.create({
   postContainer: {
-    marginTop: 20,
+    marginTop: 50,
   },
   header: {},
 });

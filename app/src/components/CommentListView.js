@@ -48,7 +48,7 @@ const CommentListView = () => {
   console.log(items);
   return (
     <RecyclerListView
-      style={{ minWidth: 200, minHeight: 200 }}
+      style={{ marginTop: 5, minHeight: 35, backgroundColor: "red" }}
       rowRenderer={rowRenderer}
       dataProvider={dataProvider}
       layoutProvider={layoutProvider}
@@ -58,4 +58,6 @@ const CommentListView = () => {
 
 export default CommentListView;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {},
+});

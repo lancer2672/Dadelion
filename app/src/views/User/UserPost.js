@@ -56,7 +56,7 @@ const UserPost = () => {
         case "NORMAL":
           dim.width = SCREEN_WIDTH;
           //Tuỳ thuộc vào độ dài của phần text mà set độ cao cho thẻ
-          dim.height = 500;
+          dim.height = 600;
           break;
         default:
           dim.width = 0;
@@ -67,7 +67,9 @@ const UserPost = () => {
   /*#endregion*/
   const rowRenderer = (type, data) => {
     const { description, createdAt, creatorName } = data.item;
-    return <RecordListView props={data.item}></RecordListView>;
+    return (
+      <RecordListView postId={data.item._id} props={data.item}></RecordListView>
+    );
   };
   return (
     <>
