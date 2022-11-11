@@ -8,9 +8,13 @@ import HomeHeader from "./HomeHeader";
 
 const Home = ({ navigation }) => {
   return (
-    <SafeAreaView>
-      <HomeHeader style={styles.header} navigation={navigation}></HomeHeader>
-      <Post style={styles.postContainer} navigation={navigation}></Post>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <HomeHeader navigation={navigation}></HomeHeader>
+      </View>
+      <View style={styles.postContainer}>
+        <Post navigation={navigation}></Post>
+      </View>
     </SafeAreaView>
   );
 };
@@ -18,8 +22,9 @@ const Home = ({ navigation }) => {
 export default Home;
 
 const styles = StyleSheet.create({
+  container: {},
   postContainer: {
-    marginTop: 50,
+    marginTop: 28,
   },
   header: {},
 });

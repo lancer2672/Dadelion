@@ -15,6 +15,7 @@ import axios from "axios";
 import { UrlAPI } from "../constants/constants";
 import CommentListView from "./CommentListView";
 import InputBar from "./InputBar";
+import { useSelector } from "react-redux";
 
 const base64 = require("base-64");
 const dayjs = require("dayjs");
@@ -22,12 +23,12 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 
 // đây là container cho mỗi post trong recyclerListView của post
-const RecordListView = ({ navigation, props, postId }) => {
+const RecordListView = ({ navigation, postId, ...props }) => {
+  const user = useSelector((state) => state.auth.user);
+  console.log(user);
   const [heart, setHeart] = useState(false);
   const [imageUriData, setImageUriData] = useState("");
-  const [numberOfHearts, setNumberOfHearts] = useState(
-    props.reactionNumber + 1
-  );
+  const [reactionNumber, setReactionNumber] = useState(props.likes.length);
   const arrayBufferToBase64 = (buffer) => {
     let binary = "";
     let bytes = new Uint8Array(buffer);
@@ -39,15 +40,38 @@ const RecordListView = ({ navigation, props, postId }) => {
     return base64.encode(binary);
   };
   useEffect(() => {
+    //if post have an image
     if (props.image) {
       setImageUriData(
         () =>
           "data:image/jpeg;base64," + arrayBufferToBase64(props.image.data.data)
       );
     }
+    //check if user reacted this post
+    for (let i = 0; i < props.likes.length; i++) {
+      console.log("a");
+
+      if (props.likes[i].userId == user._id) {
+        console.log("EXISTED");
+        setHeart(() => true);
+      }
+    }
   }, []);
   const handleReact = () => {
-    setHeart(!heart);
+    console.log("INT");
+    axios
+      .put(`${UrlAPI}/post/${postId}`, {
+        react: true,
+      })
+      .then((res) => {
+        setHeart(() => !heart);
+        if (reactionNumber == props.likes.length) {
+          setReactionNumber((reactionNumber) => reactionNumber + 1);
+        } else {
+          setReactionNumber((reactionNumber) => reactionNumber - 1);
+        }
+      })
+      .catch((err) => console.log(err));
   };
   // useEffect(() => {
   //   if (heart == true) {
@@ -132,7 +156,7 @@ const RecordListView = ({ navigation, props, postId }) => {
           onPress={handleReact}
           style={styles.reactSection_heart}
         >
-          <Text style={styles.numberOfHearts}>{numberOfHearts}</Text>
+          <Text style={styles.numberOfHearts}>{reactionNumber}</Text>
           {heart == true ? (
             <AntDesign name="heart" size={24} color="red" />
           ) : (

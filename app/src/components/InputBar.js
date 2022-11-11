@@ -15,7 +15,6 @@ import { UrlAPI } from "../constants/constants";
 
 const InputBar = ({ ...props }) => {
   const [text, setText] = useState("");
-  console.log(props.postId);
   const handlePostComment = () => {
     if (text != "") {
       axios.put(`${UrlAPI}/post/${props.postId}`, {

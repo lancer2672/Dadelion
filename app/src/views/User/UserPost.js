@@ -66,9 +66,8 @@ const UserPost = () => {
   );
   /*#endregion*/
   const rowRenderer = (type, data) => {
-    const { description, createdAt, creatorName } = data.item;
     return (
-      <RecordListView postId={data.item._id} props={data.item}></RecordListView>
+      <RecordListView {...data.item} postId={data.item._id}></RecordListView>
     );
   };
   return (
