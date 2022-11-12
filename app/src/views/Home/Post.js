@@ -16,12 +16,16 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
 import RecordListView from "../../components/ListViewItem";
+import { PostHeightWithoutCommentList } from "../../constants/constants";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 
 const Post = ({ navigation }) => {
+  console.log("post render");
   const posts = useSelector((state) => state.post.posts);
+  const [commentsViewHeight, setCommentsViewHeight] = useState(
+    PostHeightWithoutCommentList
+  );
   const items = posts.map((post, index) => {
     return {
       type: "NORMAL",
@@ -43,7 +47,7 @@ const Post = ({ navigation }) => {
         case "NORMAL":
           dim.width = SCREEN_WIDTH;
           //Tuỳ thuộc vào độ dài của phần text mà set độ cao cho thẻ
-          dim.height = 550;
+          dim.height = commentsViewHeight;
           break;
         default:
           dim.width = 0;
@@ -57,6 +61,7 @@ const Post = ({ navigation }) => {
     return (
       <RecordListView
         {...data.item}
+        setCommentsViewHeight={setCommentsViewHeight}
         postId={data.item._id}
         navigation={navigation}
       ></RecordListView>
@@ -64,7 +69,7 @@ const Post = ({ navigation }) => {
   };
   return (
     <RecyclerListView
-      style={{ minWidth: 1, minHeight: 1 }}
+      style={{ width: SCREEN_WIDTH, height: 600 }}
       rowRenderer={rowRenderer}
       dataProvider={dataProvider}
       layoutProvider={layoutProvider}

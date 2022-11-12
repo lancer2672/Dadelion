@@ -1,20 +1,21 @@
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import React from "react";
 import {
   RecyclerListView,
   DataProvider,
   LayoutProvider,
 } from "recyclerlistview";
-import { useSelector } from "react-redux";
+import Comment from "./Comment";
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const CommentListView = () => {
-  const posts = useSelector((state) => state.post.posts);
-  const items = posts.map((post, index) => {
+const CommentListView = ({ comments, ...props }) => {
+  console.count("commentListView");
+
+  const items = comments.map((comment, index) => {
     return {
       type: "NORMAL",
       item: {
         id: index,
-        ...post,
+        ...comment,
       },
     };
   });
@@ -30,7 +31,7 @@ const CommentListView = () => {
         case "NORMAL":
           dim.width = SCREEN_WIDTH;
           //Tuỳ thuộc vào độ dài của phần text mà set độ cao cho thẻ
-          dim.height = 500;
+          dim.height = 50;
           break;
         default:
           dim.width = 0;
@@ -41,14 +42,16 @@ const CommentListView = () => {
   /*#endregion*/
 
   const rowRenderer = (type, data) => {
-    const { description, createdAt, creatorName, reactionNumber, _id } =
-      data.item;
-    return <View></View>;
+    return <Comment {...data.item}></Comment>;
   };
-  console.log(items);
   return (
     <RecyclerListView
-      style={{ marginTop: 5, minHeight: 35, backgroundColor: "red" }}
+      style={{
+        marginTop: 5,
+        height: "100%",
+        width: "100%",
+        backgroundColor: "blue",
+      }}
       rowRenderer={rowRenderer}
       dataProvider={dataProvider}
       layoutProvider={layoutProvider}
@@ -58,6 +61,4 @@ const CommentListView = () => {
 
 export default CommentListView;
 
-const styles = StyleSheet.create({
-  container: {},
-});
+const styles = StyleSheet.create({});

@@ -7,19 +7,31 @@ import {
 } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Color from "../utils/color";
-import { useState } from "react";
-import axios from "axios";
 import { UrlAPI } from "../constants/constants";
+import { updatePost } from "../features/post/postSlice";
 
 const InputBar = ({ ...props }) => {
+  console.count("inputbar");
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.post.posts);
+
   const [text, setText] = useState("");
   const handlePostComment = () => {
     if (text != "") {
-      axios.put(`${UrlAPI}/post/${props.postId}`, {
-        content: text,
-      });
+      axios
+        .put(`${UrlAPI}/post/${props.postId}`, {
+          content: text,
+        })
+        .then((res) => {
+          setText("");
+          dispatch(updatePost(res.data.updatedPost));
+        })
+        .catch((err) => console.log(err));
     }
   };
 
@@ -27,6 +39,7 @@ const InputBar = ({ ...props }) => {
     <View style={styles.container}>
       <TextInput
         placeholder="Viết bình luận..."
+        value={text}
         onChangeText={(newText) => setText(newText)}
         style={styles.inputText}
       ></TextInput>

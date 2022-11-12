@@ -19,6 +19,8 @@ import RecordListView from "../../components/ListViewItem";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const UserPost = () => {
+  console.count("USER POST RENDER");
+
   const user = useSelector((state) => state.auth.user);
   const posts = useSelector((state) => state.post.posts);
   const [isLoading, setLoading] = useState(false);
@@ -26,12 +28,6 @@ const UserPost = () => {
   const userPosts = posts.filter((post, index) => {
     return post.user == user._id;
   });
-
-  const [heart, setHeart] = useState(false);
-  // useEffect(() => {
-  //   // getUserPosts()
-  // }, []);
-
   const items = userPosts.map((post, index) => {
     return {
       type: "NORMAL",
@@ -41,9 +37,6 @@ const UserPost = () => {
       },
     };
   });
-  const handleReact = () => {
-    setHeart(!heart);
-  };
   const dataProvider = new DataProvider((r1, r2) => r1 != r2).cloneWithRows(
     items
   );
@@ -71,20 +64,20 @@ const UserPost = () => {
     );
   };
   return (
-    <>
-      {isLoading == true ? (
-        <Text>LOading...</Text>
-      ) : userPosts.length < 0 ? (
-        <></>
-      ) : (
-        <RecyclerListView
-          style={{ minWidth: 1, minHeight: 1 }}
-          rowRenderer={rowRenderer}
-          dataProvider={dataProvider}
-          layoutProvider={layoutProvider}
-        ></RecyclerListView>
-      )}
-    </>
+    // <>
+    //   {isLoading == true ? (
+    //     <Text>LOading...</Text>
+    //   ) : userPosts.length < 0 ? (
+    //     <></>
+    //   ) : (
+    <RecyclerListView
+      style={{ width: SCREEN_WIDTH, height: 540 }}
+      rowRenderer={rowRenderer}
+      dataProvider={dataProvider}
+      layoutProvider={layoutProvider}
+    ></RecyclerListView>
+    //   )}
+    // </>
   );
 };
 

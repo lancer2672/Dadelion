@@ -12,6 +12,7 @@ import React from "react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as SecureStore from "expo-secure-store";
+import axios from "axios";
 
 import { AppSlogan } from "../../utils/slogan";
 import Color from "../../utils/color";
@@ -20,8 +21,6 @@ import { space } from "../../utils/size";
 import setAuthToken from "../../utils/setAuthToken";
 import { setAuth } from "../../features/auth/authSlice";
 import { UrlAPI } from "../../constants/constants";
-
-import axios from "axios";
 
 const Login = ({ navigation }) => {
   const posts = useSelector((state) => state.post.posts);

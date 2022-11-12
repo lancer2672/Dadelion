@@ -15,25 +15,15 @@ import * as DocumentPicker from "expo-document-picker";
 import { setAuth } from "../../features/auth/authSlice";
 import UserPost from "./UserPost";
 import { UrlAPI } from "../../constants/constants";
+import arrayBufferToBase64 from "../../utils/imageConvert";
 
-const base64 = require("base-64");
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const User = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [imageUri, setImageUri] = useState("");
-
-  const arrayBufferToBase64 = (buffer) => {
-    let binary = "";
-    let bytes = new Uint8Array(buffer);
-    let len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return base64.encode(binary);
-  };
-
+  console.count("USERRENDER");
   useEffect(() => {
     setImageUri(
       "data:image/jpeg;base64," + arrayBufferToBase64(user.avatar.data.data)
@@ -95,7 +85,7 @@ const User = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <View>
         {/* wallPaper */}
         <ImageBackground
@@ -104,11 +94,6 @@ const User = ({ navigation }) => {
         >
           {/* avatar */}
           <ImageBackground
-            // source={
-            //   imageUri != ""
-            //     ? { uri: imageUri }
-            //     : require("./../../../assets/imgs/DefaultAvatar.png")
-            // }
             source={
               imageUri != ""
                 ? { uri: imageUri }
@@ -117,15 +102,7 @@ const User = ({ navigation }) => {
             style={styles.avatar}
           >
             <TouchableOpacity onPress={handleUpdateAvatar}>
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "rgba(52, 52, 52, 0.4)",
-                  paddingBottom: 10,
-                  opacity: 0.4,
-                }}
-              >
+              <View style={styles.cameraIcon}>
                 <AntDesign
                   style={{ opacity: 1 }}
                   name="camera"
@@ -148,7 +125,11 @@ const User = ({ navigation }) => {
         <Text>Log out</Text>
       </TouchableOpacity>
 
-      <UserPost style={styles.userPost}></UserPost>
+      {/* user's posts */}
+
+      {/* <View style={styles.userPost}> */}
+      <UserPost></UserPost>
+      {/* </View> */}
     </View>
   );
 };
@@ -156,10 +137,9 @@ const User = ({ navigation }) => {
 export default User;
 
 const styles = StyleSheet.create({
+  container: {},
   userPost: {
-    flex: 1,
-    minHeight: 300,
-    minWidth: 300,
+    marginBottom: 400,
   },
   wallPaper: {
     width: SCREEN_WIDTH,
@@ -169,8 +149,8 @@ const styles = StyleSheet.create({
   avatar: {
     marginLeft: 4,
     marginBottom: 4,
-    borderRadius: 50,
     borderWidth: 2,
+    borderRadius: 50,
     borderColor: "#555",
     width: 100,
     height: 100,
@@ -183,5 +163,12 @@ const styles = StyleSheet.create({
   userDescription: {
     marginLeft: 108,
     marginBottom: 29,
+  },
+  cameraIcon: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(52, 52, 52, 0.4)",
+    paddingBottom: 10,
+    opacity: 0.4,
   },
 });

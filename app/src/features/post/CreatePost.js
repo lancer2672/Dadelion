@@ -9,10 +9,11 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
-import { render } from "react-dom";
 import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 
+import { addPost } from "./postSlice";
 import { UrlAPI } from "../../constants/constants";
 import Color from "../../utils/color";
 
@@ -23,6 +24,7 @@ const CreatePost = ({ setIsvisible }) => {
   const [image, setImage] = useState({});
   const [imageUri, setImageUri] = useState("");
 
+  const dispatch = useDispatch();
   const handleCreatePost = async () => {
     const newPostData = new FormData();
     newPostData.append("postImage", image);
@@ -33,7 +35,11 @@ const CreatePost = ({ setIsvisible }) => {
           "Content-Type": "multipart/form-data",
         },
       })
-      .then((res) => setIsvisible(false))
+      .then((res) => {
+        setIsvisible(false);
+        const newPost = res.data.newPost;
+        dispatch(addPost(newPost));
+      })
       .catch(function (error) {
         console.log("err");
         if (error.response) {

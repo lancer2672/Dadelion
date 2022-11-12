@@ -17,28 +17,30 @@ import CommentListView from "./CommentListView";
 import InputBar from "./InputBar";
 import { useSelector } from "react-redux";
 
-const base64 = require("base-64");
+import arrayBufferToBase64 from "../utils/imageConvert";
+import {
+  PostHeight,
+  PostHeightWithoutCommentList,
+} from "../constants/constants";
+
 const dayjs = require("dayjs");
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 
 // đây là container cho mỗi post trong recyclerListView của post
-const RecordListView = ({ navigation, postId, ...props }) => {
+const RecordListView = ({
+  navigation,
+  setCommentsViewHeight,
+  postId,
+  ...props
+}) => {
+  console.count("ListVIewItem");
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
   const [heart, setHeart] = useState(false);
   const [imageUriData, setImageUriData] = useState("");
   const [reactionNumber, setReactionNumber] = useState(props.likes.length);
-  const arrayBufferToBase64 = (buffer) => {
-    let binary = "";
-    let bytes = new Uint8Array(buffer);
-    let len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    //window.btoa is not working as I want
-    return base64.encode(binary);
-  };
+  const [viewComments, setViewComments] = useState(false);
+  console.log("VIEW COMMENT ", viewComments);
   useEffect(() => {
     //if post have an image
     if (props.image) {
@@ -49,63 +51,38 @@ const RecordListView = ({ navigation, postId, ...props }) => {
     }
     //check if user reacted this post
     for (let i = 0; i < props.likes.length; i++) {
-      console.log("a");
-
       if (props.likes[i].userId == user._id) {
-        console.log("EXISTED");
         setHeart(() => true);
       }
     }
   }, []);
   const handleReact = () => {
-    console.log("INT");
     axios
       .put(`${UrlAPI}/post/${postId}`, {
         react: true,
       })
       .then((res) => {
         setHeart(() => !heart);
-        if (reactionNumber == props.likes.length) {
-          setReactionNumber((reactionNumber) => reactionNumber + 1);
-        } else {
+        if (heart == true) {
           setReactionNumber((reactionNumber) => reactionNumber - 1);
+        } else {
+          setReactionNumber((reactionNumber) => reactionNumber + 1);
         }
       })
       .catch((err) => console.log(err));
   };
-  // useEffect(() => {
-  //   if (heart == true) {
-  //     console.log("addHeart");
-  //     axios
-  //       .put(`${UrlAPI}/post/:${props._id}`, {
-  //         reactionNumber: props.reactionNumber + 1,
-  //         description: props.description,
-  //       })
-  //       .then((res) => {
-  //         console.log("data", res);
-  //         setNumberOfHearts((preValue) => {
-  //           return preValue + 1;
-  //         });
-  //       });
-  //   } else {
-  //     axios
-  //       .put(`${UrlAPI}/post/:${props._id}`, {
-  //         reactionNumber: props.reactionNumber - 1,
-  //       })
-  //       .then((res) => {
-  //         setNumberOfHearts((preValue) => {
-  //           return preValue - 1;
-  //         });
-  //       });
-  //   }
-  // }, [heart]);
-
   const handleNavigation = () => {
     return;
     if (!navigation) {
       return;
     }
     navigation.navigate("User");
+  };
+  const handleRenderComments = () => {
+    setCommentsViewHeight((height) => {
+      return height == PostHeight ? PostHeightWithoutCommentList : PostHeight;
+    });
+    setViewComments(!viewComments);
   };
   return (
     <View style={styles.postContainer}>
@@ -164,12 +141,17 @@ const RecordListView = ({ navigation, postId, ...props }) => {
           )}
         </TouchableOpacity>
         <Text style={{ fontSize: 24, marginBottom: 8 }}>|</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleRenderComments}>
           <Text style={styles.comment}>Comment</Text>
         </TouchableOpacity>
       </View>
-      {/* <CommentListView style={styles.comments}></CommentListView> */}
-      <InputBar style={styles.inputBar} postId={postId}></InputBar>
+
+      {viewComments && (
+        <View style={styles.comments}>
+          <CommentListView comments={props.comments}></CommentListView>
+        </View>
+      )}
+      <InputBar postId={postId}></InputBar>
     </View>
   );
 };
@@ -188,7 +170,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 1,
-    backgroundColor: "yellow",
+    backgroundColor: "#e7e1e1",
   },
   moreBtn: {
     paddingRight: 4,
@@ -229,6 +211,7 @@ const styles = StyleSheet.create({
 
   content: {
     marginLeft: 8,
+    marginBottom: 4,
   },
   reactionNumber: {},
   header: {
@@ -238,16 +221,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  // commentList: {
-  //   minHeight: 200,
-  //   backgroundColor: "red",
-  // },
   comments: {
-    height: 40,
+    height: 200,
     marginTop: 5,
-  },
-  inputBar: {
-    height: 40,
-    marginTop: 5,
+    minWidth: 1,
   },
 });
