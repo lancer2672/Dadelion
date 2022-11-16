@@ -14,7 +14,6 @@ import {
   LayoutProvider,
 } from "recyclerlistview";
 import { useSelector, useDispatch } from "react-redux";
-import { AntDesign } from "@expo/vector-icons";
 import RecordListView from "../../components/ListViewItem";
 import { PostHeightWithoutCommentList } from "../../constants/constants";
 

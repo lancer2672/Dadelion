@@ -19,8 +19,6 @@ import RecordListView from "../../components/ListViewItem";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const UserPost = () => {
-  console.count("USER POST RENDER");
-
   const user = useSelector((state) => state.auth.user);
   const posts = useSelector((state) => state.post.posts);
   const [isLoading, setLoading] = useState(false);

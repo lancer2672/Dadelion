@@ -4,11 +4,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 
 import { UrlAPI } from "../constants/constants";
-import arrayBufferToBase64 from "../utils/imageConvert";
+import readImageData from "../utils/imageHandler";
 import Color from "../utils/color";
 
 const Comment = ({ ...props }) => {
-  console.count("comment");
+  console.log("comment");
   const [imageURI, setImageURI] = useState("");
   const [userName, setUserName] = useState("");
   const [content, setContent] = useState("");
@@ -18,17 +18,14 @@ const Comment = ({ ...props }) => {
       .then((res) => {
         setUserName(res.data.user.nickname);
         setContent(props.content);
-        setImageURI(
-          "data:image/jpeg;base64," +
-            arrayBufferToBase64(res.data.user.avatar.data.data)
-        );
+        setImageURI(readImageData(res.data.user.avatar.data.data));
       })
       .catch((err) => console.log(err));
   }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity>
-        <Image source={{ uri: imageURI }} style={styles.avatar}></Image>
+        <Image source={{ uri: imageURI || null }} style={styles.avatar}></Image>
       </TouchableOpacity>
       <View style={styles.commentInfo}>
         <Text>{userName}</Text>

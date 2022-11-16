@@ -8,11 +8,11 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState } from "react";
-import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-
+import * as FileSystem from "expo-file-system";
 import { addPost } from "./postSlice";
 import { UrlAPI } from "../../constants/constants";
 import Color from "../../utils/color";
@@ -21,13 +21,16 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const CreatePost = ({ setIsvisible }) => {
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState({});
   const [imageUri, setImageUri] = useState("");
 
   const dispatch = useDispatch();
   const handleCreatePost = async () => {
     const newPostData = new FormData();
-    newPostData.append("postImage", image);
+    newPostData.append("postImage", {
+      uri: imageUri,
+      name: new Date() + "_profile",
+      type: "image/jpg",
+    });
     newPostData.append("description", description);
     await axios
       .post(`${UrlAPI}/post/create`, newPostData, {
@@ -60,33 +63,58 @@ const CreatePost = ({ setIsvisible }) => {
         console.log(error.config);
       });
   };
+
   const handleSelectImage = async () => {
-    await DocumentPicker.getDocumentAsync({
-      type: "image/*",
-    })
-      .then((result) => {
-        setImageUri(result.uri);
-        setImage(result.file);
-      })
-      .catch(function (error) {
-        console.log("err");
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
-      });
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log(result);
+    if (!result.cancelled) {
+      setImageUri(result.uri);
+    }
+
+    // await DocumentPicker.getDocumentAsync({
+    //   type: "image/*",
+    // })
+    //   .then((result) => {
+    //     console.log("res", result);
+    //     setImageUri(result.uri);
+    //     setImage(result.file);
+    //     if (result.file) {
+    //       setImage(result.file);
+    //     } else {
+    //       return FileSystem.readAsStringAsync(result.uri, {
+    //         encoding: FileSystem.EncodingType.Base64,
+    //       });
+    //     }
+    //   })
+    //   .then((data) => {
+    //     setImage({
+    //       name:""
+    //     });
+    //   })
+    //   .catch(function (error) {
+    //     console.log("err");
+    //     if (error.response) {
+    //       // The request was made and the server responded with a status code
+    //       // that falls out of the range of 2xx
+    //       console.log(error.response.data);
+    //       console.log(error.response.status);
+    //       console.log(error.response.headers);
+    //     } else if (error.request) {
+    //       // The request was made but no response was received
+    //       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //       // http.ClientRequest in node.js
+    //       console.log(error.request);
+    //     } else {
+    //       // Something happened in setting up the request that triggered an Error
+    //       console.log("Error", error.message);
+    //     }
+    //     console.log(error.config);
+    //   });
   };
   return (
     <View style={styles.container}>

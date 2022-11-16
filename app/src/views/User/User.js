@@ -10,12 +10,12 @@ import {
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
-import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 
 import { setAuth } from "../../features/auth/authSlice";
 import UserPost from "./UserPost";
 import { UrlAPI } from "../../constants/constants";
-import arrayBufferToBase64 from "../../utils/imageConvert";
+import readImageData from "../../utils/imageHandler";
 
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -23,56 +23,59 @@ const User = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [imageUri, setImageUri] = useState("");
-  console.count("USERRENDER");
   useEffect(() => {
-    setImageUri(
-      "data:image/jpeg;base64," + arrayBufferToBase64(user.avatar.data.data)
-    );
+    setImageUri(readImageData(user.avatar.data.data));
   }, []);
 
   const handleUpdateAvatar = async () => {
-    await DocumentPicker.getDocumentAsync({
-      type: "image/*",
+    await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     })
       .then((result) => {
-        const newUserData = new FormData();
-        console.log(result);
-        if (!result.file) {
+        if (!result.cancelled) {
+          const newUserData = new FormData();
+          newUserData.append("avatar", {
+            uri: result.uri,
+            name: new Date() + "_profile",
+            type: "image/jpg",
+          });
+          console.log(newUserData);
+          return (
+            axios
+              .put(`${UrlAPI}/user/:id`, newUserData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+                params: {
+                  id: user._id,
+                },
+              })
+              //set uriImage after calling API using result form documentPicker
+              .then((res) => setImageUri(result.uri))
+              .catch(function (error) {
+                console.log("err");
+                if (error.response) {
+                  // The request was made and the server responded with a status code
+                  // that falls out of the range of 2xx
+                  console.log(error.response.data);
+                  console.log(error.response.status);
+                  console.log(error.response.headers);
+                } else if (error.request) {
+                  // The request was made but no response was received
+                  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                  // http.ClientRequest in node.js
+                  console.log(error.request);
+                } else {
+                  // Something happened in setting up the request that triggered an Error
+                  console.log("Error", error.message);
+                }
+                console.log(error.config);
+              })
+          );
         }
-        newUserData.append("avatar", result.file);
-        console.log(newUserData);
-        return (
-          axios
-            .put(`${UrlAPI}/user/:id`, newUserData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-              params: {
-                id: user._id,
-              },
-            })
-            //set uriImage after calling API using result form documentPicker
-            .then((res) => setImageUri(result.uri))
-            .catch(function (error) {
-              console.log("err");
-              if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log(error.request);
-              } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log("Error", error.message);
-              }
-              console.log(error.config);
-            })
-        );
       })
       .catch(function (err) {
         console.log("err", err);

@@ -6,28 +6,35 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+import { useSelector } from "react-redux";
 
 import SearchBar from "./SearchBar";
 import CreatePost from "../../features/post/CreatePost";
 import Color from "../../utils/color";
+import readImageData from "../../utils/imageHandler";
 
 const HomeHeader = ({ navigation }) => {
-  const [isVisidbleCreatePost, setIsVisidbleCreatePost] = useState(false);
+  const user = useSelector((state) => state.auth.user);
   const [modalVisible, setModalVisible] = useState(false);
+  const [userAvatar, setUserAvatar] = useState("");
   const handleNavigationUser = () => {
     navigation.navigate("User");
   };
   const openCreatePostScreen = () => {
     setModalVisible(true);
   };
+  useEffect(() => {
+    setUserAvatar(readImageData(user.avatar.data.data));
+  }, []);
   return (
     <View>
       <SearchBar></SearchBar>
       <View style={styles.container}>
         <TouchableOpacity onPress={handleNavigationUser}>
           <Image
-            source={require("./../../../assets/imgs/24.jpg")}
+            source={{ uri: userAvatar || null }}
             style={styles.avatar}
           ></Image>
         </TouchableOpacity>
@@ -45,7 +52,6 @@ const HomeHeader = ({ navigation }) => {
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
             setModalVisible(!modalVisible);
           }}
         >

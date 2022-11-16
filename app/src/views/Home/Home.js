@@ -7,7 +7,6 @@ import Post from "./Post";
 import HomeHeader from "./HomeHeader";
 
 const Home = ({ navigation }) => {
-  console.count("home");
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

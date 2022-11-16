@@ -16,7 +16,7 @@ import { UrlAPI } from "../constants/constants";
 import { updatePost } from "../features/post/postSlice";
 
 const InputBar = ({ ...props }) => {
-  console.count("inputbar");
+  console.log("inputbar");
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
 

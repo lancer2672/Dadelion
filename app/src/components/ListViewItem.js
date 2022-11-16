@@ -3,12 +3,12 @@ import {
   Text,
   Button,
   Image,
+  Modal,
   View,
   Dimensions,
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
@@ -17,11 +17,13 @@ import CommentListView from "./CommentListView";
 import InputBar from "./InputBar";
 import { useSelector } from "react-redux";
 
-import arrayBufferToBase64 from "../utils/imageConvert";
+import readImageData from "../utils/imageHandler";
 import {
   PostHeight,
   PostHeightWithoutCommentList,
 } from "../constants/constants";
+import Color from "../utils/color";
+import UpdatePost from "../features/post/UpdatePost";
 
 const dayjs = require("dayjs");
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -34,21 +36,23 @@ const RecordListView = ({
   postId,
   ...props
 }) => {
-  console.count("ListVIewItem");
+  console.log("ListViewItem");
   const user = useSelector((state) => state.auth.user);
   const [heart, setHeart] = useState(false);
   const [imageUriData, setImageUriData] = useState("");
+  const [imageUriUserAvatar, setImageUriUserAvatar] = useState("");
   const [reactionNumber, setReactionNumber] = useState(props.likes.length);
   const [viewComments, setViewComments] = useState(false);
-  console.log("VIEW COMMENT ", viewComments);
+  const [viewEditOptions, setViewEditOptions] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     //if post have an image
     if (props.image) {
-      setImageUriData(
-        () =>
-          "data:image/jpeg;base64," + arrayBufferToBase64(props.image.data.data)
-      );
+      setImageUriData(() => readImageData(props.image.data.data));
     }
+    //User's avatar posted this post
+    getUserAvatar();
+
     //check if user reacted this post
     for (let i = 0; i < props.likes.length; i++) {
       if (props.likes[i].userId == user._id) {
@@ -56,6 +60,16 @@ const RecordListView = ({
       }
     }
   }, []);
+  const getUserAvatar = () => {
+    axios
+      .get(`${UrlAPI}/user/${props.user}`)
+      .then((res) => {
+        setImageUriUserAvatar(() =>
+          readImageData(res.data.user.avatar.data.data)
+        );
+      })
+      .catch((err) => console.log(err));
+  };
   const handleReact = () => {
     axios
       .put(`${UrlAPI}/post/${postId}`, {
@@ -91,7 +105,7 @@ const RecordListView = ({
         <TouchableOpacity onPress={handleNavigation}>
           <Image
             source={{
-              uri: imageUriData || null, //data.data in your case
+              uri: imageUriUserAvatar || null, //data.data in your case
             }}
             style={styles.avatar}
           ></Image>
@@ -102,15 +116,57 @@ const RecordListView = ({
             {dayjs(props.createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}
           </Text>
         </View>
-        <TouchableOpacity style={styles.moreBtn}>
-          <Feather name="more-horizontal" size={24} color="black" />
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            onPress={() => setViewEditOptions(!viewEditOptions)}
+            style={styles.moreBtn}
+          >
+            <Feather name="more-horizontal" size={24} color="black" />
+          </TouchableOpacity>
+
+          {viewEditOptions && (
+            <View style={styles.editOptions}>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(true);
+                }}
+              >
+                <Text style={styles.option}>Chỉnh sửa</Text>
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    setModalVisible(false);
+                    setViewEditOptions(false);
+                  }}
+                >
+                  <View style={styles.centeredView}>
+                    <UpdatePost
+                      userAvatar={imageUriUserAvatar}
+                      image={imageUriData}
+                      createdAt={props.createdAt}
+                      description={props.description}
+                      creatorName={props.creatorName}
+                      setIsvisible={setModalVisible}
+                    ></UpdatePost>
+                  </View>
+                </Modal>
+              </TouchableOpacity>
+              <View style={styles.seperator}></View>
+              <TouchableOpacity>
+                <Text style={[styles.option]}>Xoá</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
       </View>
 
       {/* post content */}
       <View style={styles.content}>
         <Text numberOfLines={2}>{props.description}</Text>
       </View>
+      {/* post image */}
       <View
         style={{
           //to fit image in post => property: SCREEN_WIDTH_WITH_MARGIN_L_R_12 - 6
@@ -140,7 +196,7 @@ const RecordListView = ({
             <AntDesign name="hearto" size={24} color="black" />
           )}
         </TouchableOpacity>
-        <Text style={{ fontSize: 24, marginBottom: 8 }}>|</Text>
+        <Text style={{ fontSize: 24, marginBottom: 2 }}>|</Text>
         <TouchableOpacity onPress={handleRenderComments}>
           <Text style={styles.comment}>Comment</Text>
         </TouchableOpacity>
@@ -175,6 +231,29 @@ const styles = StyleSheet.create({
   moreBtn: {
     paddingRight: 4,
     paddingLeft: 4,
+  },
+  editOptions: {
+    position: "absolute",
+    width: 80,
+    bottom: -60,
+    backgroundColor: Color.descriptionBtnBackground,
+    right: 4,
+    zIndex: 1,
+    borderRadius: 2,
+    padding: 2,
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.6,
+    shadowRadius: 5,
+    elevation: 15,
+  },
+  option: {
+    padding: 4,
+  },
+  seperator: {
+    borderWidth: 1,
+    borderColor: Color.descriptionBackground,
   },
   reactSection: {
     marginTop: 8,
@@ -225,5 +304,12 @@ const styles = StyleSheet.create({
     height: 200,
     marginTop: 5,
     minWidth: 1,
+  },
+
+  centeredView: {
+    backgroundColor: "rgba(1, 1, 1, 0.2)",
+    flex: 1,
+    alignItems: "center",
+    marginTop: 22,
   },
 });
