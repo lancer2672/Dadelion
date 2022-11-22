@@ -23,10 +23,22 @@ export const postSlice = createSlice({
         }
       }
     },
+    deletePost: (state, action) => {
+      console.log("payload", action.payload);
+      // action.payload = postId
+      // const indexOfDeletedPost = state.posts.indexOf(action.payload);
+      const indexOfDeletedPost = state.posts.filter((post) => {
+        return post._id == action.payload;
+      });
+      console.log(indexOfDeletedPost);
+      if (indexOfDeletedPost) {
+        state.posts.splice(indexOfDeletedPost, 1);
+      }
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setPosts, addPost, updatePost } = postSlice.actions;
+export const { setPosts, addPost, updatePost, deletePost } = postSlice.actions;
 
 export default postSlice.reducer;

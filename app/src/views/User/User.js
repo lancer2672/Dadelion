@@ -98,9 +98,9 @@ const User = ({ navigation }) => {
           {/* avatar */}
           <ImageBackground
             source={
-              imageUri != ""
-                ? { uri: imageUri }
-                : require("./../../../assets/imgs/DefaultAvatar.png")
+              imageUri == null
+                ? require("./../../../assets/imgs/DefaultAvatar.png")
+                : { uri: imageUri }
             }
             style={styles.avatar}
           >

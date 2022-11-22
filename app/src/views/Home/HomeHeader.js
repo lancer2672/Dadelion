@@ -17,8 +17,10 @@ import readImageData from "../../utils/imageHandler";
 
 const HomeHeader = ({ navigation }) => {
   const user = useSelector((state) => state.auth.user);
+  console.log(user);
   const [modalVisible, setModalVisible] = useState(false);
   const [userAvatar, setUserAvatar] = useState("");
+  console.log("uservatar", userAvatar);
   const handleNavigationUser = () => {
     navigation.navigate("User");
   };
@@ -30,11 +32,18 @@ const HomeHeader = ({ navigation }) => {
   }, []);
   return (
     <View>
-      <SearchBar></SearchBar>
+      {/* <SearchBar></SearchBar> */}
       <View style={styles.container}>
         <TouchableOpacity onPress={handleNavigationUser}>
           <Image
-            source={{ uri: userAvatar || null }}
+            // uri: userAvatar || null,
+            source={
+              userAvatar == null
+                ? {
+                    uri: userAvatar,
+                  }
+                : require("./../../../assets/imgs/DefaultAvatar.png")
+            }
             style={styles.avatar}
           ></Image>
         </TouchableOpacity>

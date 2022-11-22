@@ -15,7 +15,7 @@ import axios from "axios";
 import { UrlAPI } from "../constants/constants";
 import CommentListView from "./CommentListView";
 import InputBar from "./InputBar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import readImageData from "../utils/imageHandler";
 import {
@@ -24,6 +24,7 @@ import {
 } from "../constants/constants";
 import Color from "../utils/color";
 import UpdatePost from "../features/post/UpdatePost";
+import { deletePost } from "../features/post/postSlice";
 
 const dayjs = require("dayjs");
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -37,6 +38,7 @@ const RecordListView = ({
   ...props
 }) => {
   console.log("ListViewItem");
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [heart, setHeart] = useState(false);
   const [imageUriData, setImageUriData] = useState("");
@@ -60,8 +62,8 @@ const RecordListView = ({
       }
     }
   }, []);
-  const getUserAvatar = () => {
-    axios
+  const getUserAvatar = async () => {
+    await axios
       .get(`${UrlAPI}/user/${props.user}`)
       .then((res) => {
         setImageUriUserAvatar(() =>
@@ -70,8 +72,8 @@ const RecordListView = ({
       })
       .catch((err) => console.log(err));
   };
-  const handleReact = () => {
-    axios
+  const handleReact = async () => {
+    await axios
       .put(`${UrlAPI}/post/${postId}`, {
         react: true,
       })
@@ -98,15 +100,31 @@ const RecordListView = ({
     });
     setViewComments(!viewComments);
   };
+  const handleDeletePost = async () => {
+    await axios
+      .delete(`${UrlAPI}/post/${postId}`)
+      .then((res) => {
+        console.log("res", res);
+        dispatch(deletePost(postId));
+      })
+      .catch((err) => {
+        console.log("error!", err);
+      })
+      .finally(() => setViewEditOptions(false));
+  };
   return (
     <View style={styles.postContainer}>
       {/* post header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleNavigation}>
           <Image
-            source={{
-              uri: imageUriUserAvatar || null, //data.data in your case
-            }}
+            source={
+              imageUriUserAvatar == null
+                ? {
+                    uri: imageUriUserAvatar,
+                  }
+                : require("./../../assets/imgs/DefaultAvatar.png")
+            }
             style={styles.avatar}
           ></Image>
         </TouchableOpacity>
@@ -154,7 +172,7 @@ const RecordListView = ({
                 </Modal>
               </TouchableOpacity>
               <View style={styles.seperator}></View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleDeletePost}>
                 <Text style={[styles.option]}>Xoá</Text>
               </TouchableOpacity>
             </View>
@@ -227,6 +245,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
     backgroundColor: "#e7e1e1",
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
   },
   moreBtn: {
     paddingRight: 4,

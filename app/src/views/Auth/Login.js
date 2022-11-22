@@ -30,38 +30,40 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const handleSubmitForm = async () => {
-    axios
+    await axios
       .post(`${UrlAPI}/api/auth/login`, { username, password })
-      .then(handleLogin)
+      .then((res) => {
+        console.log("handling");
+        const { token, user } = res.data;
+        setAuthToken(token);
+        dispatch(setAuth({ isAuthenticated: true, user }));
+        return axios.get(`${UrlAPI}/Post`, {});
+      })
       .then((response) => {
         // save("token",token);
         dispatch(setPosts(response.data.posts));
         navigation.navigate("Navigation");
       })
       .catch(function (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
+        console.log(error);
       });
   };
-  const handleLogin = (res) => {
+  const handleLogin = async (res) => {
+    console.log("handling");
     const { token, user } = res.data;
     setAuthToken(token);
     dispatch(setAuth({ isAuthenticated: true, user }));
-    return getPosts();
+    await axios
+      .get(`${UrlAPI}/Post`, {})
+      .then((response) => {
+        // save("token",token);
+        dispatch(setPosts(response.data.posts));
+        navigation.navigate("Navigation");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // return getPosts();
   };
   //get posts
   const getPosts = async () => {
