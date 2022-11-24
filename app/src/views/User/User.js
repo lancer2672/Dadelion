@@ -19,15 +19,18 @@ import readImageData from "../../utils/imageHandler";
 
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
+
 const User = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const [imageUri, setImageUri] = useState("");
+  const [avatarUri, setAvatarUri] = useState("");
+  const [wallPaperUri, setWallPaperUri] = useState("");
   useEffect(() => {
-    setImageUri(readImageData(user.avatar.data.data));
+    setAvatarUri(readImageData(user.avatar.data.data));
+    setWallPaperUri(readImageData(user.wallPaper.data.data));
   }, []);
-
-  const handleUpdateAvatar = async () => {
+  console.log(user._id);
+  const updateUserImage = async (isWallpaper, setUri) => {
     await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -37,24 +40,25 @@ const User = ({ navigation }) => {
       .then((result) => {
         if (!result.cancelled) {
           const newUserData = new FormData();
-          newUserData.append("avatar", {
+          newUserData.append("userImage", {
             uri: result.uri,
             name: new Date() + "_profile",
             type: "image/jpg",
           });
-          console.log(newUserData);
+          newUserData.append("isWallpaper", isWallpaper);
+          console.log("selected");
           return (
             axios
-              .put(`${UrlAPI}/user/:id`, newUserData, {
+              .put(`${UrlAPI}/user/${user._id}`, newUserData, {
                 headers: {
                   "Content-Type": "multipart/form-data",
                 },
-                params: {
-                  id: user._id,
-                },
               })
               //set uriImage after calling API using result form documentPicker
-              .then((res) => setImageUri(result.uri))
+              .then((res) => {
+                setUri(result.uri);
+                console.log(res);
+              })
               .catch(function (error) {
                 console.log("err");
                 if (error.response) {
@@ -81,26 +85,35 @@ const User = ({ navigation }) => {
         console.log("err", err);
       });
   };
-
+  const handleUpdateAvatar = () => updateUserImage(false, setAvatarUri);
+  const handleUpdateWallpaper = () => updateUserImage(true, setWallPaperUri);
   const handleLogOut = () => {
     dispatch(setAuth({ isAuthenticated: false, user: null }));
     navigation.navigate("Login");
   };
-
   return (
     <View style={styles.container}>
       <View>
         {/* wallPaper */}
         <ImageBackground
-          source={require("./../../../assets/imgs/24.jpg")}
+          //   source={
+          //     {wallPaperUri == null? {uri: wallPaperUri}: require("./../../../assets/imgs/24.jpg")}
+
+          // }
+          source={
+            wallPaperUri == null
+              ? require("./../../../assets/imgs/24.jpg")
+              : { uri: wallPaperUri || null }
+          }
           style={styles.wallPaper}
         >
           {/* avatar */}
+
           <ImageBackground
             source={
-              imageUri == null
+              avatarUri == null
                 ? require("./../../../assets/imgs/DefaultAvatar.png")
-                : { uri: imageUri }
+                : { uri: avatarUri || null }
             }
             style={styles.avatar}
           >
@@ -119,6 +132,12 @@ const User = ({ navigation }) => {
             <Text>UserName "ICON"</Text>
             <Text>User description "ICON"</Text>
           </View>
+          <TouchableOpacity
+            onPress={handleUpdateWallpaper}
+            style={styles.wallPaperCamera}
+          >
+            <AntDesign name="camera" size={24} color="black" />
+          </TouchableOpacity>
         </ImageBackground>
       </View>
       <TouchableOpacity
@@ -162,6 +181,12 @@ const styles = StyleSheet.create({
     left: 0,
     overflow: "hidden",
     justifyContent: "flex-end",
+  },
+  wallPaperCamera: {
+    position: "absolute",
+    right: 12,
+    bottom: 12,
+    padding: 4,
   },
   userDescription: {
     marginLeft: 108,

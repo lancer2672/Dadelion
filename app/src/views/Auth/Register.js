@@ -98,6 +98,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  error: {
+    color: Color.error,
+  },
   textInput: {
     borderRadius: 25,
     height: 32,

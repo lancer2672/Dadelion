@@ -8,7 +8,6 @@ import readImageData from "../utils/imageHandler";
 import Color from "../utils/color";
 
 const Comment = ({ ...props }) => {
-  console.log("comment");
   const [imageURI, setImageURI] = useState("");
   const [userName, setUserName] = useState("");
   const [content, setContent] = useState("");

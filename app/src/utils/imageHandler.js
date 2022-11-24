@@ -10,8 +10,8 @@ const arrayBufferToBase64 = (buffer) => {
   return base64.encode(binary);
 };
 const readImageData = (imageData) => {
-  return imageData == null
-    ? ""
+  return imageData.length == 0
+    ? null
     : "data:image/jpeg;base64," + arrayBufferToBase64(imageData);
 };
 

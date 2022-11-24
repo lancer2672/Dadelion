@@ -8,8 +8,6 @@ import {
 import Comment from "./Comment";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const CommentListView = ({ comments, ...props }) => {
-  console.log("commentListView");
-
   const items = comments.map((comment, index) => {
     return {
       type: "NORMAL",

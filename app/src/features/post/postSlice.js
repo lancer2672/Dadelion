@@ -24,9 +24,7 @@ export const postSlice = createSlice({
       }
     },
     deletePost: (state, action) => {
-      console.log("payload", action.payload);
       // action.payload = postId
-      // const indexOfDeletedPost = state.posts.indexOf(action.payload);
       const indexOfDeletedPost = state.posts.filter((post) => {
         return post._id == action.payload;
       });

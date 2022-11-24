@@ -37,7 +37,6 @@ const RecordListView = ({
   postId,
   ...props
 }) => {
-  console.log("ListViewItem");
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [heart, setHeart] = useState(false);
@@ -101,6 +100,7 @@ const RecordListView = ({
     setViewComments(!viewComments);
   };
   const handleDeletePost = async () => {
+    setViewEditOptions(false);
     await axios
       .delete(`${UrlAPI}/post/${postId}`)
       .then((res) => {
@@ -109,24 +109,24 @@ const RecordListView = ({
       })
       .catch((err) => {
         console.log("error!", err);
-      })
-      .finally(() => setViewEditOptions(false));
+      });
   };
   return (
     <View style={styles.postContainer}>
       {/* post header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleNavigation}>
-          <Image
-            source={
-              imageUriUserAvatar == null
-                ? {
-                    uri: imageUriUserAvatar,
-                  }
-                : require("./../../assets/imgs/DefaultAvatar.png")
-            }
-            style={styles.avatar}
-          ></Image>
+          {imageUriUserAvatar == null ? (
+            <Image
+              style={styles.avatar}
+              source={require("./../../assets/imgs/DefaultAvatar.png")}
+            ></Image>
+          ) : (
+            <Image
+              style={styles.avatar}
+              source={{ uri: imageUriUserAvatar || null }}
+            ></Image>
+          )}
         </TouchableOpacity>
         <View style={styles.postInfo}>
           <Text>{props.creatorName}</Text>

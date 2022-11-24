@@ -28,7 +28,8 @@ const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState("");
+  //login and get posts
   const handleSubmitForm = async () => {
     await axios
       .post(`${UrlAPI}/api/auth/login`, { username, password })
@@ -45,6 +46,9 @@ const Login = ({ navigation }) => {
         navigation.navigate("Navigation");
       })
       .catch(function (error) {
+        if (error.response) {
+          setError(error.response.data.message);
+        }
         console.log(error);
       });
   };
@@ -95,6 +99,13 @@ const Login = ({ navigation }) => {
         secureTextEntry={true}
         placeholder="Mật khẩu"
       ></TextInput>
+      {error == null ? (
+        <View style={{ height: 20 }}></View>
+      ) : (
+        <View style={styles.error}>
+          <Text style={styles.errorMessage}>{error}</Text>
+        </View>
+      )}
       <View style={{ margin: space.xl }}>
         <TouchableOpacity style={styles.button} onPress={handleSubmitForm}>
           <Text style={styles.textOfButton}>Đăng nhập</Text>
@@ -123,6 +134,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: space.s,
     color: Color.textColor,
+  },
+  error: {
+    minHeight: 20,
+  },
+  errorMessage: {
+    color: Color.error,
   },
   tinyLogo: {
     width: 200,
