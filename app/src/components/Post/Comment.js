@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 
-import { UrlAPI } from "../constants/constants";
-import readImageData from "../utils/imageHandler";
-import Color from "../utils/color";
+import { UrlAPI } from "../../constants";
+import readImageData from "../../utils/imageHandler";
+import Color from "../../utils/color";
 
 const Comment = ({ ...props }) => {
   const [imageURI, setImageURI] = useState("");

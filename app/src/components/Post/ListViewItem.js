@@ -12,19 +12,19 @@ import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
-import { UrlAPI } from "../constants/constants";
 import CommentListView from "./CommentListView";
-import InputBar from "./InputBar";
+import InputBar from "../InputBar";
 import { useSelector, useDispatch } from "react-redux";
 
-import readImageData from "../utils/imageHandler";
+import readImageData from "../../utils/imageHandler";
 import {
+  UrlAPI,
   PostHeight,
   PostHeightWithoutCommentList,
-} from "../constants/constants";
-import Color from "../utils/color";
-import UpdatePost from "../features/post/UpdatePost";
-import { deletePost } from "../features/post/postSlice";
+} from "../../constants";
+import Color from "../../utils/color";
+import UpdatePost from "../../features/post/UpdatePost";
+import { deletePost } from "../../features/post/postSlice";
 
 const dayjs = require("dayjs");
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -119,7 +119,7 @@ const RecordListView = ({
           {imageUriUserAvatar == null ? (
             <Image
               style={styles.avatar}
-              source={require("./../../assets/imgs/DefaultAvatar.png")}
+              source={require("./../../../assets/imgs/DefaultAvatar.png")}
             ></Image>
           ) : (
             <Image

@@ -14,8 +14,8 @@ import {
   LayoutProvider,
 } from "recyclerlistview";
 import { useSelector, useDispatch } from "react-redux";
-import RecordListView from "../../components/ListViewItem";
-import { PostHeightWithoutCommentList } from "../../constants/constants";
+import RecordListView from "../../components/Post/ListViewItem";
+import { PostHeightWithoutCommentList } from "../../constants";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 

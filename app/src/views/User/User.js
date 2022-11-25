@@ -14,7 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 
 import { setAuth } from "../../features/auth/authSlice";
 import UserPost from "./UserPost";
-import { UrlAPI } from "../../constants/constants";
+import { UrlAPI } from "../../constants";
 import readImageData from "../../utils/imageHandler";
 
 const axios = require("axios").default;

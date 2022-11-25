@@ -20,7 +20,7 @@ import { setPosts } from "../../features/post/postSlice.js";
 import { space } from "../../utils/size";
 import setAuthToken from "../../utils/setAuthToken";
 import { setAuth } from "../../features/auth/authSlice";
-import { UrlAPI } from "../../constants/constants";
+import { UrlAPI } from "../../constants";
 
 const Login = ({ navigation }) => {
   const posts = useSelector((state) => state.post.posts);

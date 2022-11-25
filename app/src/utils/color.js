@@ -1,9 +1,11 @@
 const Color = {
   mainColor: "#66dbf1",
-  textColor: "#e3c3de",
   subColor: "#a1e6f3",
+  textColor: "#e3c3de",
+  white: "#fff",
+  strongPink: "dfb1cb",
   error: "#ed5351",
-  descriptionBackground: "#d9d5d0",
-  descriptionBtnBackground: "#b3afab",
+  lightGray: "#d9d5d0",
+  gray: "#b3afab",
 };
 export default Color;

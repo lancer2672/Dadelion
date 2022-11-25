@@ -6,10 +6,12 @@ import {
   View,
   Dimensions,
   TextInput,
+  Button,
 } from "react-native";
 import React from "react";
 
 import readImageData from "../../utils/imageHandler";
+import MainButton from "../../components/Button/MainButton";
 
 const dayjs = require("dayjs");
 const UpdatePost = ({
@@ -17,8 +19,12 @@ const UpdatePost = ({
   creatorName,
   createdAt,
   description,
+  setIsvisible,
   image,
 }) => {
+  const a = (b) => {
+    console.log(b);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -40,13 +46,7 @@ const UpdatePost = ({
       <View style={styles.content}>
         <TextInput defaultValue={description}></TextInput>
       </View>
-      <View
-        style={{
-          //to fit image in post => property: SCREEN_WIDTH_WITH_MARGIN_L_R_12 - 6
-          width: 300,
-          height: 350,
-        }}
-      >
+      <View style={styles.imageContainer}>
         <Image
           source={{
             uri: image || null,
@@ -54,6 +54,14 @@ const UpdatePost = ({
           //to fit image in post => marginLeft 4;
           style={{ flex: 1, resizeMode: "stretch" }}
         ></Image>
+      </View>
+      <View style={styles.buttonContainter}>
+        <MainButton
+          style={styles.saveBtn}
+          content={"Lưu"}
+          event={a}
+        ></MainButton>
+        <MainButton content={"Huỷ"} event={setIsvisible(false)}></MainButton>
       </View>
     </View>
   );
@@ -71,11 +79,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  imageContainer: {
+    height: 300,
+    width: 300,
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
   avatar: {
     marginRight: 12,
     width: 40,
     height: 40,
     resizeMode: "stretch",
     borderRadius: 50,
+  },
+  buttonContainter: {
+    flexDirection: "row",
+    alignSelf: "flex-end",
+  },
+  saveBtn: {
+    marginRight: 8,
   },
 });

@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Color from "../utils/color";
-import { UrlAPI } from "../constants/constants";
+import { UrlAPI } from "../constants";
 import { updatePost } from "../features/post/postSlice";
 
 const InputBar = ({ ...props }) => {
@@ -61,14 +61,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   inputText: {
-    backgroundColor: Color.descriptionBackground,
+    backgroundColor: Color.lightGray,
     height: "100%",
     flex: 1,
     paddingLeft: 10,
     paddingRight: 4,
   },
   sendBtn: {
-    backgroundColor: Color.descriptionBtnBackground,
+    backgroundColor: Color.gray,
     justifyContent: "center",
     alignItems: "center",
     paddingLeft: 8,

@@ -14,7 +14,7 @@ import axios from "axios";
 
 import { AppSlogan } from "../../utils/slogan";
 import { space } from "../../utils/size";
-import { UrlAPI } from "../../constants/constants";
+import { UrlAPI } from "../../constants";
 import Color from "../../utils/color";
 
 const Register = ({ navigation }) => {
