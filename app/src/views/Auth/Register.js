@@ -13,7 +13,6 @@ import React from "react";
 import axios from "axios";
 
 import { AppSlogan } from "../../utils/slogan";
-import { space } from "../../utils/size";
 import { UrlAPI } from "../../constants";
 import Color from "../../utils/color";
 
@@ -81,7 +80,7 @@ const Register = ({ navigation }) => {
         <Text style={styles.textOfButton}>Đăng ký</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.button, { marginTop: space.s }]}
+        style={[styles.button, { marginTop: 8 }]}
         onPress={navigateToLoginScreen}
       >
         <Text style={styles.textOfButton}>Quay lại đăng nhập</Text>
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 32,
     padding: 10,
-    marginTop: space.s,
+    marginTop: 8,
     color: Color.textColor,
   },
   tinyLogo: {

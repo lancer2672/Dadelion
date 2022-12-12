@@ -17,7 +17,6 @@ import axios from "axios";
 import { AppSlogan } from "../../utils/slogan";
 import Color from "../../utils/color";
 import { setPosts } from "../../features/post/postSlice.js";
-import { space } from "../../utils/size";
 import setAuthToken from "../../utils/setAuthToken";
 import { setAuth } from "../../features/auth/authSlice";
 import { UrlAPI } from "../../constants";
@@ -106,12 +105,12 @@ const Login = ({ navigation }) => {
           <Text style={styles.errorMessage}>{error}</Text>
         </View>
       )}
-      <View style={{ margin: space.xl }}>
+      <View style={{ margin: 12 }}>
         <TouchableOpacity style={styles.button} onPress={handleSubmitForm}>
           <Text style={styles.textOfButton}>Đăng nhập</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, { marginTop: space.s }]}
+          style={[styles.button, { marginTop: 8 }]}
           onPress={navigateToRegisterScreen}
         >
           <Text style={styles.textOfButton}>Đăng ký</Text>
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     height: 32,
     lineHeight: 20,
     padding: 10,
-    marginTop: space.s,
+    marginTop: 8,
     color: Color.textColor,
   },
   error: {

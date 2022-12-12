@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import SearchBar from "./SearchBar";
-import CreatePost from "../../features/post/CreatePost";
+import CreatePost from "../../features/post/screens/CreatePost";
 import Color from "../../utils/color";
 import readImageData from "../../utils/imageHandler";
 
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     left: 48,
   },
   description: {
-    backgroundColor: Color.descriptionBackground,
+    backgroundColor: Color.lightGray,
     opacity: 0.5,
     padding: 8,
     borderRadius: 25,

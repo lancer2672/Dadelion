@@ -6,7 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Post from "./Post";
 import HomeHeader from "./HomeHeader";
 
-const Home = ({ navigation }) => {
+const Home = ({ ...props }) => {
+  const { navigation } = props;
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

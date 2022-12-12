@@ -13,13 +13,14 @@ import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import * as FileSystem from "expo-file-system";
-import { addPost } from "./postSlice";
-import { UrlAPI } from "../../constants";
-import Color from "../../utils/color";
+import { addPost } from "../postSlice";
+import { UrlAPI } from "../../../constants";
+import Color from "../../../utils/color";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const CreatePost = ({ setIsvisible }) => {
+const CreatePost = ({ ...props }) => {
+  const { setIsvisible } = props;
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState("");
 
@@ -91,7 +92,7 @@ const CreatePost = ({ setIsvisible }) => {
       {imageUri == false ? (
         <Image
           style={styles.image}
-          source={require("./../../../assets/imgs/ChooseAnImage.png")}
+          source={require("./../../../../assets/imgs/ChooseAnImage.png")}
         ></Image>
       ) : (
         <Image
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: Color.descriptionBackground,
+    backgroundColor: Color.lightGray,
   },
   image: {
     marginTop: 16,

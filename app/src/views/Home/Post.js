@@ -14,7 +14,7 @@ import {
   LayoutProvider,
 } from "recyclerlistview";
 import { useSelector, useDispatch } from "react-redux";
-import RecordListView from "../../components/Post/ListViewItem";
+import PostItem from "../../features/post/components/post-item";
 import { PostHeightWithoutCommentList } from "../../constants";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -58,12 +58,12 @@ const Post = ({ navigation }) => {
 
   const rowRenderer = (type, data) => {
     return (
-      <RecordListView
+      <PostItem
         {...data.item}
         setCommentsViewHeight={setCommentsViewHeight}
         postId={data.item._id}
         navigation={navigation}
-      ></RecordListView>
+      ></PostItem>
     );
   };
   return (

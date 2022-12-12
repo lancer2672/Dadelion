@@ -3,7 +3,8 @@ import React from "react";
 
 import Color from "../../utils/color";
 
-const MainButton = ({ style, content, event }) => {
+const MainButton = ({ ...props }) => {
+  const { style, content, event } = props;
   return (
     <TouchableOpacity onPress={() => event()} style={[styles.container, style]}>
       <Text style={styles.content}>{content}</Text>

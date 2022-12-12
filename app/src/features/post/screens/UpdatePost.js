@@ -10,21 +10,24 @@ import {
 } from "react-native";
 import React from "react";
 
-import readImageData from "../../utils/imageHandler";
-import MainButton from "../../components/Button/MainButton";
+import readImageData from "../../../utils/imageHandler";
+import MainButton from "../../../components/Button/MainButton";
 
 const dayjs = require("dayjs");
-const UpdatePost = ({
-  userAvatar,
-  creatorName,
-  createdAt,
-  description,
-  setIsvisible,
-  image,
-}) => {
+const UpdatePost = ({ ...props }) => {
+  const {
+    userAvatar,
+    creatorName,
+    createdAt,
+    description,
+    setIsvisible,
+    image,
+  } = props;
   const a = (b) => {
     console.log(b);
   };
+  console.log("UPDATE");
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

@@ -5,9 +5,12 @@ import {
   DataProvider,
   LayoutProvider,
 } from "recyclerlistview";
-import Comment from "./Comment";
+import Comment from "./post-item-comment";
+import styled from "styled-components/native";
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const CommentListView = ({ comments, ...props }) => {
+
+const CommentList = ({ ...props }) => {
+  const { comments } = props;
   const items = comments.map((comment, index) => {
     return {
       type: "NORMAL",
@@ -48,7 +51,7 @@ const CommentListView = ({ comments, ...props }) => {
         marginTop: 5,
         height: "100%",
         width: "100%",
-        backgroundColor: "blue",
+        backgroundColor: "grey",
       }}
       rowRenderer={rowRenderer}
       dataProvider={dataProvider}
@@ -57,6 +60,6 @@ const CommentListView = ({ comments, ...props }) => {
   );
 };
 
-export default CommentListView;
+export default CommentList;
 
 const styles = StyleSheet.create({});

@@ -20,7 +20,8 @@ import readImageData from "../../utils/imageHandler";
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const User = ({ navigation }) => {
+const User = ({ ...props }) => {
+  const { navigation } = props;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [avatarUri, setAvatarUri] = useState("");

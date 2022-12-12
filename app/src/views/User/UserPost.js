@@ -14,7 +14,7 @@ import {
 } from "recyclerlistview";
 import { useSelector } from "react-redux";
 
-import RecordListView from "../../components/Post/ListViewItem";
+import PostItem from "../../features/post/components/post-item";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -57,9 +57,7 @@ const UserPost = () => {
   );
   /*#endregion*/
   const rowRenderer = (type, data) => {
-    return (
-      <RecordListView {...data.item} postId={data.item._id}></RecordListView>
-    );
+    return <PostItem {...data.item} postId={data.item._id}></PostItem>;
   };
   return (
     // <>
