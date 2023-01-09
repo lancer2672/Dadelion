@@ -40,7 +40,7 @@ export const AuthenticationContextProvider = ({ children }) => {
       })
       .catch(function (error) {
         setIsLoading(false);
-        setError(error.response.data);
+        setError(error.response.data.tostring());
       });
   };
 

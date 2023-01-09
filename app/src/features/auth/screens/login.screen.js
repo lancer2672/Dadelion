@@ -1,14 +1,4 @@
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  Animated,
-  Button,
-  ImageBackground,
-  StyleSheet,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React, { useState, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
 
@@ -19,8 +9,8 @@ import {
   InputText,
   AuthButton,
   Slogan,
+  Animation,
   Logo,
-  Input,
   BackgroundImage,
   AuthButtonContent,
 } from "../components/authentication.style";
@@ -39,18 +29,17 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <BackgroundImage source={require("../../../../assets/imgs/Auth.jpg")}>
-      <Logo source={require("./../../../../assets/imgs/Logo.png")} />
+    <BackgroundImage>
+      <View style={{ marginTop: 124 }}></View>
+      <Logo />
       <Slogan>{AppSlogan}</Slogan>
       <InputText
-        autoCapitalize="false"
         onChangeText={(newUsername) => setUsername(newUsername)}
         placeholder="Tên đăng nhập"
       ></InputText>
       <InputText
-        autoCapitalize="false"
+        isPassword
         onChangeText={(newPassword) => setPassword(newPassword)}
-        secureTextEntry={true}
         placeholder="Mật khẩu"
       ></InputText>
 
@@ -61,21 +50,19 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.errorMessage}>{error}</Text>
         </View>
       )}
-      <Spacer variant="bottom" size="medium"></Spacer>
+      <Spacer variant="bottom" size="small"></Spacer>
       <View style={{ marginTop: 18 }}>
         <AuthButton onPress={handleLogin}>
           <AuthButtonContent>Đăng nhập</AuthButtonContent>
         </AuthButton>
-        <Spacer variant="top" size="medium"></Spacer>
+        <Spacer variant="top" size="large"></Spacer>
         <AuthButton onPress={navigateToRegisterScreen}>
           <AuthButtonContent>Đăng ký</AuthButtonContent>
         </AuthButton>
       </View>
+      <Spacer variant="top" size="large"></Spacer>
       <Text style={styles.forgetText}>Quên mật khẩu ?</Text>
-      <Animated.Image
-        source={require("./../../../../assets/LoginAnimation.gif")}
-        style={{ width: "100%", height: 200 }}
-      />
+      <Animation></Animation>
     </BackgroundImage>
   );
 };
@@ -93,6 +80,7 @@ const styles = StyleSheet.create({
   },
   forgetText: {
     fontWeight: "bold",
+    color: "#FFF",
   },
 });
 export default LoginScreen;

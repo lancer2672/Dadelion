@@ -6,6 +6,7 @@ const sizeVariant = {
   small: 1,
   medium: 2,
   large: 3,
+  huge: 4,
 };
 const positionVariant = {
   top: "marginTop",

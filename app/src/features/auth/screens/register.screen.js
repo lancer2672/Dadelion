@@ -11,7 +11,17 @@ import {
 import { useState, useContext } from "react";
 import React from "react";
 
+import { Spacer } from "../../../components/spacer";
 import { AppSlogan } from "../../../utils/slogan";
+import {
+  InputText,
+  AuthButton,
+  Slogan,
+  Animation,
+  Logo,
+  BackgroundImage,
+  AuthButtonContent,
+} from "../components/authentication.style";
 import Color from "../../../utils/color";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 
@@ -29,92 +39,46 @@ const RegisterScreen = ({ navigation }) => {
     onRegister(email, username, password, replicatedPassword);
   };
   return (
-    <ImageBackground
-      source={require("../../../../assets/imgs/Auth.jpg")}
-      style={styles.container}
-    >
-      <Image
-        style={styles.tinyLogo}
-        source={require("./../../../../assets/imgs/Logo.png")}
-      />
-      <Text>{AppSlogan}</Text>
-      <TextInput
-        style={styles.textInput}
+    <BackgroundImage>
+      <Logo />
+      <Slogan>{AppSlogan}</Slogan>
+      <InputText
         onChangeText={(email) => setEmail(email)}
         placeholder="Email"
-      ></TextInput>
-      <Text placeholder="Email"></Text>
-      <TextInput
-        style={styles.textInput}
+      ></InputText>
+      <InputText
         onChangeText={(username) => setUsername(username)}
         placeholder="Tên đăng nhập"
-      ></TextInput>
-      <TextInput
-        style={styles.textInput}
+      ></InputText>
+      <InputText
         onChangeText={(password) => setPassword(password)}
         placeholder="Mật khẩu"
-      ></TextInput>
-      <TextInput
-        style={styles.textInput}
+      ></InputText>
+      <InputText
         onChangeText={(replicatedPassword) =>
           setReplicatedPassword(replicatedPassword)
         }
         placeholder="Nhập lại mật khẩu"
-      ></TextInput>
-      <TouchableOpacity style={styles.button} onPress={handleRegistration}>
-        <Text style={styles.textOfButton}>Đăng ký</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, { marginTop: 8 }]}
-        onPress={navigateToLoginScreen}
-      >
-        <Text style={styles.textOfButton}>Quay lại đăng nhập</Text>
-      </TouchableOpacity>
-    </ImageBackground>
+      ></InputText>
+      <Spacer variant="bottom" size="huge"></Spacer>
+      <Spacer variant="bottom" size="huge"></Spacer>
+      <View>
+        <AuthButton onPress={handleRegistration}>
+          <AuthButtonContent>Đăng ký</AuthButtonContent>
+        </AuthButton>
+        <Spacer variant="top" size="large"></Spacer>
+        <AuthButton onPress={navigateToLoginScreen}>
+          <AuthButtonContent>Quay lại đăng nhập</AuthButtonContent>
+        </AuthButton>
+      </View>
+    </BackgroundImage>
   );
 };
 
 export default RegisterScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   error: {
     color: Color.error,
-  },
-  textInput: {
-    borderRadius: 25,
-    height: 32,
-    padding: 10,
-    marginTop: 8,
-    color: Color.textColor,
-  },
-  tinyLogo: {
-    width: 200,
-    height: 200,
-    resizeMode: "contain",
-  },
-  button: {
-    minWidth: 200,
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: "#fff",
-    borderRadius: 25,
-  },
-  textOfButton: {
-    alignSelf: "center",
-    fontWeight: "bold",
-    color: Color.textColor,
-  },
-  forgetText: {
-    fontWeight: "bold",
-  },
-  slogan: {
-    fontStyle: "italic",
-    textColor: Color.textColor,
-    fontWeight: "500",
   },
 });
