@@ -8,15 +8,15 @@ import {
   Text,
   View,
 } from "react-native";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import React from "react";
-import axios from "axios";
 
-import { AppSlogan } from "../../utils/slogan";
-import { UrlAPI } from "../../constants";
-import Color from "../../utils/color";
+import { AppSlogan } from "../../../utils/slogan";
+import Color from "../../../utils/color";
+import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 
-const Register = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
+  const { isLoading, error, onRegister } = useContext(AuthenticationContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -26,31 +26,16 @@ const Register = ({ navigation }) => {
     navigation.navigate("Login");
   };
   const handleRegistration = () => {
-    if (password != replicatedPassword) {
-      return;
-    }
-    axios
-      .post(`${UrlAPI}/api/auth/register`, {
-        email,
-        username,
-        password,
-      })
-      .then(function (response) {
-        console.log(response);
-        navigation.navigate("Login");
-      })
-      .catch(function (error) {
-        console.log(error.response.data);
-      });
+    onRegister(email, username, password, replicatedPassword);
   };
   return (
     <ImageBackground
-      source={require("../../../assets/imgs/Auth.jpg")}
+      source={require("../../../../assets/imgs/Auth.jpg")}
       style={styles.container}
     >
       <Image
         style={styles.tinyLogo}
-        source={require("./../../../assets/imgs/Logo.png")}
+        source={require("./../../../../assets/imgs/Logo.png")}
       />
       <Text>{AppSlogan}</Text>
       <TextInput
@@ -89,7 +74,7 @@ const Register = ({ navigation }) => {
   );
 };
 
-export default Register;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {

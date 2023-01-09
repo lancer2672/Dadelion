@@ -6,17 +6,17 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import { useSelector } from "react-redux";
 
-import SearchBar from "./SearchBar";
 import CreatePost from "../../features/post/screens/CreatePost";
 import Color from "../../utils/color";
 import readImageData from "../../utils/imageHandler";
+import { AuthenticationContext } from "../../services/authentication/authentication.context";
 
 const HomeHeader = ({ navigation }) => {
-  const user = useSelector((state) => state.auth.user);
+  const { user } = useContext(AuthenticationContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [userAvatar, setUserAvatar] = useState("");
 

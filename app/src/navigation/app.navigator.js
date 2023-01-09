@@ -1,13 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
 import User from "../views/User/User";
 import Home from "../views/Home/Home";
 
-const MainTabNavigator = () => {
+export const AppNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
@@ -40,7 +39,3 @@ const MainTabNavigator = () => {
     </Tab.Navigator>
   );
 };
-
-export default MainTabNavigator;
-
-const styles = StyleSheet.create({});

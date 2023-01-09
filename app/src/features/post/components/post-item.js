@@ -77,7 +77,7 @@ const ReactSectionContainer = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  border-bottom-color: "#dedede";
+  border-bottom-color: #dedede;
   border-bottom-width: 2px;
 `;
 const PostItem = ({ ...props }) => {
@@ -146,7 +146,6 @@ const PostItem = ({ ...props }) => {
         <Text numberOfLines={2}>{description}</Text>
       </PostDescription>
 
-      {/* post image */}
       <View
         style={{
           width: SCREEN_WIDTH_WITH_MARGIN_L_R_12,

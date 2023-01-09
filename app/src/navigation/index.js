@@ -1,38 +1,22 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View } from "react-native";
-import styled from "styled-components/native";
 
-import LoginScreen from "../views/Auth/Login";
-import RegisterScreen from "../views/Auth/Register";
-import MainTabNavigator from "./MainTabNavigator";
+import { AppNavigator } from "./app.navigator";
+import { AuthNavigator } from "./auth.navigator";
+import { AuthenticationContext } from "../services/authentication/authentication.context";
+import { useContext } from "react";
 const Stack = createNativeStackNavigator();
-const t = styled(View)`
-  padding: ${(props) => {
-    console.log("props", props);
-    return 0;
-  }};
-`;
+
 const Navigator = () => {
+  const { isAuthenticated } = useContext(AuthenticationContext);
+  console.log("isAuthenticated", isAuthenticated);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          options={{ headerShown: false }}
-          component={LoginScreen}
-        />
-        <Stack.Screen
-          name="Register"
-          options={{ headerShown: false }}
-          component={RegisterScreen}
-        />
-        <Stack.Screen
-          name="Navigation"
-          options={{ headerShown: false }}
-          component={MainTabNavigator}
-        />
-      </Stack.Navigator>
+      {isAuthenticated ? (
+        <AppNavigator></AppNavigator>
+      ) : (
+        <AuthNavigator></AuthNavigator>
+      )}
     </NavigationContainer>
   );
 };
