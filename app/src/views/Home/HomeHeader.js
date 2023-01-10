@@ -10,7 +10,7 @@ import React, { useEffect, useState, useContext } from "react";
 
 import { useSelector } from "react-redux";
 
-import CreatePost from "../../features/post/screens/CreatePost";
+import CreatePost from "../../features/post/screens/create-post.screen";
 import Color from "../../utils/color";
 import readImageData from "../../utils/imageHandler";
 import { AuthenticationContext } from "../../services/authentication/authentication.context";

@@ -23,7 +23,8 @@ export const AuthenticationContextProvider = ({ children }) => {
       .catch((e) => {
         setIsLoading(false);
         console.log("er", e);
-        setError(e.toString());
+        setAuthToken(null);
+        setError("Lỗi! Đăng nhập thất bại");
       });
   };
 
@@ -40,7 +41,7 @@ export const AuthenticationContextProvider = ({ children }) => {
       })
       .catch(function (error) {
         setIsLoading(false);
-        setError(error.response.data.tostring());
+        setError("Lỗi! Đăng ký không thành công");
       });
   };
 
@@ -55,6 +56,7 @@ export const AuthenticationContextProvider = ({ children }) => {
         user,
         isLoading,
         error,
+        setError,
         onLogin,
         onRegister,
         onLogout,

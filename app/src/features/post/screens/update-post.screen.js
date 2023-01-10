@@ -26,7 +26,6 @@ const UpdatePost = ({ ...props }) => {
   const a = (b) => {
     console.log(b);
   };
-  console.log("UPDATE");
 
   return (
     <View style={styles.container}>

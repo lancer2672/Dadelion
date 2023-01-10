@@ -6,14 +6,13 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import axios from "axios";
-import { useDispatch } from "react-redux";
 
-import { deletePost } from "../postSlice";
-import UpdatePost from "../screens/UpdatePost";
+import { PostContext } from "../../../services/post/post.context";
+import UpdatePost from "../screens/update-post.screen";
 import { UrlAPI } from "../../../constants";
 import readImageData from "../../../utils/imageHandler";
 
@@ -46,8 +45,8 @@ const OptionsContainer = styled(View)`
   elevation: 1;
 `;
 const OpenOptionsButton = styled(TouchableOpacity)`
-  padding-right: 4px,
-  padding-reft: 4px, 
+  padding-right: 4px;
+  padding-left: 4px;
 `;
 const OpenOptionsButtonContainer = styled(View)``;
 const Option = styled(Text)`
@@ -67,10 +66,17 @@ const Avatar = styled(Image)`
   border-radius: 50px;
 `;
 
-const dayjs = require("dayjs");
 const PostHeader = ({ ...props }) => {
-  const { postCreatorId, creatorName, createdAt, postImageUri, description } =
-    props;
+  const { DeletePost } = useContext(PostContext);
+  const dayjs = require("dayjs");
+  const {
+    postCreatorId,
+    postId,
+    creatorName,
+    createdAt,
+    postImageUri,
+    description,
+  } = props;
   const [imageUriUserAvatar, setImageUriUserAvatar] = useState("");
   const [viewEditOptions, setViewEditOptions] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -88,17 +94,10 @@ const PostHeader = ({ ...props }) => {
       })
       .catch((err) => console.log(err));
   };
+
   const handleDeletePost = async () => {
-    await axios
-      .delete(`${UrlAPI}/post/${postId}`)
-      .then((res) => {
-        console.log("res", res);
-        setViewEditOptions(false);
-        dispatch(deletePost(postId));
-      })
-      .catch((err) => {
-        console.log("error!", err);
-      });
+    await DeletePost(postId);
+    setViewEditOptions(false);
   };
   return (
     <Container>
@@ -121,9 +120,6 @@ const PostHeader = ({ ...props }) => {
         <OpenOptionsButton onPress={() => setViewEditOptions(!viewEditOptions)}>
           <Feather name="more-horizontal" size={24} color="black" />
         </OpenOptionsButton>
-
-        {/* edit post */}
-
         {viewEditOptions && (
           <OptionsContainer>
             <TouchableOpacity

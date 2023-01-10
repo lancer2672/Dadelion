@@ -8,24 +8,16 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/native";
 
 import CommentList from "./post-item-comment-list";
 import InputBar from "./post-item-inputbar";
 import readImageData from "../../../utils/imageHandler";
-import {
-  UrlAPI,
-  PostHeight,
-  PostHeightWithoutCommentList,
-} from "../../../constants";
-import Color from "../../../utils/color";
-import { deletePost } from "../postSlice";
 import PostHeader from "./post-item-header";
+import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import { PostContext } from "../../../services/post/post.context";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
@@ -80,11 +72,9 @@ const ReactSectionContainer = styled(View)`
   border-bottom-color: #dedede;
   border-bottom-width: 2px;
 `;
-const PostItem = ({ ...props }) => {
+const PostItem = ({ navigation, post }) => {
   const {
-    navigation,
-    setCommentsViewHeight,
-    postId,
+    _id: postId,
     likes,
     comments,
     description,
@@ -92,14 +82,16 @@ const PostItem = ({ ...props }) => {
     user: postCreatorId,
     creatorName,
     createdAt,
-  } = props;
-  const user = useSelector((state) => state.auth.user);
+  } = post;
+
+  const { user } = useContext(AuthenticationContext);
+  const { ReactPost, error } = useContext(PostContext);
   const [heart, setHeart] = useState(false);
   const [imageUriData, setImageUriData] = useState("");
   const [reactionNumber, setReactionNumber] = useState(likes.length);
   const [viewComments, setViewComments] = useState(false);
   useEffect(() => {
-    //if post have an image
+    //check if post have an image
     if (image) {
       setImageUriData(() => readImageData(image.data.data));
     }
@@ -111,29 +103,22 @@ const PostItem = ({ ...props }) => {
     }
   }, []);
   const handleReact = async () => {
-    await axios
-      .put(`${UrlAPI}/post/${postId}`, {
-        react: true,
-      })
-      .then((res) => {
-        setHeart(() => !heart);
-        if (heart == true) {
-          setReactionNumber((reactionNumber) => reactionNumber - 1);
-        } else {
-          setReactionNumber((reactionNumber) => reactionNumber + 1);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
-  const handleRenderComments = () => {
-    setCommentsViewHeight((height) => {
-      return height == PostHeight ? PostHeightWithoutCommentList : PostHeight;
-    });
-    setViewComments(!viewComments);
+    await ReactPost(postId);
+    console.log("error", error);
+    if (error != null) return;
+    else {
+      setHeart(() => !heart);
+      if (heart == true) {
+        setReactionNumber((reactionNumber) => reactionNumber - 1);
+      } else {
+        setReactionNumber((reactionNumber) => reactionNumber + 1);
+      }
+    }
   };
   return (
     <Container>
       <PostHeader
+        postId={postId}
         description={description}
         createdAt={createdAt}
         creatorName={creatorName}
@@ -141,7 +126,6 @@ const PostItem = ({ ...props }) => {
         postImageUri={imageUriData}
       ></PostHeader>
 
-      {/* post content */}
       <PostDescription>
         <Text numberOfLines={2}>{description}</Text>
       </PostDescription>
@@ -160,11 +144,9 @@ const PostItem = ({ ...props }) => {
             flex: 1,
             resizeMode: "stretch",
           }}
-          //to fit image in post => marginLeft 4;
         ></Image>
       </View>
 
-      {/* reaction  */}
       <ReactSectionContainer>
         <ReactButton onPress={handleReact}>
           <ReactionNumber>{reactionNumber}</ReactionNumber>
@@ -177,7 +159,7 @@ const PostItem = ({ ...props }) => {
 
         <Seperator>|</Seperator>
 
-        <ShowCommentsButton onPress={handleRenderComments}>
+        <ShowCommentsButton>
           <ShowCommentsButtonContent>Comment</ShowCommentsButtonContent>
         </ShowCommentsButton>
       </ReactSectionContainer>

@@ -5,13 +5,12 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
-  Text,
   View,
 } from "react-native";
 import { useState, useContext } from "react";
 import React from "react";
 
-import { Spacer } from "../../../components/spacer";
+import { Spacer } from "../../../components/spacer/spacer.component";
 import { AppSlogan } from "../../../utils/slogan";
 import {
   InputText,
@@ -22,17 +21,21 @@ import {
   BackgroundImage,
   AuthButtonContent,
 } from "../components/authentication.style";
+import { Text } from "../../../components/typography/text.component";
 import Color from "../../../utils/color";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 
 const RegisterScreen = ({ navigation }) => {
-  const { isLoading, error, onRegister } = useContext(AuthenticationContext);
+  const { isLoading, error, onRegister, setError } = useContext(
+    AuthenticationContext
+  );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [replicatedPassword, setReplicatedPassword] = useState("");
 
   const navigateToLoginScreen = () => {
+    setError(null);
     navigation.navigate("Login");
   };
   const handleRegistration = () => {
@@ -60,7 +63,13 @@ const RegisterScreen = ({ navigation }) => {
         }
         placeholder="Nhập lại mật khẩu"
       ></InputText>
-      <Spacer variant="bottom" size="huge"></Spacer>
+      {error == null ? (
+        <View style={{ height: 21 }}></View>
+      ) : (
+        <View style={styles.error}>
+          <Text variant="error">{error}</Text>
+        </View>
+      )}
       <Spacer variant="bottom" size="huge"></Spacer>
       <View>
         <AuthButton onPress={handleRegistration}>

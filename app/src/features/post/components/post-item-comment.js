@@ -6,7 +6,6 @@ import styled from "styled-components/native";
 
 import { UrlAPI } from "../../../constants";
 import readImageData from "../../../utils/imageHandler";
-import Color from "../../../utils/color";
 
 const CommentContainer = styled(View)`
   flex-direction: row;
@@ -58,7 +57,6 @@ const Comment = ({ ...props }) => {
         <UserName>{userName}</UserName>
         <CommentContent>{content}</CommentContent>
       </CommentInfo>
-
       <OptionsButton>
         <MaterialIcons name="expand-more" size={24} color="black" />
       </OptionsButton>

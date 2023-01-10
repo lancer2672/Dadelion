@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, Button, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import Post from "./Post";
+import Post from "../../features/post/screens/post.screen";
 import HomeHeader from "./HomeHeader";
 
 const Home = ({ ...props }) => {

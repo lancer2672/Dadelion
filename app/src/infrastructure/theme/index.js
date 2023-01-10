@@ -1,6 +1,6 @@
 import { colors } from "./colors";
 import { space, lineHeights } from "./spacing";
-import { sizes } from "./sizes";
+import { sizes, buttonSizes } from "./sizes";
 import { fonts, fontWeights, fontSizes } from "./fonts";
 
 const theme = {
@@ -9,6 +9,7 @@ const theme = {
   lineHeights,
   sizes,
   fonts,
+  buttonSizes,
   fontSizes,
   fontWeights,
 };

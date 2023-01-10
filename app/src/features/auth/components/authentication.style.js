@@ -30,16 +30,19 @@ export const InputText = styled.TextInput.attrs((props) => ({
   autoCapitalize: false,
 }))`
   border-radius: 25px;
-  height: 32px;
+  padding: ${(props) => props.theme.space[2]};
+  margin: ${(props) => props.theme.space[1]};
+  font-size: ${(props) => props.theme.fontSizes.body};
   line-height: 20px;
-  margin-top: 8px;
+  min-width: 200px;
+  text-align: center;
   color: ${(props) => props.theme.colors.text.primary};
 `;
 
 export const AuthButton = styled(TouchableOpacity)`
   min-width: 200px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: ${(props) => props.theme.space[2]};
+  padding-bottom: ${(props) => props.theme.space[2]};
   background-color: ${(props) => props.theme.colors.ui.quaternary};
   border-radius: 25px;
 `;
@@ -47,6 +50,7 @@ export const AuthButton = styled(TouchableOpacity)`
 export const AuthButtonContent = styled(Text)`
   align-self: center;
   font-weight: bold;
+  font-size: 16px;
   color: ${(props) => props.theme.colors.text.primary};
 `;
 

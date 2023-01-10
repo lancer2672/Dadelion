@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { useState, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
 
@@ -14,10 +14,13 @@ import {
   BackgroundImage,
   AuthButtonContent,
 } from "../components/authentication.style";
-import { Spacer } from "../../../components/spacer";
+import { Text } from "../../../components/typography/text.component";
+import { Spacer } from "../../../components/spacer/spacer.component";
 
 const LoginScreen = ({ navigation }) => {
-  const { isLoading, error, onLogin } = useContext(AuthenticationContext);
+  const { isLoading, error, onLogin, setError } = useContext(
+    AuthenticationContext
+  );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,6 +28,7 @@ const LoginScreen = ({ navigation }) => {
     onLogin(username, password);
   };
   const navigateToRegisterScreen = () => {
+    setError(null);
     navigation.navigate("Register");
   };
 
@@ -44,10 +48,10 @@ const LoginScreen = ({ navigation }) => {
       ></InputText>
 
       {error == null ? (
-        <View style={{ height: 20 }}></View>
+        <View style={{ height: 21 }}></View>
       ) : (
         <View style={styles.error}>
-          <Text style={styles.errorMessage}>{error}</Text>
+          <Text variant="error">{error}</Text>
         </View>
       )}
       <Spacer variant="bottom" size="small"></Spacer>
@@ -61,7 +65,7 @@ const LoginScreen = ({ navigation }) => {
         </AuthButton>
       </View>
       <Spacer variant="top" size="large"></Spacer>
-      <Text style={styles.forgetText}>Quên mật khẩu ?</Text>
+      <Text variant="caption">Quên mật khẩu ?</Text>
       <Animation></Animation>
     </BackgroundImage>
   );

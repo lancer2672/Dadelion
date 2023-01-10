@@ -8,7 +8,6 @@ import {
   ImageBackground,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
@@ -16,14 +15,15 @@ import { setAuth } from "../../features/auth/authSlice";
 import UserPost from "./UserPost";
 import { UrlAPI } from "../../constants";
 import readImageData from "../../utils/imageHandler";
+import { AuthenticationContext } from "../../services/authentication/authentication.context";
+import { useContext } from "react";
 
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const User = ({ ...props }) => {
   const { navigation } = props;
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const { user } = useContext(AuthenticationContext);
   const [avatarUri, setAvatarUri] = useState("");
   const [wallPaperUri, setWallPaperUri] = useState("");
   useEffect(() => {
