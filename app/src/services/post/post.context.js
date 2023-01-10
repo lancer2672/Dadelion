@@ -58,14 +58,20 @@ export const PostContextProvider = ({ children }) => {
   const HandleReactPost = async (postId) => {
     await ReactPost(postId)
       .then((res) => {
-        console.log("Thành Công");
         setError(null);
       })
       .catch((err) => setError(err));
-    console.log(" Done Handling");
   };
-  const HandleCommentPost = async (content) => {
-    CommentPost(content);
+  const HandleCommentPost = async (postId, content) => {
+    await CommentPost(postId, content)
+      .then((res) => {
+        setError(null);
+        console.log("Comment thành công");
+      })
+      .catch((err) => {
+        setError(err);
+        console.log("Comment thất bại");
+      });
   };
   return (
     <PostContext.Provider

@@ -21,8 +21,8 @@ export const ReactPost = (postId) => {
   });
 };
 
-export const CommentPost = (content) => {
-  return axios.put(`${UrlAPI}/post/${props.postId}`, {
-    content: text,
+export const CommentPost = (postId, content) => {
+  return axios.put(`${UrlAPI}/post/${postId}`, {
+    content,
   });
 };

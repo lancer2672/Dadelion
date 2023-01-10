@@ -7,12 +7,9 @@ import {
 } from "react-native";
 import React, { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components/native";
 
-import { UrlAPI } from "../../../constants";
-import { updatePost } from "../postSlice";
 import { PostContext } from "../../../services/post/post.context";
 
 const InputContainer = styled(View)`
@@ -40,12 +37,12 @@ const SubmitButton = styled(TouchableOpacity)`
   padding-bottom: 5px;
 `;
 
-const InputBar = ({ ...props }) => {
+const InputBar = ({ postId }) => {
   const [text, setText] = useState("");
   const { CommentPost, error } = useContext(PostContext);
   const handlePostComment = async () => {
     if (text != "") {
-      await CommentPost();
+      await CommentPost(postId, text);
       if (error != null) setText("");
     }
   };
@@ -57,7 +54,6 @@ const InputBar = ({ ...props }) => {
         value={text}
         onChangeText={(newText) => setText(newText)}
       ></InputContent>
-
       <SubmitButton onPress={handlePostComment}>
         <Ionicons name="send" size={24} color="black" />
       </SubmitButton>
