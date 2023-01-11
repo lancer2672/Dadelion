@@ -43,7 +43,7 @@ const InputBar = ({ postId }) => {
   const handlePostComment = async () => {
     if (text != "") {
       await CommentPost(postId, text);
-      if (error != null) setText("");
+      if (error == null) setText("");
     }
   };
 

@@ -52,9 +52,13 @@ const OpenOptionsButtonContainer = styled(View)``;
 const Option = styled(Text)`
   padding: 4px;
 `;
+const CreatorName = styled(Text)`
+  font-size: ${(props) => props.theme.fontSizes.label};
+  font-weight: ${(props) => props.theme.fontWeights.medium};
+`;
 const ModalUpdatePostContainer = styled(Modal)`
   background-color: rgba(1, 1, 1, 0.2);
-  flex: 1;
+
   align-items: center;
   margin-top: 22px;
 `;
@@ -66,13 +70,14 @@ const Avatar = styled(Image)`
   border-radius: 50px;
 `;
 
+const dayjs = require("dayjs");
 const PostHeader = ({ ...props }) => {
   const { DeletePost } = useContext(PostContext);
-  const dayjs = require("dayjs");
   const {
     postCreatorId,
     postId,
     creatorName,
+    setSelectedItem,
     createdAt,
     postImageUri,
     description,
@@ -112,7 +117,7 @@ const PostHeader = ({ ...props }) => {
       </TouchableOpacity>
 
       <PostInfoContainer>
-        <Text>{creatorName}</Text>
+        <CreatorName>{creatorName}</CreatorName>
         <Text>{dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}</Text>
       </PostInfoContainer>
 
@@ -130,23 +135,21 @@ const PostHeader = ({ ...props }) => {
               <Option>Chỉnh sửa</Option>
               <Modal
                 animationType="fade"
-                transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
                   setModalVisible(false);
-                  setViewEditOptions(false);
                 }}
               >
-                <ModalUpdatePostContainer>
-                  <UpdatePost
-                    userAvatar={imageUriUserAvatar}
-                    image={postImageUri}
-                    createdAt={createdAt}
-                    description={description}
-                    creatorName={creatorName}
-                    setIsvisible={setModalVisible}
-                  ></UpdatePost>
-                </ModalUpdatePostContainer>
+                <UpdatePost
+                  userAvatar={imageUriUserAvatar}
+                  image={postImageUri}
+                  postId={postId}
+                  createdAt={createdAt}
+                  description={description}
+                  creatorName={creatorName}
+                  setIsvisible={setModalVisible}
+                  setViewEditOptions={setViewEditOptions}
+                ></UpdatePost>
               </Modal>
             </TouchableOpacity>
 

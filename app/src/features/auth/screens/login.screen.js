@@ -1,7 +1,6 @@
-import { View, StyleSheet } from "react-native";
-import React, { useState, useContext } from "react";
+import { View, StyleSheet, Keyboard } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
-
 import { AppSlogan } from "../../../utils/slogan";
 import Color from "../../../utils/color";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
@@ -25,6 +24,7 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
+    Keyboard.dismiss();
     onLogin(username, password);
   };
   const navigateToRegisterScreen = () => {

@@ -11,6 +11,7 @@ import {
 import React, { useState, useEffect, useContext } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import styled from "styled-components/native";
+import ReadMore from "@fawazahmed/react-native-read-more";
 
 import CommentList from "./post-item-comment-list";
 import InputBar from "./post-item-inputbar";
@@ -55,9 +56,14 @@ const CommentListContainer = styled(View)`
   margin-top: 5px;
   min-width: 1px;
 `;
-const PostDescription = styled(View)`
+const PostDescriptionContainer = styled(ReadMore)`
   margin-left: 8px;
   margin-bottom: 4px;
+  margin-top: 4px;
+  font-size: ${(props) => props.theme.fontSizes.body};
+`;
+const PostDescription = styled(Text)`
+  font-size: ${(props) => props.theme.fontSizes.body};
 `;
 //to fit image in post => property: SCREEN_WIDTH_WITH_MARGIN_L_R_12 - 6
 const PostImageContainer = styled(View)`
@@ -78,18 +84,18 @@ const PostItem = ({ navigation, post }) => {
     likes,
     comments,
     description,
-    image,
+    image = null,
     user: postCreatorId,
     creatorName,
     createdAt,
   } = post;
-
   const { user } = useContext(AuthenticationContext);
   const { ReactPost, error } = useContext(PostContext);
   const [heart, setHeart] = useState(false);
   const [imageUriData, setImageUriData] = useState("");
   const [reactionNumber, setReactionNumber] = useState(likes.length);
   const [viewComments, setViewComments] = useState(false);
+
   useEffect(() => {
     //check if post have an image
     if (image) {
@@ -102,9 +108,15 @@ const PostItem = ({ navigation, post }) => {
       }
     }
   }, []);
+  useEffect(() => {
+    //check if post have an image
+    if (image) {
+      setImageUriData(() => readImageData(image.data.data));
+    }
+    //check if user reacted this post
+  }, [image]);
   const handleReact = async () => {
     await ReactPost(postId);
-    console.log("error", error);
     if (error != null) return;
     else {
       setHeart(() => !heart);
@@ -115,6 +127,7 @@ const PostItem = ({ navigation, post }) => {
       }
     }
   };
+
   return (
     <Container>
       <PostHeader
@@ -126,9 +139,9 @@ const PostItem = ({ navigation, post }) => {
         postImageUri={imageUriData}
       ></PostHeader>
 
-      <PostDescription>
-        <Text numberOfLines={2}>{description}</Text>
-      </PostDescription>
+      <PostDescriptionContainer numberOfLines={3}>
+        <PostDescription>{description}</PostDescription>
+      </PostDescriptionContainer>
 
       <View
         style={{
@@ -142,7 +155,7 @@ const PostItem = ({ navigation, post }) => {
           }}
           style={{
             flex: 1,
-            resizeMode: "stretch",
+            resizeMode: "cover",
           }}
         ></Image>
       </View>

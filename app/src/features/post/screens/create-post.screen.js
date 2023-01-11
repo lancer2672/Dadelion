@@ -11,9 +11,6 @@ import {
 import React, { useState, useContext } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { Entypo } from "@expo/vector-icons";
-import axios from "axios";
-import * as FileSystem from "expo-file-system";
-import { UrlAPI } from "../../../constants";
 import Color from "../../../utils/color";
 import { PostContext } from "../../../services/post/post.context";
 
@@ -34,7 +31,6 @@ const CreatePost = ({ ...props }) => {
     });
     newPostData.append("description", description);
     await CreatePost(newPostData);
-    console.log("SetINvisibble");
     setIsvisible(false);
   };
   const handleSelectImage = async () => {

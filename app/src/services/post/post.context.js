@@ -5,6 +5,7 @@ import {
   DeletePost,
   CreatePost,
   ReactPost,
+  UpdatePost,
   CommentPost,
 } from "./post.service";
 
@@ -73,6 +74,32 @@ export const PostContextProvider = ({ children }) => {
         console.log("Comment thất bại");
       });
   };
+  const HandleUpdatePost = async (postId, newPostData) => {
+    setIsLoading(true);
+    await UpdatePost(postId, newPostData)
+      .then((res) => {
+        console.log("post", posts);
+        const updatedPost = res.data.updatedPost;
+        setIsLoading(false);
+        console.log("Cập nhật thành công");
+        const newPosts = posts.map((post) => {
+          if (post._id == updatedPost._id) {
+            return updatedPost;
+          } else {
+            return post;
+          }
+        });
+        setPosts((post) => newPosts);
+        console.log("NewPOst", newPosts);
+        setError(null);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        setError("Cập nhật không thành công");
+        console.log("Cập nhật thất bại");
+      });
+  };
   return (
     <PostContext.Provider
       value={{
@@ -83,6 +110,7 @@ export const PostContextProvider = ({ children }) => {
         CreatePost: HandleCreatePost,
         ReactPost: HandleReactPost,
         CommentPost: HandleCommentPost,
+        UpdatePost: HandleUpdatePost,
       }}
     >
       {children}

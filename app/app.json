@@ -23,6 +23,7 @@
       "usesIcloudStorage ":true
     },
     "android": {
+
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/imgs/24.jpg",
