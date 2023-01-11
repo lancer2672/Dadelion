@@ -26,6 +26,7 @@ export default function App() {
   if (!oswaldLoaded || !latoLoaded) {
     return null;
   }
+
   return (
     <Provider store={store}>
       <MenuProvider>

@@ -13,6 +13,7 @@ import axios from "axios";
 import {
   Menu,
   MenuOptions,
+  renderers,
   MenuOption,
   MenuTrigger,
 } from "react-native-popup-menu";
@@ -89,8 +90,8 @@ const PostHeader = ({ ...props }) => {
     description,
   } = props;
   const [imageUriUserAvatar, setImageUriUserAvatar] = useState("");
-  const [viewEditOptions, setViewEditOptions] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [createTime, setCreateTime] = useState(null);
   useEffect(() => {
     getCreatorPostAvatar();
   }, []);
@@ -110,6 +111,28 @@ const PostHeader = ({ ...props }) => {
     await DeletePost(postId);
     setViewEditOptions(false);
   };
+  useEffect(() => {
+    let currentDate = new Date();
+    let createDate = new Date(createdAt);
+    console.log("date1", currentDate);
+    console.log("date2", createDate);
+    const days = (currentDate, createDate) => {
+      let difference = currentDate.getTime() - createDate.getTime();
+      let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+      console.log(difference);
+      return TotalDays;
+    };
+    const diffDays = days(currentDate, createDate);
+    if (diffDays == 1) {
+      setCreateTime("Hôm nay lúc " + dayjs(createdAt).format("HH:mm"));
+    } else if (diffDays == 2) {
+      setCreateTime("Hôm qua lúc " + dayjs(createdAt).format("HH:mm"));
+    } else {
+      setCreateTime(dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm"));
+    }
+    // return dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm");
+  }, []);
+
   return (
     <Container>
       <TouchableOpacity>
@@ -124,16 +147,17 @@ const PostHeader = ({ ...props }) => {
 
       <PostInfoContainer>
         <CreatorName>{creatorName}</CreatorName>
-        <Text>{dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}</Text>
+        {/* <Text>{dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}</Text> */}
+        <Text>{createTime}</Text>
       </PostInfoContainer>
 
       <OpenOptionsButtonContainer>
-        <OpenOptionsButton onPress={() => setViewEditOptions(!viewEditOptions)}>
+        {/* <OpenOptionsButton onPress={() => setViewEditOptions(!viewEditOptions)}>
           <Feather name="more-horizontal" size={24} color="black" />
-        </OpenOptionsButton>
-        {viewEditOptions && (
-          <OptionsContainer>
-            <TouchableOpacity
+        </OpenOptionsButton> */}
+
+        {/* <OptionsContainer>
+             <TouchableOpacity
               onPress={() => {
                 setModalVisible(true);
               }}
@@ -157,16 +181,54 @@ const PostHeader = ({ ...props }) => {
                   setViewEditOptions={setViewEditOptions}
                 ></UpdatePost>
               </Modal>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            <Seperator></Seperator>
+        {/* <Seperator></Seperator>
 
             <TouchableOpacity onPress={handleDeletePost}>
               <Option>Xoá</Option>
-            </TouchableOpacity>
-          </OptionsContainer>
-        )}
+            </TouchableOpacity>  
+
+         
+          </OptionsContainer>*/}
       </OpenOptionsButtonContainer>
+      <Menu render={renderers.SlideInMenu}>
+        <MenuTrigger>
+          <Feather
+            style={{ padding: 8 }}
+            name="more-horizontal"
+            size={24}
+            color="black"
+          />
+        </MenuTrigger>
+        <MenuOptions
+          customStyles={{
+            optionTouchable: {
+              underlayColor: "red",
+            },
+            optionWrapper: {
+              backgroundColor: "pink",
+              margin: 5,
+            },
+            optionText: {
+              color: "black",
+            },
+          }}
+        >
+          <MenuOption
+            onSelect={() => alert(`Save`)}
+            text={"\u2713 " + "save"}
+          />
+          <MenuOption onSelect={() => alert(`Delete`)}>
+            <Text style={{ color: "red" }}>Delete</Text>
+          </MenuOption>
+          <MenuOption
+            onSelect={() => alert(`Not called`)}
+            disabled={true}
+            text="Disabled"
+          />
+        </MenuOptions>
+      </Menu>
     </Container>
   );
 };

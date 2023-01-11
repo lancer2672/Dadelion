@@ -14,7 +14,7 @@ const Home = ({ navigation }) => {
       <View style={styles.header}>
         <HomeHeader navigation={navigation}></HomeHeader>
       </View>
-      <MessageBar message={`Welcome ${user.nickname}`}></MessageBar>
+      <MessageBar message={`Xin chào ${user.nickname}`}></MessageBar>
       <View style={styles.postContainer}>
         <Post navigation={navigation}></Post>
       </View>
