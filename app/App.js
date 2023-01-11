@@ -13,7 +13,7 @@ import { store } from "./src/features/store";
 import Navigator from "./src/infrastructure/navigation";
 import { AuthenticationContextProvider } from "./src/services/authentication/authentication.context";
 import { PostContextProvider } from "./src/services/post/post.context";
-
+import { MenuProvider } from "react-native-popup-menu";
 export default function App() {
   const [oswaldLoaded] = useOswald({
     Oswald_400Regular,
@@ -28,13 +28,15 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <AuthenticationContextProvider>
-          <PostContextProvider>
-            <Navigator></Navigator>
-          </PostContextProvider>
-        </AuthenticationContextProvider>
-      </ThemeProvider>
+      <MenuProvider>
+        <ThemeProvider theme={theme}>
+          <AuthenticationContextProvider>
+            <PostContextProvider>
+              <Navigator></Navigator>
+            </PostContextProvider>
+          </AuthenticationContextProvider>
+        </ThemeProvider>
+      </MenuProvider>
     </Provider>
   );
 }

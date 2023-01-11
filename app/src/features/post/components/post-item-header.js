@@ -10,6 +10,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import axios from "axios";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
 
 import { PostContext } from "../../../services/post/post.context";
 import UpdatePost from "../screens/update-post.screen";

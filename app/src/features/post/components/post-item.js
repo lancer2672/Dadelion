@@ -109,11 +109,9 @@ const PostItem = ({ navigation, post }) => {
     }
   }, []);
   useEffect(() => {
-    //check if post have an image
     if (image) {
       setImageUriData(() => readImageData(image.data.data));
     }
-    //check if user reacted this post
   }, [image]);
   const handleReact = async () => {
     await ReactPost(postId);

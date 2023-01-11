@@ -27,7 +27,6 @@ export const Logo = styled.Image.attrs((props) => ({
 
 export const InputText = styled.TextInput.attrs((props) => ({
   secureTextEntry: props.isPassword ? true : false,
-  autoCapitalize: false,
 }))`
   border-radius: 25px;
   padding: ${(props) => props.theme.space[2]};
