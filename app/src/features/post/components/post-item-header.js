@@ -7,21 +7,14 @@ import {
   View,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
-import { Feather } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import axios from "axios";
-import {
-  Menu,
-  MenuOptions,
-  renderers,
-  MenuOption,
-  MenuTrigger,
-} from "react-native-popup-menu";
 
-import { PostContext } from "../../../services/post/post.context";
+import { HeaderMenu } from "./post-item-header-menu-options";
 import UpdatePost from "../screens/update-post.screen";
 import { UrlAPI } from "../../../constants";
 import readImageData from "../../../utils/imageHandler";
+import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 
 const Container = styled(View)`
   margin-top: 8px;
@@ -79,12 +72,11 @@ const Avatar = styled(Image)`
 
 const dayjs = require("dayjs");
 const PostHeader = ({ ...props }) => {
-  const { DeletePost } = useContext(PostContext);
   const {
     postCreatorId,
     postId,
     creatorName,
-    setSelectedItem,
+
     createdAt,
     postImageUri,
     description,
@@ -92,6 +84,7 @@ const PostHeader = ({ ...props }) => {
   const [imageUriUserAvatar, setImageUriUserAvatar] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [createTime, setCreateTime] = useState(null);
+  const { user } = useContext(AuthenticationContext);
   useEffect(() => {
     getCreatorPostAvatar();
   }, []);
@@ -174,39 +167,13 @@ const PostHeader = ({ ...props }) => {
           ></UpdatePost>
         </Modal>
       </OpenOptionsButtonContainer>
-      <Menu render={renderers.SlideInMenu}>
-        <MenuTrigger>
-          <Feather
-            style={{ padding: 8 }}
-            name="more-horizontal"
-            size={24}
-            color="black"
-          />
-        </MenuTrigger>
-        <MenuOptions
-          customStyles={{
-            optionTouchable: {
-              underlayColor: "red",
-            },
-            optionWrapper: {
-              backgroundColor: "pink",
-              margin: 5,
-            },
-            optionText: {
-              color: "black",
-            },
-          }}
-        >
-          <MenuOption
-            onSelect={() => setModalVisible(true)}
-            text={"Chỉnh sửa bài viết"}
-          />
-          <MenuOption onSelect={() => handleDeletePost()} text="Xóa bài viết" />
-          <MenuOption>
-            <Text>Hủy</Text>
-          </MenuOption>
-        </MenuOptions>
-      </Menu>
+      {user._id == postCreatorId && (
+        <HeaderMenu
+          postCreatorId={postCreatorId}
+          postId={postId}
+          setModalVisible={setModalVisible}
+        ></HeaderMenu>
+      )}
     </Container>
   );
 };

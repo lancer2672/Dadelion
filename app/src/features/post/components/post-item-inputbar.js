@@ -38,14 +38,17 @@ const SubmitButton = styled(TouchableOpacity)`
   padding-bottom: 5px;
 `;
 
-const InputBar = ({ postId }) => {
+const InputBar = ({ postId, commentsLength, setIsVisibleCommentlist }) => {
   const [text, setText] = useState("");
   const { CommentPost, error } = useContext(PostContext);
   const handlePostComment = async () => {
     Keyboard.dismiss();
     if (text != "") {
       await CommentPost(postId, text);
-      if (error == null) setText("");
+      if (error == null) {
+        setText("");
+        if (commentsLength != 0) setIsVisibleCommentlist(true);
+      }
     }
   };
 

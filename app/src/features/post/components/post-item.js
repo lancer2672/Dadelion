@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { AntDesign, createIconSetFromFontello } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
@@ -39,7 +40,10 @@ const Container = styled(View)`
   border-bottom-right-radius: 25px;
 `;
 const ReactionNumber = styled(Text)`
-  margin-right: 8px;
+  margin-right: 4px;
+`;
+const CommentsNumber = styled(Text)`
+  margin-right: 4px;
 `;
 const ReactButton = styled(TouchableOpacity)`
   flex-direction: row;
@@ -48,15 +52,10 @@ const Seperator = styled(Text)`
   font-size: 24px;
   margin-bottom: 2px;
 `;
-const ShowCommentsButton = styled(TouchableOpacity)``;
-const ShowCommentsButtonContent = styled(Text)`
-  height: 16px;
+const ShowCommentsButton = styled(TouchableOpacity)`
+  flex-direction: row;
 `;
-const CommentListContainer = styled(View)`
-  height: 200px;
-  margin-top: 5px;
-  min-width: 1px;
-`;
+const CommentListContainer = styled(View)``;
 const PostDescriptionContainer = styled(ReadMore)`
   margin-left: 8px;
   margin-bottom: 4px;
@@ -65,11 +64,6 @@ const PostDescriptionContainer = styled(ReadMore)`
 `;
 const PostDescription = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.body};
-`;
-//to fit image in post => property: SCREEN_WIDTH_WITH_MARGIN_L_R_12 - 6
-const PostImageContainer = styled(View)`
-width: ${SCREEN_WIDTH_WITH_MARGIN_L_R_12 - 6}px,
-height: 350px,
 `;
 const ReactSectionContainer = styled(View)`
   margin-top: 8px;
@@ -179,17 +173,22 @@ const PostItem = ({ navigation, post }) => {
         <ShowCommentsButton
           onPress={() => setIsCommentsVisible(!isCommentsVisible)}
         >
-          <ShowCommentsButtonContent>Comment</ShowCommentsButtonContent>
+          <CommentsNumber>{comments.length}</CommentsNumber>
+          <Fontisto name="comment" size={24} color="black" />
         </ShowCommentsButton>
       </ReactSectionContainer>
       {!isCommentsVisible && <Comment comment={lastComment}></Comment>}
 
-      {isCommentsVisible && (
+      {isCommentsVisible && comments.length > 1 && (
         <CommentListContainer>
           <CommentList comments={comments}></CommentList>
         </CommentListContainer>
       )}
-      <InputBar postId={postId}></InputBar>
+      <InputBar
+        commentsLength={comments.length}
+        setIsCommentsVisible={setIsCommentsVisible}
+        postId={postId}
+      ></InputBar>
     </Container>
   );
 };

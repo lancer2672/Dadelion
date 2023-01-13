@@ -22,7 +22,6 @@ export const PostContextProvider = ({ children }) => {
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log("Lỗi");
         setIsLoading(false);
         setError(err);
       });
@@ -68,7 +67,7 @@ export const PostContextProvider = ({ children }) => {
       .then((res) => {
         setError(null);
         console.log("Comment thành công");
-        console.log(res);
+
         const updatedPost = res.data.updatedPost;
         const newPosts = posts.map((post) => {
           if (post._id == updatedPost._id) {
@@ -97,7 +96,7 @@ export const PostContextProvider = ({ children }) => {
             return post;
           }
         });
-        setPosts((post) => newPosts);
+        setPosts(newPosts);
         console.log("NewPOst", newPosts);
         setError(null);
       })

@@ -1,11 +1,14 @@
-import { StyleSheet, FlatList, Text } from "react-native";
+import { StyleSheet, FlatList, Text, ActivityIndicator } from "react-native";
 import React, { useState, useContext } from "react";
 import PostItem from "../components/post-item";
 import { PostContext } from "../../../services/post/post.context";
 import { Spacer } from "../../../components/spacer/spacer.component";
 
 const Post = ({ navigation }) => {
-  const { posts } = useContext(PostContext);
+  const { posts, isLoading } = useContext(PostContext);
+  if (isLoading) {
+    return <ActivityIndicator></ActivityIndicator>;
+  }
   return (
     <FlatList
       style={{ marginBottom: 150 }}

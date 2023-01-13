@@ -45,6 +45,9 @@ const UserName = styled(Text)`
 const CommentContent = styled(Text)``;
 const OptionsButton = styled(TouchableOpacity)`
   margin-left: 6px;
+  position: absolute;
+  top: 2px;
+  right: 8px;
 `;
 const Comment = ({ comment }) => {
   if (comment == false) {

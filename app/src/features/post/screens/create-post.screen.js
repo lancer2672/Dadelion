@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     color: "white",
     flex: 1,
-    padding: 10,
+    padding: 2,
     borderRadius: 5,
     backgroundColor: Color.lightGray,
   },
