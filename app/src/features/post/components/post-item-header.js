@@ -109,7 +109,6 @@ const PostHeader = ({ ...props }) => {
 
   const handleDeletePost = async () => {
     await DeletePost(postId);
-    setViewEditOptions(false);
   };
   useEffect(() => {
     let currentDate = new Date();

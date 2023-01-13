@@ -9,10 +9,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, createIconSetFromFontello } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
+import Comment from "./post-item-comment-item";
 import CommentList from "./post-item-comment-list";
 import InputBar from "./post-item-inputbar";
 import readImageData from "../../../utils/imageHandler";
@@ -72,6 +73,7 @@ height: 350px,
 `;
 const ReactSectionContainer = styled(View)`
   margin-top: 8px;
+  margin-bottom: 8px;
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
@@ -95,7 +97,10 @@ const PostItem = ({ navigation, post }) => {
   const [imageUriData, setImageUriData] = useState(null);
   const [reactionNumber, setReactionNumber] = useState(likes.length);
   const [isCommentsVisible, setIsCommentsVisible] = useState(false);
-
+  let lastComment = false;
+  if (comments.length) {
+    lastComment = comments[comments.length - 1];
+  }
   useEffect(() => {
     //check if post have an image
     if (image) {
@@ -177,6 +182,7 @@ const PostItem = ({ navigation, post }) => {
           <ShowCommentsButtonContent>Comment</ShowCommentsButtonContent>
         </ShowCommentsButton>
       </ReactSectionContainer>
+      {!isCommentsVisible && <Comment comment={lastComment}></Comment>}
 
       {isCommentsVisible && (
         <CommentListContainer>

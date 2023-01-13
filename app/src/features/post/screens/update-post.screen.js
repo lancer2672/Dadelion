@@ -40,7 +40,7 @@ const UpdatePost = ({ ...props }) => {
     description,
     setSelectedItem,
     setIsvisible,
-    setViewEditOptions,
+
     postId,
     image,
   } = props;
