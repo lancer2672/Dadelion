@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import styled from "styled-components/native";
+// import * as Progress from "react-native-progress";
 
 export const BackgroundImage = styled.ImageBackground.attrs((props) => ({
   source: require("../../../../assets/imgs/Auth.jpg"),
@@ -66,3 +67,15 @@ export const Animation = styled(Animated.Image).attrs((props) => ({
   width: 100%;
   height: 200px;
 `;
+export const Animation1 = styled(Animated.Image).attrs((props) => ({
+  source: require("./../../../../assets/DandelionSpreadAnimation.gif"),
+}))`
+  width: 100%;
+  height: 200px;
+`;
+
+// export const ProgressBarComponent = styled(Progress.Bar).attrs((props) => ({
+//   progress: 0.3,
+// }))`
+//   width: 200px;
+// `;

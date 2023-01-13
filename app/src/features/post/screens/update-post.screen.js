@@ -55,7 +55,6 @@ const UpdatePost = ({ ...props }) => {
       .catch((err) => {});
   };
   const handleCloseModal = () => {
-    setViewEditOptions(false);
     setIsvisible(false);
   };
   const handleUpdatePost = async () => {

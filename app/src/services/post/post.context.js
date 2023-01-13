@@ -68,6 +68,16 @@ export const PostContextProvider = ({ children }) => {
       .then((res) => {
         setError(null);
         console.log("Comment thành công");
+        console.log(res);
+        const updatedPost = res.data.updatedPost;
+        const newPosts = posts.map((post) => {
+          if (post._id == updatedPost._id) {
+            return updatedPost;
+          } else {
+            return post;
+          }
+        });
+        setPosts(newPosts);
       })
       .catch((err) => {
         setError(err);
@@ -78,10 +88,8 @@ export const PostContextProvider = ({ children }) => {
     setIsLoading(true);
     await UpdatePost(postId, newPostData)
       .then((res) => {
-        console.log("post", posts);
         const updatedPost = res.data.updatedPost;
         setIsLoading(false);
-        console.log("Cập nhật thành công");
         const newPosts = posts.map((post) => {
           if (post._id == updatedPost._id) {
             return updatedPost;

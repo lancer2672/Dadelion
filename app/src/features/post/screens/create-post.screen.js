@@ -20,15 +20,17 @@ const CreatePost = ({ ...props }) => {
   const { CreatePost, error, isLoading } = useContext(PostContext);
   const { setIsvisible } = props;
   const [description, setDescription] = useState("");
-  const [imageUri, setImageUri] = useState("");
+  const [imageUri, setImageUri] = useState(null);
 
   const handleCreatePost = async () => {
     const newPostData = new FormData();
-    newPostData.append("postImage", {
-      uri: imageUri,
-      name: new Date() + "_profile",
-      type: "image/jpg",
-    });
+    if (imageUri != null) {
+      newPostData.append("postImage", {
+        uri: imageUri,
+        name: new Date() + "_profile",
+        type: "image/jpg",
+      });
+    }
     newPostData.append("description", description);
     await CreatePost(newPostData);
     setIsvisible(false);
@@ -59,7 +61,7 @@ const CreatePost = ({ ...props }) => {
           <Entypo name="images" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      {imageUri == false ? (
+      {imageUri == null ? (
         <Image
           style={styles.image}
           source={require("./../../../../assets/imgs/ChooseAnImage.png")}

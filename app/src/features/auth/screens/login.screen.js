@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { AppSlogan } from "../../../utils/slogan";
 import Color from "../../../utils/color";
+import * as Facebook from "expo-facebook";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import {
   InputText,
@@ -12,9 +13,11 @@ import {
   Logo,
   BackgroundImage,
   AuthButtonContent,
+  Animation1,
 } from "../components/authentication.style";
 import { Text } from "../../../components/typography/text.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
+import ProgressBar from "react-native-progress/Bar";
 
 const LoginScreen = ({ navigation }) => {
   const { isLoading, error, onLogin, setError } = useContext(
@@ -22,10 +25,20 @@ const LoginScreen = ({ navigation }) => {
   );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [progress, setProgress] = useState(0);
 
+  async function handleFacebookLogin() {
+    // Start the auth session
+  }
   const handleLogin = () => {
     Keyboard.dismiss();
-    onLogin(username, password);
+    const progressEvent = (progressEvent) => {
+      var percentCompleted = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
+      setProgress(percentCompleted / 100);
+    };
+    onLogin(username, password, progressEvent);
   };
   const navigateToRegisterScreen = () => {
     setError(null);
@@ -37,6 +50,17 @@ const LoginScreen = ({ navigation }) => {
       <View style={{ marginTop: 124 }}></View>
       <Logo />
       <Slogan>{AppSlogan}</Slogan>
+      {/* {isLoading && (
+        <View style={{ position: "absolute", top: 330 }}>
+          <ProgressBar
+            color={"#9b92e5"}
+            unfilledColor={"#ddd5e0"}
+            borderWidth={0}
+            progress={progress}
+            width={200}
+          />
+        </View>
+      )} */}
       <InputText
         onChangeText={(newUsername) => setUsername(newUsername)}
         placeholder="Tên đăng nhập"
@@ -59,6 +83,9 @@ const LoginScreen = ({ navigation }) => {
         <AuthButton onPress={handleLogin}>
           <AuthButtonContent>Đăng nhập</AuthButtonContent>
         </AuthButton>
+        {/* <AuthButton onPress={handleFacebookLogin}>
+          <AuthButtonContent>Đăng nhập với facebook</AuthButtonContent>
+        </AuthButton> */}
         <Spacer variant="top" size="large"></Spacer>
         <AuthButton onPress={navigateToRegisterScreen}>
           <AuthButtonContent>Đăng ký</AuthButtonContent>

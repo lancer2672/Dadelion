@@ -2,7 +2,11 @@
   "expo": {
     "name": "Dandelion",
     "slug": "Dandelion",
-    "version": "1.0.0",
+    "version": "1.0.0", 
+    "expoClientId": "474614477183384",
+    "facebookAppId": "5759604337465247",
+    "facebookScheme": "fb5759604337465247",
+    "facebookDisplayName": "Dandelion",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -23,7 +27,7 @@
       "usesIcloudStorage ":true
     },
     "android": {
-
+      
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/imgs/24.jpg",

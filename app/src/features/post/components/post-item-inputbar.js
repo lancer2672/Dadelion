@@ -1,4 +1,5 @@
 import {
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -41,6 +42,7 @@ const InputBar = ({ postId }) => {
   const [text, setText] = useState("");
   const { CommentPost, error } = useContext(PostContext);
   const handlePostComment = async () => {
+    Keyboard.dismiss();
     if (text != "") {
       await CommentPost(postId, text);
       if (error == null) setText("");

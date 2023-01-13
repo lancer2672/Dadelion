@@ -10,9 +10,9 @@ export const AuthenticationContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
-  const onLogin = (username, password) => {
+  const onLogin = (username, password, progressEvent) => {
     setIsLoading(true);
-    LoginRequest(username, password)
+    LoginRequest(username, password, progressEvent)
       .then((res) => {
         const { token, user } = res.data;
         setAuthToken(token);

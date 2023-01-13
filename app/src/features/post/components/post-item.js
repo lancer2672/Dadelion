@@ -92,9 +92,9 @@ const PostItem = ({ navigation, post }) => {
   const { user } = useContext(AuthenticationContext);
   const { ReactPost, error } = useContext(PostContext);
   const [heart, setHeart] = useState(false);
-  const [imageUriData, setImageUriData] = useState("");
+  const [imageUriData, setImageUriData] = useState(null);
   const [reactionNumber, setReactionNumber] = useState(likes.length);
-  const [viewComments, setViewComments] = useState(false);
+  const [isCommentsVisible, setIsCommentsVisible] = useState(false);
 
   useEffect(() => {
     //check if post have an image
@@ -141,23 +141,24 @@ const PostItem = ({ navigation, post }) => {
         <PostDescription>{description}</PostDescription>
       </PostDescriptionContainer>
 
-      <View
-        style={{
-          width: SCREEN_WIDTH_WITH_MARGIN_L_R_12,
-          height: 350,
-        }}
-      >
-        <Image
-          source={{
-            uri: imageUriData || null,
-          }}
+      {image && (
+        <View
           style={{
-            flex: 1,
-            resizeMode: "cover",
+            width: SCREEN_WIDTH_WITH_MARGIN_L_R_12,
+            height: 350,
           }}
-        ></Image>
-      </View>
-
+        >
+          <Image
+            source={{
+              uri: imageUriData,
+            }}
+            style={{
+              flex: 1,
+              resizeMode: "cover",
+            }}
+          ></Image>
+        </View>
+      )}
       <ReactSectionContainer>
         <ReactButton onPress={handleReact}>
           <ReactionNumber>{reactionNumber}</ReactionNumber>
@@ -170,12 +171,14 @@ const PostItem = ({ navigation, post }) => {
 
         <Seperator>|</Seperator>
 
-        <ShowCommentsButton>
+        <ShowCommentsButton
+          onPress={() => setIsCommentsVisible(!isCommentsVisible)}
+        >
           <ShowCommentsButtonContent>Comment</ShowCommentsButtonContent>
         </ShowCommentsButton>
       </ReactSectionContainer>
 
-      {viewComments && (
+      {isCommentsVisible && (
         <CommentListContainer>
           <CommentList comments={comments}></CommentList>
         </CommentListContainer>

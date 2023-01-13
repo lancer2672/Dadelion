@@ -1,65 +1,38 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Text, Dimensions, FlatList } from "react-native";
 import React from "react";
 import {
   RecyclerListView,
   DataProvider,
   LayoutProvider,
 } from "recyclerlistview";
-import Comment from "./post-item-comment";
+import Comment from "./post-item-comment-item";
 import styled from "styled-components/native";
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import { Spacer } from "../../../components/spacer/spacer.component";
+import { memo } from "react";
 
-const CommentList = ({ ...props }) => {
-  const { comments } = props;
-  const items = comments.map((comment, index) => {
-    return {
-      type: "NORMAL",
-      item: {
-        id: index,
-        ...comment,
-      },
-    };
-  });
-  const dataProvider = new DataProvider((r1, r2) => r1 != r2).cloneWithRows(
-    items
-  );
-  const layoutProvider = new LayoutProvider(
-    (i) => {
-      return dataProvider.getDataForIndex(i).type;
-    },
-    (type, dim) => {
-      switch (type) {
-        case "NORMAL":
-          dim.width = SCREEN_WIDTH;
-          //Tuỳ thuộc vào độ dài của phần text mà set độ cao cho thẻ
-          dim.height = 50;
-          break;
-        default:
-          dim.width = 0;
-          dim.height = 0;
-      }
-    }
-  );
-  /*#endregion*/
-
-  const rowRenderer = (type, data) => {
-    return <Comment {...data.item}></Comment>;
-  };
+const CommentList = ({ comments }) => {
+  console.log("list_render");
   return (
-    <RecyclerListView
+    <FlatList
       style={{
         marginTop: 5,
-        height: "100%",
+        height: 200,
         width: "100%",
-        backgroundColor: "grey",
       }}
-      rowRenderer={rowRenderer}
-      dataProvider={dataProvider}
-      layoutProvider={layoutProvider}
-    ></RecyclerListView>
+      data={comments}
+      ListEmptyComponent={() => <Text>Nothing</Text>}
+      renderItem={({ item }) => {
+        return (
+          <Spacer position={"bottom"} size="small">
+            <Comment comment={item} />
+          </Spacer>
+        );
+      }}
+      keyExtractor={(item) => item._id}
+    ></FlatList>
   );
 };
 
-export default CommentList;
+export default memo(CommentList);
 
 const styles = StyleSheet.create({});

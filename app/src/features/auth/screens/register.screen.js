@@ -38,8 +38,17 @@ const RegisterScreen = ({ navigation }) => {
     setError(null);
     navigation.navigate("Login");
   };
-  const handleRegistration = () => {
-    onRegister(email, username, password, replicatedPassword);
+  const handleRegistration = async () => {
+    await onRegister(email, username, password, replicatedPassword);
+    // if(error == null){
+    //   setUsername
+    //   setPassword
+    //   setEmail
+    //   setReplicatedPassword
+    // }
+    if (error == null) {
+      navigateToLoginScreen();
+    }
   };
   return (
     <BackgroundImage>
@@ -54,10 +63,12 @@ const RegisterScreen = ({ navigation }) => {
         placeholder="Tên đăng nhập"
       ></InputText>
       <InputText
+        isPassword
         onChangeText={(password) => setPassword(password)}
         placeholder="Mật khẩu"
       ></InputText>
       <InputText
+        isPassword
         onChangeText={(replicatedPassword) =>
           setReplicatedPassword(replicatedPassword)
         }

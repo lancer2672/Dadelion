@@ -28,7 +28,6 @@ export const CommentPost = (postId, content) => {
   });
 };
 export const UpdatePost = (postId, newPostData) => {
-  console.log("postId", postId);
   return axios.put(`${UrlAPI}/post/${postId}`, newPostData, {
     headers: {
       "Content-Type": "multipart/form-data",

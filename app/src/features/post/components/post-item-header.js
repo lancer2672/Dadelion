@@ -114,23 +114,29 @@ const PostHeader = ({ ...props }) => {
   useEffect(() => {
     let currentDate = new Date();
     let createDate = new Date(createdAt);
-    console.log("date1", currentDate);
-    console.log("date2", createDate);
     const days = (currentDate, createDate) => {
       let difference = currentDate.getTime() - createDate.getTime();
       let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-      console.log(difference);
       return TotalDays;
     };
     const diffDays = days(currentDate, createDate);
     if (diffDays == 1) {
-      setCreateTime("Hôm nay lúc " + dayjs(createdAt).format("HH:mm"));
+      if (currentDate.getDate() == createDate.getDate()) {
+        setCreateTime("Hôm nay lúc " + dayjs(createdAt).format("HH:mm"));
+      } else {
+        setCreateTime("Hôm qua lúc " + dayjs(createdAt).format("HH:mm"));
+      }
     } else if (diffDays == 2) {
-      setCreateTime("Hôm qua lúc " + dayjs(createdAt).format("HH:mm"));
+      if (currentDate.getDate() == createDate.getDate() + 1) {
+        setCreateTime("Hôm qua lúc " + dayjs(createdAt).format("HH:mm"));
+      } else {
+        setCreateTime(
+          dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")
+        );
+      }
     } else {
       setCreateTime(dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm"));
     }
-    // return dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm");
   }, []);
 
   return (
@@ -147,50 +153,27 @@ const PostHeader = ({ ...props }) => {
 
       <PostInfoContainer>
         <CreatorName>{creatorName}</CreatorName>
-        {/* <Text>{dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}</Text> */}
         <Text>{createTime}</Text>
       </PostInfoContainer>
 
       <OpenOptionsButtonContainer>
-        {/* <OpenOptionsButton onPress={() => setViewEditOptions(!viewEditOptions)}>
-          <Feather name="more-horizontal" size={24} color="black" />
-        </OpenOptionsButton> */}
-
-        {/* <OptionsContainer>
-             <TouchableOpacity
-              onPress={() => {
-                setModalVisible(true);
-              }}
-            >
-              <Option>Chỉnh sửa</Option>
-              <Modal
-                animationType="fade"
-                visible={modalVisible}
-                onRequestClose={() => {
-                  setModalVisible(false);
-                }}
-              >
-                <UpdatePost
-                  userAvatar={imageUriUserAvatar}
-                  image={postImageUri}
-                  postId={postId}
-                  createdAt={createdAt}
-                  description={description}
-                  creatorName={creatorName}
-                  setIsvisible={setModalVisible}
-                  setViewEditOptions={setViewEditOptions}
-                ></UpdatePost>
-              </Modal>
-            </TouchableOpacity> */}
-
-        {/* <Seperator></Seperator>
-
-            <TouchableOpacity onPress={handleDeletePost}>
-              <Option>Xoá</Option>
-            </TouchableOpacity>  
-
-         
-          </OptionsContainer>*/}
+        <Modal
+          animationType="fade"
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+        >
+          <UpdatePost
+            userAvatar={imageUriUserAvatar}
+            image={postImageUri}
+            postId={postId}
+            createdAt={createdAt}
+            description={description}
+            creatorName={creatorName}
+            setIsvisible={setModalVisible}
+          ></UpdatePost>
+        </Modal>
       </OpenOptionsButtonContainer>
       <Menu render={renderers.SlideInMenu}>
         <MenuTrigger>
@@ -216,17 +199,13 @@ const PostHeader = ({ ...props }) => {
           }}
         >
           <MenuOption
-            onSelect={() => alert(`Save`)}
-            text={"\u2713 " + "save"}
+            onSelect={() => setModalVisible(true)}
+            text={"Chỉnh sửa bài viết"}
           />
-          <MenuOption onSelect={() => alert(`Delete`)}>
-            <Text style={{ color: "red" }}>Delete</Text>
+          <MenuOption onSelect={() => handleDeletePost()} text="Xóa bài viết" />
+          <MenuOption>
+            <Text>Hủy</Text>
           </MenuOption>
-          <MenuOption
-            onSelect={() => alert(`Not called`)}
-            disabled={true}
-            text="Disabled"
-          />
         </MenuOptions>
       </Menu>
     </Container>

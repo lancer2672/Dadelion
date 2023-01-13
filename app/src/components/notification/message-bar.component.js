@@ -28,7 +28,7 @@ const DandelionPetal = styled.Image.attrs(() => ({
   width: 120px;
   height: 120px;
   position: absolute;
-  top: -40;
+  top: -40px;
 `;
 const Message = styled.Text`
   margin-left: 100px;
@@ -52,7 +52,6 @@ const LinearBackground = styled(LinearGradient).attrs(() => ({
 export const MessageBar = ({ message }) => {
   const [position, setPosition] = useState(new Animated.Value(1000));
   const [opacity, setOpacity] = useState(new Animated.Value(0.2));
-  console.log("render");
   useEffect(() => {
     Animated.parallel([
       Animated.timing(position, {

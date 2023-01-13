@@ -9,11 +9,15 @@ import readImageData from "../../../utils/imageHandler";
 
 const CommentContainer = styled(View)`
   flex-direction: row;
-  height: 40px;
-  width: 100%;
+  margin-bottom: 4px;
+  border-bottom-width: 1px;
+`;
+const CommentContentWrapper = styled(View)`
+  flex-direction: row;
+  height: auto;
+  flex: 1;
   align-items: center;
-  background-color: red;
-  border-radius: 25px;
+  padding: 4px;
 `;
 const Avatar = styled(Image)`
   width: 40px;
@@ -25,24 +29,26 @@ const Avatar = styled(Image)`
 const CommentInfo = styled(View)`
   flex: 1;
 `;
-const UserName = styled(Text)``;
+const UserName = styled(Text)`
+  font-size: 15px;
+`;
 const CommentContent = styled(Text)``;
 const OptionsButton = styled(TouchableOpacity)`
   margin-left: 6px;
 `;
 
-const Comment = ({ ...props }) => {
-  console.log(props);
-  const { userId, content: commentContent } = props;
-  const [imageURI, setImageURI] = useState("");
+const Comment = ({ comment }) => {
+  console.count("item re-render");
+  const { userId, content: commentContent } = comment;
+  const [imageURI, setImageURI] = useState(null);
   const [userName, setUserName] = useState("");
   const [content, setContent] = useState("");
   useEffect(() => {
+    setContent(commentContent);
     axios
       .get(`${UrlAPI}/user/${userId}`)
       .then((res) => {
         setUserName(res.data.user.nickname);
-        setContent(commentContent);
         setImageURI(readImageData(res.data.user.avatar.data.data));
       })
       .catch((err) => console.log(err));
@@ -50,16 +56,23 @@ const Comment = ({ ...props }) => {
   return (
     <CommentContainer>
       <TouchableOpacity>
-        <Avatar source={{ uri: imageURI || null }}></Avatar>
+        {imageURI == null ? (
+          <Avatar
+            source={require("../../../../assets/imgs/DefaultAvatar.png")}
+          ></Avatar>
+        ) : (
+          <Avatar source={{ uri: imageURI }}></Avatar>
+        )}
       </TouchableOpacity>
-
-      <CommentInfo>
-        <UserName>{userName}</UserName>
-        <CommentContent>{content}</CommentContent>
-      </CommentInfo>
-      <OptionsButton>
-        <MaterialIcons name="expand-more" size={24} color="black" />
-      </OptionsButton>
+      <CommentContentWrapper>
+        <CommentInfo>
+          <UserName>{userName}</UserName>
+          <CommentContent>{content}</CommentContent>
+        </CommentInfo>
+        <OptionsButton>
+          <MaterialIcons name="expand-more" size={24} color="black" />
+        </OptionsButton>
+      </CommentContentWrapper>
     </CommentContainer>
   );
 };
