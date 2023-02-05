@@ -26,9 +26,7 @@ export default Home;
 
 const styles = StyleSheet.create({
   container: {},
-  postContainer: {
-    marginTop: 20,
-  },
+  postContainer: {},
   header: {
     height: 72,
   },

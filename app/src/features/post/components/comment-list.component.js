@@ -9,7 +9,6 @@ const CommentList = ({ postId, comments }) => {
   let commentList;
 
   // just render lesser than 4 comments
-
   // if (comments.length > 5) {
   //   commentList = comments.slice(-4).map((comment, index) => {
   //     return {

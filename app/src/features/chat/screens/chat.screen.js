@@ -1,12 +1,14 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Platform } from "react-native";
 import React from "react";
 
-export const ChatScreen = () => {
+import ListAvtWithName from "../components/list-avt-with-name.componet";
+
+const ChatScreen = () => {
   return (
-    <View>
-      <Text>ChatScreen</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "gray" }}>
+      <ListAvtWithName></ListAvtWithName>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({});
+export default ChatScreen;

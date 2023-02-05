@@ -1,10 +1,11 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 
 import User from "../../views/User/User";
 import Home from "../../views/Home/Home";
 import Map from "../../features/map/screens/map.screen";
+import ChatScreen from "../../features/chat/screens/chat.screen";
 export const AppNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -19,6 +20,14 @@ export const AppNavigator = () => {
             iconName = focused ? "user-check" : "user";
           } else if (route.name === "Map") {
             iconName = "map-pin";
+          } else if (route.name === "Chat") {
+            return (
+              <Ionicons
+                name="ios-chatbubble-ellipses-outline"
+                size={24}
+                color={color}
+              />
+            );
           }
           // You can return any component that you like here!
           return <Feather name={iconName} size={size} color={color} />;
@@ -33,6 +42,11 @@ export const AppNavigator = () => {
         component={Home}
       />
       <Tab.Screen name="Map" options={{ headerShown: false }} component={Map} />
+      <Tab.Screen
+        name="Chat"
+        options={{ headerShown: false }}
+        component={ChatScreen}
+      />
       <Tab.Screen
         name="User"
         options={{ headerShown: false }}
