@@ -10,7 +10,7 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components/native";
 import axios from "axios";
 
-import { HeaderMenu } from "./post-item-header-menu-options";
+import { HeaderMenu } from "./header-menu.component";
 import UpdatePost from "../screens/update-post.screen";
 import { UrlAPI } from "../../../constants";
 import readImageData from "../../../utils/imageHandler";
@@ -30,37 +30,10 @@ const PostInfoContainer = styled(View)`
   justify-content: center;
   flex: 1;
 `;
-const OptionsContainer = styled(View)`
-  position: absolute;
-  width: 80px;
-  bottom: -60px;
-  background-color: ${(props) => props.theme.colors.bg.secondary};
-  right: 4px;
-  z-index: 1;
-  border-radius: 2px;
-  padding: 2px;
-  shadow-color: "#000";
-  shadow-opacity: 0.6;
-  shadow-radius: 5px;
-  elevation: 1;
-`;
-const OpenOptionsButton = styled(TouchableOpacity)`
-  padding-right: 4px;
-  padding-left: 4px;
-`;
 const OpenOptionsButtonContainer = styled(View)``;
-const Option = styled(Text)`
-  padding: 4px;
-`;
 const CreatorName = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.label};
   font-weight: ${(props) => props.theme.fontWeights.medium};
-`;
-const ModalUpdatePostContainer = styled(Modal)`
-  background-color: rgba(1, 1, 1, 0.2);
-
-  align-items: center;
-  margin-top: 22px;
 `;
 const Avatar = styled(Image)`
   margin-right: 12px;
@@ -76,11 +49,12 @@ const PostHeader = ({ ...props }) => {
     postCreatorId,
     postId,
     creatorName,
-
     createdAt,
     postImageUri,
     description,
   } = props;
+  console.log("header-render");
+
   const [imageUriUserAvatar, setImageUriUserAvatar] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [createTime, setCreateTime] = useState(null);

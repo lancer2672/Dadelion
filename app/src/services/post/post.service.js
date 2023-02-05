@@ -5,9 +5,11 @@ import axios from "axios";
 export const GetAllPosts = () => {
   return axios.get(`${UrlAPI}/post/`, {});
 };
+
 export const DeletePost = (postId) => {
   return axios.delete(`${UrlAPI}/post/${postId}`);
 };
+
 export const CreatePost = (newPostData) => {
   return axios.post(`${UrlAPI}/post/create`, newPostData, {
     headers: {
@@ -27,6 +29,15 @@ export const CommentPost = (postId, content) => {
     content,
   });
 };
+
+export const DeleteComment = (postId, commentId) => {
+  return axios.delete(`${UrlAPI}/post/comment/${postId}`, {
+    data: {
+      commentId,
+    },
+  });
+};
+
 export const UpdatePost = (postId, newPostData) => {
   return axios.put(`${UrlAPI}/post/${postId}`, newPostData, {
     headers: {

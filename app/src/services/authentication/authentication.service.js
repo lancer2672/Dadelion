@@ -12,6 +12,7 @@ export const LoginRequest = async (username, password, progressEvent) => {
     }
   );
 };
+
 export const RegisterRequest = (email, username, password) => {
   return axios.post(`${UrlAPI}/api/auth/register`, {
     email,

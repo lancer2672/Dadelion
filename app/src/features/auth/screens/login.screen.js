@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
       <View style={{ marginTop: 124 }}></View>
       <Logo />
       <Slogan>{AppSlogan}</Slogan>
-      {/* {isLoading && (
+      {isLoading && (
         <View style={{ position: "absolute", top: 330 }}>
           <ProgressBar
             color={"#9b92e5"}
@@ -60,7 +60,7 @@ const LoginScreen = ({ navigation }) => {
             width={200}
           />
         </View>
-      )} */}
+      )}
       <InputText
         onChangeText={(newUsername) => setUsername(newUsername)}
         placeholder="Tên đăng nhập"

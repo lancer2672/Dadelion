@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useEffect, useState, memo } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
+import React, { useEffect, useState, memo, useContext } from "react";
 import axios from "axios";
 import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
 import { UrlAPI } from "../../../constants";
 import readImageData from "../../../utils/imageHandler";
+import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import { CommentMenu } from "./comment-menu-options.component";
 
 const CommentContainer = styled(View)`
   flex-direction: row;
@@ -49,18 +50,20 @@ const OptionsButton = styled(TouchableOpacity)`
   top: 2px;
   right: 8px;
 `;
-const Comment = ({ comment }) => {
+const Comment = ({ comment, postId }) => {
+  // comment == {} then we return <></>
   if (comment == false) {
     return <></>;
   }
-  const { userId, content: commentContent } = comment;
+  const { user } = useContext(AuthenticationContext);
+  const { userId: creatorId, content: commentContent } = comment;
   const [imageURI, setImageURI] = useState(null);
   const [userName, setUserName] = useState("");
   const [content, setContent] = useState("");
   useEffect(() => {
     setContent(commentContent);
     axios
-      .get(`${UrlAPI}/user/${userId}`)
+      .get(`${UrlAPI}/user/${creatorId}`)
       .then((res) => {
         setUserName(res.data.user.nickname);
         setImageURI(readImageData(res.data.user.avatar.data.data));
@@ -85,9 +88,13 @@ const Comment = ({ comment }) => {
             <CommentContent>{content}</CommentContent>
           </ReadMore>
         </CommentInfo>
-        <OptionsButton>
-          <MaterialIcons name="expand-more" size={24} color="black" />
-        </OptionsButton>
+
+        {/* check if it is user's comment */}
+        {creatorId == user._id && (
+          <OptionsButton>
+            <CommentMenu postId={postId} commentId={comment._id}></CommentMenu>
+          </OptionsButton>
+        )}
       </CommentContentWrapper>
     </CommentContainer>
   );

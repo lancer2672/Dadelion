@@ -1,6 +1,6 @@
 import { StyleSheet, FlatList, Text, ActivityIndicator } from "react-native";
 import React, { useState, useContext } from "react";
-import PostItem from "../components/post-item";
+import PostItem from "../components/post.component";
 import { PostContext } from "../../../services/post/post.context";
 import { Spacer } from "../../../components/spacer/spacer.component";
 

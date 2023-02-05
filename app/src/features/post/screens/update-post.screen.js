@@ -38,9 +38,7 @@ const UpdatePost = ({ ...props }) => {
     creatorName,
     createdAt,
     description,
-    setSelectedItem,
     setIsvisible,
-
     postId,
     image,
   } = props;

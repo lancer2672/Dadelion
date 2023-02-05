@@ -38,7 +38,7 @@ const SubmitButton = styled(TouchableOpacity)`
   padding-bottom: 5px;
 `;
 
-const InputBar = ({ postId, commentsLength, setIsVisibleCommentlist }) => {
+const InputBar = ({ postId, commentsLength, setIsCommentsVisible }) => {
   const [text, setText] = useState("");
   const { CommentPost, error } = useContext(PostContext);
   const handlePostComment = async () => {
@@ -47,7 +47,12 @@ const InputBar = ({ postId, commentsLength, setIsVisibleCommentlist }) => {
       await CommentPost(postId, text);
       if (error == null) {
         setText("");
-        if (commentsLength != 0) setIsVisibleCommentlist(true);
+        //  If there isn't any comments we will render this comment
+        //  otherwise we  will display commentlist
+        if (commentsLength !== 0) {
+          console.log("commentLength", commentsLength);
+          setIsCommentsVisible(true);
+        }
       }
     }
   };

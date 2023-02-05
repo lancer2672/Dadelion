@@ -14,11 +14,11 @@ import { Fontisto } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
-import Comment from "./post-item-comment-item";
-import CommentList from "./post-item-comment-list";
-import InputBar from "./post-item-inputbar";
+import Comment from "./comment.component";
+import CommentList from "./comment-list.component";
+import InputBar from "./inputbar.component";
 import readImageData from "../../../utils/imageHandler";
-import PostHeader from "./post-item-header";
+import PostHeader from "./post-header.component";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import { PostContext } from "../../../services/post/post.context";
 
@@ -71,8 +71,10 @@ const ReactSectionContainer = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  border-bottom-color: #dedede;
+  border-bottom-color: #ccc8c8;
   border-bottom-width: 2px;
+  border-top-color: #ccc8c8;
+  border-top-width: 2px;
 `;
 const PostItem = ({ navigation, post }) => {
   const {
@@ -93,7 +95,7 @@ const PostItem = ({ navigation, post }) => {
   const [isCommentsVisible, setIsCommentsVisible] = useState(false);
   let lastComment = false;
   if (comments.length) {
-    lastComment = comments[comments.length - 1];
+    lastComment = { ...comments[comments.length - 1] };
   }
   useEffect(() => {
     //check if post have an image
@@ -177,11 +179,13 @@ const PostItem = ({ navigation, post }) => {
           <Fontisto name="comment" size={24} color="black" />
         </ShowCommentsButton>
       </ReactSectionContainer>
-      {!isCommentsVisible && <Comment comment={lastComment}></Comment>}
+      {!isCommentsVisible && (
+        <Comment postId={postId} comment={lastComment}></Comment>
+      )}
 
       {isCommentsVisible && comments.length > 1 && (
         <CommentListContainer>
-          <CommentList comments={comments}></CommentList>
+          <CommentList postId={postId} comments={comments}></CommentList>
         </CommentListContainer>
       )}
       <InputBar

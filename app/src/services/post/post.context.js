@@ -7,6 +7,7 @@ import {
   ReactPost,
   UpdatePost,
   CommentPost,
+  DeleteComment,
 } from "./post.service";
 
 export const PostContext = createContext();
@@ -66,8 +67,6 @@ export const PostContextProvider = ({ children }) => {
     await CommentPost(postId, content)
       .then((res) => {
         setError(null);
-        console.log("Comment thành công");
-
         const updatedPost = res.data.updatedPost;
         const newPosts = posts.map((post) => {
           if (post._id == updatedPost._id) {
@@ -76,11 +75,35 @@ export const PostContextProvider = ({ children }) => {
             return post;
           }
         });
+        console.log("newPost", newPosts);
         setPosts(newPosts);
       })
       .catch((err) => {
         setError(err);
         console.log("Comment thất bại");
+      });
+  };
+  const HandleDeleteComment = async (postId, commentId) => {
+    setIsLoading(true);
+    await DeleteComment(postId, commentId)
+      .then((res) => {
+        setError(null);
+        const updatedComments = res.data.updatedComments;
+        const newPosts = posts.map((post) => {
+          if (post._id == postId) {
+            return {
+              ...post,
+              comments: updatedComments,
+            };
+          } else return post;
+        });
+        setPosts(newPosts);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log("error");
+        setError(err);
+        setIsLoading(false);
       });
   };
   const HandleUpdatePost = async (postId, newPostData) => {
@@ -118,6 +141,7 @@ export const PostContextProvider = ({ children }) => {
         ReactPost: HandleReactPost,
         CommentPost: HandleCommentPost,
         UpdatePost: HandleUpdatePost,
+        DeleteComment: HandleDeleteComment,
       }}
     >
       {children}
