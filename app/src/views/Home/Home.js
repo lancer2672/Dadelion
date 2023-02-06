@@ -10,15 +10,15 @@ import HomeHeader from "./HomeHeader";
 const Home = ({ navigation }) => {
   const { user } = useContext(AuthenticationContext);
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <View style={styles.container}>
+      <View>
         <HomeHeader navigation={navigation}></HomeHeader>
       </View>
       <MessageBar message={`Xin chào ${user.nickname}`}></MessageBar>
       <View style={styles.postContainer}>
         <Post navigation={navigation}></Post>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -27,7 +27,4 @@ export default Home;
 const styles = StyleSheet.create({
   container: {},
   postContainer: {},
-  header: {
-    height: 72,
-  },
 });

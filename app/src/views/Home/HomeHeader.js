@@ -8,11 +8,10 @@ import {
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 
-import { useSelector } from "react-redux";
-
 import CreatePost from "../../features/post/screens/create-post.screen";
 import Color from "../../utils/color";
 import readImageData from "../../utils/imageHandler";
+import Search from "./components/search.component";
 import { AuthenticationContext } from "../../services/authentication/authentication.context";
 
 const HomeHeader = ({ navigation }) => {
@@ -31,7 +30,7 @@ const HomeHeader = ({ navigation }) => {
   }, []);
   return (
     <View>
-      {/* <SearchBar></SearchBar> */}
+      <Search></Search>
       <View style={styles.container}>
         <TouchableOpacity onPress={handleNavigationUser}>
           {userAvatar == null ? (

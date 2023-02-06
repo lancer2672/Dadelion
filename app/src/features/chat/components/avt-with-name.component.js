@@ -11,9 +11,9 @@ const Container = styled(TouchableOpacity)`
 // font-size: ${(props) => props.theme.fontSizes.label};
 // font-size: ${(props) => props.theme.fontWeights.medium};
 const Name = styled(Text)`
-  font-size: 14;
   text-align: center;
-  font-weight: 500;
+  font-size: ${(props) => props.theme.fontSizes.caption};
+  font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 const Avatar = styled(Image)`
   border-radius: 25;
