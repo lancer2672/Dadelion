@@ -1,51 +1,42 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
+import { Snackbar } from "react-native-paper";
+
 import FoundUser from "./found-user.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
-const FoundedUsersList = () => {
-  const listUser = [
-    {
-      name: "khánh",
-    },
-    {
-      name: "toản",
-    },
-    {
-      name: "toản1",
-    },
-    {
-      name: "toản2",
-    },
-    {
-      name: "toản3",
-    },
-    {
-      name: "toản4",
-    },
-    {
-      name: "toản5",
-    },
-    {
-      name: "toản6",
-    },
-  ];
+const FoundedUsersList = ({ userList }) => {
+  if (userList.length === 0) {
+    return <></>;
+  }
+
   return (
-    <FlatList
-      style={{ margin: 12 }}
-      data={listUser}
-      ListEmptyComponent={() => null}
-      renderItem={({ item }) => {
-        const { avatar, name } = item;
-        return (
-          <Spacer position={"bottom"} size={"small"}>
-            <FoundUser name={name} />
-          </Spacer>
-        );
+    <View
+      style={{
+        position: "absolute",
+        top: 60,
+        right: 0,
+        left: 0,
+        backgroundColor: "#e3d8d8",
+        zIndex: 1,
       }}
-      keyExtractor={(item) => {
-        return item.name;
-      }}
-    ></FlatList>
+    >
+      <FlatList
+        style={{ marginTop: 12 }}
+        data={userList}
+        ListEmptyComponent={() => null}
+        renderItem={({ item }) => {
+          const { avatar, username } = item;
+          return (
+            <Spacer position={"bottom"} size={"medium"}>
+              <FoundUser avatar={avatar} name={username} />
+            </Spacer>
+          );
+        }}
+        keyExtractor={(item) => {
+          return item._id;
+        }}
+      ></FlatList>
+    </View>
   );
 };
 
