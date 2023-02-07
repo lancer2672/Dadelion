@@ -32,5 +32,3 @@ const AvtWithName = ({ avatar, name }) => {
 };
 
 export default AvtWithName;
-
-const styles = StyleSheet.create({});

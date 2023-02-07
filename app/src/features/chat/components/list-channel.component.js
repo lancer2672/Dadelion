@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
-import AvtWithName from "./avt-with-name.component";
+
+import Channel from "./channel.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
-const ListAvtWithName = () => {
+
+const ListChannel = () => {
   const listUser = [
     {
       name: "khánh",
@@ -28,22 +30,29 @@ const ListAvtWithName = () => {
     {
       name: "toản6",
     },
+    {
+      name: "toản7",
+    },
+    {
+      name: "toản8",
+    },
+    {
+      name: "toản88",
+    },
+    {
+      name: "toản888",
+    },
   ];
   return (
     <FlatList
-      style={{
-        margin: 12,
-        height: 80,
-        flexGrow: 0,
-      }}
+      style={{ margin: 12, marginTop: 24, flexGrow: 0 }}
       data={listUser}
-      horizontal
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {
         const { avatar, name } = item;
         return (
-          <Spacer position={"right"} size={"large"}>
-            <AvtWithName name={name} />
+          <Spacer position={"bottom"} size={"large"}>
+            <Channel />
           </Spacer>
         );
       }}
@@ -54,4 +63,6 @@ const ListAvtWithName = () => {
   );
 };
 
-export default ListAvtWithName;
+export default ListChannel;
+
+const styles = StyleSheet.create({});

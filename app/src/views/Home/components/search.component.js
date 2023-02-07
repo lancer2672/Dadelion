@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import { Searchbar, Snackbar } from "react-native-paper";
 import styled from "styled-components/native";
@@ -6,32 +12,34 @@ import axios from "axios";
 
 import { UrlAPI } from "../../../constants";
 import FoundedUsersList from "./found-user-list.component";
+
 const SearchContainer = styled(View)`
   padding: ${(props) => props.theme.space[2]};
 `;
 
 const Search = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [userList, setUserList] = useState(null);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const searchTimeout = useRef();
 
   //deboucing search
   useEffect(() => {
-    console.log("useEffect");
     if (searchKeyword.trim() == "") {
       setUserList(null);
     } else {
       searchTimeout.current = setTimeout(() => {
-        console.log("searching");
         search();
-      }, 500);
+      }, 400);
     }
     return () => {
       if (searchTimeout.current) clearTimeout(searchTimeout.current);
     };
   }, [searchKeyword]);
+
   const search = async () => {
+    setIsSearching(true);
     try {
       const response = await axios.get(
         `${UrlAPI}/user/search/?q=${searchKeyword}`
@@ -43,6 +51,7 @@ const Search = () => {
       }
       setUserList(response.data.users);
     } catch (err) {}
+    setIsSearching(false);
   };
   return (
     <SearchContainer>
@@ -76,6 +85,7 @@ const Search = () => {
           <Text>Không tìm thấy người dùng !!!</Text>
         </View>
       </Snackbar>
+      {isSearching && <ActivityIndicator size="small" color="#0000ff" />}
     </SearchContainer>
   );
 };

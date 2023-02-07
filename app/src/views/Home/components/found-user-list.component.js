@@ -13,7 +13,7 @@ const FoundedUsersList = ({ userList }) => {
     <View
       style={{
         position: "absolute",
-        top: 60,
+        top: 68,
         right: 0,
         left: 0,
         backgroundColor: "#e3d8d8",

@@ -17,7 +17,7 @@ export const AppNavigator = () => {
           if (route.name === "Home") {
             iconName = "home";
           } else if (route.name === "User") {
-            iconName = focused ? "user-check" : "user";
+            iconName = "user";
           } else if (route.name === "Map") {
             iconName = "map-pin";
           } else if (route.name === "Chat") {

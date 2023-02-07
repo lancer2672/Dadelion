@@ -21,8 +21,8 @@ import { useContext } from "react";
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const User = ({ ...props }) => {
-  const { navigation } = props;
+const User = ({ props, navigation }) => {
+  console.log(props);
   const { user } = useContext(AuthenticationContext);
   const [avatarUri, setAvatarUri] = useState("");
   const [wallPaperUri, setWallPaperUri] = useState("");
@@ -97,10 +97,6 @@ const User = ({ ...props }) => {
       <View>
         {/* wallPaper */}
         <ImageBackground
-          //   source={
-          //     {wallPaperUri == null? {uri: wallPaperUri}: require("./../../../assets/imgs/24.jpg")}
-
-          // }
           source={
             wallPaperUri == null
               ? require("./../../../assets/imgs/24.jpg")
