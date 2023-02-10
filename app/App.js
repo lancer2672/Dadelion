@@ -11,6 +11,7 @@ import theme from "./src/infrastructure/theme";
 import Navigator from "./src/infrastructure/navigation";
 import { AuthenticationContextProvider } from "./src/services/authentication/authentication.context";
 import { PostContextProvider } from "./src/services/post/post.context";
+import { ChatContextProvider } from "./src/services/chat/chat.context";
 import { MenuProvider } from "react-native-popup-menu";
 
 export default function App() {
@@ -32,7 +33,9 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <AuthenticationContextProvider>
           <PostContextProvider>
-            <Navigator></Navigator>
+            <ChatContextProvider>
+              <Navigator></Navigator>
+            </ChatContextProvider>
           </PostContextProvider>
         </AuthenticationContextProvider>
       </ThemeProvider>

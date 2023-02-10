@@ -10,14 +10,13 @@ import React, { useEffect, useState, useContext } from "react";
 
 import CreatePost from "../../features/post/screens/create-post.screen";
 import Color from "../../utils/color";
-import readImageData from "../../utils/imageHandler";
 import Search from "./components/search.component";
 import { AuthenticationContext } from "../../services/authentication/authentication.context";
 
 const HomeHeader = ({ navigation }) => {
   const { user } = useContext(AuthenticationContext);
   const [modalVisible, setModalVisible] = useState(false);
-  const [userAvatar, setUserAvatar] = useState("");
+  const [userAvatar, setUserAvatar] = useState(null);
 
   const handleNavigationUser = () => {
     navigation.navigate("User");
@@ -26,7 +25,7 @@ const HomeHeader = ({ navigation }) => {
     setModalVisible(true);
   };
   useEffect(() => {
-    setUserAvatar(readImageData(user.avatar.data.data));
+    setUserAvatar(user.avatar);
   }, []);
   return (
     <View>
@@ -39,10 +38,7 @@ const HomeHeader = ({ navigation }) => {
               source={require("./../../../assets/imgs/DefaultAvatar.png")}
             ></Image>
           ) : (
-            <Image
-              source={{ uri: userAvatar || null }}
-              style={styles.avatar}
-            ></Image>
+            <Image source={{ uri: userAvatar }} style={styles.avatar}></Image>
           )}
         </TouchableOpacity>
         <View style={styles.descriptionContainer}>

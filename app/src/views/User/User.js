@@ -27,8 +27,8 @@ const User = ({ props, navigation }) => {
   const [avatarUri, setAvatarUri] = useState("");
   const [wallPaperUri, setWallPaperUri] = useState("");
   useEffect(() => {
-    setAvatarUri(readImageData(user.avatar.data.data));
-    setWallPaperUri(readImageData(user.wallPaper.data.data));
+    setAvatarUri(readImageData(user.avatar));
+    setWallPaperUri(readImageData(user.wallPaper));
   }, []);
   console.log(user._id);
   const updateUserImage = async (isWallpaper, setUri) => {
@@ -100,7 +100,7 @@ const User = ({ props, navigation }) => {
           source={
             wallPaperUri == null
               ? require("./../../../assets/imgs/24.jpg")
-              : { uri: wallPaperUri || null }
+              : { uri: wallPaperUri }
           }
           style={styles.wallPaper}
         >
@@ -110,7 +110,7 @@ const User = ({ props, navigation }) => {
             source={
               avatarUri == null
                 ? require("./../../../assets/imgs/DefaultAvatar.png")
-                : { uri: avatarUri || null }
+                : { uri: avatarUri }
             }
             style={styles.avatar}
           >

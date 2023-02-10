@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { createContext } from "react";
 import setAuthToken from "../../utils/setAuthToken";
-import { LoginRequest, RegisterRequest } from "./authentication.service";
+import {
+  LoginRequest,
+  RegisterRequest,
+  TransformUserInformation,
+} from "./authentication.service";
 
 export const AuthenticationContext = createContext();
 
 export const AuthenticationContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
@@ -16,9 +21,10 @@ export const AuthenticationContextProvider = ({ children }) => {
       .then((res) => {
         const { token, user } = res.data;
         setAuthToken(token);
-        setUser(user);
+        setUser(TransformUserInformation(user));
         setIsLoading(false);
         setError(null);
+        setIsAuthenticated(true);
       })
       .catch((e) => {
         setIsLoading(false);
@@ -56,6 +62,7 @@ export const AuthenticationContextProvider = ({ children }) => {
         user,
         isLoading,
         error,
+        isAuthenticated,
         setError,
         onLogin,
         onRegister,

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { createContext } from "react";
+import { AuthenticationContext } from "../authentication/authentication.context";
 import {
   GetAllPosts,
   DeletePost,
@@ -15,18 +16,21 @@ export const PostContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
+  const { isAuthenticated } = useContext(AuthenticationContext);
   useEffect(() => {
-    setIsLoading(true);
-    GetAllPosts()
-      .then((response) => {
-        setPosts(response.data.posts);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setError(err);
-      });
-  }, []);
+    if (isAuthenticated) {
+      setIsLoading(true);
+      GetAllPosts()
+        .then((response) => {
+          setPosts(response.data.posts);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err);
+        });
+    }
+  }, [isAuthenticated]);
   const HandleDeletePost = async (postId) => {
     setIsLoading(true);
     await DeletePost(postId)

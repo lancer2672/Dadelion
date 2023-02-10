@@ -4,19 +4,19 @@ import styled from "styled-components/native";
 
 const Container = styled(TouchableOpacity)`
   width: 100%;
-  height: 50
+  height: 50px;
   justify-content: flex-start;
   align-items: center;
-  flex-direction:row;
+  flex-direction: row;
 `;
 const Name = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.caption};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 const Avatar = styled(Image)`
-  border-radius: 25;
-  width: 50;
-  height: 50;
+  border-radius: 25px;
+  width: 50px;
+  height: 50px;
 `;
 const LastMessage = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.body};

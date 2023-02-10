@@ -26,17 +26,19 @@ const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [progress, setProgress] = useState(0);
-
+  console.log("progress", progress);
   async function handleFacebookLogin() {
     // Start the auth session
   }
   const handleLogin = () => {
     Keyboard.dismiss();
-    const progressEvent = (progressEvent) => {
+    const progressEvent = (progEvent) => {
+      console.log("progEvent.loaded", progEvent.loaded);
       var percentCompleted = Math.round(
-        (progressEvent.loaded * 100) / progressEvent.total
+        (progEvent.loaded * 100) / progEvent.total
       );
-      setProgress(percentCompleted / 100);
+      console.log(percentCompleted);
+      setProgress(() => percentCompleted / 100);
     };
     onLogin(username, password, progressEvent);
   };

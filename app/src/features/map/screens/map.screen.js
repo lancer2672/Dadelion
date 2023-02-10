@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, Image, View } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components/native";
-import MapView from "react-native-maps";
+import MapView, { Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
-
+import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 const MapViewComponent = styled(MapView)`
   flex: 1;
 `;
@@ -11,6 +11,7 @@ const MapViewComponent = styled(MapView)`
 const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const { user } = useContext(AuthenticationContext);
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -40,7 +41,21 @@ const Map = () => {
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         }}
-      ></MapViewComponent>
+      >
+        <Marker
+          key={"name"}
+          image={require("./../../../../assets/imgs/DefaultAvatar.png")}
+          title={"Tran Khanh"}
+          coordinate={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          }}
+        >
+          <Callout onPress={null}>
+            <Text>SomeThing</Text>
+          </Callout>
+        </Marker>
+      </MapViewComponent>
     );
   }
   return <></>;

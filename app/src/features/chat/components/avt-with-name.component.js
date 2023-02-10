@@ -3,8 +3,8 @@ import styled from "styled-components/native";
 import React from "react";
 
 const Container = styled(TouchableOpacity)`
-  width: 50;
-  height: 70;
+  width: 50px;
+  height: 70px;
   justify-content: center;
   align-items; center;
 `;
@@ -16,9 +16,9 @@ const Name = styled(Text)`
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 const Avatar = styled(Image)`
-  border-radius: 25;
-  width: 50;
-  height: 50;
+  border-radius: 25px;
+  width: 50px;
+  height: 50px;
 `;
 const AvtWithName = ({ avatar, name }) => {
   return (

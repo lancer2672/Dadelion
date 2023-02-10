@@ -38,6 +38,7 @@ const ListAvtWithName = () => {
       }}
       data={listUser}
       horizontal
+      showsHorizontalScrollIndicator={false}
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {
         const { avatar, name } = item;
