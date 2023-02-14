@@ -19,6 +19,8 @@ import { Text } from "../../../components/typography/text.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import ProgressBar from "react-native-progress/Bar";
 
+import { accountSchema } from "../../../utils/validator";
+
 const LoginScreen = ({ navigation }) => {
   const { isLoading, error, onLogin, setError } = useContext(
     AuthenticationContext
@@ -26,21 +28,31 @@ const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [progress, setProgress] = useState(0);
-  console.log("progress", progress);
-  async function handleFacebookLogin() {
-    // Start the auth session
-  }
-  const handleLogin = () => {
+
+  const validateAccount = (account) => {
+    const accountSchemaNoEmail = accountSchema.omit("email");
+
+    return accountSchemaNoEmail.validate(account);
+  };
+
+  const updateProgressBarEvent = (progEvent) => {
+    var percentCompleted = Math.round(
+      (progEvent.loaded * 100) / progEvent.total
+    );
+    setProgress(() => percentCompleted / 100);
+  };
+  const handleLogin = async () => {
     Keyboard.dismiss();
-    const progressEvent = (progEvent) => {
-      console.log("progEvent.loaded", progEvent.loaded);
-      var percentCompleted = Math.round(
-        (progEvent.loaded * 100) / progEvent.total
-      );
-      console.log(percentCompleted);
-      setProgress(() => percentCompleted / 100);
+    const acc = {
+      name: username,
+      password: password,
     };
-    onLogin(username, password, progressEvent);
+    await validateAccount(acc)
+      .then((valid) => {
+        console.log(valid);
+        // onLogin(username, password, updateProgressBarEvent);
+      })
+      .catch((err) => console.log(err));
   };
   const navigateToRegisterScreen = () => {
     setError(null);

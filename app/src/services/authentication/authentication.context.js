@@ -28,7 +28,6 @@ export const AuthenticationContextProvider = ({ children }) => {
       })
       .catch((e) => {
         setIsLoading(false);
-        console.log("er", e);
         setAuthToken(null);
         setError("Lỗi! Đăng nhập thất bại");
       });

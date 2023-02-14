@@ -22,9 +22,16 @@ const Name = styled(Text)`
 `;
 const FoundUser = ({ avatar, name }) => {
   const avtUri = readImageData(avatar.data.data);
+
   return (
     <Container onPress={() => console.log("press")}>
-      <Avatar source={{ uri: avtUri }}></Avatar>
+      {avtUri == null ? (
+        <Avatar
+          source={require("../../../../assets/imgs/DefaultAvatar.png")}
+        ></Avatar>
+      ) : (
+        <Avatar source={{ uri: avtUri }}></Avatar>
+      )}
       <Spacer position={"left"} size={"medium"}></Spacer>
       <Name>{name}</Name>
     </Container>
