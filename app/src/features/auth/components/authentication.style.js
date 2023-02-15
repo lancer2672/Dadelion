@@ -1,11 +1,12 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Image,
+  Pressable,
   ImageBackground,
   Text,
+  TouchableOpacity,
   StyleSheet,
   Animated,
-  TouchableOpacity,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import styled from "styled-components/native";
@@ -26,7 +27,9 @@ export const Logo = styled.Image.attrs((props) => ({
   resize-mode: contain;
 `;
 
-export const AuthButton = styled(TouchableOpacity)`
+export const AuthButton = styled(TouchableOpacity).attrs((props) => ({
+  // disabled: props.isValidated ? false : true,
+}))`
   min-width: 200px;
   padding-top: ${(props) => props.theme.space[2]};
   padding-bottom: ${(props) => props.theme.space[2]};
@@ -40,7 +43,6 @@ export const AuthButtonContent = styled(Text)`
   font-size: 16px;
   color: ${(props) => props.theme.colors.text.primary};
 `;
-
 export const Slogan = styled(Text)`
   font-style: italic;
   color: ${(props) => props.theme.colors.text.primary};
@@ -61,7 +63,7 @@ export const Animation1 = styled(Animated.Image).attrs((props) => ({
   height: 200px;
 `;
 export const Error = styled(Text)`
-  margin-top: 8;
+  margin-top: 8px;
   color: ${(props) => props.theme.colors.text.error};
 `;
 // export const ProgressBarComponent = styled(Progress.Bar).attrs((props) => ({
@@ -69,7 +71,7 @@ export const Error = styled(Text)`
 // }))`
 //   width: 200px;
 // `;
-export const InputText = ({
+const InputText = ({
   iconLeft,
   iconRight,
   onIconPress,
@@ -77,7 +79,7 @@ export const InputText = ({
   placeholder,
   setText,
   passwordType,
-  validationErrors,
+  hasValidationError,
 }) => {
   return (
     <TextInput
@@ -85,7 +87,7 @@ export const InputText = ({
       outlineStyle={{
         borderRadius: 25,
       }}
-      outlineColor={validationErrors.password && "red"}
+      outlineColor={hasValidationError && "red"}
       style={styles.textInput}
       secureTextEntry={passwordType && !showPassword}
       left={
@@ -99,28 +101,25 @@ export const InputText = ({
         />
       }
       right={
-        <TextInput.Icon
-          size={20}
-          onPress={onIconPress}
-          icon={
-            passwordType == true
-              ? showPassword
-                ? "eye-off"
-                : "eye"
-              : iconRight
-          }
-        />
+        passwordType && (
+          <TextInput.Icon
+            size={20}
+            onPress={onIconPress}
+            icon={showPassword ? "eye-off" : "eye"}
+          />
+        )
       }
       onChangeText={(newText) => setText(newText)}
       placeholder={placeholder}
     ></TextInput>
   );
 };
-
+export default memo(InputText);
 const styles = StyleSheet.create({
   textInput: {
     backgroundColor: "white",
     width: 250,
+    marginTop: 8,
     fontSize: 14,
   },
 });

@@ -3,11 +3,8 @@ import React, { useState, useContext, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { AppSlogan } from "../../../utils/slogan";
 import Color from "../../../utils/color";
-import * as Facebook from "expo-facebook";
-import { TextInput } from "react-native-paper";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
-import {
-  InputText,
+import InputText, {
   AuthButton,
   Slogan,
   Animation,
@@ -17,11 +14,12 @@ import {
   AuthButtonContent,
   Animation1,
 } from "../components/authentication.style";
-import { Text } from "../../../components/typography/text.component";
-import { Spacer } from "../../../components/spacer/spacer.component";
 import ProgressBar from "react-native-progress/Bar";
 
-import { accountSchema } from "../../../utils/validation";
+import { Text } from "../../../components/typography/text.component";
+import { Spacer } from "../../../components/spacer/spacer.component";
+import { accountSchema } from "../../../utils/validationSchemas";
+import validateInformation from "../../../utils/validator";
 
 const LoginScreen = ({ navigation }) => {
   const { isLoading, error, onLogin, setError } = useContext(
@@ -31,17 +29,11 @@ const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [progress, setProgress] = useState(0);
-  const [validationErrors, setValidationErrors] = useState({
-    name: null,
-    password: null,
-  });
+  const [validationError, setValidationError] = useState({});
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const validateInformation = (account) => {
-    const accountSchemaNoEmail = accountSchema.omit(["email"]);
-    return accountSchemaNoEmail.validate(account);
-  };
+
   const updateProgressBarEvent = (progEvent) => {
     var percentCompleted = Math.round(
       (progEvent.loaded * 100) / progEvent.total
@@ -52,25 +44,23 @@ const LoginScreen = ({ navigation }) => {
     setError(null);
     Keyboard.dismiss();
     const acc = {
-      name: username,
+      username: username,
       password: password,
     };
-    await validateInformation(acc)
+    await validateInformation(accountSchema, acc, ["password", "username"])
       .then((valid) => {
-        setValidationErrors({});
-        onLogin(valid.name, valid.password, updateProgressBarEvent);
+        setValidationError({});
+        onLogin(valid.username, valid.password, updateProgressBarEvent);
       })
       .catch((err) => {
-        setValidationErrors((erros) => {
-          return {
-            [err.path]: err.errors[0],
-          };
+        setValidationError({
+          [err.path]: err.errors[0],
         });
       });
   };
   const navigateToRegisterScreen = () => {
     setError(null);
-    navigation.navigate("Register");
+    navigation.navigate("Register", {});
   };
 
   return (
@@ -90,35 +80,36 @@ const LoginScreen = ({ navigation }) => {
         </View>
       )}
       <InputText
-        onPress={togglePasswordVisibility}
         iconLeft={"account"}
         setText={setUsername}
-        validationErrors={validationErrors}
+        hasValidationError={validationError.username}
         placeholder={"Tên đăng nhập"}
       ></InputText>
-      {validationErrors.name && (
-        <Error variant="error">{validationErrors.name}</Error>
+      {validationError.username && (
+        <Error variant="error">{validationError.username}</Error>
       )}
-      <Spacer position={"top"} size={"medium"}></Spacer>
 
       <InputText
-        onPress={togglePasswordVisibility}
+        onIconPress={togglePasswordVisibility}
         iconLeft={"lock"}
         passwordType
         setText={setPassword}
         showPassword={showPassword}
-        validationErrors={validationErrors}
+        hasValidationError={validationError.password}
         placeholder={"Mật khẩu"}
       ></InputText>
 
-      {validationErrors.password && (
-        <Error variant="error">{validationErrors.password}</Error>
+      {validationError.password && (
+        <Error variant="error">{validationError.password}</Error>
       )}
 
       {error && <Error variant="error">{error}</Error>}
       <Spacer variant="bottom" size="small"></Spacer>
       <View style={{ marginTop: 18 }}>
-        <AuthButton onPress={handleLogin}>
+        <AuthButton
+          // isValidated={Object.keys(validationError).length == 0 ? true : false}
+          onPress={handleLogin}
+        >
           <AuthButtonContent>Đăng nhập</AuthButtonContent>
         </AuthButton>
         <Spacer variant="top" size="large"></Spacer>
@@ -132,23 +123,4 @@ const LoginScreen = ({ navigation }) => {
     </BackgroundImage>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  errorMessage: {
-    color: Color.error,
-  },
-  textInput: {
-    backgroundColor: "white",
-    width: 250,
-    fontSize: 14,
-  },
-  forgetText: {
-    fontWeight: "bold",
-    color: "#FFF",
-  },
-});
 export default LoginScreen;
