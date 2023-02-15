@@ -4,6 +4,7 @@ import * as SecureStore from "expo-secure-store";
 import { AppSlogan } from "../../../utils/slogan";
 import Color from "../../../utils/color";
 import * as Facebook from "expo-facebook";
+import { TextInput } from "react-native-paper";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import {
   InputText,
@@ -11,6 +12,7 @@ import {
   Slogan,
   Animation,
   Logo,
+  Error,
   BackgroundImage,
   AuthButtonContent,
   Animation1,
@@ -19,22 +21,27 @@ import { Text } from "../../../components/typography/text.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import ProgressBar from "react-native-progress/Bar";
 
-import { accountSchema } from "../../../utils/validator";
+import { accountSchema } from "../../../utils/validation";
 
 const LoginScreen = ({ navigation }) => {
   const { isLoading, error, onLogin, setError } = useContext(
     AuthenticationContext
   );
   const [username, setUsername] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [progress, setProgress] = useState(0);
-
-  const validateAccount = (account) => {
-    const accountSchemaNoEmail = accountSchema.omit("email");
-
+  const [validationErrors, setValidationErrors] = useState({
+    name: null,
+    password: null,
+  });
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const validateInformation = (account) => {
+    const accountSchemaNoEmail = accountSchema.omit(["email"]);
     return accountSchemaNoEmail.validate(account);
   };
-
   const updateProgressBarEvent = (progEvent) => {
     var percentCompleted = Math.round(
       (progEvent.loaded * 100) / progEvent.total
@@ -42,17 +49,24 @@ const LoginScreen = ({ navigation }) => {
     setProgress(() => percentCompleted / 100);
   };
   const handleLogin = async () => {
+    setError(null);
     Keyboard.dismiss();
     const acc = {
       name: username,
       password: password,
     };
-    await validateAccount(acc)
+    await validateInformation(acc)
       .then((valid) => {
-        console.log(valid);
-        // onLogin(username, password, updateProgressBarEvent);
+        setValidationErrors({});
+        onLogin(valid.name, valid.password, updateProgressBarEvent);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setValidationErrors((erros) => {
+          return {
+            [err.path]: err.errors[0],
+          };
+        });
+      });
   };
   const navigateToRegisterScreen = () => {
     setError(null);
@@ -76,30 +90,37 @@ const LoginScreen = ({ navigation }) => {
         </View>
       )}
       <InputText
-        onChangeText={(newUsername) => setUsername(newUsername)}
-        placeholder="Tên đăng nhập"
+        onPress={togglePasswordVisibility}
+        iconLeft={"account"}
+        setText={setUsername}
+        validationErrors={validationErrors}
+        placeholder={"Tên đăng nhập"}
       ></InputText>
+      {validationErrors.name && (
+        <Error variant="error">{validationErrors.name}</Error>
+      )}
+      <Spacer position={"top"} size={"medium"}></Spacer>
+
       <InputText
-        isPassword
-        onChangeText={(newPassword) => setPassword(newPassword)}
-        placeholder="Mật khẩu"
+        onPress={togglePasswordVisibility}
+        iconLeft={"lock"}
+        passwordType
+        setText={setPassword}
+        showPassword={showPassword}
+        validationErrors={validationErrors}
+        placeholder={"Mật khẩu"}
       ></InputText>
 
-      {error == null ? (
-        <View style={{ height: 21 }}></View>
-      ) : (
-        <View style={styles.error}>
-          <Text variant="error">{error}</Text>
-        </View>
+      {validationErrors.password && (
+        <Error variant="error">{validationErrors.password}</Error>
       )}
+
+      {error && <Error variant="error">{error}</Error>}
       <Spacer variant="bottom" size="small"></Spacer>
       <View style={{ marginTop: 18 }}>
         <AuthButton onPress={handleLogin}>
           <AuthButtonContent>Đăng nhập</AuthButtonContent>
         </AuthButton>
-        {/* <AuthButton onPress={handleFacebookLogin}>
-          <AuthButtonContent>Đăng nhập với facebook</AuthButtonContent>
-        </AuthButton> */}
         <Spacer variant="top" size="large"></Spacer>
         <AuthButton onPress={navigateToRegisterScreen}>
           <AuthButtonContent>Đăng ký</AuthButtonContent>
@@ -117,11 +138,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-end",
   },
-  error: {
-    minHeight: 16,
-  },
   errorMessage: {
     color: Color.error,
+  },
+  textInput: {
+    backgroundColor: "white",
+    width: 250,
+    fontSize: 14,
   },
   forgetText: {
     fontWeight: "bold",
