@@ -22,7 +22,7 @@ import { accountSchema } from "../../../utils/validationSchemas";
 import validateInformation from "../../../utils/validator";
 
 const LoginScreen = ({ navigation }) => {
-  const { isLoading, error, onLogin, setError } = useContext(
+  const { isLoading, error, onLogin, setError, isAuthenticated } = useContext(
     AuthenticationContext
   );
   const [username, setUsername] = useState("");
@@ -62,7 +62,6 @@ const LoginScreen = ({ navigation }) => {
     setError(null);
     navigation.navigate("Register", {});
   };
-
   return (
     <BackgroundImage>
       <View style={{ marginTop: 124 }}></View>

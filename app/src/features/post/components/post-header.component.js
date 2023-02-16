@@ -53,7 +53,6 @@ const PostHeader = ({ ...props }) => {
     postImageUri,
     description,
   } = props;
-  console.log("header-render");
 
   const [imageUriUserAvatar, setImageUriUserAvatar] = useState("");
   const [modalVisible, setModalVisible] = useState(false);

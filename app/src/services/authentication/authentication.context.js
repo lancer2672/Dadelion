@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createContext } from "react";
 import setAuthToken from "../../utils/setAuthToken";
 import {
   LoginRequest,
   RegisterRequest,
+  CheckUserLoggedIn,
+  StoreUserData,
+  DeleteUserToken,
   TransformUserInformation,
+  GetUserById,
 } from "./authentication.service";
 
 export const AuthenticationContext = createContext();
@@ -15,30 +19,49 @@ export const AuthenticationContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
-  const onLogin = (username, password, progressEvent) => {
-    setIsLoading(true);
-    LoginRequest(username, password, progressEvent)
-      .then((res) => {
-        const { token, user } = res.data;
-        setAuthToken(token);
-        setUser(TransformUserInformation(user));
-        setIsLoading(false);
-        setError(null);
-        setIsAuthenticated(true);
-      })
-      .catch((e) => {
-        setIsLoading(false);
-        setAuthToken(null);
-        setError("Lỗi! Đăng nhập thất bại");
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const userData = await CheckUserLoggedIn();
+        if (userData) {
+          setAuthToken(userData.token);
+          const res = await GetUserById(userData.userId);
+          if (res) {
+            setUser(TransformUserInformation(res.data.user));
+            setIsAuthenticated(true);
+            setIsLoading(false);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loadUser();
+  }, []);
+  const onLogin = async (username, password, progressEvent) => {
+    try {
+      setIsLoading(true);
+      const data = await LoginRequest(username, password, progressEvent);
+      const { token, user } = data;
+      setAuthToken(token);
+      StoreUserData({
+        token,
+        userId: data.user._id,
       });
+      setUser(TransformUserInformation(user));
+      setIsLoading(false);
+      setError(null);
+      setIsAuthenticated(true);
+    } catch (err) {
+      console.log("err", err);
+      setIsLoading(false);
+      setAuthToken(null);
+      setError(err);
+    }
   };
 
   const onRegister = (email, username, password, repeatedPassword) => {
     setIsLoading(true);
-    if (password !== repeatedPassword) {
-      setError("Error: Passwords do not match");
-      return;
-    }
     RegisterRequest(email, username, password)
       .then(function (response) {
         setIsLoading(false);
@@ -51,6 +74,10 @@ export const AuthenticationContextProvider = ({ children }) => {
   };
 
   const onLogout = () => {
+    DeleteUserToken();
+    setIsAuthenticated(false);
+    setAuthToken(null);
+    setUser(null);
     return;
   };
 

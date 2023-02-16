@@ -41,7 +41,6 @@ const RegisterScreen = ({ navigation }) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  console.log("er", validationError);
   const handleRegistration = async () => {
     const accountInfor = {
       email: email,
@@ -70,7 +69,6 @@ const RegisterScreen = ({ navigation }) => {
         setValidationError({ [err.path]: err.errors[0] });
       });
   };
-  console.log("username", username);
   return (
     <BackgroundImage>
       <Logo />
