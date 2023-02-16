@@ -63,11 +63,8 @@ export const CheckUserLoggedIn = () => {
 };
 
 export const GetUserById = async (userId) => {
-  console.log("userId", `${UrlAPI}/user/${userId}`);
   try {
-    console.log("getting");
     const res = await axios.get(`${UrlAPI}/user/${userId}`);
-    console.log("res", res);
     return res;
   } catch (err) {
     throw err;

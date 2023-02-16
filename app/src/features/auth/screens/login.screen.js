@@ -1,21 +1,20 @@
 import { View, StyleSheet, Keyboard } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
-import * as SecureStore from "expo-secure-store";
-import { AppSlogan } from "../../../utils/slogan";
-import Color from "../../../utils/color";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
-import InputText, {
+import ProgressBar from "react-native-progress/Bar";
+
+import {
   AuthButton,
   Slogan,
-  Animation,
   Logo,
   Error,
   BackgroundImage,
   AuthButtonContent,
   Animation1,
 } from "../components/authentication.style";
-import ProgressBar from "react-native-progress/Bar";
-
+import { AppSlogan } from "../../../utils/slogan";
+import InputText from "../components/text-input.component";
+import RememberPassword from "../components/remember-checkbox.component";
 import { Text } from "../../../components/typography/text.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { accountSchema } from "../../../utils/validationSchemas";
@@ -26,14 +25,14 @@ const LoginScreen = ({ navigation }) => {
     AuthenticationContext
   );
   const [username, setUsername] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [savePassword, setSavePassword] = useState(false);
   const [progress, setProgress] = useState(0);
   const [validationError, setValidationError] = useState({});
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
   const updateProgressBarEvent = (progEvent) => {
     var percentCompleted = Math.round(
       (progEvent.loaded * 100) / progEvent.total
@@ -50,7 +49,12 @@ const LoginScreen = ({ navigation }) => {
     await validateInformation(accountSchema, acc, ["password", "username"])
       .then((valid) => {
         setValidationError({});
-        onLogin(valid.username, valid.password, updateProgressBarEvent);
+        onLogin(
+          valid.username,
+          valid.password,
+          savePassword,
+          updateProgressBarEvent
+        );
       })
       .catch((err) => {
         setValidationError({
@@ -64,7 +68,6 @@ const LoginScreen = ({ navigation }) => {
   };
   return (
     <BackgroundImage>
-      <View style={{ marginTop: 124 }}></View>
       <Logo />
       <Slogan>{AppSlogan}</Slogan>
       {isLoading && (
@@ -103,7 +106,13 @@ const LoginScreen = ({ navigation }) => {
       )}
 
       {error && <Error variant="error">{error}</Error>}
+      <RememberPassword
+        savePassword={savePassword}
+        setSavePassword={setSavePassword}
+      ></RememberPassword>
+
       <Spacer variant="bottom" size="small"></Spacer>
+
       <View style={{ marginTop: 18 }}>
         <AuthButton
           // isValidated={Object.keys(validationError).length == 0 ? true : false}
@@ -118,7 +127,6 @@ const LoginScreen = ({ navigation }) => {
       </View>
       <Spacer variant="top" size="large"></Spacer>
       <Text variant="caption">Quên mật khẩu ?</Text>
-      <Animation></Animation>
     </BackgroundImage>
   );
 };

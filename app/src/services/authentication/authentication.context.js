@@ -19,8 +19,10 @@ export const AuthenticationContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
+  // Load user token and id in SecureStore
   useEffect(() => {
-    const loadUser = async () => {
+    // DeleteUserToken();
+    (async () => {
       try {
         const userData = await CheckUserLoggedIn();
         if (userData) {
@@ -35,28 +37,29 @@ export const AuthenticationContextProvider = ({ children }) => {
       } catch (err) {
         console.log(err);
       }
-    };
-    loadUser();
+    })();
   }, []);
-  const onLogin = async (username, password, progressEvent) => {
+  const onLogin = async (username, password, savePassword, progressEvent) => {
     try {
       setIsLoading(true);
       const data = await LoginRequest(username, password, progressEvent);
       const { token, user } = data;
       setAuthToken(token);
-      StoreUserData({
-        token,
-        userId: data.user._id,
-      });
       setUser(TransformUserInformation(user));
       setIsLoading(false);
       setError(null);
       setIsAuthenticated(true);
+      if (savePassword) {
+        StoreUserData({
+          token,
+          userId: data.user._id,
+        });
+      }
     } catch (err) {
       console.log("err", err);
       setIsLoading(false);
       setAuthToken(null);
-      setError(err);
+      setError("Thông tin đăng nhập không chính xác");
     }
   };
 

@@ -42,6 +42,7 @@ const UpdatePost = ({ ...props }) => {
     postId,
     image,
   } = props;
+  console.log("userAvt", userAvatar);
   const { error, UpdatePost } = useContext(PostContext);
   const [newDescription, setNewDescription] = useState(description);
   const [imageUri, setImageUri] = useState(null);

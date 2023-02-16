@@ -19,73 +19,76 @@ export const PostContextProvider = ({ children }) => {
   const { isAuthenticated } = useContext(AuthenticationContext);
   useEffect(() => {
     if (isAuthenticated) {
-      setIsLoading(true);
-      GetAllPosts()
-        .then((response) => {
-          setPosts(response.data.posts);
+      (async () => {
+        setIsLoading(true);
+        try {
+          const res = await GetAllPosts();
+          setPosts(res.data.posts);
           setIsLoading(false);
-        })
-        .catch((err) => {
+        } catch (err) {
           setIsLoading(false);
           setError(err);
-        });
+          console.log("err", err);
+        }
+      })();
+    } else {
+      setPosts([]);
     }
   }, [isAuthenticated]);
+
   const HandleDeletePost = async (postId) => {
     setIsLoading(true);
-    await DeletePost(postId)
-      .then((res) => {
-        const newPosts = posts.filter((post, index) => {
-          return post._id !== postId;
-        });
-        setPosts(newPosts);
-        setIsLoading(false);
-        setError(null);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setError("Lỗi! Xóa không thành công");
-      });
+    try {
+      await DeletePost(postId);
+      const newPosts = posts.filter((post) => post._id !== postId);
+      setPosts(newPosts);
+      setIsLoading(false);
+      setError(null);
+    } catch (err) {
+      setIsLoading(false);
+      setError("Xóa post không thành công");
+      console.log(err);
+    }
   };
   const HandleCreatePost = async (newPostFormData) => {
     setIsLoading(true);
-    await CreatePost(newPostFormData)
-      .then((res) => {
-        setPosts([...posts, res.data.newPost]);
-        setIsLoading(false);
-        setError(null);
-      })
-      .catch(function (error) {
-        setIsLoading(false);
-        setError("Lỗi! Tạo bài đăng không thành công");
-      });
+    try {
+      const res = await CreatePost(newPostFormData);
+      setPosts([...posts, res.data.newPost]);
+      setIsLoading(false);
+      setError(null);
+    } catch (err) {
+      setError("Tạo post không thành công");
+      setIsLoading(false);
+      console.log("err", err);
+    }
   };
   const HandleReactPost = async (postId) => {
-    await ReactPost(postId)
-      .then((res) => {
-        setError(null);
-      })
-      .catch((err) => setError(err));
+    try {
+      await ReactPost(postId);
+      setError(null);
+    } catch (err) {
+      console.log("err");
+      setError("Lỗi!!!");
+    }
   };
   const HandleCommentPost = async (postId, content) => {
-    await CommentPost(postId, content)
-      .then((res) => {
-        setError(null);
-        const updatedPost = res.data.updatedPost;
-        const newPosts = posts.map((post) => {
-          if (post._id == updatedPost._id) {
-            return updatedPost;
-          } else {
-            return post;
-          }
-        });
-        console.log("newPost", newPosts);
-        setPosts(newPosts);
-      })
-      .catch((err) => {
-        setError(err);
-        console.log("Comment thất bại");
+    try {
+      const res = await CommentPost(postId, content);
+      setError(null);
+      const updatedPost = res.data.updatedPost;
+      const newPosts = posts.map((post) => {
+        if (post._id == updatedPost._id) {
+          return updatedPost;
+        } else {
+          return post;
+        }
       });
+      setPosts(newPosts);
+    } catch (err) {
+      setError("Lỗi!!!");
+      console.log("err", err);
+    }
   };
   const HandleDeleteComment = async (postId, commentId) => {
     setIsLoading(true);
@@ -106,7 +109,7 @@ export const PostContextProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log("error");
-        setError(err);
+        setError("Lỗi!!!");
         setIsLoading(false);
       });
   };
@@ -124,7 +127,7 @@ export const PostContextProvider = ({ children }) => {
           }
         });
         setPosts(newPosts);
-        console.log("NewPOst", newPosts);
+
         setError(null);
       })
       .catch((err) => {

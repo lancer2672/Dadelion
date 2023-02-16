@@ -11,7 +11,7 @@ import React from "react";
 
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { AppSlogan } from "../../../utils/slogan";
-import InputText, {
+import {
   AuthButton,
   Slogan,
   Logo,
@@ -19,6 +19,7 @@ import InputText, {
   BackgroundImage,
   AuthButtonContent,
 } from "../components/authentication.style";
+import InputText from "../components/text-input.component";
 import { Text } from "../../../components/typography/text.component";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import { accountSchema } from "../../../utils/validationSchemas";

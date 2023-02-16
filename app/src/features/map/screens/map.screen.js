@@ -11,6 +11,7 @@ const MapViewComponent = styled(MapView)`
 const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(AuthenticationContext);
   useEffect(() => {
     (async () => {
@@ -20,8 +21,10 @@ const Map = () => {
         return;
       }
 
+      setIsLoading(true);
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+      setIsLoading(false);
     })();
   }, []);
 
