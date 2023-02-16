@@ -12,7 +12,6 @@ const InputText = ({
   passwordType,
   hasValidationError,
 }) => {
-  console.log("render");
   return (
     <TextInput
       mode="outlined"

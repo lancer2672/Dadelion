@@ -42,14 +42,17 @@ const CommentInfo = styled(View)`
 const UserName = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.label};
   font-weight: ${(props) => props.theme.fontWeights.medium};
+  margin-right: 8px;
 `;
 const CommentContent = styled(Text)``;
+
 const OptionsButton = styled(TouchableOpacity)`
   margin-left: 6px;
   position: absolute;
   top: 2px;
   right: 8px;
 `;
+const dayjs = require("dayjs");
 const Comment = ({ comment, postId }) => {
   // comment == {} then we return <></>
   if (comment == false) {
@@ -60,8 +63,13 @@ const Comment = ({ comment, postId }) => {
   const [imageURI, setImageURI] = useState(null);
   const [userName, setUserName] = useState("");
   const [content, setContent] = useState("");
+  const [createTime, setCreateTime] = useState("");
   useEffect(() => {
     setContent(commentContent);
+    setCreateTime(
+      dayjs(comment.createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")
+    );
+    //get avatar of people commenting
     axios
       .get(`${UrlAPI}/user/${creatorId}`)
       .then((res) => {
@@ -83,7 +91,15 @@ const Comment = ({ comment, postId }) => {
       </TouchableOpacity>
       <CommentContentWrapper>
         <CommentInfo>
-          <UserName>{userName}</UserName>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <UserName>{userName}</UserName>
+            <Text>{createTime}</Text>
+          </View>
           <ReadMore numberOfLines={2}>
             <CommentContent>{content}</CommentContent>
           </ReadMore>

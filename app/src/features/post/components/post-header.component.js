@@ -15,6 +15,7 @@ import UpdatePost from "../screens/update-post.screen";
 import { UrlAPI } from "../../../constants";
 import readImageData from "../../../utils/imageHandler";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import { PostCreatedTimeFormater } from "../../../utils/timeFormater";
 
 const Container = styled(View)`
   margin-top: 8px;
@@ -43,7 +44,6 @@ const Avatar = styled(Image)`
   border-radius: 50px;
 `;
 
-const dayjs = require("dayjs");
 const PostHeader = ({ ...props }) => {
   const {
     postCreatorId,
@@ -73,35 +73,8 @@ const PostHeader = ({ ...props }) => {
       .catch((err) => console.log(err));
   };
 
-  const handleDeletePost = async () => {
-    await DeletePost(postId);
-  };
   useEffect(() => {
-    let currentDate = new Date();
-    let createDate = new Date(createdAt);
-    const days = (currentDate, createDate) => {
-      let difference = currentDate.getTime() - createDate.getTime();
-      let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
-      return TotalDays;
-    };
-    const diffDays = days(currentDate, createDate);
-    if (diffDays == 1) {
-      if (currentDate.getDate() == createDate.getDate()) {
-        setCreateTime("Hôm nay lúc " + dayjs(createdAt).format("HH:mm"));
-      } else {
-        setCreateTime("Hôm qua lúc " + dayjs(createdAt).format("HH:mm"));
-      }
-    } else if (diffDays == 2) {
-      if (currentDate.getDate() == createDate.getDate() + 1) {
-        setCreateTime("Hôm qua lúc " + dayjs(createdAt).format("HH:mm"));
-      } else {
-        setCreateTime(
-          dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")
-        );
-      }
-    } else {
-      setCreateTime(dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm"));
-    }
+    setCreateTime(PostCreatedTimeFormater(createdAt));
   }, []);
 
   return (
@@ -131,7 +104,7 @@ const PostHeader = ({ ...props }) => {
         >
           <UpdatePost
             userAvatar={imageUriUserAvatar}
-            image={postImageUri}
+            postImage={postImageUri}
             postId={postId}
             createdAt={createdAt}
             description={description}

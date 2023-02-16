@@ -13,8 +13,6 @@ const SavePasswordText = styled(Text)`
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 const RememberPassword = ({ savePassword, setSavePassword }) => {
-  console.log("checkbox render");
-
   return (
     <Container>
       <Checkbox

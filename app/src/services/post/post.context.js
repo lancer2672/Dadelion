@@ -23,6 +23,7 @@ export const PostContextProvider = ({ children }) => {
         setIsLoading(true);
         try {
           const res = await GetAllPosts();
+
           setPosts(res.data.posts);
           setIsLoading(false);
         } catch (err) {
@@ -118,6 +119,7 @@ export const PostContextProvider = ({ children }) => {
     await UpdatePost(postId, newPostData)
       .then((res) => {
         const updatedPost = res.data.updatedPost;
+        console.log("updatedPost", updatedPost._id);
         setIsLoading(false);
         const newPosts = posts.map((post) => {
           if (post._id == updatedPost._id) {

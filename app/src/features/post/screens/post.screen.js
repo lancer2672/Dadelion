@@ -11,7 +11,7 @@ const Post = ({ navigation }) => {
   }
   return (
     <FlatList
-      style={{ marginBottom: 150 }}
+      style={{ marginBottom: 250 }}
       data={posts}
       ListEmptyComponent={() => <Text>Nothing</Text>}
       renderItem={({ item }) => {

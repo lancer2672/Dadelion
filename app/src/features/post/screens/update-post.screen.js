@@ -40,16 +40,15 @@ const UpdatePost = ({ ...props }) => {
     description,
     setIsvisible,
     postId,
-    image,
+    postImage,
   } = props;
-  console.log("userAvt", userAvatar);
   const { error, UpdatePost } = useContext(PostContext);
   const [newDescription, setNewDescription] = useState(description);
-  const [imageUri, setImageUri] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const HandlePickImage = () => {
     PickImage()
       .then((result) => {
-        setImageUri(result.uri);
+        if (!result.cancelled) setSelectedImage(result.uri);
       })
       .catch((err) => {});
   };
@@ -58,9 +57,9 @@ const UpdatePost = ({ ...props }) => {
   };
   const handleUpdatePost = async () => {
     const newPostData = new FormData();
-    if (imageUri != null) {
+    if (selectedImage != null) {
       newPostData.append("updateImage", {
-        uri: imageUri,
+        uri: selectedImage,
         name: new Date() + "_profile",
         type: "image/jpg",
       });
@@ -69,15 +68,23 @@ const UpdatePost = ({ ...props }) => {
     await UpdatePost(postId, newPostData);
     handleCloseModal();
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image
-          source={{
-            uri: userAvatar || null, //data.data in your case
-          }}
-          style={styles.avatar}
-        ></Image>
+        {userAvatar == null ? (
+          <Image
+            source={require("../../../../assets/imgs/DefaultAvatar.png")}
+            style={styles.avatar}
+          ></Image>
+        ) : (
+          <Image
+            source={{
+              uri: userAvatar, //data.data in your case
+            }}
+            style={styles.avatar}
+          ></Image>
+        )}
         <View style={styles.postInfo}>
           <Text>{creatorName}</Text>
           <Text>
@@ -99,7 +106,7 @@ const UpdatePost = ({ ...props }) => {
       <TouchableOpacity onPress={HandlePickImage} style={styles.imageContainer}>
         <ImageBackground
           source={{
-            uri: imageUri || image || null,
+            uri: selectedImage || postImage || null,
           }}
           style={styles.image}
         >
