@@ -9,6 +9,7 @@ const InputText = ({
   showPassword,
   placeholder,
   setText,
+  onBlur,
   passwordType,
   hasValidationError,
 }) => {
@@ -31,6 +32,7 @@ const InputText = ({
           icon={iconLeft}
         />
       }
+      onBlur={onBlur}
       right={
         passwordType && (
           <TextInput.Icon

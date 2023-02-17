@@ -1,24 +1,20 @@
-import { View, StyleSheet, Keyboard } from "react-native";
+import { View, Keyboard } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import ProgressBar from "react-native-progress/Bar";
 
 import {
   AuthButton,
-  Slogan,
-  Logo,
   Error,
-  BackgroundImage,
   AuthButtonContent,
-  Animation1,
 } from "../components/authentication.style";
-import { AppSlogan } from "../../../utils/slogan";
 import InputText from "../components/text-input.component";
 import RememberPassword from "../components/remember-checkbox.component";
 import { Text } from "../../../components/typography/text.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { accountSchema } from "../../../utils/validationSchemas";
-import validateInformation from "../../../utils/validator";
+import handleValidation from "../../../utils/validator";
+import AuthContainer from "../components/auth-container.component";
 
 const LoginScreen = ({ navigation }) => {
   const { isLoading, error, onLogin, setError, isAuthenticated } = useContext(
@@ -29,9 +25,12 @@ const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [savePassword, setSavePassword] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [validationError, setValidationError] = useState({});
+  const [validationErrors, setValidationErrors] = useState({});
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+  const toggleSavePasswordCheck = () => {
+    setSavePassword(!savePassword);
   };
   const updateProgressBarEvent = (progEvent) => {
     var percentCompleted = Math.round(
@@ -39,39 +38,21 @@ const LoginScreen = ({ navigation }) => {
     );
     setProgress(() => percentCompleted / 100);
   };
-  const handleLogin = async () => {
+
+  const handleLogin = () => {
     setError(null);
     Keyboard.dismiss();
-    const acc = {
-      username: username,
-      password: password,
-    };
-    await validateInformation(accountSchema, acc, ["password", "username"])
-      .then((valid) => {
-        setValidationError({});
-        onLogin(
-          valid.username,
-          valid.password,
-          savePassword,
-          updateProgressBarEvent
-        );
-      })
-      .catch((err) => {
-        setValidationError({
-          [err.path]: err.errors[0],
-        });
-      });
+    if (Object.keys(validationErrors).length == 0)
+      onLogin(username, password, savePassword, updateProgressBarEvent);
   };
-  const navigateToRegisterScreen = () => {
+  const navigateToRegister1Screen = () => {
     setError(null);
-    navigation.navigate("Register", {});
+    navigation.navigate("Register1", {});
   };
   return (
-    <BackgroundImage>
-      <Logo />
-      <Slogan>{AppSlogan}</Slogan>
+    <AuthContainer>
       {isLoading && (
-        <View style={{ position: "absolute", top: 330 }}>
+        <View style={{ position: "absolute", top: 345 }}>
           <ProgressBar
             color={"#9b92e5"}
             unfilledColor={"#ddd5e0"}
@@ -84,11 +65,20 @@ const LoginScreen = ({ navigation }) => {
       <InputText
         iconLeft={"account"}
         setText={setUsername}
-        hasValidationError={validationError.username}
+        hasValidationError={validationErrors.username}
         placeholder={"Tên đăng nhập"}
+        onBlur={() =>
+          handleValidation(
+            accountSchema,
+            "username",
+            username,
+            validationErrors,
+            setValidationErrors
+          )
+        }
       ></InputText>
-      {validationError.username && (
-        <Error variant="error">{validationError.username}</Error>
+      {validationErrors.username && (
+        <Error variant="error">{validationErrors.username}</Error>
       )}
 
       <InputText
@@ -97,37 +87,46 @@ const LoginScreen = ({ navigation }) => {
         passwordType
         setText={setPassword}
         showPassword={showPassword}
-        hasValidationError={validationError.password}
+        onBlur={() =>
+          handleValidation(
+            accountSchema,
+            "password",
+            password,
+            validationErrors,
+            setValidationErrors
+          )
+        }
+        hasValidationError={validationErrors.password}
         placeholder={"Mật khẩu"}
       ></InputText>
 
-      {validationError.password && (
-        <Error variant="error">{validationError.password}</Error>
+      {validationErrors.password && (
+        <Error variant="error">{validationErrors.password}</Error>
       )}
 
       {error && <Error variant="error">{error}</Error>}
       <RememberPassword
         savePassword={savePassword}
-        setSavePassword={setSavePassword}
+        onIconPress={toggleSavePasswordCheck}
       ></RememberPassword>
 
       <Spacer variant="bottom" size="small"></Spacer>
 
       <View style={{ marginTop: 18 }}>
         <AuthButton
-          // isValidated={Object.keys(validationError).length == 0 ? true : false}
+          // isValidated={Object.keys(validationErrors).length == 0 ? true : false}
           onPress={handleLogin}
         >
           <AuthButtonContent>Đăng nhập</AuthButtonContent>
         </AuthButton>
         <Spacer variant="top" size="large"></Spacer>
-        <AuthButton onPress={navigateToRegisterScreen}>
+        <AuthButton onPress={navigateToRegister1Screen}>
           <AuthButtonContent>Đăng ký</AuthButtonContent>
         </AuthButton>
       </View>
       <Spacer variant="top" size="large"></Spacer>
       <Text variant="caption">Quên mật khẩu ?</Text>
-    </BackgroundImage>
+    </AuthContainer>
   );
 };
 export default LoginScreen;

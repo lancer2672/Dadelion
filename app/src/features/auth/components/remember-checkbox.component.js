@@ -12,12 +12,13 @@ const SavePasswordText = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.body};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
-const RememberPassword = ({ savePassword, setSavePassword }) => {
+const RememberPassword = ({ savePassword, onIconPress }) => {
+  console.log("render");
   return (
     <Container>
       <Checkbox
         status={savePassword ? "checked" : "unchecked"}
-        onPress={() => setSavePassword(!savePassword)}
+        onPress={() => onIconPress()}
       />
       <SavePasswordText>Lưu mật khẩu</SavePasswordText>
     </Container>

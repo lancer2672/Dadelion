@@ -10,22 +10,19 @@ import { useState, useContext } from "react";
 import React from "react";
 
 import { Spacer } from "../../../components/spacer/spacer.component";
-import { AppSlogan } from "../../../utils/slogan";
 import {
   AuthButton,
-  Slogan,
-  Logo,
   Error,
-  BackgroundImage,
   AuthButtonContent,
 } from "../components/authentication.style";
+import AuthContainer from "../components/auth-container.component";
 import InputText from "../components/text-input.component";
 import { Text } from "../../../components/typography/text.component";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import { accountSchema } from "../../../utils/validationSchemas";
 import validateInformation from "../../../utils/validator";
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen2 = ({ navigation }) => {
   const { isLoading, error, onRegister, setError } = useContext(
     AuthenticationContext
   );
@@ -33,11 +30,11 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [validationError, setValidationError] = useState({});
+  const [validationErrors, setValidationErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const navigateToLoginScreen = () => {
+  const navigateBack = () => {
     setError(null);
-    navigation.navigate("Login");
+    navigation.goBack();
   };
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -61,37 +58,34 @@ const RegisterScreen = ({ navigation }) => {
         setPassword("");
         setEmail("");
         setConfirmPassword("");
-        setValidationError({});
+        setValidationErrors({});
         if (error == null) {
-          navigateToLoginScreen();
+          navigation.navigate("Login");
         }
       })
       .catch((err) => {
-        setValidationError({ [err.path]: err.errors[0] });
+        setValidationErrors({ [err.path]: err.errors[0] });
       });
   };
   return (
-    <BackgroundImage>
-      <Logo />
-      <Slogan>{AppSlogan}</Slogan>
-
+    <AuthContainer>
       <InputText
         iconLeft={"email"}
         setText={setEmail}
-        hasValidationError={validationError.email}
+        hasValidationError={validationErrors.email}
         placeholder={"Email"}
       ></InputText>
-      {validationError.email && (
-        <Error variant="error">{validationError.email}</Error>
+      {validationErrors.email && (
+        <Error variant="error">{validationErrors.email}</Error>
       )}
       <InputText
         iconLeft={"account"}
         setText={setUsername}
-        hasValidationError={validationError.username}
+        hasValidationError={validationErrors.username}
         placeholder={"Tên đăng nhập"}
       ></InputText>
-      {validationError.username && (
-        <Error variant="error">{validationError.username}</Error>
+      {validationErrors.username && (
+        <Error variant="error">{validationErrors.username}</Error>
       )}
       <InputText
         iconLeft={"lock"}
@@ -99,11 +93,11 @@ const RegisterScreen = ({ navigation }) => {
         passwordType
         showPassword={showPassword}
         onIconPress={togglePasswordVisibility}
-        hasValidationError={validationError.password}
+        hasValidationError={validationErrors.password}
         placeholder={"Mật khẩu"}
       ></InputText>
-      {validationError.password && (
-        <Error variant="error">{validationError.password}</Error>
+      {validationErrors.password && (
+        <Error variant="error">{validationErrors.password}</Error>
       )}
       <InputText
         iconLeft={"lock"}
@@ -111,11 +105,11 @@ const RegisterScreen = ({ navigation }) => {
         passwordType
         showPassword={showPassword}
         onIconPress={togglePasswordVisibility}
-        hasValidationError={validationError.confirmPassword}
+        hasValidationError={validationErrors.confirmPassword}
         placeholder={"Nhập lại mật khẩu"}
       ></InputText>
-      {validationError.confirmPassword && (
-        <Error variant="error">{validationError.confirmPassword}</Error>
+      {validationErrors.confirmPassword && (
+        <Error variant="error">{validationErrors.confirmPassword}</Error>
       )}
 
       {error && (
@@ -123,21 +117,23 @@ const RegisterScreen = ({ navigation }) => {
           <Text variant="error">{error}</Text>
         </View>
       )}
+
       <Spacer variant="bottom" size="huge"></Spacer>
+
       <View>
         <AuthButton onPress={handleRegistration}>
           <AuthButtonContent>Đăng ký</AuthButtonContent>
         </AuthButton>
         <Spacer variant="top" size="large"></Spacer>
-        <AuthButton onPress={navigateToLoginScreen}>
-          <AuthButtonContent>Quay lại đăng nhập</AuthButtonContent>
+        <AuthButton onPress={navigateBack}>
+          <AuthButtonContent>Quay lại </AuthButtonContent>
         </AuthButton>
       </View>
-    </BackgroundImage>
+    </AuthContainer>
   );
 };
 
-export default RegisterScreen;
+export default RegisterScreen2;
 
 const styles = StyleSheet.create({
   error: {},
