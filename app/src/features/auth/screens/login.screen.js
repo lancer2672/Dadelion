@@ -13,7 +13,7 @@ import RememberPassword from "../components/remember-checkbox.component";
 import { Text } from "../../../components/typography/text.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { accountSchema } from "../../../utils/validationSchemas";
-import handleValidation from "../../../utils/validator";
+import { handleValidateField } from "../../../utils/validator";
 import AuthContainer from "../components/auth-container.component";
 
 const LoginScreen = ({ navigation }) => {
@@ -40,6 +40,10 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleLogin = () => {
+    if (!password || !username) {
+      setError("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
     setError(null);
     Keyboard.dismiss();
     if (Object.keys(validationErrors).length == 0)
@@ -68,7 +72,7 @@ const LoginScreen = ({ navigation }) => {
         hasValidationError={validationErrors.username}
         placeholder={"Tên đăng nhập"}
         onBlur={() =>
-          handleValidation(
+          handleValidateField(
             accountSchema,
             "username",
             username,
@@ -88,7 +92,7 @@ const LoginScreen = ({ navigation }) => {
         setText={setPassword}
         showPassword={showPassword}
         onBlur={() =>
-          handleValidation(
+          handleValidateField(
             accountSchema,
             "password",
             password,

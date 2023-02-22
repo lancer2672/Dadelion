@@ -20,18 +20,30 @@ import InputText from "../components/text-input.component";
 import { Text } from "../../../components/typography/text.component";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import { accountSchema } from "../../../utils/validationSchemas";
-import validateInformation from "../../../utils/validator";
+import {
+  handleValidateField,
+  handleValidateObject,
+} from "../../../utils/validator";
+import { ActivityIndicator } from "react-native-paper";
 
-const RegisterScreen2 = ({ navigation }) => {
+const RegisterScreen2 = ({
+  navigation,
+  route,
+  // setFirstname,
+  // setLastname,
+  // setDateOfBirth,
+}) => {
   const { isLoading, error, onRegister, setError } = useContext(
     AuthenticationContext
   );
+  const { firstname, lastname, dateOfBirth } = route.params;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigateBack = () => {
     setError(null);
     navigation.goBack();
@@ -39,34 +51,35 @@ const RegisterScreen2 = ({ navigation }) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleRegistration = async () => {
-    const accountInfor = {
-      email: email,
-      username: username,
-      password: password,
-      confirmPassword: confirmPassword,
-    };
-    await validateInformation(accountSchema, accountInfor, [
-      "confirmPassword",
-      "password",
-      "username",
-      "email",
-    ])
-      .then((accountInfor) => {
-        onRegister(email, username, password, confirmPassword);
+    if (Object.keys(validationErrors) == 0) {
+      try {
+        await onRegister(
+          email,
+          username,
+          password,
+          firstname,
+          lastname,
+          dateOfBirth
+        );
         setUsername("");
         setPassword("");
         setEmail("");
+        // setFirstname("");
+        // setLastname("");
+        // setDateOfBirth(null);
         setConfirmPassword("");
-        setValidationErrors({});
-        if (error == null) {
-          navigation.navigate("Login");
-        }
-      })
-      .catch((err) => {
-        setValidationErrors({ [err.path]: err.errors[0] });
-      });
+        navigation.navigate("Login");
+      } catch (err) {}
+    }
   };
+  if (isLoading) {
+    return <ActivityIndicator></ActivityIndicator>;
+  }
   return (
     <AuthContainer>
       <InputText
@@ -74,6 +87,15 @@ const RegisterScreen2 = ({ navigation }) => {
         setText={setEmail}
         hasValidationError={validationErrors.email}
         placeholder={"Email"}
+        onBlur={() =>
+          handleValidateField(
+            accountSchema,
+            "email",
+            email,
+            validationErrors,
+            setValidationErrors
+          )
+        }
       ></InputText>
       {validationErrors.email && (
         <Error variant="error">{validationErrors.email}</Error>
@@ -82,6 +104,15 @@ const RegisterScreen2 = ({ navigation }) => {
         iconLeft={"account"}
         setText={setUsername}
         hasValidationError={validationErrors.username}
+        onBlur={() =>
+          handleValidateField(
+            accountSchema,
+            "username",
+            username,
+            validationErrors,
+            setValidationErrors
+          )
+        }
         placeholder={"Tên đăng nhập"}
       ></InputText>
       {validationErrors.username && (
@@ -91,6 +122,15 @@ const RegisterScreen2 = ({ navigation }) => {
         iconLeft={"lock"}
         setText={setPassword}
         passwordType
+        onBlur={() =>
+          handleValidateField(
+            accountSchema,
+            "password",
+            password,
+            validationErrors,
+            setValidationErrors
+          )
+        }
         showPassword={showPassword}
         onIconPress={togglePasswordVisibility}
         hasValidationError={validationErrors.password}
@@ -103,8 +143,20 @@ const RegisterScreen2 = ({ navigation }) => {
         iconLeft={"lock"}
         setText={setConfirmPassword}
         passwordType
-        showPassword={showPassword}
-        onIconPress={togglePasswordVisibility}
+        showPassword={showConfirmPassword}
+        onIconPress={toggleConfirmPasswordVisibility}
+        onBlur={() =>
+          handleValidateObject(
+            accountSchema,
+            {
+              password: password,
+              confirmPassword: confirmPassword,
+            },
+            ["confirmPassword"],
+            validationErrors,
+            setValidationErrors
+          )
+        }
         hasValidationError={validationErrors.confirmPassword}
         placeholder={"Nhập lại mật khẩu"}
       ></InputText>
@@ -113,11 +165,10 @@ const RegisterScreen2 = ({ navigation }) => {
       )}
 
       {error && (
-        <View style={styles.error}>
+        <View>
           <Text variant="error">{error}</Text>
         </View>
       )}
-
       <Spacer variant="bottom" size="huge"></Spacer>
 
       <View>
@@ -134,12 +185,3 @@ const RegisterScreen2 = ({ navigation }) => {
 };
 
 export default RegisterScreen2;
-
-const styles = StyleSheet.create({
-  error: {},
-  textInput: {
-    backgroundColor: "white",
-    width: 250,
-    fontSize: 14,
-  },
-});

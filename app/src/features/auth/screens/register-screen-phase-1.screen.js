@@ -1,5 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState, useEffect } from "react";
+
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 import AuthContainer from "../components/auth-container.component";
 import InputText from "../components/text-input.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
@@ -8,25 +10,67 @@ import {
   AuthButton,
   AuthButtonContent,
 } from "../components/authentication.style";
-import handleValidation from "../../../utils/validator";
-import { nameSchema } from "../../../utils/validationSchemas";
+import { handleValidateField } from "../../../utils/validator";
+import { nameSchema, ageLimit } from "../../../utils/validationSchemas";
+
+const dayjs = require("dayjs");
 const RegisterScreen1 = ({ navigation }) => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState();
+  const [dateOfBirth, setDateOfBirth] = useState(new Date("01/01/2002"));
+  const [formatedDateOfBirth, setFormatedDateOfBirth] = useState();
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const navigateToRegister2 = () => {
+    handleValidateField(
+      nameSchema,
+      "firstname",
+      firstname,
+      validationErrors,
+      setValidationErrors
+    );
+    handleValidateField(
+      nameSchema,
+      "lastname",
+      lastname,
+      validationErrors,
+      setValidationErrors
+    );
+    if (!lastname || !firstname) {
+      return;
+    }
+    console.log("length", Object.keys(validationErrors).length);
     if (Object.keys(validationErrors).length == 0) {
-      console.log("err", validationErrors);
       navigation.navigate("Register2", {
         firstname,
         lastname,
-        dateOfBirth,
+        dateOfBirth: dateOfBirth.toISOString(),
+        // setFirstname,
+        // setLastname,
+        // setDateOfBirth,
       });
     } else {
       console.log("cannot navigate");
     }
   };
+
+  //format ngày được chọn để hiển thị lên UI và kiểm tra độ tuổi của người dùng
+  useEffect(() => {
+    if (dateOfBirth) {
+      setFormatedDateOfBirth(dayjs(dateOfBirth).format("DD/MM/YYYY"));
+      const yearsDiff = new Date().getFullYear() - dateOfBirth.getFullYear();
+      if (yearsDiff >= ageLimit) {
+        let e = validationErrors;
+        delete e[dateOfBirth];
+        setValidationErrors(e);
+      } else {
+        setValidationErrors((pre) => ({
+          ...pre,
+          dateOfBirth: `Bạn chưa đủ ${ageLimit} tuổi`,
+        }));
+      }
+    }
+  }, [dateOfBirth]);
   return (
     <AuthContainer>
       <InputText
@@ -35,7 +79,7 @@ const RegisterScreen1 = ({ navigation }) => {
         hasValidationError={validationErrors.firstname}
         placeholder={"Tên"}
         onBlur={() =>
-          handleValidation(
+          handleValidateField(
             nameSchema,
             "firstname",
             firstname,
@@ -52,7 +96,7 @@ const RegisterScreen1 = ({ navigation }) => {
         setText={setLastname}
         hasValidationError={validationErrors.lastname}
         onBlur={() =>
-          handleValidation(
+          handleValidateField(
             nameSchema,
             "lastname",
             lastname,
@@ -65,16 +109,31 @@ const RegisterScreen1 = ({ navigation }) => {
       {validationErrors.lastname && (
         <Error variant="error">{validationErrors.lastname}</Error>
       )}
-      <InputText
-        iconLeft={"cake"}
-        setText={setDateOfBirth}
-        hasValidationError={validationErrors.password}
-        placeholder={"Ngày sinh"}
-      ></InputText>
-      {validationErrors.password && (
-        <Error variant="error">{validationErrors.password}</Error>
+      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <InputText
+          iconLeft={"calendar"}
+          disabled
+          text={formatedDateOfBirth}
+          hasValidationError={validationErrors.password}
+          placeholder={"Ngày sinh"}
+        ></InputText>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <RNDateTimePicker
+          maximumDate={new Date()}
+          mode="date"
+          onChange={(e, date) => {
+            if (e.type == "set") {
+              setDateOfBirth(date);
+            }
+            setShowDatePicker(false);
+          }}
+          value={dateOfBirth}
+        ></RNDateTimePicker>
       )}
-
+      {validationErrors.dateOfBirth && (
+        <Error variant="error">{validationErrors.dateOfBirth}</Error>
+      )}
       <Spacer variant="bottom" size="huge"></Spacer>
 
       <View>
@@ -91,5 +150,3 @@ const RegisterScreen1 = ({ navigation }) => {
 };
 
 export default RegisterScreen1;
-
-const styles = StyleSheet.create({});

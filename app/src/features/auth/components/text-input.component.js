@@ -8,8 +8,10 @@ const InputText = ({
   onIconPress,
   showPassword,
   placeholder,
+  text,
   setText,
   onBlur,
+  disabled,
   passwordType,
   hasValidationError,
 }) => {
@@ -22,6 +24,8 @@ const InputText = ({
       outlineColor={hasValidationError && "red"}
       style={styles.textInput}
       secureTextEntry={passwordType && !showPassword}
+      disabled={disabled}
+      value={text}
       left={
         <TextInput.Icon
           size={20}
@@ -29,6 +33,7 @@ const InputText = ({
             marginRight: 0,
             fontSize: 12,
           }}
+          disabled={true}
           icon={iconLeft}
         />
       }

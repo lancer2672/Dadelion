@@ -63,9 +63,16 @@ export const AuthenticationContextProvider = ({ children }) => {
     }
   };
 
-  const onRegister = (email, username, password, repeatedPassword) => {
+  const onRegister = (
+    email,
+    username,
+    password,
+    firstname,
+    lastname,
+    dateOfBirth
+  ) => {
     setIsLoading(true);
-    RegisterRequest(email, username, password)
+    RegisterRequest(email, username, password, firstname, lastname, dateOfBirth)
       .then(function (response) {
         setIsLoading(false);
         setError(null);

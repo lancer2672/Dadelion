@@ -12,7 +12,6 @@ export const getValue = (key) => {
   console.log("getValue");
   SecureStore.getItemAsync(key)
     .then((data) => {
-      console.log("data", data);
       return data;
     })
     .catch((err) => {
