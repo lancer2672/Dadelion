@@ -64,11 +64,6 @@ export const Error = styled(Text)`
   margin-top: 8px;
   color: ${(props) => props.theme.colors.text.error};
 `;
-// export const ProgressBarComponent = styled(Progress.Bar).attrs((props) => ({
-//   progress: 0.3,
-// }))`
-//   width: 200px;
-// `;
 export const RemememberCheckButton = () => {
   return;
 };

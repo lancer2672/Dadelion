@@ -14,7 +14,6 @@ export const handleValidateField = (
       setValidationErrors(newValidationErros);
     })
     .catch((err) => {
-      console.log("err", err.path);
       setValidationErrors((pre) => ({ ...pre, [err.path]: err.errors[0] }));
     });
 };
