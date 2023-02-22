@@ -1,6 +1,7 @@
 import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import React from "react";
+import { Avatar } from "../shared-styled-component";
 
 const Container = styled(TouchableOpacity)`
   width: 50px;
@@ -14,11 +15,6 @@ const Name = styled(Text)`
   text-align: center;
   font-size: ${(props) => props.theme.fontSizes.caption};
   font-weight: ${(props) => props.theme.fontWeights.medium};
-`;
-const Avatar = styled(Image)`
-  border-radius: 25px;
-  width: 50px;
-  height: 50px;
 `;
 const AvtWithName = ({ avatar, name }) => {
   return (

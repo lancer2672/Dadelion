@@ -16,6 +16,7 @@ const Container = styled(View)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  background-color: red;
   flex: 1;
 `;
 

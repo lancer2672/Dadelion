@@ -1,6 +1,7 @@
 import { StyleSheet, Text, Image, TouchableOpacity, View } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
+import { Avatar } from "../shared-styled-component";
 
 const Container = styled(TouchableOpacity)`
   width: 100%;
@@ -13,11 +14,7 @@ const Name = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.caption};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
-const Avatar = styled(Image)`
-  border-radius: 25px;
-  width: 50px;
-  height: 50px;
-`;
+
 const LastMessage = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.body};
 `;

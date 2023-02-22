@@ -13,7 +13,7 @@ import { AuthenticationContextProvider } from "./src/services/authentication/aut
 import { PostContextProvider } from "./src/services/post/post.context";
 import { ChatContextProvider } from "./src/services/chat/chat.context";
 import { MenuProvider } from "react-native-popup-menu";
-import InputBar from "./src/features/chat/components/message-input-bar.component";
+import UserMessage from "./src/features/chat/components/message-of-user.component";
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -35,7 +35,8 @@ export default function App() {
         <AuthenticationContextProvider>
           <PostContextProvider>
             <ChatContextProvider>
-              <Navigator></Navigator>
+              {/* <Navigator></Navigator> */}
+              <UserMessage></UserMessage>
             </ChatContextProvider>
           </PostContextProvider>
         </AuthenticationContextProvider>
