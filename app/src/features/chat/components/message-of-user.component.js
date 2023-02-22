@@ -4,11 +4,12 @@ import styled from "styled-components/native";
 
 const Container = styled(View).attrs((props) => ({
   flexDirection: props.myMessage ? "row-reverse" : "row",
-  marginLeft: props.myMessage ? 0 : 8,
-  marginRight: props.myMessage ? 8 : 0,
+
   flex: 1,
 }))`
   align-content: center;
+  margin: 8px;
+  margin-bottom: 0px;
 `;
 
 const Avatar = styled(Image)`
@@ -18,40 +19,35 @@ const Avatar = styled(Image)`
   align-self: flex-end;
 `;
 
-const MessageContainer = styled(View).attrs((props) => ({
-  marginLeft: props.myMessage ? 40 : 0,
-  marginRight: props.myMessage ? 0 : 40,
-}))`
-  margin-left: 8px;
+const MessageContainer = styled(View).attrs((props) => {
+  return {
+    marginLeft: props.myMessage ? 32 : 6,
+    marginRight: props.myMessage ? 6 : 40,
+  };
+})`
   align-self: flex-end;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 `;
 
 const Message = styled(Text).attrs((props) => ({}))`
-  background-color: red;
+  background-color: ${(props) => props.theme.colors.bg.primary};
   margin-top: 6px;
   border-radius: 15px;
-  padding: 4px;
-  padding-left: 8px;
-  padding-right: 8px;
-`;
-const MessageWrapper = styled(View)`
-  flex-direction: row;
+  padding: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
-const UserMessage = ({ myMessage, messages }) => {
+const UserMessage = ({ myMessage, messageBox }) => {
   return (
     <Container myMessage={myMessage}>
       <Avatar
         source={require("../../../../assets/imgs/DefaultAvatar.png")}
       ></Avatar>
-      <MessageContainer>
-        <MessageWrapper style={{ flexDirection: "row" }}>
-          <Message>
-            UserMeessageUserMessageUserMessageUserMessageUserMessageUserMessageUserMessageUserMessageUserMessageUserMessageUserMessageUserMessageUserMessageUserMesssage
-          </Message>
-          <View style={{ flex: 1 }}></View>
-        </MessageWrapper>
+      <MessageContainer myMessage={myMessage}>
+        {messageBox.map((item, index) => {
+          return <Message>{item.message}</Message>;
+        })}
       </MessageContainer>
     </Container>
   );
