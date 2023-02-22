@@ -47,7 +47,6 @@ const Map = () => {
       >
         <Marker
           key={"name"}
-          image={require("./../../../../assets/imgs/DefaultAvatar.png")}
           title={"Tran Khanh"}
           coordinate={{
             latitude: location.coords.latitude,

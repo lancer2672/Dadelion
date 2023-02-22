@@ -1,17 +1,19 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import InputBar from "./message-input-bar.component";
 import styled from "styled-components/native";
+
+import InputBar from "./message-input-bar.component";
+import ListUserMessages from "./list-user-messages.component";
+import ChatRoomHeader from "./chat-room-header.component";
 
 const Container = styled(View)`
   flex: 1;
 `;
-const ChatRoom = () => {
-  const data = [];
+const ChatRoom = ({ setModalVisible, channelMessages }) => {
   return (
     <Container>
-      <Text>ChatRoom</Text>
-      <FlatList></FlatList>
+      <ChatRoomHeader setModalVisible={setModalVisible}></ChatRoomHeader>
+      <ListUserMessages channelMessages={channelMessages}></ListUserMessages>
       <InputBar></InputBar>
     </Container>
   );

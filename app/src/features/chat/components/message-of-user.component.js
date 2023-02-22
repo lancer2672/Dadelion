@@ -46,7 +46,9 @@ const UserMessage = ({ myMessage, messageBox }) => {
       ></Avatar>
       <MessageContainer myMessage={myMessage}>
         {messageBox.map((item, index) => {
-          return <Message>{item.message}</Message>;
+          return (
+            <Message key={`user-message ${item._id}`}>{item.message}</Message>
+          );
         })}
       </MessageContainer>
     </Container>

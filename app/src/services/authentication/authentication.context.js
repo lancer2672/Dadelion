@@ -21,7 +21,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 
   // Load user token and id in SecureStore
   useEffect(() => {
-    DeleteUserToken();
     (async () => {
       try {
         const userData = await CheckUserLoggedIn();

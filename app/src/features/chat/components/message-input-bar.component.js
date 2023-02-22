@@ -15,22 +15,23 @@ import { AntDesign } from "@expo/vector-icons";
 const Container = styled(View)`
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-  background-color: red;
-  flex: 1;
+
+  background-color: ${(props) => props.theme.colors.bg.secondary};
 `;
 
 const Icon = styled(TouchableOpacity)`
-  background-color: red;
+  align-self: flex-start;
+  margin-top: 16px;
   margin-right: ${(props) => props.theme.space[2]};
 `;
 
 const LeftIconContainer = styled(View)`
+  align-self: flex-start;
   flex-direction: row;
+  margin-left: 4px;
 `;
 const InputText = styled(TextInput)`
-  background-color: red;
-  padding: 0px;
+  background-color: ${(props) => props.theme.colors.bg.primary};
   flex: 1;
   margin-right: ${(props) => props.theme.space[2]};
 `;
@@ -38,7 +39,7 @@ const InputText = styled(TextInput)`
 const InputBar = () => {
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputWidth, setTextInputWidth] = useState(0);
-  const iconSize = 32;
+  const iconSize = 28;
   const iconColor = "black";
   const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
   const inputWidth = textInputWidth + iconContainerWidth;
@@ -93,16 +94,21 @@ const InputBar = () => {
         <InputText
           onFocus={handleFocus}
           onBlur={handleBlur}
+          placeholder={"Nhắn tin"}
           mode="outlined"
           outlineStyle={{
             borderRadius: 25,
+          }}
+          multiline
+          style={{
+            fontSize: 16,
+            marginLeft: leftIconsVisible ? 0 : 8,
           }}
           right={
             <TextInput.Icon
               size={24}
               style={{
-                marginRight: 0,
-                fontSize: 12,
+                padding: 0,
               }}
               icon={"send"}
             />
@@ -113,7 +119,7 @@ const InputBar = () => {
         />
       </Animated.View>
       <Icon>
-        <AntDesign name="heart" size={24} color="black" />
+        <AntDesign name="heart" size={iconSize} color={iconColor} />
       </Icon>
     </Container>
   );

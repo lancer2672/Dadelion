@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Button,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { View } from "react-native";
 import { useState, useContext } from "react";
 import React from "react";
 

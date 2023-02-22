@@ -7,6 +7,7 @@ import socket from "../../../utils/socket";
 import { ChatContext } from "../../../services/chat/chat.context";
 const ListChannel = () => {
   const { channels } = useContext(ChatContext);
+  console.log("Channels", channels);
   useEffect(() => {}, []);
   return (
     <FlatList
@@ -14,10 +15,10 @@ const ListChannel = () => {
       data={channels}
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {
-        const { avatar, name } = item;
+        const { _id } = item;
         return (
           <Spacer position={"bottom"} size={"large"}>
-            <Channel />
+            <Channel channelId={_id} />
           </Spacer>
         );
       }}

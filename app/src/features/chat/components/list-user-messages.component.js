@@ -3,13 +3,15 @@ import React from "react";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import UserMessage from "./message-of-user.component";
 
-const ListUserMessages = () => {
+const ListUserMessages = ({ channelMessages }) => {
+  console.log("z", channelMessages);
   const listMessages = [
     {
       _id: 1,
       myMessage: true,
       messageBox: [
         {
+          _id: 1,
           message: "Colour picker",
         },
       ],
@@ -18,9 +20,11 @@ const ListUserMessages = () => {
       _id: 2,
       messageBox: [
         {
+          _id: 2,
           message: "Colour picker",
         },
         {
+          _id: 3,
           message: "Colour picker",
         },
       ],
@@ -28,6 +32,11 @@ const ListUserMessages = () => {
   ];
   return (
     <FlatList
+      style={{
+        flex: 1,
+        marginBottom: 8,
+      }}
+      inverted
       data={listMessages}
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {

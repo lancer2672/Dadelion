@@ -8,15 +8,21 @@ export const ChatContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated } = useContext(AuthenticationContext);
   const [channels, setChannels] = useState([]);
+
   const [error, setError] = useState(null);
   useEffect(() => {
     if (isAuthenticated) {
       setIsLoading(true);
-      GetChannels()
-        .then((response) => {
-          setChannels(response.data.channels);
-        })
-        .catch((err) => setError(err));
+
+      (async () => {
+        try {
+          const channels = await GetChannels();
+          setChannels(channels);
+        } catch (err) {
+          console.log("err");
+          setError("Không thể tải dữ liệu");
+        }
+      })();
     }
   }, [isAuthenticated]);
   return (
