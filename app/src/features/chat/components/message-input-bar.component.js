@@ -5,12 +5,15 @@ import {
   View,
   Animated,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
 import { EvilIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
+
+import { ChatContext } from "../../../services/chat/chat.context";
+import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 
 const Container = styled(View)`
   flex-direction: row;
@@ -36,15 +39,19 @@ const InputText = styled(TextInput)`
   margin-right: ${(props) => props.theme.space[2]};
 `;
 
-const InputBar = () => {
+const InputBar = ({ channelId }) => {
+  const { user } = useContext(AuthenticationContext);
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputWidth, setTextInputWidth] = useState(0);
+  const [text, setText] = useState("");
+  const { handleSendMessage } = useContext(ChatContext);
   const iconSize = 28;
   const iconColor = "black";
+
+  //for animation
   const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
   const inputWidth = textInputWidth + iconContainerWidth;
   const animation = new Animated.Value(inputWidth);
-
   const handleFocus = () => {
     setLeftIconVisible(false);
     Animated.timing(animation, {
@@ -63,6 +70,10 @@ const InputBar = () => {
     }).start();
   };
 
+  const sendMessage = () => {
+    console.log("icon pressed");
+    handleSendMessage(channelId, user._id, text);
+  };
   return (
     <Container>
       <Animated.View
@@ -92,6 +103,8 @@ const InputBar = () => {
           </LeftIconContainer>
         )}
         <InputText
+          value={text}
+          onChangeText={(newText) => setText(newText)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={"Nhắn tin"}
@@ -111,6 +124,7 @@ const InputBar = () => {
                 padding: 0,
               }}
               icon={"send"}
+              onPress={sendMessage}
             />
           }
           onLayout={(event) => {

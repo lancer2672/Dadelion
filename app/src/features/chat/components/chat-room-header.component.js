@@ -6,13 +6,16 @@ import { Ionicons } from "@expo/vector-icons";
 const Container = styled(View)`
   flex-direction: row;
 `;
+const BackIcon = styled(TouchableOpacity)`
+  margin-left: 12px;
+`;
 
 const ChatRoomHeader = ({ setModalVisible, chatRoomName = "" }) => {
   return (
     <Container>
-      <TouchableOpacity onPress={() => setModalVisible(false)}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
+      <BackIcon onPress={() => setModalVisible(false)}>
+        <Ionicons name="arrow-back" size={32} color="black" />
+      </BackIcon>
       <Text>{chatRoomName}</Text>
       {/* <Options></Options> */}
     </Container>

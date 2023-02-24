@@ -1,35 +1,12 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import UserMessage from "./message-of-user.component";
+import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 
 const ListUserMessages = ({ channelMessages }) => {
+  const { user } = useContext(AuthenticationContext);
   console.log("z", channelMessages);
-  const listMessages = [
-    {
-      _id: 1,
-      myMessage: true,
-      messageBox: [
-        {
-          _id: 1,
-          message: "Colour picker",
-        },
-      ],
-    },
-    {
-      _id: 2,
-      messageBox: [
-        {
-          _id: 2,
-          message: "Colour picker",
-        },
-        {
-          _id: 3,
-          message: "Colour picker",
-        },
-      ],
-    },
-  ];
   return (
     <FlatList
       style={{
@@ -37,10 +14,11 @@ const ListUserMessages = ({ channelMessages }) => {
         marginBottom: 8,
       }}
       inverted
-      data={listMessages}
+      data={channelMessages}
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {
-        const { myMessage, messageBox } = item;
+        const { userId: memberId, messageBox } = item;
+        let myMessage = memberId == user._id ? true : false;
         return <UserMessage myMessage={myMessage} messageBox={messageBox} />;
       }}
       keyExtractor={(item) => {
