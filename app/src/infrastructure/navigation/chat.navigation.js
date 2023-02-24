@@ -1,10 +1,10 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-const Stack = createNativeStackNavigator();
 import ChatScreen from "../../features/chat/screens/chat.screen";
-import ChatRoom from "../../features/chat/screens/chat-room.component";
+import ChatRoom from "../../features/chat/screens/chat-room.screen";
 
+const Stack = createNativeStackNavigator();
 export const ChatNavigator = () => (
   <Stack.Navigator
     initialRouteName="Chat"
@@ -13,6 +13,6 @@ export const ChatNavigator = () => (
     }}
   >
     <Stack.Screen name="Chat" component={ChatScreen} />
-    <Stack.Screen name="ChatRoom" component={RegisterScreen1} />
+    <Stack.Screen name="ChatRoom" component={ChatRoom} />
   </Stack.Navigator>
 );

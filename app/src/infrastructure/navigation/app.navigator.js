@@ -5,13 +5,15 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import User from "../../views/User/User";
 import Home from "../../views/Home/Home";
 import Map from "../../features/map/screens/map.screen";
-import ChatScreen from "../../features/chat/screens/chat.screen";
+import { ChatNavigator } from "./chat.navigation";
+
 export const AppNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
+        tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           if (route.name === "Home") {
@@ -20,7 +22,7 @@ export const AppNavigator = () => {
             iconName = "user";
           } else if (route.name === "Map") {
             iconName = "map-pin";
-          } else if (route.name === "Chat") {
+          } else if (route.name === "ChatNavigator") {
             return (
               <Ionicons
                 name="ios-chatbubble-ellipses-outline"
@@ -43,9 +45,9 @@ export const AppNavigator = () => {
       />
       <Tab.Screen name="Map" options={{ headerShown: false }} component={Map} />
       <Tab.Screen
-        name="Chat"
+        name="ChatNavigator"
         options={{ headerShown: false }}
-        component={ChatScreen}
+        component={ChatNavigator}
       />
       <Tab.Screen
         name="User"

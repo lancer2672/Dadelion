@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Channel from "./channel.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { ChatContext } from "../../../services/chat/chat.context";
-const ListChannel = () => {
+const ListChannel = ({ navigation }) => {
   const { channels } = useContext(ChatContext);
   useEffect(() => {}, []);
   return (
@@ -15,7 +15,7 @@ const ListChannel = () => {
       renderItem={({ item }) => {
         return (
           <Spacer position={"bottom"} size={"large"}>
-            <Channel channel={item} />
+            <Channel navigation={navigation} channel={item} />
           </Spacer>
         );
       }}

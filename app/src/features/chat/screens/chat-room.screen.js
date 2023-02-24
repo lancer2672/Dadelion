@@ -9,10 +9,10 @@ import ChatRoomHeader from "../components/chat-room-header.component";
 const Container = styled(View)`
   flex: 1;
 `;
-const ChatRoom = ({ channelId, setModalVisible, channelMessages }) => {
+const ChatRoom = ({ channelId, channelMessages }) => {
   return (
     <Container>
-      <ChatRoomHeader setModalVisible={setModalVisible}></ChatRoomHeader>
+      <ChatRoomHeader></ChatRoomHeader>
       <ListUserMessages channelMessages={channelMessages}></ListUserMessages>
       <InputBar channelId={channelId}></InputBar>
     </Container>

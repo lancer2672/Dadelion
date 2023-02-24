@@ -4,11 +4,11 @@ import React from "react";
 import ListAvtWithName from "../components/list-avt-with-name.componet";
 import ListChannel from "../components/list-channel.component";
 
-const ChatScreen = () => {
+const ChatScreen = ({ navigation }) => {
   return (
     <View>
       <ListAvtWithName></ListAvtWithName>
-      <ListChannel></ListChannel>
+      <ListChannel navigation={navigation}></ListChannel>
     </View>
   );
 };

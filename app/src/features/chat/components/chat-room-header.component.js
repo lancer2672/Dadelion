@@ -10,10 +10,10 @@ const BackIcon = styled(TouchableOpacity)`
   margin-left: 12px;
 `;
 
-const ChatRoomHeader = ({ setModalVisible, chatRoomName = "" }) => {
+const ChatRoomHeader = ({ navigation, chatRoomName = "" }) => {
   return (
     <Container>
-      <BackIcon onPress={() => setModalVisible(false)}>
+      <BackIcon onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={32} color="black" />
       </BackIcon>
       <Text>{chatRoomName}</Text>

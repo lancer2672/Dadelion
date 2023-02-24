@@ -32,13 +32,11 @@ const LastMessage = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.body};
 `;
 
-const Channel = ({ channel }) => {
+const Channel = ({ navigation, channel }) => {
   console.log("z", channel);
   const { _id: channelId, channelMessages } = channel;
-  const { HandleGetGroupChatMembers } = useContext(ChatContext);
   //hiện giờ chỉ cho chat với 1 người nên đặt tên k có "s"
   const [chatFriend, setChatFriend] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
   let friendAvatar = null;
   useLayoutEffect(() => {
     (async () => {
@@ -59,22 +57,12 @@ const Channel = ({ channel }) => {
   return (
     <Container
       onPress={() => {
-        setModalVisible(true);
+        navigation.navigate("ChatRoom", {
+          channelId,
+          channelMessages,
+        });
       }}
     >
-      <Modal
-        animationType="slide"
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
-      >
-        <ChatRoom
-          channelId={channelId}
-          channelMessages={channelMessages}
-          setModalVisible={setModalVisible}
-        ></ChatRoom>
-      </Modal>
       {friendAvatar ? (
         <Avatar source={{ uri: friendAvatar }}></Avatar>
       ) : (
