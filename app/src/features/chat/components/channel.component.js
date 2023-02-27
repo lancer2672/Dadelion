@@ -33,8 +33,8 @@ const LastMessage = styled(Text)`
 `;
 
 const Channel = ({ navigation, channel }) => {
-  console.log("z", channel);
   const { _id: channelId, channelMessages } = channel;
+  const { joinRoom } = useContext(ChatContext);
   //hiện giờ chỉ cho chat với 1 người nên đặt tên k có "s"
   const [chatFriend, setChatFriend] = useState(null);
   let friendAvatar = null;
@@ -57,9 +57,10 @@ const Channel = ({ navigation, channel }) => {
   return (
     <Container
       onPress={() => {
+        joinRoom(channelId);
         navigation.navigate("ChatRoom", {
-          channelId,
-          channelMessages,
+          channelId: channelId,
+          channelMessages: channelMessages,
         });
       }}
     >

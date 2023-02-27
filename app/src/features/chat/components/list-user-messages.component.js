@@ -1,20 +1,23 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import UserMessage from "./message-of-user.component";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import { useLayoutEffect } from "react";
+import { ChatContext } from "../../../services/chat/chat.context";
 
-const ListUserMessages = ({ channelMessages }) => {
+const ListUserMessages = ({ listMessage }) => {
   const { user } = useContext(AuthenticationContext);
-  console.log("z", channelMessages);
+
+  useLayoutEffect(() => {}, []);
   return (
     <FlatList
       style={{
         flex: 1,
         marginBottom: 8,
       }}
-      inverted
-      data={channelMessages}
+      inverted={false}
+      data={listMessage}
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {
         const { userId: memberId, messageBox } = item;

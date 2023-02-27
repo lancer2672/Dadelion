@@ -17,27 +17,28 @@ export const ChatContextProvider = ({ children }) => {
       setIsLoading(true);
       socket.emit("login", userId);
       socket.on("get-channels", (chatChannels) => {
-        console.log("ChatChannel", chatChannels);
         setChannels(chatChannels);
       });
       setIsLoading(false);
     }
   }, [isAuthenticated]);
 
-  const handleSendMessage = (channelId, userId, newMessage) => {
+  const handleSendMessage = (channelId, userId, newMessage, setListMessage) => {
     socket.emit("send-message", {
       channelId,
       userId,
       newMessage,
     });
     socket.on("updated-channels", (newChannels) => {
-      console.log("newChannel", newChannels);
+      setListMessage(newChannels.channelMessages);
       setChannels(newChannels);
     });
   };
+
   const joinRoom = (channelId) => {
-    socket.emit("join-room", channelId);
+    socket.emit("join-chat-room", channelId);
   };
+
   //userId is id of user using this app, this f will find all channels have userId
   const handleGetMembersOfChannel = (userId, channelId) => {
     socket.on("get-channel-members", (channelMembers) => {});

@@ -6,7 +6,7 @@ import { Spacer } from "../../../components/spacer/spacer.component";
 import { ChatContext } from "../../../services/chat/chat.context";
 const ListChannel = ({ navigation }) => {
   const { channels } = useContext(ChatContext);
-  useEffect(() => {}, []);
+
   return (
     <FlatList
       style={{ margin: 12, marginTop: 24, flexGrow: 0 }}

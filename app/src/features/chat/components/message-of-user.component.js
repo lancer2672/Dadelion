@@ -29,7 +29,9 @@ const MessageContainer = styled(View).attrs((props) => {
   margin-bottom: 2px;
 `;
 
-const Message = styled(Text).attrs((props) => ({}))`
+const Message = styled(Text).attrs((props) => {
+  return { textAlign: props.myMessage ? "right" : "left" };
+})`
   background-color: ${(props) => props.theme.colors.bg.primary};
   margin-top: 6px;
   border-radius: 15px;
@@ -41,13 +43,23 @@ const Message = styled(Text).attrs((props) => ({}))`
 const UserMessage = ({ myMessage, messageBox }) => {
   return (
     <Container myMessage={myMessage}>
-      <Avatar
-        source={require("../../../../assets/imgs/DefaultAvatar.png")}
-      ></Avatar>
+      {!myMessage && (
+        <>
+          <Avatar
+            source={require("../../../../assets/imgs/DefaultAvatar.png")}
+          ></Avatar>
+        </>
+      )}
       <MessageContainer myMessage={myMessage}>
         {messageBox.map((item, index) => {
+          const id = item._id;
           return (
-            <Message key={`user-message ${item._id}`}>{item.message}</Message>
+            <>
+              <View key={id} style={{ flexDirection: "row" }}>
+                {myMessage && <View style={{ flex: 1 }}></View>}
+                <Message myMessage={myMessage}>{item.message}</Message>
+              </View>
+            </>
           );
         })}
       </MessageContainer>

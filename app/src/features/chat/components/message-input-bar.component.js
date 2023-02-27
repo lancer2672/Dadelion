@@ -39,7 +39,7 @@ const InputText = styled(TextInput)`
   margin-right: ${(props) => props.theme.space[2]};
 `;
 
-const InputBar = ({ channelId }) => {
+const InputBar = ({ channelId, setListMessage }) => {
   const { user } = useContext(AuthenticationContext);
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputWidth, setTextInputWidth] = useState(0);
@@ -71,8 +71,8 @@ const InputBar = ({ channelId }) => {
   };
 
   const sendMessage = () => {
-    console.log("icon pressed");
-    handleSendMessage(channelId, user._id, text);
+    handleSendMessage(channelId, user._id, text, setListMessage);
+    setText("");
   };
   return (
     <Container>
@@ -115,11 +115,12 @@ const InputBar = ({ channelId }) => {
           multiline
           style={{
             fontSize: 16,
+
             marginLeft: leftIconsVisible ? 0 : 8,
           }}
           right={
             <TextInput.Icon
-              size={24}
+              size={22}
               style={{
                 padding: 0,
               }}
@@ -133,7 +134,7 @@ const InputBar = ({ channelId }) => {
         />
       </Animated.View>
       <Icon>
-        <AntDesign name="heart" size={iconSize} color={iconColor} />
+        <AntDesign name="heart" size={24} color={iconColor} />
       </Icon>
     </Container>
   );
