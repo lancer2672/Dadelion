@@ -12,7 +12,7 @@ const Container = styled(View)`
 const ChatRoom = ({ navigation, route }) => {
   const { channelId, channelMessages } = route.params;
   const [listMessage, setListMessage] = useState(channelMessages);
-  console.log("userMessage", listMessage);
+
   return (
     <Container>
       <ChatRoomHeader navigation={navigation}></ChatRoomHeader>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useLayoutEffect, useState, useContext } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -16,6 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { PickImage } from "../../../utils/openImagePicker";
 import { PostContext } from "../../../services/post/post.context";
+import { Header, Seperator, Avatar, UserName } from "../shared-components";
 
 const UpdateBtn = styled(TouchableOpacity)`
   min-width: 200px;
@@ -30,8 +31,32 @@ const UpdateBtnContent = styled(Text)`
   font-size: 16px;
   color: ${(props) => props.theme.colors.text.primary};
 `;
-
+const PostInfo = styled(View)`
+  margin-top: 24px;
+  margin-left: 8px;
+  flex-direction: row;
+  align-items: center;
+`;
+const Container = styled(View)`
+  background-color: ${(props) => props.theme.colors.bg.primary};
+  flex: 1;
+`;
+const UserInfo = styled(View)`
+  margin-left: 8px;
+`;
+const ImageContainer = styled(TouchableOpacity)`
+  height: 300;
+`;
+const PostImage = styled(ImageBackground)`
+  flex: 1;
+  opacity: 0.6;
+  resize-mode: stretch;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(props) => props.theme.colors.bg.secondary};
+`;
 const dayjs = require("dayjs");
+
 const UpdatePost = ({ ...props }) => {
   const {
     userAvatar,
@@ -44,11 +69,19 @@ const UpdatePost = ({ ...props }) => {
   } = props;
   const { error, UpdatePost } = useContext(PostContext);
   const [newDescription, setNewDescription] = useState(description);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageUri, setSelectedImageUri] = useState(postImage);
+  const [updateBtnDisable, setUpdateBtnDisable] = useState(true);
+  useLayoutEffect(() => {
+    if (selectedImageUri != postImage || newDescription !== description) {
+      setUpdateBtnDisable(false);
+    } else {
+      setUpdateBtnDisable(true);
+    }
+  }, [selectedImageUri, newDescription]);
   const HandlePickImage = () => {
     PickImage()
       .then((result) => {
-        if (!result.cancelled) setSelectedImage(result.uri);
+        if (!result.cancelled) setSelectedImageUri(result.uri);
       })
       .catch((err) => {});
   };
@@ -57,9 +90,9 @@ const UpdatePost = ({ ...props }) => {
   };
   const handleUpdatePost = async () => {
     const newPostData = new FormData();
-    if (selectedImage != null) {
+    if (selectedImageUri != null) {
       newPostData.append("updateImage", {
-        uri: selectedImage,
+        uri: selectedImageUri,
         name: new Date() + "_profile",
         type: "image/jpg",
       });
@@ -70,29 +103,38 @@ const UpdatePost = ({ ...props }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <Container>
+      <Header
+        isDisabled={updateBtnDisable}
+        onBackButtonPress={handleCloseModal}
+        onButtonPress={handleUpdatePost}
+        heading={"Chỉnh sửa bài viết"}
+        buttonContent={"Lưu"}
+      ></Header>
+
+      <Seperator></Seperator>
+
+      <PostInfo>
         {userAvatar == null ? (
-          <Image
+          <Avatar
             source={require("../../../../assets/imgs/DefaultAvatar.png")}
-            style={styles.avatar}
-          ></Image>
+          ></Avatar>
         ) : (
-          <Image
+          <Avatar
             source={{
-              uri: userAvatar, //data.data in your case
+              uri: userAvatar,
             }}
-            style={styles.avatar}
-          ></Image>
+          ></Avatar>
         )}
-        <View style={styles.postInfo}>
-          <Text>{creatorName}</Text>
+        <UserInfo>
+          <UserName>{creatorName}</UserName>
           <Text>
             {dayjs(createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")}
           </Text>
-        </View>
-      </View>
-      <View style={styles.content}>
+        </UserInfo>
+      </PostInfo>
+
+      <View>
         <TextInput
           style={{ margin: 8, height: "auto", lineHeight: 20, fontSize: 16 }}
           multiline={true}
@@ -103,70 +145,17 @@ const UpdatePost = ({ ...props }) => {
         ></TextInput>
       </View>
 
-      <TouchableOpacity onPress={HandlePickImage} style={styles.imageContainer}>
-        <ImageBackground
+      <ImageContainer onPress={HandlePickImage}>
+        <PostImage
           source={{
-            uri: selectedImage || postImage || null,
+            uri: selectedImageUri || postImage || null,
           }}
-          style={styles.image}
         >
           <AntDesign style={{}} name="camera" size={48} color="black" />
-        </ImageBackground>
-      </TouchableOpacity>
-
-      <View style={styles.buttonContainter}>
-        <Spacer variant="top" size="medium"></Spacer>
-        <UpdateBtn onPress={handleUpdatePost}>
-          <UpdateBtnContent>Lưu</UpdateBtnContent>
-        </UpdateBtn>
-        <Spacer variant="top" size="medium"></Spacer>
-        <UpdateBtn onPress={handleCloseModal}>
-          <UpdateBtnContent>Hủy</UpdateBtnContent>
-        </UpdateBtn>
-      </View>
-    </View>
+        </PostImage>
+      </ImageContainer>
+    </Container>
   );
 };
 
 export default UpdatePost;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "rgba(0,0,0,0.4)",
-    flex: 1,
-  },
-  header: {
-    marginTop: 24,
-    marginLeft: 8,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  imageContainer: {
-    maxHeight: 400,
-    height: 300,
-    paddingTop: 20,
-    paddingBottom: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-  },
-  avatar: {
-    marginRight: 12,
-    width: 40,
-    height: 40,
-    resizeMode: "stretch",
-    borderRadius: 50,
-  },
-  buttonContainter: {
-    width: "100%",
-    alignSelf: "center",
-  },
-  saveBtn: {
-    marginRight: 8,
-  },
-  image: {
-    flex: 1,
-    opacity: 0.6,
-    resizeMode: "stretch",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

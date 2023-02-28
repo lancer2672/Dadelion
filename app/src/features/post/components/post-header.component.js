@@ -16,7 +16,7 @@ import { UrlAPI } from "../../../constants";
 import readImageData from "../../../utils/imageHandler";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import { PostCreatedTimeFormater } from "../../../utils/timeFormater";
-import { Avatar } from "../shared-styled-components";
+import { Avatar } from "../shared-components";
 
 const Container = styled(View)`
   margin-top: 8px;
