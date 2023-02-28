@@ -8,11 +8,10 @@ export const colors = {
     primary: "#66dbf1",
     secondary: "#a1e6f3",
     tertiary: "#F1F1F1",
-    quaternary: "#FFFFFF",
+
     disabled: "#DEDEDE",
     error: "#f03030",
     success: "#138000",
-      
   },
   bg: {
     primary: "#d9d5d0",
@@ -22,12 +21,12 @@ export const colors = {
   text: {
     primary: "#e3c3de",
     secondary: "#a1e6f3",
-
     disabled: "#9C9C9C",
     inverse: "#FFFFFF",
     error: "#e35d5d",
     success: "#138000",
   },
+  white: "#FFFFFF",
 };
 
 // mainColor: "#66dbf1",

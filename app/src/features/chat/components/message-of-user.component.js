@@ -4,7 +4,6 @@ import styled from "styled-components/native";
 
 const Container = styled(View).attrs((props) => ({
   flexDirection: props.myMessage ? "row-reverse" : "row",
-
   flex: 1,
 }))`
   align-content: center;
@@ -35,9 +34,11 @@ const Message = styled(Text).attrs((props) => {
   background-color: ${(props) => props.theme.colors.bg.primary};
   margin-top: 6px;
   border-radius: 15px;
+  line-height: 24px;
   padding: 6px;
   padding-left: 10px;
   padding-right: 10px;
+  font-size: 15px;
 `;
 
 const UserMessage = ({ myMessage, messageBox }) => {
@@ -54,12 +55,10 @@ const UserMessage = ({ myMessage, messageBox }) => {
         {messageBox.map((item, index) => {
           const id = item._id;
           return (
-            <>
-              <View key={id} style={{ flexDirection: "row" }}>
-                {myMessage && <View style={{ flex: 1 }}></View>}
-                <Message myMessage={myMessage}>{item.message}</Message>
-              </View>
-            </>
+            <View key={id} style={{ flexDirection: "row" }}>
+              {myMessage && <View style={{ flex: 1 }}></View>}
+              <Message myMessage={myMessage}>{item.message}</Message>
+            </View>
           );
         })}
       </MessageContainer>

@@ -16,6 +16,7 @@ import { UrlAPI } from "../../../constants";
 import readImageData from "../../../utils/imageHandler";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import { PostCreatedTimeFormater } from "../../../utils/timeFormater";
+import { Avatar } from "../shared-styled-components";
 
 const Container = styled(View)`
   margin-top: 8px;
@@ -23,25 +24,16 @@ const Container = styled(View)`
   flex-direction: row;
   align-items: center;
 `;
-const Seperator = styled(View)`
-  border-width: 1px;
-  border-color: ${(props) => props.theme.colors.bg.secondary};
-`;
+
 const PostInfoContainer = styled(View)`
   justify-content: center;
   flex: 1;
+  margin-left: 12px;
 `;
 const OpenOptionsButtonContainer = styled(View)``;
 const CreatorName = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.label};
   font-weight: ${(props) => props.theme.fontWeights.medium};
-`;
-const Avatar = styled(Image)`
-  margin-right: 12px;
-  width: 40px;
-  height: 40px;
-  resize-mode: stretch;
-  border-radius: 50px;
 `;
 
 const PostHeader = ({ ...props }) => {

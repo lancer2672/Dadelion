@@ -18,13 +18,13 @@ import { AuthenticationContext } from "../../../services/authentication/authenti
 const Container = styled(View)`
   flex-direction: row;
   justify-content: center;
-
+  height: 44px;
   background-color: ${(props) => props.theme.colors.bg.secondary};
 `;
 
 const Icon = styled(TouchableOpacity)`
   align-self: flex-start;
-  margin-top: 16px;
+  margin-top: 8px;
   margin-right: ${(props) => props.theme.space[2]};
 `;
 
@@ -47,7 +47,7 @@ const InputBar = ({ channelId, setListMessage }) => {
   const { handleSendMessage } = useContext(ChatContext);
   const iconSize = 28;
   const iconColor = "black";
-
+  console.log("rendered");
   //for animation
   const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
   const inputWidth = textInputWidth + iconContainerWidth;
@@ -110,7 +110,7 @@ const InputBar = ({ channelId, setListMessage }) => {
           placeholder={"Nhắn tin"}
           mode="outlined"
           outlineStyle={{
-            borderRadius: 25,
+            borderRadius: 15,
           }}
           multiline
           style={{

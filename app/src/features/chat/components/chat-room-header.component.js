@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -11,6 +11,7 @@ const BackIcon = styled(TouchableOpacity)`
 `;
 
 const ChatRoomHeader = ({ navigation, chatRoomName = "" }) => {
+  console.log("chat room render");
   return (
     <Container>
       <BackIcon onPress={() => navigation.goBack()}>
@@ -22,6 +23,6 @@ const ChatRoomHeader = ({ navigation, chatRoomName = "" }) => {
   );
 };
 
-export default ChatRoomHeader;
+export default memo(ChatRoomHeader);
 
 const styles = StyleSheet.create({});

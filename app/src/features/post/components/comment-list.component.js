@@ -4,7 +4,6 @@ import React from "react";
 import Comment from "./comment.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 
-const ITEM_HEIGHT = 50;
 const CommentList = ({ postId, comments }) => {
   let commentList;
 
