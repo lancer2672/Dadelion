@@ -9,6 +9,7 @@ const ObjectId = mongoose.Types.ObjectId;
 require("dotenv").config();
 
 const mainRoute = require("./routes");
+
 function connectDB() {
   try {
     mongoose.connect(
@@ -28,7 +29,7 @@ app.use("/", mainRoute);
 
 //for chatting feature
 const ChatChannel = require("./models/channel");
-let chatChannels = [];
+
 socketIO.on("connection", (socket) => {
   console.log("a user just connected", socket.id);
   socket.on("create-channel", (roomName) => {
@@ -86,4 +87,5 @@ socketIO.on("connection", (socket) => {
     socket.emit("get-channels", chatChannels);
   });
 });
+
 server.listen(process.env.PORT, () => console.log(`server started`));
