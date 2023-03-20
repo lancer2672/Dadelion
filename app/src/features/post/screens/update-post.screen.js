@@ -45,7 +45,7 @@ const UserInfo = styled(View)`
   margin-left: 8px;
 `;
 const ImageContainer = styled(TouchableOpacity)`
-  height: 300;
+  height: 300px;
 `;
 const PostImage = styled(ImageBackground)`
   flex: 1;

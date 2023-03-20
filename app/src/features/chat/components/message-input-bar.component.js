@@ -11,6 +11,7 @@ import { EvilIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 import { ChatContext } from "../../../services/chat/chat.context";
 import { AuthenticationContext } from "../../../services/authentication/authentication.context";
@@ -43,11 +44,12 @@ const InputBar = ({ channelId, setListMessage }) => {
   const { user } = useContext(AuthenticationContext);
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputWidth, setTextInputWidth] = useState(0);
+  const [photoUri, setPhotoUri] = useState(null);
   const [text, setText] = useState("");
   const { handleSendMessage } = useContext(ChatContext);
   const iconSize = 28;
   const iconColor = "black";
-  console.log("rendered");
+
   //for animation
   const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
   const inputWidth = textInputWidth + iconContainerWidth;
@@ -60,7 +62,6 @@ const InputBar = ({ channelId, setListMessage }) => {
       useNativeDriver: false,
     }).start();
   };
-
   const handleBlur = () => {
     setLeftIconVisible(true);
     Animated.timing(animation, {
@@ -69,7 +70,15 @@ const InputBar = ({ channelId, setListMessage }) => {
       useNativeDriver: false,
     }).start();
   };
-
+  const handleOpenCamera = () => {
+    ImagePicker.launchCameraAsync()
+      .then((result) => {
+        if (!result.cancelled) {
+          setPhotoUri(result.uri);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   const sendMessage = () => {
     handleSendMessage(channelId, user._id, text, setListMessage);
     setText("");
@@ -87,19 +96,25 @@ const InputBar = ({ channelId, setListMessage }) => {
       >
         {leftIconsVisible && (
           <LeftIconContainer>
-            <Icon>
-              <EvilIcons name="camera" size={iconSize} color={iconColor} />
-            </Icon>
-            <Icon>
-              <EvilIcons name="image" size={iconSize} color={iconColor} />
-            </Icon>
-            <Icon>
-              <MaterialCommunityIcons
-                name="microphone"
-                size={iconSize}
-                color={iconColor}
-              />
-            </Icon>
+            <TouchableOpacity onPress={handleOpenCamera}>
+              <Icon>
+                <EvilIcons name="camera" size={iconSize} color={iconColor} />
+              </Icon>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon>
+                <EvilIcons name="image" size={iconSize} color={iconColor} />
+              </Icon>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon>
+                <MaterialCommunityIcons
+                  name="microphone"
+                  size={iconSize}
+                  color={iconColor}
+                />
+              </Icon>
+            </TouchableOpacity>
           </LeftIconContainer>
         )}
         <InputText

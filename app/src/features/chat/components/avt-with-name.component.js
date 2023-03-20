@@ -16,6 +16,7 @@ const Name = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.caption};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
+
 const AvtWithName = ({ avatar, name }) => {
   return (
     <Container>

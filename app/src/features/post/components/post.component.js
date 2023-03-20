@@ -5,6 +5,7 @@ import {
   Image,
   Modal,
   View,
+  Pressable,
   Dimensions,
   TouchableOpacity,
 } from "react-native";
@@ -76,6 +77,7 @@ const ReactSectionContainer = styled(View)`
   border-top-color: #ccc8c8;
   border-top-width: 2px;
 `;
+
 const PostItem = ({ navigation, post }) => {
   const {
     _id: postId,
@@ -90,9 +92,14 @@ const PostItem = ({ navigation, post }) => {
   const { user } = useContext(AuthenticationContext);
   const { ReactPost, error } = useContext(PostContext);
   const [heart, setHeart] = useState(false);
-  const [imageUriData, setImageUriData] = useState(null);
+  const [imageUri, setImageUri] = useState(null);
   const [reactionNumber, setReactionNumber] = useState(likes.length);
   const [isCommentsVisible, setIsCommentsVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [imageSize, setImageSize] = useState({
+    width: 0,
+    height: 0,
+  });
   let lastComment = false;
   if (comments.length) {
     lastComment = { ...comments[comments.length - 1] };
@@ -100,7 +107,7 @@ const PostItem = ({ navigation, post }) => {
   useEffect(() => {
     //check if post have an image
     if (image) {
-      setImageUriData(() => readImageData(image.data.data));
+      setImageUri(() => readImageData(image.data.data));
     }
     //check if user reacted this post
     for (let i = 0; i < likes.length; i++) {
@@ -111,9 +118,21 @@ const PostItem = ({ navigation, post }) => {
   }, []);
   useEffect(() => {
     if (image) {
-      setImageUriData(() => readImageData(image.data.data));
+      setImageUri(() => readImageData(image.data.data));
     }
   }, [image]);
+  useEffect(() => {
+    if (imageUri != null) {
+      Image.getSize(imageUri, (width, height) => {
+        const screenWidth = Dimensions.get("window").width;
+        const scaleFactor = width / screenWidth;
+        const imageHeight = height / scaleFactor;
+
+        setImageSize({ width: screenWidth, height: imageHeight });
+      });
+    }
+  }, [imageUri]);
+
   const handleReact = async () => {
     await ReactPost(postId);
     if (error != null) return;
@@ -135,7 +154,7 @@ const PostItem = ({ navigation, post }) => {
         createdAt={createdAt}
         creatorName={creatorName}
         postCreatorId={postCreatorId}
-        postImageUri={imageUriData}
+        postImageUri={imageUri}
       ></PostHeader>
 
       <PostDescriptionContainer numberOfLines={3}>
@@ -143,7 +162,10 @@ const PostItem = ({ navigation, post }) => {
       </PostDescriptionContainer>
 
       {image && (
-        <View
+        <Pressable
+          onPress={() => {
+            setModalVisible(true);
+          }}
           style={{
             width: SCREEN_WIDTH_WITH_MARGIN_L_R_12,
             height: 350,
@@ -151,15 +173,32 @@ const PostItem = ({ navigation, post }) => {
         >
           <Image
             source={{
-              uri: imageUriData,
+              uri: imageUri,
             }}
             style={{
               flex: 1,
-              resizeMode: "cover",
             }}
           ></Image>
-        </View>
+        </Pressable>
       )}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <Image
+            source={{
+              uri: imageUri,
+            }}
+            style={{ width: imageSize.width, height: imageSize.height }}
+          ></Image>
+        </View>
+      </Modal>
+
       <ReactSectionContainer>
         <ReactButton onPress={handleReact}>
           <ReactionNumber>{reactionNumber}</ReactionNumber>
@@ -198,3 +237,12 @@ const PostItem = ({ navigation, post }) => {
 };
 
 export default PostItem;
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    backgroundColor: "#363535",
+  },
+});
