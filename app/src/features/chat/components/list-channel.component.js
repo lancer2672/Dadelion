@@ -1,0 +1,31 @@
+import { StyleSheet, Text, View, FlatList } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+
+import Channel from "./channel.component";
+import { Spacer } from "../../../components/spacer/spacer.component";
+import { ChatContext } from "../../../services/chat/chat.context";
+const ListChannel = ({ navigation }) => {
+  const { channels } = useContext(ChatContext);
+
+  return (
+    <FlatList
+      style={{ margin: 12, marginTop: 24, flexGrow: 0 }}
+      data={channels}
+      ListEmptyComponent={() => null}
+      renderItem={({ item }) => {
+        return (
+          <Spacer position={"bottom"} size={"large"}>
+            <Channel navigation={navigation} channel={item} />
+          </Spacer>
+        );
+      }}
+      keyExtractor={(item) => {
+        return item._id;
+      }}
+    ></FlatList>
+  );
+};
+
+export default ListChannel;
+
+const styles = StyleSheet.create({});
