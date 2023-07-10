@@ -40,11 +40,11 @@ const SubmitButton = styled(TouchableOpacity)`
 
 const InputBar = ({ postId, commentsLength, setIsCommentsVisible }) => {
   const [text, setText] = useState("");
-  const { CommentPost, error } = useContext(PostContext);
+  const { commentPost, error } = useContext(PostContext);
   const handlePostComment = async () => {
     Keyboard.dismiss();
     if (text != "") {
-      await CommentPost(postId, text);
+      await commentPost(postId, text);
       if (error == null) {
         setText("");
         //  If there isn't any comments we will render this comment

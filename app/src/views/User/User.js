@@ -38,6 +38,7 @@ const User = ({ props, navigation }) => {
       aspect: [4, 3],
       quality: 1,
     })
+      //@kimphupv18
       .then((result) => {
         if (!result.cancelled) {
           const newUserData = new FormData();
@@ -47,7 +48,6 @@ const User = ({ props, navigation }) => {
             type: "image/jpg",
           });
           newUserData.append("isWallpaper", isWallpaper);
-          console.log("selected");
           return (
             axios
               .put(`${UrlAPI}/user/${user._id}`, newUserData, {

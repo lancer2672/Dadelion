@@ -90,7 +90,7 @@ const PostItem = ({ navigation, post }) => {
     createdAt,
   } = post;
   const { user } = useContext(AuthenticationContext);
-  const { ReactPost, error } = useContext(PostContext);
+  const { reactPost, error } = useContext(PostContext);
   const [heart, setHeart] = useState(false);
   const [imageUri, setImageUri] = useState(null);
   const [reactionNumber, setReactionNumber] = useState(likes.length);
@@ -134,7 +134,7 @@ const PostItem = ({ navigation, post }) => {
   }, [imageUri]);
 
   const handleReact = async () => {
-    await ReactPost(postId);
+    await reactPost(postId);
     if (error != null) return;
     else {
       setHeart(() => !heart);

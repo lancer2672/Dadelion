@@ -80,7 +80,7 @@ const InputBar = ({ channelId, setListMessage }) => {
       .catch((err) => console.log(err));
   };
   const sendMessage = () => {
-    handleSendMessage(channelId, user._id, text, setListMessage);
+    handleSendMessage(channelId, user._id, text);
     setText("");
   };
   return (

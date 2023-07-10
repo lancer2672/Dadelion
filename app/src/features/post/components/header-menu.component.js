@@ -11,9 +11,9 @@ import { Feather } from "@expo/vector-icons";
 
 import { PostContext } from "../../../services/post/post.context";
 export const HeaderMenu = ({ postId, setModalVisible, postCreatorId }) => {
-  const { DeletePost } = useContext(PostContext);
+  const { deletePost } = useContext(PostContext);
   const handleDeletePost = async () => {
-    await DeletePost(postId);
+    await deletePost(postId);
   };
   const openUpdatePostModal = () => {
     setModalVisible(true);

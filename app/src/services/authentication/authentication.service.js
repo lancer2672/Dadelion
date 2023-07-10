@@ -6,7 +6,7 @@ import readImageData from "../../utils/imageHandler";
 import { getValue, save, deleteItem } from "../../utils/tokenStorage";
 import * as SecureStore from "expo-secure-store";
 
-export const LoginRequest = async (username, password, progressEvent) => {
+export const loginRequest = async (username, password, progressEvent) => {
   try {
     const response = await axios.post(
       `${UrlAPI}/api/auth/login`,
@@ -21,7 +21,7 @@ export const LoginRequest = async (username, password, progressEvent) => {
   }
 };
 
-export const RegisterRequest = (
+export const registerRequest = (
   email,
   username,
   password,
@@ -39,7 +39,7 @@ export const RegisterRequest = (
   });
 };
 
-export const TransformUserInformation = (user) => {
+export const transformUserInformation = (user) => {
   const transformedAvatar = readImageData(user.avatar.data.data);
   const transformedWallpaper = readImageData(user.wallPaper.data.data);
   return {
@@ -49,7 +49,7 @@ export const TransformUserInformation = (user) => {
   };
 };
 
-export const StoreUserData = async (data) => {
+export const storeUserData = async (data) => {
   try {
     const stringifiedData = JSON.stringify(data);
     await SecureStore.setItemAsync("user", stringifiedData);
@@ -58,11 +58,11 @@ export const StoreUserData = async (data) => {
   }
 };
 
-export const DeleteUserToken = () => {
+export const deleteUserToken = () => {
   deleteItem("user");
 };
 
-export const CheckUserLoggedIn = () => {
+export const checkUserLoggedIn = () => {
   return SecureStore.getItemAsync("user")
     .then((userData) => {
       return JSON.parse(userData);
@@ -72,7 +72,7 @@ export const CheckUserLoggedIn = () => {
     });
 };
 
-export const GetUserById = async (userId) => {
+export const getUserById = async (userId) => {
   try {
     const res = await axios.get(`${UrlAPI}/user/${userId}`);
     return res;

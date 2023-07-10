@@ -67,7 +67,7 @@ const UpdatePost = ({ ...props }) => {
     postId,
     postImage,
   } = props;
-  const { error, UpdatePost } = useContext(PostContext);
+  const { error, updatePost } = useContext(PostContext);
   const [newDescription, setNewDescription] = useState(description);
   const [selectedImageUri, setSelectedImageUri] = useState(postImage);
   const [updateBtnDisable, setUpdateBtnDisable] = useState(true);
@@ -98,7 +98,7 @@ const UpdatePost = ({ ...props }) => {
       });
     }
     newPostData.append("description", newDescription);
-    await UpdatePost(postId, newPostData);
+    await updatePost(postId, newPostData);
     handleCloseModal();
   };
 

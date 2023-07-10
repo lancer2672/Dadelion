@@ -7,7 +7,7 @@ import { AuthenticationContext } from "../../../services/authentication/authenti
 const ListUserMessages = ({ listMessage }) => {
   const { user } = useContext(AuthenticationContext);
   const [visibleMessages, setVisibleMessages] = useState(10);
-  console.log("userMessage", listMessage);
+  console.log("userMessage", listMessage.length);
   const handleLoadMore = () => {
     setVisibleMessages(visibleMessages + 10);
     console.log("load more", visibleMessages);

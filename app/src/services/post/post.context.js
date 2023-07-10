@@ -2,13 +2,13 @@ import React, { useEffect, useContext, useState } from "react";
 import { createContext } from "react";
 import { AuthenticationContext } from "../authentication/authentication.context";
 import {
-  GetAllPosts,
-  DeletePost,
-  CreatePost,
-  ReactPost,
-  UpdatePost,
-  CommentPost,
-  DeleteComment,
+  getAllPosts,
+  deletePost,
+  createPost,
+  reactPost,
+  updatePost,
+  commentPost,
+  deleteComment,
 } from "./post.service";
 
 export const PostContext = createContext();
@@ -22,7 +22,7 @@ export const PostContextProvider = ({ children }) => {
       (async () => {
         setIsLoading(true);
         try {
-          const res = await GetAllPosts();
+          const res = await getAllPosts();
 
           setPosts(res.data.posts);
           setIsLoading(false);
@@ -37,10 +37,10 @@ export const PostContextProvider = ({ children }) => {
     }
   }, [isAuthenticated]);
 
-  const HandleDeletePost = async (postId) => {
+  const deletePost = async (postId) => {
     setIsLoading(true);
     try {
-      await DeletePost(postId);
+      await deletePost(postId);
       const newPosts = posts.filter((post) => post._id !== postId);
       setPosts(newPosts);
       setIsLoading(false);
@@ -54,7 +54,7 @@ export const PostContextProvider = ({ children }) => {
   const HandleCreatePost = async (newPostFormData) => {
     setIsLoading(true);
     try {
-      const res = await CreatePost(newPostFormData);
+      const res = await createPost(newPostFormData);
       setPosts([...posts, res.data.newPost]);
       setIsLoading(false);
       setError(null);
@@ -64,18 +64,18 @@ export const PostContextProvider = ({ children }) => {
       console.log("err", err);
     }
   };
-  const HandleReactPost = async (postId) => {
+  const reactPost = async (postId) => {
     try {
-      await ReactPost(postId);
+      await reactPost(postId);
       setError(null);
     } catch (err) {
       console.log("err");
       setError("Lỗi!!!");
     }
   };
-  const HandleCommentPost = async (postId, content) => {
+  const commentPost = async (postId, content) => {
     try {
-      const res = await CommentPost(postId, content);
+      const res = await commentPost(postId, content);
       setError(null);
       const updatedPost = res.data.updatedPost;
       const newPosts = posts.map((post) => {
@@ -91,9 +91,9 @@ export const PostContextProvider = ({ children }) => {
       console.log("err", err);
     }
   };
-  const HandleDeleteComment = async (postId, commentId) => {
+  const deleteComment = async (postId, commentId) => {
     setIsLoading(true);
-    await DeleteComment(postId, commentId)
+    await deleteComment(postId, commentId)
       .then((res) => {
         setError(null);
         const updatedComments = res.data.updatedComments;
@@ -114,9 +114,9 @@ export const PostContextProvider = ({ children }) => {
         setIsLoading(false);
       });
   };
-  const HandleUpdatePost = async (postId, newPostData) => {
+  const updatePost = async (postId, newPostData) => {
     setIsLoading(true);
-    await UpdatePost(postId, newPostData)
+    await updatePost(postId, newPostData)
       .then((res) => {
         const updatedPost = res.data.updatedPost;
         console.log("updatedPost", updatedPost._id);
@@ -145,12 +145,12 @@ export const PostContextProvider = ({ children }) => {
         posts,
         isLoading,
         error,
-        DeletePost: HandleDeletePost,
-        CreatePost: HandleCreatePost,
-        ReactPost: HandleReactPost,
-        CommentPost: HandleCommentPost,
-        UpdatePost: HandleUpdatePost,
-        DeleteComment: HandleDeleteComment,
+        deletePost,
+        createPost,
+        reactPost,
+        commentPost,
+        updatePost,
+        deleteComment,
       }}
     >
       {children}

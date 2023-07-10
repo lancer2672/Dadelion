@@ -13,7 +13,7 @@ const Post = ({ navigation }) => {
     <FlatList
       style={{ marginBottom: 250 }}
       data={posts}
-      ListEmptyComponent={() => <Text>Nothing</Text>}
+      ListEmptyComponent={() => <Text></Text>}
       renderItem={({ item }) => {
         return (
           <Spacer position={"bottom"} size="medium">

@@ -71,7 +71,7 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const CreatePost = ({ ...props }) => {
-  const { CreatePost, error, isLoading } = useContext(PostContext);
+  const { createPost, error, isLoading } = useContext(PostContext);
   const { user } = useContext(AuthenticationContext);
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
@@ -99,7 +99,7 @@ const CreatePost = ({ ...props }) => {
       });
     }
     newPostData.append("description", description);
-    await CreatePost(newPostData);
+    await createPost(newPostData);
     setIsvisible(false);
   };
   const handleSelectImage = async () => {

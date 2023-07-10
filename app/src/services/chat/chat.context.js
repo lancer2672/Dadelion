@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { createContext } from "react";
-import { GetChannels } from "./chat.service";
+import { getChannels, getRoomMessages } from "./chat.service";
 import { AuthenticationContext } from "../authentication/authentication.context";
 import socket from "../../utils/socket";
 
@@ -22,24 +22,38 @@ export const ChatContextProvider = ({ children }) => {
       setIsLoading(false);
     }
   }, [isAuthenticated]);
-
-  const handleSendMessage = (channelId, userId, newMessage, setListMessage) => {
+  const registerMessageListener = (setListMessage) => {
+    console.log("registered");
+    socket.on("updated-channels", (newChannels) => {
+      console.log(
+        "newChannels.channelMessages",
+        newChannels.channelMessages.length
+      );
+      setListMessage(() => newChannels.channelMessages);
+      setChannels(newChannels);
+    });
+  };
+  const handleSendMessage = (channelId, userId, newMessage) => {
     socket.emit("send-message", {
       channelId,
       userId,
       newMessage,
-    });
-    socket.on("updated-channels", (newChannels) => {
-      setListMessage(newChannels.channelMessages);
-      setChannels(newChannels);
     });
   };
 
   const joinRoom = (channelId) => {
     socket.emit("join-chat-room", channelId);
   };
+  const loadChatRoomMessages = async (channelId) => {
+    try {
+      const messages = await getRoomMessages(channelId);
+      console.log("messages", messages);
+      return messages;
+    } catch (er) {
+      console.log(er);
+    }
+  };
 
-  //userId is id of user using this app, this f will find all channels have userId
   const handleGetMembersOfChannel = (userId, channelId) => {
     socket.on("get-channel-members", (channelMembers) => {});
   };
@@ -49,6 +63,8 @@ export const ChatContextProvider = ({ children }) => {
         error,
         channels,
         handleSendMessage,
+        registerMessageListener,
+        loadChatRoomMessages,
         joinRoom,
       }}
     >

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 
@@ -6,7 +6,6 @@ const InputText = ({
   iconLeft,
   iconRight,
   onIconPress,
-  showPassword,
   placeholder,
   text,
   setText,
@@ -15,6 +14,7 @@ const InputText = ({
   passwordType,
   hasValidationError,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <TextInput
       mode="outlined"
@@ -42,7 +42,9 @@ const InputText = ({
         passwordType && (
           <TextInput.Icon
             size={20}
-            onPress={onIconPress}
+            onPress={() => {
+              setShowPassword(!showPassword);
+            }}
             icon={showPassword ? "eye-off" : "eye"}
           />
         )

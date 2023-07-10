@@ -2,19 +2,20 @@ import React, { useEffect, useState } from "react";
 import { createContext } from "react";
 import setAuthToken from "../../utils/setAuthToken";
 import {
-  LoginRequest,
-  RegisterRequest,
-  CheckUserLoggedIn,
-  StoreUserData,
-  DeleteUserToken,
-  TransformUserInformation,
-  GetUserById,
+  loginRequest,
+  registerRequest,
+  checkUserLoggedIn,
+  storeUserData,
+  deleteUserToken,
+  transformUserInformation,
+  getUserById,
 } from "./authentication.service";
 
 export const AuthenticationContext = createContext();
 
 export const AuthenticationContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoginning, setIsLoginning] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
@@ -23,12 +24,12 @@ export const AuthenticationContextProvider = ({ children }) => {
   useEffect(() => {
     (async () => {
       try {
-        const userData = await CheckUserLoggedIn();
+        const userData = await checkUserLoggedIn();
         if (userData) {
           setAuthToken(userData.token);
-          const res = await GetUserById(userData.userId);
+          const res = await getUserById(userData.userId);
           if (res) {
-            setUser(TransformUserInformation(res.data.user));
+            setUser(transformUserInformation(res.data.user));
             setIsAuthenticated(true);
             setIsLoading(false);
           }
@@ -40,25 +41,25 @@ export const AuthenticationContextProvider = ({ children }) => {
   }, []);
   const onLogin = async (username, password, savePassword, progressEvent) => {
     try {
-      setIsLoading(true);
-      const data = await LoginRequest(username, password, progressEvent);
+      setIsLoginning(true);
+      const data = await loginRequest(username, password, progressEvent);
       const { token, user } = data;
       setAuthToken(token);
-      setUser(TransformUserInformation(user));
-      setIsLoading(false);
+      setUser(transformUserInformation(user));
       setError(null);
       setIsAuthenticated(true);
       if (savePassword) {
-        StoreUserData({
+        storeUserData({
           token,
           userId: data.user._id,
         });
       }
     } catch (err) {
       console.log("err", err);
-      setIsLoading(false);
       setAuthToken(null);
       setError("Thông tin đăng nhập không chính xác");
+    } finally {
+      setIsLoginning(false);
     }
   };
 
@@ -71,7 +72,7 @@ export const AuthenticationContextProvider = ({ children }) => {
     dateOfBirth
   ) => {
     setIsLoading(true);
-    RegisterRequest(email, username, password, firstname, lastname, dateOfBirth)
+    registerRequest(email, username, password, firstname, lastname, dateOfBirth)
       .then(function (response) {
         setIsLoading(false);
         setError(null);
@@ -83,7 +84,7 @@ export const AuthenticationContextProvider = ({ children }) => {
   };
 
   const onLogout = () => {
-    DeleteUserToken();
+    deleteUserToken();
     setIsAuthenticated(false);
     setAuthToken(null);
     setUser(null);
@@ -96,6 +97,7 @@ export const AuthenticationContextProvider = ({ children }) => {
         isAuthenticated: !!user,
         user,
         isLoading,
+        isLoginning,
         error,
         isAuthenticated,
         setError,

@@ -35,17 +35,9 @@ const RegisterScreen2 = ({
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigateBack = () => {
     setError(null);
     navigation.goBack();
-  };
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
   };
 
   const handleRegistration = async () => {
@@ -124,8 +116,6 @@ const RegisterScreen2 = ({
             setValidationErrors
           )
         }
-        showPassword={showPassword}
-        onIconPress={togglePasswordVisibility}
         hasValidationError={validationErrors.password}
         placeholder={"Mật khẩu"}
       ></InputText>
@@ -136,8 +126,6 @@ const RegisterScreen2 = ({
         iconLeft={"lock"}
         setText={setConfirmPassword}
         passwordType
-        showPassword={showConfirmPassword}
-        onIconPress={toggleConfirmPasswordVisibility}
         onBlur={() =>
           handleValidateObject(
             accountSchema,

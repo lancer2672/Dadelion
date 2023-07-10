@@ -2,15 +2,15 @@
 import { UrlAPI } from "../../constants";
 import axios from "axios";
 
-export const GetAllPosts = () => {
+export const getAllPosts = () => {
   return axios.get(`${UrlAPI}/post/`, {});
 };
 
-export const DeletePost = (postId) => {
+export const deletePost = (postId) => {
   return axios.delete(`${UrlAPI}/post/${postId}`);
 };
 
-export const CreatePost = (newPostData) => {
+export const createPost = (newPostData) => {
   return axios.post(`${UrlAPI}/post/create`, newPostData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -18,19 +18,19 @@ export const CreatePost = (newPostData) => {
   });
 };
 
-export const ReactPost = (postId) => {
+export const reactPost = (postId) => {
   return axios.put(`${UrlAPI}/post/react/${postId}`, {
     react: true,
   });
 };
 
-export const CommentPost = (postId, content) => {
+export const commentPost = (postId, content) => {
   return axios.put(`${UrlAPI}/post/comment/${postId}`, {
     content,
   });
 };
 
-export const DeleteComment = (postId, commentId) => {
+export const deleteComment = (postId, commentId) => {
   return axios.delete(`${UrlAPI}/post/comment/${postId}`, {
     data: {
       commentId,
@@ -38,7 +38,7 @@ export const DeleteComment = (postId, commentId) => {
   });
 };
 
-export const UpdatePost = (postId, newPostData) => {
+export const updatePost = (postId, newPostData) => {
   return axios.put(`${UrlAPI}/post/${postId}`, newPostData, {
     headers: {
       "Content-Type": "multipart/form-data",

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Dandelion",
     "slug": "Dandelion",
-    "version": "1.0.0", 
+    "version": "1.0.0",
     "expoClientId": "474614477183384",
     "facebookAppId": "5759604337465247",
     "facebookScheme": "fb5759604337465247",
@@ -12,7 +12,7 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/imgs/Auth.jpg",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -21,13 +21,12 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "infoPlist":{
-        "NSAllowsArbitraryLoads":true
+      "infoPlist": {
+        "NSAllowsArbitraryLoads": true
       },
-      "usesIcloudStorage ":true
+      "usesIcloudStorage ": true
     },
     "android": {
-      
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/imgs/24.jpg",

@@ -17,7 +17,7 @@ const dayjs = require("dayjs");
 const RegisterScreen1 = ({ navigation }) => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState(new Date("01/01/2002"));
+  const [dateOfBirth, setDateOfBirth] = useState(null);
   const [formatedDateOfBirth, setFormatedDateOfBirth] = useState();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
@@ -39,7 +39,7 @@ const RegisterScreen1 = ({ navigation }) => {
     if (!lastname || !firstname) {
       return;
     }
-    console.log("length", Object.keys(validationErrors).length);
+    console.log(validationErrors);
     if (Object.keys(validationErrors).length == 0) {
       navigation.navigate("Register2", {
         firstname,
@@ -57,17 +57,23 @@ const RegisterScreen1 = ({ navigation }) => {
   //format ngày được chọn để hiển thị lên UI và kiểm tra độ tuổi của người dùng
   useEffect(() => {
     if (dateOfBirth) {
-      setFormatedDateOfBirth(dayjs(dateOfBirth).format("DD/MM/YYYY"));
-      const yearsDiff = new Date().getFullYear() - dateOfBirth.getFullYear();
-      if (yearsDiff >= ageLimit) {
-        let e = validationErrors;
-        delete e[dateOfBirth];
-        setValidationErrors(e);
+      if (dateOfBirth == null) {
+        setFormatedDateOfBirth("Ngày sinh");
       } else {
-        setValidationErrors((pre) => ({
-          ...pre,
-          dateOfBirth: `Bạn chưa đủ ${ageLimit} tuổi`,
-        }));
+        setFormatedDateOfBirth(dayjs(dateOfBirth).format("DD/MM/YYYY"));
+        const yearsDiff = new Date().getFullYear() - dateOfBirth.getFullYear();
+        console.log("yearDiff", yearsDiff);
+        console.log("validationErros", validationErrors);
+        if (yearsDiff >= ageLimit) {
+          let e = validationErrors;
+          delete e["dateOfBirth"];
+          setValidationErrors(e);
+        } else {
+          setValidationErrors((pre) => ({
+            ...pre,
+            dateOfBirth: `Bạn chưa đủ ${ageLimit} tuổi`,
+          }));
+        }
       }
     }
   }, [dateOfBirth]);
@@ -128,7 +134,7 @@ const RegisterScreen1 = ({ navigation }) => {
             }
             setShowDatePicker(false);
           }}
-          value={dateOfBirth}
+          value={dateOfBirth == null ? new Date() : dateOfBirth}
         ></RNDateTimePicker>
       )}
       {validationErrors.dateOfBirth && (

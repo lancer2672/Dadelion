@@ -17,18 +17,14 @@ import { handleValidateField } from "../../../utils/validator";
 import AuthContainer from "../components/auth-container.component";
 
 const LoginScreen = ({ navigation }) => {
-  const { isLoading, error, onLogin, setError, isAuthenticated } = useContext(
+  const { error, onLogin, setError, isAuthenticated, isLoginning } = useContext(
     AuthenticationContext
   );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [savePassword, setSavePassword] = useState(false);
   const [progress, setProgress] = useState(0);
   const [validationErrors, setValidationErrors] = useState({});
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
   const toggleSavePasswordCheck = () => {
     setSavePassword(!savePassword);
   };
@@ -55,7 +51,7 @@ const LoginScreen = ({ navigation }) => {
   };
   return (
     <AuthContainer>
-      {isLoading && (
+      {isLoginning && (
         <View style={{ position: "absolute", top: 345 }}>
           <ProgressBar
             color={"#9b92e5"}
@@ -86,11 +82,9 @@ const LoginScreen = ({ navigation }) => {
       )}
 
       <InputText
-        onIconPress={togglePasswordVisibility}
         iconLeft={"lock"}
         passwordType
         setText={setPassword}
-        showPassword={showPassword}
         onBlur={() =>
           handleValidateField(
             accountSchema,
