@@ -43,7 +43,7 @@ const LoginScreen = ({ navigation }) => {
     setError(null);
     Keyboard.dismiss();
     if (Object.keys(validationErrors).length == 0)
-      onLogin(username, password, savePassword, updateProgressBarEvent);
+      onLogin(username, password, savePassword);
   };
   const navigateToRegister1Screen = () => {
     setError(null);

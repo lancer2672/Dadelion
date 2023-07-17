@@ -13,7 +13,8 @@ import { AuthenticationContextProvider } from "./src/services/authentication/aut
 import { PostContextProvider } from "./src/services/post/post.context";
 import { ChatContextProvider } from "./src/services/chat/chat.context";
 import { MenuProvider } from "react-native-popup-menu";
-
+import { Provider } from "react-redux";
+import store from "./src/store";
 export default function App() {
   const [oswaldLoaded] = useOswald({
     Oswald_400Regular,
@@ -31,13 +32,15 @@ export default function App() {
     // library "react-native-popup-menu";
     <MenuProvider>
       <ThemeProvider theme={theme}>
-        <AuthenticationContextProvider>
-          <PostContextProvider>
-            <ChatContextProvider>
-              <Navigator></Navigator>
-            </ChatContextProvider>
-          </PostContextProvider>
-        </AuthenticationContextProvider>
+        <Provider store={store}>
+          <AuthenticationContextProvider>
+            <PostContextProvider>
+              <ChatContextProvider>
+                <Navigator></Navigator>
+              </ChatContextProvider>
+            </PostContextProvider>
+          </AuthenticationContextProvider>
+        </Provider>
       </ThemeProvider>
     </MenuProvider>
   );

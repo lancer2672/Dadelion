@@ -6,16 +6,16 @@ import readImageData from "../../utils/imageHandler";
 import { getValue, save, deleteItem } from "../../utils/tokenStorage";
 import * as SecureStore from "expo-secure-store";
 
-export const loginRequest = async (username, password, progressEvent) => {
+export const loginRequest = async (username, password) => {
   try {
     const response = await axios.post(
       `${UrlAPI}/api/auth/login`,
       { username, password },
       {
-        onUploadProgress: progressEvent,
+        // onUploadProgress: progressEvent,
       }
     );
-    return response.data;
+    return response.data.data;
   } catch (err) {
     throw err;
   }

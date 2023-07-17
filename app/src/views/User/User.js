@@ -17,20 +17,18 @@ import { UrlAPI } from "../../constants";
 import readImageData from "../../utils/imageHandler";
 import { AuthenticationContext } from "../../services/authentication/authentication.context";
 import { useContext } from "react";
-
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const User = ({ props, navigation }) => {
-  console.log(props);
-  const { user } = useContext(AuthenticationContext);
-  const [avatarUri, setAvatarUri] = useState("");
-  const [wallPaperUri, setWallPaperUri] = useState("");
+  const { user = {} } = useContext(AuthenticationContext);
+  console.log("User", user);
+  const [avatarUri, setAvatarUri] = useState(null);
+  const [wallPaperUri, setWallPaperUri] = useState(null);
   useEffect(() => {
-    setAvatarUri(readImageData(user.avatar));
-    setWallPaperUri(readImageData(user.wallPaper));
+    setAvatarUri(user.avatar);
+    setWallPaperUri(user.wallPaper);
   }, []);
-  console.log(user._id);
   const updateUserImage = async (isWallpaper, setUri) => {
     await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -38,7 +36,6 @@ const User = ({ props, navigation }) => {
       aspect: [4, 3],
       quality: 1,
     })
-      //@kimphupv18
       .then((result) => {
         if (!result.cancelled) {
           const newUserData = new FormData();
@@ -99,7 +96,7 @@ const User = ({ props, navigation }) => {
         <ImageBackground
           source={
             wallPaperUri == null
-              ? require("./../../../assets/imgs/24.jpg")
+              ? require("./../../../assets/imgs/DefaultBackground.jpg")
               : { uri: wallPaperUri }
           }
           style={styles.wallPaper}
@@ -109,7 +106,7 @@ const User = ({ props, navigation }) => {
           <ImageBackground
             source={
               avatarUri == null
-                ? require("./../../../assets/imgs/DefaultAvatar.png")
+                ? require("@assets/imgs/DefaultAvatar.png")
                 : { uri: avatarUri }
             }
             style={styles.avatar}

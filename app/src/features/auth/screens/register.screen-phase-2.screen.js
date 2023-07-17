@@ -43,14 +43,15 @@ const RegisterScreen2 = ({
   const handleRegistration = async () => {
     if (Object.keys(validationErrors) == 0) {
       try {
-        await onRegister(
+        const data = {
           email,
           username,
           password,
           firstname,
           lastname,
-          dateOfBirth
-        );
+          dateOfBirth,
+        };
+        await onRegister(data);
         setUsername("");
         setPassword("");
         setEmail("");

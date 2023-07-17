@@ -8,7 +8,7 @@
     "facebookScheme": "fb5759604337465247",
     "facebookDisplayName": "Dandelion",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/imgs/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/imgs/Auth.jpg",
@@ -29,12 +29,13 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/imgs/24.jpg",
+        "foregroundImage": "./assets/imgs/DefaultBackground.jpg",
         "backgroundColor": "#FFFFFF"
       }
     },
+    "jsEngine": "hermes",
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/imgs/favicon.png"
     }
   }
 }

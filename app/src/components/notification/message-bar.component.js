@@ -22,7 +22,7 @@ const Container = styled(View)`
 // #8885de
 
 const DandelionPetal = styled.Image.attrs(() => ({
-  source: require("../../../assets/DandelionPetal.png"),
+  source: require("../../../assets/imgs/DandelionPetal.png"),
 }))`
   resize-mode: contain;
   width: 120px;

@@ -10,6 +10,8 @@ import {
   transformUserInformation,
   getUserById,
 } from "./authentication.service";
+import authApi from "../../api/authApi";
+import userApi from "../../api/userApi";
 
 export const AuthenticationContext = createContext();
 
@@ -22,6 +24,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 
   // Load user token and id in SecureStore
   useEffect(() => {
+    onLogout();
     (async () => {
       try {
         const userData = await checkUserLoggedIn();
@@ -29,6 +32,7 @@ export const AuthenticationContextProvider = ({ children }) => {
           setAuthToken(userData.token);
           const res = await getUserById(userData.userId);
           if (res) {
+            console.log("getUserById - data", res.data);
             setUser(transformUserInformation(res.data.user));
             setIsAuthenticated(true);
             setIsLoading(false);
@@ -39,11 +43,11 @@ export const AuthenticationContextProvider = ({ children }) => {
       }
     })();
   }, []);
-  const onLogin = async (username, password, savePassword, progressEvent) => {
+  const onLogin = async (username, password, savePassword) => {
     try {
       setIsLoginning(true);
-      const data = await loginRequest(username, password, progressEvent);
-      const { token, user } = data;
+      const response = await authApi.login(username, password);
+      const { token, user } = response.data.data;
       setAuthToken(token);
       setUser(transformUserInformation(user));
       setError(null);
@@ -63,24 +67,17 @@ export const AuthenticationContextProvider = ({ children }) => {
     }
   };
 
-  const onRegister = (
-    email,
-    username,
-    password,
-    firstname,
-    lastname,
-    dateOfBirth
-  ) => {
+  const onRegister = async (data) => {
     setIsLoading(true);
-    registerRequest(email, username, password, firstname, lastname, dateOfBirth)
-      .then(function (response) {
-        setIsLoading(false);
-        setError(null);
-      })
-      .catch(function (error) {
-        setIsLoading(false);
-        setError("Lỗi! Đăng ký không thành công");
-      });
+    try {
+      console.log("onRegister", data);
+      const res = await userApi.createUser(data);
+      setIsLoading(false);
+      setError(null);
+    } catch (e) {
+      setIsLoading(false);
+      setError("Lỗi! Đăng ký không thành công");
+    }
   };
 
   const onLogout = () => {

@@ -45,7 +45,7 @@ const InputText = ({
             onPress={() => {
               setShowPassword(!showPassword);
             }}
-            icon={showPassword ? "eye-off" : "eye"}
+            icon={showPassword ? "eye" : "eye-off"}
           />
         )
       }

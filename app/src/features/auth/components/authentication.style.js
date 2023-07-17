@@ -49,13 +49,13 @@ export const Slogan = styled(Text)`
 `;
 
 export const Animation = styled(Animated.Image).attrs((props) => ({
-  source: require("./../../../../assets/LoginAnimation.gif"),
+  source: require("./../../../../assets/imgs/LoginAnimation.gif"),
 }))`
   width: 100%;
   height: 200px;
 `;
 export const Animation1 = styled(Animated.Image).attrs((props) => ({
-  source: require("./../../../../assets/DandelionSpreadAnimation.gif"),
+  source: require("./../../../../assets/imgs/DandelionSpreadAnimation.gif"),
 }))`
   width: 100%;
   height: 200px;
