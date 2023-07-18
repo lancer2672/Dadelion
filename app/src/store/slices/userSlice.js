@@ -1,21 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
-  data: null,
-  errorMessage: "",
-  pending: false,
+  user: null,
 };
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    update: (state, action) => {
-      state.data = action.payload.user;
+    setUser: (state, action) => {
+      state.user = action.payload.user;
+      console.log("state.data", action.payload);
     },
-    remove: (state) => {
-      state.data = null;
+    update: (state, action) => {
+      state.user = action.payload.user;
+      console.log("state.data", state.user);
+    },
+    loggout: (state) => {
+      state.user = null;
+      state.token = null;
     },
   },
 });
 
-export const { update, remove } = userSlice.actions;
+export const { update, loggout, setUser } = userSlice.actions;

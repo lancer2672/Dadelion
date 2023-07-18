@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@expo-google-fonts/lato": "^0.2.2",
@@ -48,6 +49,7 @@
     "redux": "^4.2.0",
     "socket.io-client": "^4.6.0",
     "styled-components": "^5.3.6",
+    "typescript": "^5.1.6",
     "yup": "^1.0.0"
   },
   "devDependencies": {

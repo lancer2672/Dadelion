@@ -15,11 +15,16 @@ import { Spacer } from "../../../components/spacer/spacer.component";
 import { accountSchema } from "../../../utils/validationSchemas";
 import { handleValidateField } from "../../../utils/validator";
 import AuthContainer from "../components/auth-container.component";
-
+import { useLoginMutation } from "@src/store/services/userService";
+import { setUser, update } from "@src/store/slices/userSlice";
+import { useDispatch } from "react-redux";
 const LoginScreen = ({ navigation }) => {
-  const { error, onLogin, setError, isAuthenticated, isLoginning } = useContext(
+  const { onLogin, setError, isAuthenticated, isLoginning } = useContext(
     AuthenticationContext
   );
+  const [login, { error, isSuccess, isLoading, ...loginResult }] =
+    useLoginMutation();
+  const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [savePassword, setSavePassword] = useState(false);
@@ -36,17 +41,16 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleLogin = () => {
-    if (!password || !username) {
-      setError("Vui lòng điền đầy đủ thông tin");
-      return;
-    }
-    setError(null);
-    Keyboard.dismiss();
-    if (Object.keys(validationErrors).length == 0)
-      onLogin(username, password, savePassword);
+    login({ username, password });
   };
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("loginResult.data", loginResult.data);
+      dispatch(setUser(loginResult.data));
+    }
+  }, [isLoading]);
   const navigateToRegister1Screen = () => {
-    setError(null);
+    // setError(null);
     navigation.navigate("Register1", {});
   };
   return (

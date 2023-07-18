@@ -12,9 +12,12 @@ import CreatePost from "../../features/post/screens/create-post.screen";
 import Color from "../../utils/color";
 import Search from "./components/search.component";
 import { AuthenticationContext } from "../../services/authentication/authentication.context";
+import { useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 
 const HomeHeader = ({ navigation }) => {
-  const { user } = useContext(AuthenticationContext);
+  const { user } = useSelector(userSelector);
+  console.log("HomeHeader", user);
   const [modalVisible, setModalVisible] = useState(false);
   const [userAvatar, setUserAvatar] = useState(null);
 
