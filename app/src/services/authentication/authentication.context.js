@@ -10,8 +10,6 @@ import {
   transformUserInformation,
   getUserById,
 } from "./authentication.service";
-import authApi from "../../api/authApi";
-import userApi from "../../api/userApi";
 
 export const AuthenticationContext = createContext();
 
@@ -44,40 +42,40 @@ export const AuthenticationContextProvider = ({ children }) => {
     })();
   }, []);
   const onLogin = async (username, password, savePassword) => {
-    try {
-      setIsLoginning(true);
-      const response = await authApi.login(username, password);
-      const { token, user } = response.data.data;
-      setAuthToken(token);
-      setUser(transformUserInformation(user));
-      setError(null);
-      setIsAuthenticated(true);
-      if (savePassword) {
-        storeUserData({
-          token,
-          userId: data.user._id,
-        });
-      }
-    } catch (err) {
-      console.log("err", err);
-      setAuthToken(null);
-      setError("Thông tin đăng nhập không chính xác");
-    } finally {
-      setIsLoginning(false);
-    }
+    // try {
+    //   setIsLoginning(true);
+    //   const response = await authApi.login(username, password);
+    //   const { token, user } = response.data.data;
+    //   setAuthToken(token);
+    //   setUser(transformUserInformation(user));
+    //   setError(null);
+    //   setIsAuthenticated(true);
+    //   if (savePassword) {
+    //     storeUserData({
+    //       token,
+    //       userId: data.user._id,
+    //     });
+    //   }
+    // } catch (err) {
+    //   console.log("err", err);
+    //   setAuthToken(null);
+    //   setError("Thông tin đăng nhập không chính xác");
+    // } finally {
+    //   setIsLoginning(false);
+    // }
   };
 
   const onRegister = async (data) => {
-    setIsLoading(true);
-    try {
-      console.log("onRegister", data);
-      const res = await userApi.createUser(data);
-      setIsLoading(false);
-      setError(null);
-    } catch (e) {
-      setIsLoading(false);
-      setError("Lỗi! Đăng ký không thành công");
-    }
+    // setIsLoading(true);
+    // try {
+    //   console.log("onRegister", data);
+    //   const res = await userApi.createUser(data);
+    //   setIsLoading(false);
+    //   setError(null);
+    // } catch (e) {
+    //   setIsLoading(false);
+    //   setError("Lỗi! Đăng ký không thành công");
+    // }
   };
 
   const onLogout = () => {

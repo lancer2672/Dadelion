@@ -1,6 +1,5 @@
 import { View, Keyboard } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import React, { useState, useEffect } from "react";
 import ProgressBar from "react-native-progress/Bar";
 
 import {
@@ -8,20 +7,19 @@ import {
   Error,
   AuthButtonContent,
 } from "../components/authentication.style";
-import InputText from "../components/text-input.component";
+
+import InputText from "@src/features/auth/components/text-input.component";
 import RememberPassword from "../components/remember-checkbox.component";
-import { Text } from "../../../components/typography/text.component";
-import { Spacer } from "../../../components/spacer/spacer.component";
-import { accountSchema } from "../../../utils/validationSchemas";
-import { handleValidateField } from "../../../utils/validator";
 import AuthContainer from "../components/auth-container.component";
+import { Text } from "@src/components/typography/text.component";
+import { Spacer } from "@src/components/spacer/spacer.component";
+import { accountSchema } from "@src/utils/validationSchemas";
+import { handleValidateField } from "@src/utils/validator";
 import { useLoginMutation } from "@src/store/services/userService";
 import { setUser, update } from "@src/store/slices/userSlice";
 import { useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = ({ navigation }) => {
-  const { onLogin, setError, isAuthenticated, isLoginning } = useContext(
-    AuthenticationContext
-  );
   const [login, { error, isSuccess, isLoading, ...loginResult }] =
     useLoginMutation();
   const dispatch = useDispatch();
@@ -44,10 +42,31 @@ const LoginScreen = ({ navigation }) => {
     login({ username, password });
   };
   useEffect(() => {
-    if (isSuccess) {
-      console.log("loginResult.data", loginResult.data);
-      dispatch(setUser(loginResult.data));
-    }
+    // handle result when login succeeded
+    (async () => {
+      try {
+        if (isSuccess) {
+          const payload = { savePassword, ...loginResult.data };
+          dispatch(setUser(payload));
+          if (savePassword) {
+            await AsyncStorage.setItem(
+              "userId",
+              JSON.stringify(loginResult.data.user._id)
+            );
+            await AsyncStorage.setItem(
+              "token",
+              JSON.stringify(loginResult.data.token)
+            );
+            await AsyncStorage.setItem(
+              "refreshToken",
+              JSON.stringify(loginResult.data.refreshToken)
+            );
+          }
+        }
+      } catch (er) {
+        console.log("err", er);
+      }
+    })();
   }, [isLoading]);
   const navigateToRegister1Screen = () => {
     // setError(null);
@@ -55,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
   };
   return (
     <AuthContainer>
-      {isLoginning && (
+      {false && (
         <View style={{ position: "absolute", top: 345 }}>
           <ProgressBar
             color={"#9b92e5"}
@@ -107,6 +126,7 @@ const LoginScreen = ({ navigation }) => {
       )}
 
       {error && <Error variant="error">{error}</Error>}
+      <Spacer variant="top" size="large"></Spacer>
       <RememberPassword
         savePassword={savePassword}
         onIconPress={toggleSavePasswordCheck}

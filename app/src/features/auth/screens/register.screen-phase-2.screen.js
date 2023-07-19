@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import React from "react";
 
 import { Spacer } from "../../../components/spacer/spacer.component";
@@ -18,17 +18,11 @@ import {
   handleValidateObject,
 } from "../../../utils/validator";
 import { ActivityIndicator } from "react-native-paper";
+import { useCreateUserMutation } from "@src/store/services/userService";
 
-const RegisterScreen2 = ({
-  navigation,
-  route,
-  // setFirstname,
-  // setLastname,
-  // setDateOfBirth,
-}) => {
-  const { isLoading, error, onRegister, setError } = useContext(
-    AuthenticationContext
-  );
+const RegisterScreen2 = ({ navigation, route }) => {
+  const [createUser, { error, isSuccess, isLoading, ...createUserResult }] =
+    useCreateUserMutation();
   const { firstname, lastname, dateOfBirth } = route.params;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -36,10 +30,21 @@ const RegisterScreen2 = ({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
   const navigateBack = () => {
-    setError(null);
     navigation.goBack();
   };
-
+  useEffect(() => {
+    //register succeeded
+    if (isSuccess) {
+      setUsername("");
+      setPassword("");
+      setEmail("");
+      // setFirstname("");
+      // setLastname("");
+      // setDateOfBirth(null);
+      setConfirmPassword("");
+      navigation.navigate("Login");
+    }
+  }, [isSuccess]);
   const handleRegistration = async () => {
     if (Object.keys(validationErrors) == 0) {
       try {
@@ -51,15 +56,7 @@ const RegisterScreen2 = ({
           lastname,
           dateOfBirth,
         };
-        await onRegister(data);
-        setUsername("");
-        setPassword("");
-        setEmail("");
-        // setFirstname("");
-        // setLastname("");
-        // setDateOfBirth(null);
-        setConfirmPassword("");
-        navigation.navigate("Login");
+        await createUser(data);
       } catch (err) {}
     }
   };

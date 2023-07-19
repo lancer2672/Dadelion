@@ -1,15 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { UrlAPI } from "@src/constants";
 import { transformUserInformation } from "@src/services/authentication/authentication.service";
-import type { User } from "@src/type";
 
+import { baseQueryWithReauth } from "./baseQuery";
 const user = "/user/";
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: UrlAPI }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getUserById: builder.query({
-      query: (name) => `${user}/${name}`,
+      query: (userId) => `${user}/${userId}`,
       transformResponse: (response, meta, arg) => {
         const transformedUser = transformUserInformation(response.data.user);
         return { ...response.data, user: transformedUser };
@@ -30,7 +30,7 @@ export const userApi = createApi({
     }),
     createUser: builder.mutation({
       query: (userData) => ({
-        url: user,
+        url: `/api/auth/register`,
         method: "POST",
         body: userData,
       }),
