@@ -11,7 +11,6 @@ import {
 import AuthContainer from "../components/auth-container.component";
 import InputText from "../components/text-input.component";
 import { Text } from "../../../components/typography/text.component";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import { accountSchema } from "../../../utils/validationSchemas";
 import {
   handleValidateField,

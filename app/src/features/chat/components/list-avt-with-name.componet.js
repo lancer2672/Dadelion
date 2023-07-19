@@ -1,32 +1,11 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
 import AvtWithName from "./avt-with-name.component";
-import { Spacer } from "../../../components/spacer/spacer.component";
+import { Spacer } from "@src/components/spacer/spacer.component";
 const ListAvtWithName = () => {
   const listUser = [
     {
       name: "khánh",
-    },
-    {
-      name: "toản",
-    },
-    {
-      name: "toản1",
-    },
-    {
-      name: "toản2",
-    },
-    {
-      name: "toản3",
-    },
-    {
-      name: "toản4",
-    },
-    {
-      name: "toản5",
-    },
-    {
-      name: "toản6",
     },
   ];
   return (

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import React from "react";
-import { Avatar } from "../shared-styled-component";
+import { Avatar } from "@src/features/post/shared-components";
 
 const Container = styled(TouchableOpacity)`
   width: 50px;

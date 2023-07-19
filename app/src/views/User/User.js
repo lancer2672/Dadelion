@@ -10,18 +10,17 @@ import {
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { useSelector } from "react-redux";
 
-import { setAuth } from "../../features/auth/authSlice";
+import { setAuth } from "@src/features/auth/authSlice";
 import UserPost from "./UserPost";
-import { UrlAPI } from "../../constants";
-import readImageData from "../../utils/imageHandler";
-import { AuthenticationContext } from "../../services/authentication/authentication.context";
-import { useContext } from "react";
+import { UrlAPI } from "@src/constants";
+import { userSelector } from "@src/store/selector";
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const User = ({ props, navigation }) => {
-  const { user = {} } = useContext(AuthenticationContext);
+  const { user = {} } = useSelector(userSelector);
   console.log("User", user);
   const [avatarUri, setAvatarUri] = useState(null);
   const [wallPaperUri, setWallPaperUri] = useState(null);

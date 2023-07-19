@@ -13,8 +13,8 @@ import {
 import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
 
-import { Spacer } from "../../../components/spacer/spacer.component";
-import { PickImage } from "../../../utils/openImagePicker";
+import { Spacer } from "@src/components/spacer/spacer.component";
+import { openImagePicker } from "@src/utils/openImagePicker";
 import { PostContext } from "../../../services/post/post.context";
 import { Header, Seperator, Avatar, UserName } from "../shared-components";
 
@@ -79,7 +79,7 @@ const UpdatePost = ({ ...props }) => {
     }
   }, [selectedImageUri, newDescription]);
   const HandlePickImage = () => {
-    PickImage()
+    openImagePicker()
       .then((result) => {
         if (!result.cancelled) setSelectedImageUri(result.uri);
       })

@@ -12,11 +12,12 @@ import axios from "axios";
 
 import { HeaderMenu } from "./header-menu.component";
 import UpdatePost from "../screens/update-post.screen";
-import { UrlAPI } from "../../../constants";
-import readImageData from "../../../utils/imageHandler";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
-import { PostCreatedTimeFormater } from "../../../utils/timeFormater";
+import { UrlAPI } from "@src/constants";
+import readImageData from "@src/utils/imageHandler";
+import { PostCreatedTimeFormater } from "@src/utils/timeFormater";
 import { Avatar } from "../shared-components";
+import { useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 
 const Container = styled(View)`
   margin-top: 8px;
@@ -49,7 +50,7 @@ const PostHeader = ({ ...props }) => {
   const [imageUriUserAvatar, setImageUriUserAvatar] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [createTime, setCreateTime] = useState(null);
-  const { user } = useContext(AuthenticationContext);
+  const { user } = useSelector(userSelector);
   useEffect(() => {
     getCreatorPostAvatar();
   }, []);

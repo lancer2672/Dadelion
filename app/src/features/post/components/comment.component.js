@@ -4,10 +4,11 @@ import axios from "axios";
 import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
-import { UrlAPI } from "../../../constants";
-import readImageData from "../../../utils/imageHandler";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import { UrlAPI } from "@src/constants";
+import readImageData from "@src/utils/imageHandler";
 import { CommentMenu } from "./comment-menu-options.component";
+import { useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 
 const CommentContainer = styled(View)`
   flex-direction: row;
@@ -58,7 +59,7 @@ const Comment = ({ comment, postId }) => {
   if (comment == false) {
     return <></>;
   }
-  const { user } = useContext(AuthenticationContext);
+  const { user } = useSelector(userSelector);
   const { userId: creatorId, content: commentContent } = comment;
   const [imageURI, setImageURI] = useState(null);
   const [userName, setUserName] = useState("");

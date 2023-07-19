@@ -10,10 +10,10 @@ import React, { useContext, useState, useLayoutEffect } from "react";
 import styled from "styled-components/native";
 import axios from "axios";
 
-import { Avatar } from "../shared-styled-component";
-import { UrlAPI } from "../../../constants";
-import { ChatContext } from "../../../services/chat/chat.context";
-import readImageData from "../../../utils/imageHandler";
+import { Avatar } from "@src/features/post/shared-components";
+import { UrlAPI } from "@src/constants";
+import { ChatContext } from "@src/services/chat/chat.context";
+import readImageData from "@src/utils/imageHandler";
 import ChatRoom from "../screens/chat-room.screen";
 
 const Container = styled(TouchableOpacity)`

@@ -4,15 +4,14 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 import AuthContainer from "../components/auth-container.component";
 import InputText from "../components/text-input.component";
-import { Spacer } from "../../../components/spacer/spacer.component";
 import {
   Error,
   AuthButton,
   AuthButtonContent,
 } from "../components/authentication.style";
-import { handleValidateField } from "../../../utils/validator";
-import { nameSchema, ageLimit } from "../../../utils/validationSchemas";
-
+import { Spacer } from "@src/components/spacer/spacer.component";
+import { handleValidateField } from "@src/utils/validator";
+import { nameSchema, ageLimit } from "@src/utils/validationSchemas";
 const dayjs = require("dayjs");
 const RegisterScreen1 = ({ navigation }) => {
   const [firstname, setFirstname] = useState("");

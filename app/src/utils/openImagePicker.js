@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 
-export const PickImage = () => {
+export const openImagePicker = () => {
   return ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.All,
     allowsEditing: true,

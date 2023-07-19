@@ -2,7 +2,7 @@ import { StyleSheet, FlatList } from "react-native";
 import React from "react";
 
 import Comment from "./comment.component";
-import { Spacer } from "../../../components/spacer/spacer.component";
+import { Spacer } from "@src/components/spacer/spacer.component";
 
 const CommentList = ({ postId, comments }) => {
   let commentList;

@@ -18,10 +18,11 @@ import ReadMore from "@fawazahmed/react-native-read-more";
 import Comment from "./comment.component";
 import CommentList from "./comment-list.component";
 import InputBar from "./inputbar.component";
-import readImageData from "../../../utils/imageHandler";
+import readImageData from "@src/utils/imageHandler";
 import PostHeader from "./post-header.component";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import { PostContext } from "../../../services/post/post.context";
+import { useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
@@ -89,7 +90,7 @@ const PostItem = ({ navigation, post }) => {
     creatorName,
     createdAt,
   } = post;
-  const { user } = useContext(AuthenticationContext);
+  const { user } = useSelector(userSelector);
   const { reactPost, error } = useContext(PostContext);
   const [heart, setHeart] = useState(false);
   const [imageUri, setImageUri] = useState(null);

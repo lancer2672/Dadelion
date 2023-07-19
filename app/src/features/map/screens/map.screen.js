@@ -3,7 +3,6 @@ import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components/native";
 import MapView, { Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 const MapViewComponent = styled(MapView)`
   flex: 1;
 `;
@@ -12,7 +11,6 @@ const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useContext(AuthenticationContext);
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();

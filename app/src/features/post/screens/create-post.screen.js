@@ -15,10 +15,9 @@ import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import styled from "styled-components/native";
 
-import { Spacer } from "../../../components/spacer/spacer.component";
-import Color from "../../../utils/color";
+import { Spacer } from "@src/components/spacer/spacer.component";
+import Color from "@src/utils/color";
 import { PostContext } from "../../../services/post/post.context";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 import {
   Avatar,
   Seperator,
@@ -27,6 +26,8 @@ import {
   UserName,
 } from "../shared-components";
 import { useLayoutEffect } from "react";
+import { useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 
 const Body = styled(View)`
   flex-direction: row;
@@ -72,7 +73,8 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const CreatePost = ({ ...props }) => {
   const { createPost, error, isLoading } = useContext(PostContext);
-  const { user } = useContext(AuthenticationContext);
+  z;
+  const { user } = useSelector(userSelector);
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
   const [createBtnDisable, setCreateBtnDisable] = useState(true);

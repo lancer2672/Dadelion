@@ -10,7 +10,7 @@ import { Searchbar, Snackbar } from "react-native-paper";
 import styled from "styled-components/native";
 import axios from "axios";
 
-import { UrlAPI } from "../../../constants";
+import { UrlAPI } from "@src/constants";
 import FoundedUsersList from "./found-user-list.component";
 
 const SearchContainer = styled(View)`

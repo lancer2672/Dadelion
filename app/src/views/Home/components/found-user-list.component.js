@@ -3,7 +3,7 @@ import React from "react";
 import { Snackbar } from "react-native-paper";
 
 import FoundUser from "./found-user.component";
-import { Spacer } from "../../../components/spacer/spacer.component";
+import { Spacer } from "@src/components/spacer/spacer.component";
 const FoundedUsersList = ({ userList }) => {
   if (userList.length === 0) {
     return <></>;

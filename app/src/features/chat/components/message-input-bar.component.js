@@ -14,7 +14,8 @@ import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 import { ChatContext } from "../../../services/chat/chat.context";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import { userSelector } from "@src/store/selector";
+import { useSelector } from "react-redux";
 
 const Container = styled(View)`
   flex-direction: row;
@@ -41,7 +42,7 @@ const InputText = styled(TextInput)`
 `;
 
 const InputBar = ({ channelId, setListMessage }) => {
-  const { user } = useContext(AuthenticationContext);
+  const { user } = useSelector(userSelector);
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputWidth, setTextInputWidth] = useState(0);
   const [photoUri, setPhotoUri] = useState(null);

@@ -1,11 +1,11 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
-import { Spacer } from "../../../components/spacer/spacer.component";
 import UserMessage from "./message-of-user.component";
-import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import { useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 
 const ListUserMessages = ({ listMessage }) => {
-  const { user } = useContext(AuthenticationContext);
+  const { user } = useSelector(userSelector);
   const [visibleMessages, setVisibleMessages] = useState(10);
   console.log("userMessage", listMessage.length);
   const handleLoadMore = () => {

@@ -2,9 +2,9 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather, Ionicons } from "@expo/vector-icons";
 
-import User from "../../views/User/User";
-import Home from "../../views/Home/Home";
-import Map from "../../features/map/screens/map.screen";
+import User from "@src/views/User/User";
+import Home from "@src/views/Home/Home";
+import Map from "@src/features/map/screens/map.screen";
 import { ChatNavigator } from "./chat.navigation";
 
 export const AppNavigator = () => {

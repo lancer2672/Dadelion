@@ -1,8 +1,8 @@
 import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
-import { Spacer } from "../../../components/spacer/spacer.component";
-import readImageData from "../../../utils/imageHandler";
+import { Spacer } from "@src/components/spacer/spacer.component";
+import readImageData from "@src/utils/imageHandler";
 const Avatar = styled(Image)`
   width: 40px;
   height: 40px;

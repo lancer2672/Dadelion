@@ -2,8 +2,7 @@ import { StyleSheet, FlatList, Text, ActivityIndicator } from "react-native";
 import React, { useState, useContext } from "react";
 import PostItem from "../components/post.component";
 import { PostContext } from "../../../services/post/post.context";
-import { Spacer } from "../../../components/spacer/spacer.component";
-
+import { Spacer } from "@src/components/spacer/spacer.component";
 const Post = ({ navigation }) => {
   const { posts, isLoading } = useContext(PostContext);
   if (isLoading) {
