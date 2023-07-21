@@ -14,73 +14,52 @@ import { useSelector } from "react-redux";
 
 import { setAuth } from "@src/features/auth/authSlice";
 import UserPost from "./UserPost";
-import { UrlAPI } from "@src/constants";
 import { userSelector } from "@src/store/selector";
+import { useUpdateUserMutation } from "@src/store/services/userService";
+import { isFulfilled } from "@reduxjs/toolkit";
 const axios = require("axios").default;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);
-  console.log("User", user);
+  const [updateUser, { isLoading, isSuccess, ...res }] =
+    useUpdateUserMutation();
   const [avatarUri, setAvatarUri] = useState(null);
+  const [selectedImageUri, setSelectedImageUri] = useState(null);
   const [wallPaperUri, setWallPaperUri] = useState(null);
   useEffect(() => {
     setAvatarUri(user.avatar);
     setWallPaperUri(user.wallPaper);
   }, []);
+  useEffect(() => {
+    if (isSuccess) {
+      setAvatarUri(selectedImageUri);
+    }
+  }, [isSuccess]);
   const updateUserImage = async (isWallpaper, setUri) => {
-    await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    })
-      .then((result) => {
-        if (!result.cancelled) {
-          const newUserData = new FormData();
-          newUserData.append("userImage", {
-            uri: result.uri,
-            name: new Date() + "_profile",
-            type: "image/jpg",
-          });
-          newUserData.append("isWallpaper", isWallpaper);
-          return (
-            axios
-              .put(`${UrlAPI}/user/${user._id}`, newUserData, {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-              })
-              //set uriImage after calling API using result form documentPicker
-              .then((res) => {
-                setUri(result.uri);
-                console.log(res);
-              })
-              .catch(function (error) {
-                console.log("err");
-                if (error.response) {
-                  // The request was made and the server responded with a status code
-                  // that falls out of the range of 2xx
-                  console.log(error.response.data);
-                  console.log(error.response.status);
-                  console.log(error.response.headers);
-                } else if (error.request) {
-                  // The request was made but no response was received
-                  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                  // http.ClientRequest in node.js
-                  console.log(error.request);
-                } else {
-                  // Something happened in setting up the request that triggered an Error
-                  console.log("Error", error.message);
-                }
-                console.log(error.config);
-              })
-          );
-        }
-      })
-      .catch(function (err) {
-        console.log("err", err);
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
       });
+
+      if (!result.cancelled) {
+        setSelectedImageUri(result.uri);
+
+        const newUserData = new FormData();
+        newUserData.append("userImage", {
+          uri: result.uri,
+          name: new Date() + "_profile",
+          type: "image/jpg",
+        });
+        newUserData.append("isWallpaper", isWallpaper);
+        updateUser({ newUserData, userId: user._id });
+      }
+    } catch (err) {
+      console.log("Error selecting image", err);
+    }
   };
   const handleUpdateAvatar = () => updateUserImage(false, setAvatarUri);
   const handleUpdateWallpaper = () => updateUserImage(true, setWallPaperUri);

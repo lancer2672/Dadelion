@@ -3,14 +3,15 @@ import { UrlAPI } from "@src/constants";
 import { transformUserInformation } from "@src/services/authentication/authentication.service";
 
 import { baseQueryWithReauth } from "./baseQuery";
-const user = "/user/";
+const userRoute = "/user/";
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getUserById: builder.query({
-      query: (userId) => `${user}/${userId}`,
+      query: (userId) => `${userRoute}/${userId}`,
       transformResponse: (response, meta, arg) => {
+        console.log("called");
         const transformedUser = transformUserInformation(response.data.user);
         return { ...response.data, user: transformedUser };
       },
@@ -28,6 +29,16 @@ export const userApi = createApi({
       },
       transformErrorResponse: (response, meta, arg) => response.data.message,
     }),
+    updateUser: builder.mutation({
+      query: ({ newUserData, userId }) => ({
+        url: `${userRoute}/${userId}`,
+        method: "PUT",
+        body: newUserData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    }),
     createUser: builder.mutation({
       query: (userData) => ({
         url: `/api/auth/register`,
@@ -35,10 +46,14 @@ export const userApi = createApi({
         body: userData,
       }),
       transformResponse: (response, meta, arg) => response.data,
-      transformErrorResponse: (response, meta, arg) => response.status,
+      transformErrorResponse: (response, meta, arg) => response.message,
     }),
   }),
 });
 
-export const { useGetUserByIdQuery, useLoginMutation, useCreateUserMutation } =
-  userApi;
+export const {
+  useGetUserByIdQuery,
+  useLoginMutation,
+  useUpdateUserMutation,
+  useCreateUserMutation,
+} = userApi;

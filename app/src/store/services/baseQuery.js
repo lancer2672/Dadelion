@@ -23,6 +23,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       extraOptions
     );
     if (refreshResult.data) {
+      console.log("refreshResult", refreshResult);
       api.dispatch(setToken(refreshResult.data));
       result = await baseQuery(args, api, extraOptions);
     } else {

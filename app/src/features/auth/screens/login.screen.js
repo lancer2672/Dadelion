@@ -17,10 +17,12 @@ import { accountSchema } from "@src/utils/validationSchemas";
 import { handleValidateField } from "@src/utils/validator";
 import { useLoginMutation } from "@src/store/services/userService";
 import { setUser, update } from "@src/store/slices/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { appSelector } from "@src/store/selector";
+import { setIsLoading } from "@src/store/slices/appSlice";
 const LoginScreen = ({ navigation }) => {
-  const [login, { error, isSuccess, isLoading, ...loginResult }] =
+  const [login, { error, isSuccess, isLoading: isFetching, ...loginResult }] =
     useLoginMutation();
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
@@ -67,7 +69,8 @@ const LoginScreen = ({ navigation }) => {
         console.log("err", er);
       }
     })();
-  }, [isLoading]);
+    dispatch(setIsLoading(isFetching));
+  }, [isFetching]);
   const navigateToRegister1Screen = () => {
     // setError(null);
     navigation.navigate("Register1", {});

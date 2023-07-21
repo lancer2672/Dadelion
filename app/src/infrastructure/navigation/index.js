@@ -3,28 +3,38 @@ import { AppNavigator } from "./app.navigator";
 import { AuthNavigator } from "./auth.navigator";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Platform, StatusBar } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
+import { appSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/services/userService";
-import { loggout, setToken, setUser } from "@src/store/slices/userSlice";
+import { setToken, setUser } from "@src/store/slices/userSlice";
+import { setIsLoading } from "@src/store/slices/appSlice";
 
 const Navigator = () => {
   const userState = useSelector(userSelector);
+  const appState = useSelector(appSelector);
   const dispatch = useDispatch();
   const [userCredentials, setCredentials] = useState({});
-  const { data, isLoading, isSuccess, error } = useGetUserByIdQuery(
-    userCredentials.userId,
-    {}
-  );
+  const {
+    data,
+    isSuccess,
+    isLoading: isFetching,
+    error,
+  } = useGetUserByIdQuery(userCredentials.userId, {});
+  console.log("appStateIsLoading", appState.isLoading);
   useEffect(() => {
-    //get user succeeded
     if (isSuccess && data) {
-      dispatch(setUser({ user: data, token: userCredentials.token }));
+      dispatch(
+        setUser({
+          user: data,
+          token: userCredentials.token,
+          refreshToken: userCredentials.refreshToken,
+        })
+      );
     }
-    dispatch(loggout());
-  }, [isSuccess, data]);
+    dispatch(setIsLoading(isFetching));
+  }, [isFetching]);
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -42,6 +52,7 @@ const Navigator = () => {
           setCredentials({
             userId: JSON.parse(userId),
             token: JSON.parse(token),
+            refreshToken: JSON.parse(refreshToken),
           });
         }
       } catch (er) {
@@ -56,13 +67,29 @@ const Navigator = () => {
         <SafeAreaView
           style={{
             flex: 1,
-            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           }}
         >
           <AppNavigator></AppNavigator>
         </SafeAreaView>
       ) : (
         <AuthNavigator></AuthNavigator>
+      )}
+      {appState.isLoading && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <ActivityIndicator size="large" color="#FFF" />
+        </View>
       )}
     </NavigationContainer>
   );

@@ -15,7 +15,6 @@ export const userSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.refreshToken = action.payload.refreshToken;
-      console.log("state.data", action.payload);
     },
     setToken: (state, action) => {
       state.token = action.payload.token;
@@ -27,7 +26,6 @@ export const userSlice = createSlice({
 
     update: (state, action) => {
       state.user = action.payload.user;
-      console.log("state.data", state.user);
     },
     loggout: (state) => {
       state.user = null;

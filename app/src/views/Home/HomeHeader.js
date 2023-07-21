@@ -17,7 +17,6 @@ import { userSelector } from "@src/store/selector";
 
 const HomeHeader = ({ navigation }) => {
   const { user } = useSelector(userSelector);
-  console.log("HomeHeader", user);
   const [modalVisible, setModalVisible] = useState(false);
   const [userAvatar, setUserAvatar] = useState(null);
 
