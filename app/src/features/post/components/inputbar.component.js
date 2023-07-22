@@ -12,6 +12,7 @@ import { useState } from "react";
 import styled from "styled-components/native";
 
 import { PostContext } from "../../../services/post/post.context";
+import { useCommentPostMutation } from "@src/store/services/postService";
 
 const InputContainer = styled(View)`
   flex-direction: row;
@@ -39,20 +40,21 @@ const SubmitButton = styled(TouchableOpacity)`
 `;
 
 const InputBar = ({ postId, commentsLength, setIsCommentsVisible }) => {
-  const [text, setText] = useState("");
-  const { commentPost, error } = useContext(PostContext);
+  const [content, setContent] = useState("");
+  const [commentPost] = useCommentPostMutation();
   const handlePostComment = async () => {
     Keyboard.dismiss();
-    if (text != "") {
-      await commentPost(postId, text);
-      if (error == null) {
-        setText("");
-        //  If there isn't any comments we will render this comment
-        //  otherwise we  will display commentlist
-        if (commentsLength !== 0) {
-          console.log("commentLength", commentsLength);
-          setIsCommentsVisible(true);
-        }
+    if (content != "") {
+      console.log("content", content);
+      commentPost({ postId, content });
+      console.log("text1 ", content);
+
+      setContent("");
+      //  If there isn't any comments we will render this comment
+      //  otherwise we  will display commentlist
+      if (commentsLength !== 0) {
+        console.log("commentLength", commentsLength);
+        setIsCommentsVisible(true);
       }
     }
   };
@@ -61,8 +63,8 @@ const InputBar = ({ postId, commentsLength, setIsCommentsVisible }) => {
     <InputContainer>
       <InputContent
         placeholder="Viết bình luận..."
-        value={text}
-        onChangeText={(newText) => setText(newText)}
+        value={content}
+        onChangeText={(newText) => setContent(newText)}
       ></InputContent>
       <SubmitButton onPress={handlePostComment}>
         <Ionicons name="send" size={24} color="black" />

@@ -17,6 +17,9 @@ import { Spacer } from "@src/components/spacer/spacer.component";
 import { openImagePicker } from "@src/utils/openImagePicker";
 import { PostContext } from "../../../services/post/post.context";
 import { Header, Seperator, Avatar, UserName } from "../shared-components";
+import { useUpdatePostMutation } from "@src/store/services/postService";
+import { useDispatch } from "react-redux";
+import { setIsLoading } from "@src/store/slices/appSlice";
 
 const UpdateBtn = styled(TouchableOpacity)`
   min-width: 200px;
@@ -67,17 +70,18 @@ const UpdatePost = ({ ...props }) => {
     postId,
     postImage,
   } = props;
-  const { error, updatePost } = useContext(PostContext);
+  const [updatePost, { isSuccess, isLoading, ...res }] =
+    useUpdatePostMutation();
   const [newDescription, setNewDescription] = useState(description);
   const [selectedImageUri, setSelectedImageUri] = useState(postImage);
-  const [updateBtnDisable, setUpdateBtnDisable] = useState(true);
-  useLayoutEffect(() => {
-    if (selectedImageUri != postImage || newDescription !== description) {
-      setUpdateBtnDisable(false);
-    } else {
-      setUpdateBtnDisable(true);
+  const dispatch = useDispatch();
+  console.log("res", res);
+  useEffect(() => {
+    dispatch(setIsLoading(isLoading));
+    if (isSuccess) {
+      handleCloseModal();
     }
-  }, [selectedImageUri, newDescription]);
+  }, [isLoading]);
   const HandlePickImage = () => {
     openImagePicker()
       .then((result) => {
@@ -98,14 +102,12 @@ const UpdatePost = ({ ...props }) => {
       });
     }
     newPostData.append("description", newDescription);
-    await updatePost(postId, newPostData);
-    handleCloseModal();
+    updatePost({ postId, newPostData });
   };
 
   return (
     <Container>
       <Header
-        isDisabled={updateBtnDisable}
         onBackButtonPress={handleCloseModal}
         onButtonPress={handleUpdatePost}
         heading={"Chỉnh sửa bài viết"}

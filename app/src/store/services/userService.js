@@ -1,8 +1,7 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { UrlAPI } from "@src/constants";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { transformUserInformation } from "@src/services/authentication/authentication.service";
-
 import { baseQueryWithReauth } from "./baseQuery";
+
 const userRoute = "/user/";
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -11,7 +10,6 @@ export const userApi = createApi({
     getUserById: builder.query({
       query: (userId) => `${userRoute}/${userId}`,
       transformResponse: (response, meta, arg) => {
-        console.log("called");
         const transformedUser = transformUserInformation(response.data.user);
         return { ...response.data, user: transformedUser };
       },

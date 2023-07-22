@@ -1,16 +1,26 @@
 import { StyleSheet, FlatList, Text, ActivityIndicator } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import PostItem from "../components/post.component";
 import { PostContext } from "../../../services/post/post.context";
 import { Spacer } from "@src/components/spacer/spacer.component";
+import { useGetAllPostsQuery } from "@src/store/services/postService";
+import { useDispatch } from "react-redux";
+import { setIsLoading } from "@src/store/slices/appSlice";
+
 const Post = ({ navigation }) => {
-  const { posts, isLoading } = useContext(PostContext);
-  if (isLoading) {
-    return <ActivityIndicator></ActivityIndicator>;
-  }
+  const dispatch = useDispatch();
+  const [posts, setPosts] = useState([]);
+
+  const { isLoading, isSuccess, data } = useGetAllPostsQuery();
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("data.posts", data.posts);
+      setPosts(data.posts);
+    }
+    dispatch(setIsLoading(isLoading));
+  }, [isLoading, data]);
   return (
     <FlatList
-      style={{ marginBottom: 250 }}
       data={posts}
       ListEmptyComponent={() => <Text></Text>}
       renderItem={({ item }) => {

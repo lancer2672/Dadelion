@@ -6,6 +6,7 @@ import User from "@src/views/User/User";
 import Home from "@src/views/Home/Home";
 import Map from "@src/features/map/screens/map.screen";
 import { ChatNavigator } from "./chat.navigation";
+import { colors } from "../theme/colors";
 
 export const AppNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -34,7 +35,7 @@ export const AppNavigator = () => {
           // You can return any component that you like here!
           return <Feather name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "tomato",
+        tabBarActiveTintColor: colors.text.primary,
         tabBarInactiveTintColor: "gray",
       })}
     >

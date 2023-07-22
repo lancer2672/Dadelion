@@ -8,16 +8,14 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components/native";
-import axios from "axios";
 
 import { HeaderMenu } from "./header-menu.component";
 import UpdatePost from "../screens/update-post.screen";
-import { UrlAPI } from "@src/constants";
-import readImageData from "@src/utils/imageHandler";
 import { PostCreatedTimeFormater } from "@src/utils/timeFormater";
 import { Avatar } from "../shared-components";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
+import { useGetUserByIdQuery } from "@src/store/services/userService";
 
 const Container = styled(View)`
   margin-top: 8px;
@@ -37,34 +35,26 @@ const CreatorName = styled(Text)`
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 
-const PostHeader = ({ ...props }) => {
-  const {
-    postCreatorId,
-    postId,
-    creatorName,
-    createdAt,
-    postImageUri,
-    description,
-  } = props;
-
-  const [imageUriUserAvatar, setImageUriUserAvatar] = useState("");
+const PostHeader = ({
+  postCreatorId,
+  postId,
+  creatorName,
+  createdAt,
+  postImageUri,
+  description,
+}) => {
+  const { data, isLoading, isSuccess } = useGetUserByIdQuery(postCreatorId);
+  const [postOwnerAvatar, setPostOwnerAvatar] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [createTime, setCreateTime] = useState(null);
   const { user } = useSelector(userSelector);
-  useEffect(() => {
-    getCreatorPostAvatar();
-  }, []);
 
-  const getCreatorPostAvatar = async () => {
-    await axios
-      .get(`${UrlAPI}/user/${postCreatorId}`)
-      .then((res) => {
-        setImageUriUserAvatar(() =>
-          readImageData(res.data.user.avatar.data.data)
-        );
-      })
-      .catch((err) => console.log(err));
-  };
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("Data", data);
+      setPostOwnerAvatar(data.user.avatar);
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
     setCreateTime(PostCreatedTimeFormater(createdAt));
@@ -73,12 +63,12 @@ const PostHeader = ({ ...props }) => {
   return (
     <Container>
       <TouchableOpacity>
-        {imageUriUserAvatar == null ? (
+        {postOwnerAvatar == null ? (
           <Avatar
             source={require("./../../../../assets/imgs/DefaultAvatar.png")}
           ></Avatar>
         ) : (
-          <Avatar source={{ uri: imageUriUserAvatar || null }}></Avatar>
+          <Avatar source={{ uri: postOwnerAvatar || null }}></Avatar>
         )}
       </TouchableOpacity>
 
@@ -96,7 +86,7 @@ const PostHeader = ({ ...props }) => {
           }}
         >
           <UpdatePost
-            userAvatar={imageUriUserAvatar}
+            userAvatar={postOwnerAvatar}
             postImage={postImageUri}
             postId={postId}
             createdAt={createdAt}

@@ -16,15 +16,17 @@ const baseQuery = fetchBaseQuery({
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 401) {
-    // try to get a new token
     const refreshResult = await baseQuery(
-      "/api/auth/refreshToken",
-      api,
-      extraOptions
+      {
+        url: "/api/auth/refreshToken",
+        method: "POST",
+        body: { refreshToken: api.getState().user.refreshToken },
+      },
+      api
     );
     if (refreshResult.data) {
-      console.log("refreshResult", refreshResult);
-      api.dispatch(setToken(refreshResult.data));
+      api.dispatch(setToken({ token: refreshResult.data.accessToken }));
+      // Reconstruct the headers with the new token and make the second request
       result = await baseQuery(args, api, extraOptions);
     } else {
       api.dispatch(loggout());

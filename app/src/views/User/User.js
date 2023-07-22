@@ -16,9 +16,94 @@ import { setAuth } from "@src/features/auth/authSlice";
 import UserPost from "./UserPost";
 import { userSelector } from "@src/store/selector";
 import { useUpdateUserMutation } from "@src/store/services/userService";
-import { isFulfilled } from "@reduxjs/toolkit";
-const axios = require("axios").default;
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import styled from "styled-components/native";
+
+const Container = styled.View`
+  flex: 1;
+  background-color: ${(props) => props.theme.colors.bg.primary};
+`;
+
+const Header = styled.View`
+  width: 100%;
+  height: 300px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.colors.bg.primary};
+  elevation: 5;
+  padding-bottom: 24px;
+  padding-top: 12px;
+`;
+const Avatar = styled.ImageBackground.attrs((props) => {
+  return {
+    source:
+      props.avatarUri == null
+        ? require("@assets/imgs/DefaultAvatar.png")
+        : { uri: props.avatarUri },
+  };
+})`
+  border-width: 0px;
+  border-radius: 60px;
+  border-color: #555;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  justify-content: flex-end;
+`;
+
+const CameraIcon = styled.View`
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(52, 52, 52, 0.4);
+  padding-bottom: 10px;
+`;
+
+const UserDescription = styled.View`
+  margin-bottom: 29px;
+  align-items: center;
+`;
+
+const Name = styled.Text`
+  font-size: ${(props) => props.theme.fontSizes.h5};
+  color: ${(props) => props.theme.colors.text.primary};
+  font-weight: bold;
+`;
+const HeaderContent = styled.View`
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-horizontal: 24px;
+`;
+const HeaderContainer = styled.View`
+  height: 390px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  width: 100%;
+  background-color: #9971ee;
+  elevation: 5;
+`;
+const BottomHeader = styled.View`
+  flex: 1;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+`;
+const ItemValue = styled.Text`
+  font-size: ${(props) => props.theme.fontSizes.title};
+  font-weight: bold;
+  color: ${(props) => props.theme.colors.text.primary};
+`;
+
+const ItemLabel = styled.Text`
+  font-size: ${(props) => props.theme.fontSizes.caption};
+  color: ${(props) => props.theme.colors.text.primary};
+`;
+const ItemContainer = styled.View`
+  align-items: center;
+  margin-horizontal: 12px;
+`;
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);
@@ -26,10 +111,8 @@ const User = ({ props, navigation }) => {
     useUpdateUserMutation();
   const [avatarUri, setAvatarUri] = useState(null);
   const [selectedImageUri, setSelectedImageUri] = useState(null);
-  const [wallPaperUri, setWallPaperUri] = useState(null);
   useEffect(() => {
     setAvatarUri(user.avatar);
-    setWallPaperUri(user.wallPaper);
   }, []);
   useEffect(() => {
     if (isSuccess) {
@@ -62,113 +145,51 @@ const User = ({ props, navigation }) => {
     }
   };
   const handleUpdateAvatar = () => updateUserImage(false, setAvatarUri);
-  const handleUpdateWallpaper = () => updateUserImage(true, setWallPaperUri);
+
   const handleLogOut = () => {
     dispatch(setAuth({ isAuthenticated: false, user: null }));
     navigation.navigate("Login");
   };
   return (
-    <View style={styles.container}>
-      <View>
-        {/* wallPaper */}
-        <ImageBackground
-          source={
-            wallPaperUri == null
-              ? require("./../../../assets/imgs/DefaultBackground.jpg")
-              : { uri: wallPaperUri }
-          }
-          style={styles.wallPaper}
-        >
-          {/* avatar */}
-
-          <ImageBackground
-            source={
-              avatarUri == null
-                ? require("@assets/imgs/DefaultAvatar.png")
-                : { uri: avatarUri }
-            }
-            style={styles.avatar}
-          >
+    <Container>
+      <HeaderContainer>
+        <Header>
+          <HeaderContent>
+            <TouchableOpacity>
+              <AntDesign name="arrowleft" size={32} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <AntDesign name="setting" size={32} color="black" />
+            </TouchableOpacity>
+          </HeaderContent>
+          <Avatar avatarUri={avatarUri}>
             <TouchableOpacity onPress={handleUpdateAvatar}>
-              <View style={styles.cameraIcon}>
+              <CameraIcon>
                 <AntDesign
                   style={{ opacity: 1 }}
                   name="camera"
                   size={24}
                   color="black"
                 />
-              </View>
+              </CameraIcon>
             </TouchableOpacity>
-          </ImageBackground>
-          <View style={styles.userDescription}>
-            <Text>UserName "ICON"</Text>
-            <Text>User description "ICON"</Text>
-          </View>
-          <TouchableOpacity
-            onPress={handleUpdateWallpaper}
-            style={styles.wallPaperCamera}
-          >
-            <AntDesign name="camera" size={24} color="black" />
-          </TouchableOpacity>
-        </ImageBackground>
-      </View>
-      <TouchableOpacity
-        style={{ backgroundColor: "red" }}
-        onPress={handleLogOut}
-      >
-        <Text>Log out</Text>
-      </TouchableOpacity>
-
-      {/* user's posts */}
-
-      {/* <View style={styles.userPost}> */}
-      <UserPost></UserPost>
-      {/* </View> */}
-    </View>
+          </Avatar>
+          <UserDescription>
+            <Name>{user.nickname}</Name>
+            {/* <Text>User description "ICON"</Text> */}
+          </UserDescription>
+        </Header>
+        <BottomHeader>
+          <ItemContainer>
+            <ItemValue>85</ItemValue>
+            <ItemLabel>Bạn bè</ItemLabel>
+          </ItemContainer>
+        </BottomHeader>
+      </HeaderContainer>
+    </Container>
   );
 };
 
 export default User;
 
-const styles = StyleSheet.create({
-  container: {},
-  userPost: {
-    marginBottom: 400,
-  },
-  wallPaper: {
-    width: SCREEN_WIDTH,
-    height: 200,
-    justifyContent: "flex-end",
-  },
-  avatar: {
-    marginLeft: 4,
-    marginBottom: 4,
-    borderWidth: 2,
-    borderRadius: 50,
-    borderColor: "#555",
-    width: 100,
-    height: 100,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    overflow: "hidden",
-    justifyContent: "flex-end",
-  },
-  wallPaperCamera: {
-    position: "absolute",
-    right: 12,
-    bottom: 12,
-    padding: 4,
-  },
-  userDescription: {
-    marginLeft: 108,
-    marginBottom: 29,
-  },
-  cameraIcon: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(52, 52, 52, 0.4)",
-    paddingBottom: 10,
-    opacity: 0.4,
-  },
-});
+const styles = StyleSheet.create({});

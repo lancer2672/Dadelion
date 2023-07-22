@@ -14,12 +14,12 @@ import Search from "./components/search.component";
 import { AuthenticationContext } from "../../services/authentication/authentication.context";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-
+import { UrlAPI } from "@src/constants";
+//const
 const HomeHeader = ({ navigation }) => {
-  const { user } = useSelector(userSelector);
+  const userState = useSelector(userSelector);
   const [modalVisible, setModalVisible] = useState(false);
   const [userAvatar, setUserAvatar] = useState(null);
-
   const handleNavigationUser = () => {
     navigation.navigate("User");
   };
@@ -27,7 +27,9 @@ const HomeHeader = ({ navigation }) => {
     setModalVisible(true);
   };
   useEffect(() => {
-    setUserAvatar(user.avatar);
+    if (userState.user.avatar) {
+      setUserAvatar(userState.user.avatar);
+    }
   }, []);
   return (
     <View>

@@ -13,7 +13,6 @@ import axios from "axios";
 import { Avatar } from "@src/features/post/shared-components";
 import { UrlAPI } from "@src/constants";
 import { ChatContext } from "@src/services/chat/chat.context";
-import readImageData from "@src/utils/imageHandler";
 import ChatRoom from "../screens/chat-room.screen";
 
 const Container = styled(TouchableOpacity)`
@@ -37,6 +36,7 @@ const Channel = ({ navigation, channel }) => {
   const { joinRoom } = useContext(ChatContext);
   //hiện giờ chỉ cho chat với 1 người nên đặt tên k có "s"
   const [chatFriend, setChatFriend] = useState(null);
+
   let friendAvatar = null;
   useLayoutEffect(() => {
     (async () => {
@@ -45,7 +45,7 @@ const Channel = ({ navigation, channel }) => {
           `${UrlAPI}/chat/channel/${channelId}/members`
         );
         setChatFriend(res.data.members[0]);
-        friendAvatar = readImageData(res.data.members[0].avatar.data.data);
+        friendAvatar = res.data.members[0].avatar;
       } catch (err) {
         console.log("err", err);
       }

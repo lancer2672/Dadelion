@@ -9,6 +9,7 @@ import readImageData from "@src/utils/imageHandler";
 import { CommentMenu } from "./comment-menu-options.component";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
+import { useGetUserByIdQuery } from "@src/store/services/userService";
 
 const CommentContainer = styled(View)`
   flex-direction: row;
@@ -60,34 +61,32 @@ const Comment = ({ comment, postId }) => {
     return <></>;
   }
   const { user } = useSelector(userSelector);
-  const { userId: creatorId, content: commentContent } = comment;
-  const [imageURI, setImageURI] = useState(null);
-  const [userName, setUserName] = useState("");
+  const { data, isLoading, isSuccess } = useGetUserByIdQuery(comment.userId);
+  const [creatorAvatar, setCreatorAvatar] = useState(null);
+  const [creatorName, setCreatorName] = useState("");
   const [content, setContent] = useState("");
   const [createTime, setCreateTime] = useState("");
   useEffect(() => {
-    setContent(commentContent);
+    if (isSuccess) {
+      setCreatorName(data.user.nickname);
+      setCreatorAvatar(data.user.avatar);
+    }
+  }, [isLoading]);
+  useEffect(() => {
+    setContent(comment.content);
     setCreateTime(
       dayjs(comment.createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")
     );
-    //get avatar of people commenting
-    axios
-      .get(`${UrlAPI}/user/${creatorId}`)
-      .then((res) => {
-        setUserName(res.data.user.nickname);
-        setImageURI(readImageData(res.data.user.avatar.data.data));
-      })
-      .catch((err) => console.log(err));
   }, []);
   return (
     <CommentContainer>
       <TouchableOpacity>
-        {imageURI == null ? (
+        {creatorAvatar == null ? (
           <Avatar
             source={require("../../../../assets/imgs/DefaultAvatar.png")}
           ></Avatar>
         ) : (
-          <Avatar source={{ uri: imageURI }}></Avatar>
+          <Avatar source={{ uri: creatorAvatar }}></Avatar>
         )}
       </TouchableOpacity>
       <CommentContentWrapper>
@@ -98,7 +97,7 @@ const Comment = ({ comment, postId }) => {
               alignItems: "center",
             }}
           >
-            <UserName>{userName}</UserName>
+            <UserName>{creatorName}</UserName>
             <Text>{createTime}</Text>
           </View>
           <ReadMore numberOfLines={2}>
@@ -107,7 +106,7 @@ const Comment = ({ comment, postId }) => {
         </CommentInfo>
 
         {/* check if it is user's comment */}
-        {creatorId == user._id && (
+        {comment.userId == user._id && (
           <OptionsButton>
             <CommentMenu postId={postId} commentId={comment._id}></CommentMenu>
           </OptionsButton>

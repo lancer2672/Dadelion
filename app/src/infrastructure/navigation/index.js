@@ -10,6 +10,7 @@ import { appSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/services/userService";
 import { setToken, setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { colors } from "../theme/colors";
 
 const Navigator = () => {
   const userState = useSelector(userSelector);
@@ -22,12 +23,11 @@ const Navigator = () => {
     isLoading: isFetching,
     error,
   } = useGetUserByIdQuery(userCredentials.userId, {});
-  console.log("appStateIsLoading", appState.isLoading);
   useEffect(() => {
     if (isSuccess && data) {
       dispatch(
         setUser({
-          user: data,
+          user: data.user,
           token: userCredentials.token,
           refreshToken: userCredentials.refreshToken,
         })
@@ -85,7 +85,6 @@ const Navigator = () => {
             bottom: 0,
             left: 0,
             right: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
           }}
         >
           <ActivityIndicator size="large" color="#FFF" />

@@ -9,7 +9,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -26,8 +26,10 @@ import {
   UserName,
 } from "../shared-components";
 import { useLayoutEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
+import { useCreatePostMutation } from "@src/store/services/postService";
+import { setIsLoading } from "@src/store/slices/appSlice";
 
 const Body = styled(View)`
   flex-direction: row;
@@ -71,26 +73,23 @@ const AddImageButton = styled(TouchableOpacity)``;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-const CreatePost = ({ ...props }) => {
-  const { createPost, error, isLoading } = useContext(PostContext);
-  z;
+const CreatePost = ({ setIsvisible }) => {
+  // const { createPost, error, isLoading } = useContext(PostContext);
+  const [createPost, { isLoading, isSuccess, data, ...res }] =
+    useCreatePostMutation();
   const { user } = useSelector(userSelector);
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
-  const [createBtnDisable, setCreateBtnDisable] = useState(true);
-  const { setIsvisible } = props;
-  const { avatar, nickname } = user;
-
-  useLayoutEffect(() => {
-    if (imageUri || description.trim().length !== 0) {
-      setCreateBtnDisable(false);
-    } else {
-      setCreateBtnDisable(true);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isSuccess) {
+      setIsvisible(false);
     }
-  }, [imageUri, description]);
+    dispatch(setIsLoading(isLoading));
+  }, [isLoading]);
   const handleCreatePost = async () => {
     if (!imageUri && description.trim(" ") == "") {
-      setCreateBtnDisable(true);
+      //TODO:
     }
     const newPostData = new FormData();
     if (imageUri != null) {
@@ -101,8 +100,7 @@ const CreatePost = ({ ...props }) => {
       });
     }
     newPostData.append("description", description);
-    await createPost(newPostData);
-    setIsvisible(false);
+    createPost(newPostData);
   };
   const handleSelectImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -115,31 +113,27 @@ const CreatePost = ({ ...props }) => {
       setImageUri(result.uri);
     }
   };
-  if (isLoading) {
-    return <ActivityIndicator size="large" color="#fff"></ActivityIndicator>;
-  }
   return (
     <Container SCREEN_WIDTH={SCREEN_WIDTH} SCREEN_HEIGHT={SCREEN_HEIGHT}>
       <Header
         onBackButtonPress={() => setIsvisible(false)}
         onButtonPress={handleCreatePost}
         heading={"Tạo bài viết"}
-        isDisabled={createBtnDisable}
         buttonContent={"Đăng"}
       ></Header>
       <Seperator style={{ width: SCREEN_WIDTH }}></Seperator>
       <Spacer size={"medium"} position={"bottom"}></Spacer>
       <Body>
         <UserInfo>
-          {avatar == null ? (
+          {user.avatar == null ? (
             <Avatar
               source={require("./../../../../assets/imgs/DefaultAvatar.png")}
             ></Avatar>
           ) : (
-            <Avatar source={{ uri: avatar }}></Avatar>
+            <Avatar source={{ uri: user.avatar }}></Avatar>
           )}
           <Spacer position={"left"} size={"small"}></Spacer>
-          <UserName>{nickname}</UserName>
+          <UserName>{user.nickname}</UserName>
         </UserInfo>
       </Body>
       <View style={{ flexDirection: "row", alignItems: "center", padding: 8 }}>

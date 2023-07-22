@@ -5,6 +5,7 @@ import { StyleSheet, Text, Button, View, TouchableOpacity } from "react-native";
 import { MessageBar } from "@src/components/notification/message-bar.component";
 import Post from "@src/features/post/screens/post.screen";
 import HomeHeader from "./HomeHeader";
+import { colors } from "@src/infrastructure/theme/colors";
 const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
@@ -22,6 +23,9 @@ const Home = ({ navigation }) => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    backgroundColor: colors.bg.primary,
+  },
   postContainer: {},
 });

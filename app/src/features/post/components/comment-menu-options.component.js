@@ -10,10 +10,11 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { PostContext } from "../../../services/post/post.context";
+import { useDeleteCommentMutation } from "@src/store/services/postService";
 export const CommentMenu = ({ postId, commentId }) => {
-  const { deleteComment } = useContext(PostContext);
-  const handleDeleteComment = async () => {
-    await deleteComment(postId, commentId);
+  const [deleteComment] = useDeleteCommentMutation();
+  const handleDeleteComment = () => {
+    deleteComment({ postId, commentId });
   };
   return (
     <Menu render={renderers.SlideInMenu}>

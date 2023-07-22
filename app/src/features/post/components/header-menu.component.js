@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Text } from "react-native";
 import {
   Menu,
@@ -10,11 +10,20 @@ import {
 import { Feather } from "@expo/vector-icons";
 
 import { PostContext } from "../../../services/post/post.context";
+import { useDeletePostMutation } from "@src/store/services/postService";
+import { useDispatch } from "react-redux";
+import { setIsLoading } from "@src/store/slices/appSlice";
 export const HeaderMenu = ({ postId, setModalVisible, postCreatorId }) => {
-  const { deletePost } = useContext(PostContext);
+  const [deletePost, { isSuccess, isLoading }] = useDeletePostMutation();
+  const dispatch = useDispatch();
   const handleDeletePost = async () => {
-    await deletePost(postId);
+    deletePost(postId);
   };
+  useEffect(() => {
+    dispatch(setIsLoading(isLoading));
+    if (isSuccess) {
+    }
+  }, [isLoading]);
   const openUpdatePostModal = () => {
     setModalVisible(true);
   };

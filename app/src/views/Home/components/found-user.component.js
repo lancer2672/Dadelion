@@ -2,7 +2,6 @@ import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import { Spacer } from "@src/components/spacer/spacer.component";
-import readImageData from "@src/utils/imageHandler";
 const Avatar = styled(Image)`
   width: 40px;
   height: 40px;
@@ -21,16 +20,14 @@ const Name = styled(Text)`
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 const FoundUser = ({ avatar, name }) => {
-  const avtUri = readImageData(avatar.data.data);
-
   return (
     <Container onPress={() => console.log("press")}>
-      {avtUri == null ? (
+      {avatar == null ? (
         <Avatar
           source={require("../../../../assets/imgs/DefaultAvatar.png")}
         ></Avatar>
       ) : (
-        <Avatar source={{ uri: avtUri }}></Avatar>
+        <Avatar source={{ uri: avatar }}></Avatar>
       )}
       <Spacer position={"left"} size={"medium"}></Spacer>
       <Name>{name}</Name>

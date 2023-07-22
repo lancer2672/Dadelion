@@ -18,11 +18,11 @@ import ReadMore from "@fawazahmed/react-native-read-more";
 import Comment from "./comment.component";
 import CommentList from "./comment-list.component";
 import InputBar from "./inputbar.component";
-import readImageData from "@src/utils/imageHandler";
 import PostHeader from "./post-header.component";
 import { PostContext } from "../../../services/post/post.context";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
+import { useReactPostMutation } from "@src/store/services/postService";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
@@ -85,16 +85,17 @@ const PostItem = ({ navigation, post }) => {
     likes,
     comments,
     description,
-    image = null,
+    image: postImage = null,
     user: postCreatorId,
     creatorName,
     createdAt,
   } = post;
   const { user } = useSelector(userSelector);
-  const { reactPost, error } = useContext(PostContext);
+  const [reactPost, { isLoading }] = useReactPostMutation();
+  const { error } = useContext(PostContext);
   const [heart, setHeart] = useState(false);
   const [imageUri, setImageUri] = useState(null);
-  const [reactionNumber, setReactionNumber] = useState(likes.length);
+  const [reactionNumber, setReactionNumber] = useState(0);
   const [isCommentsVisible, setIsCommentsVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [imageSize, setImageSize] = useState({
@@ -106,22 +107,20 @@ const PostItem = ({ navigation, post }) => {
     lastComment = { ...comments[comments.length - 1] };
   }
   useEffect(() => {
-    //check if post have an image
-    if (image) {
-      setImageUri(() => readImageData(image.data.data));
-    }
     //check if user reacted this post
     for (let i = 0; i < likes.length; i++) {
       if (likes[i].userId == user._id) {
         setHeart(() => true);
       }
     }
-  }, []);
+    setReactionNumber(likes.length);
+  }, [likes]);
+
   useEffect(() => {
-    if (image) {
-      setImageUri(() => readImageData(image.data.data));
+    if (postImage) {
+      setImageUri(postImage);
     }
-  }, [image]);
+  }, [postImage]);
   useEffect(() => {
     if (imageUri != null) {
       Image.getSize(imageUri, (width, height) => {
@@ -134,8 +133,10 @@ const PostItem = ({ navigation, post }) => {
     }
   }, [imageUri]);
 
-  const handleReact = async () => {
-    await reactPost(postId);
+  const handleReact = () => {
+    //ignore if handling react to post
+
+    reactPost(postId);
     if (error != null) return;
     else {
       setHeart(() => !heart);
@@ -162,7 +163,7 @@ const PostItem = ({ navigation, post }) => {
         <PostDescription>{description}</PostDescription>
       </PostDescriptionContainer>
 
-      {image && (
+      {postImage && (
         <Pressable
           onPress={() => {
             setModalVisible(true);
