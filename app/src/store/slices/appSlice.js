@@ -5,7 +5,7 @@ const initialState = {
 };
 export const appSlice = createSlice({
   name: "app",
-  initialState: initialState,
+  initialState,
   reducers: {
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;

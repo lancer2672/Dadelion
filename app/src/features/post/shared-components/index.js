@@ -13,7 +13,7 @@ export const Seperator = styled(View)`
   border-color: #9cabad;
 `;
 export const UserName = styled(Text)`
-  font-size: ${(props) => props.theme.fontSizes.label};
+  font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 export const Header = ({
@@ -67,7 +67,7 @@ const Button = styled(Pressable).attrs((props) => ({
   elevation: 1;
 `;
 const ButtonContent = styled(Text)`
-  font-size: ${(props) => props.theme.fontSizes.label};
+  font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: ${(props) => props.theme.fontWeights.medium};
   color: ${(props) => props.theme.colors.white};
 `;

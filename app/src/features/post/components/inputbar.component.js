@@ -11,7 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import styled from "styled-components/native";
 
-import { PostContext } from "../../../services/post/post.context";
 import { useCommentPostMutation } from "@src/store/services/postService";
 
 const InputContainer = styled(View)`
@@ -39,23 +38,14 @@ const SubmitButton = styled(TouchableOpacity)`
   padding-bottom: 5px;
 `;
 
-const InputBar = ({ postId, commentsLength, setIsCommentsVisible }) => {
+const InputBar = ({ postId }) => {
   const [content, setContent] = useState("");
   const [commentPost] = useCommentPostMutation();
   const handlePostComment = async () => {
     Keyboard.dismiss();
     if (content != "") {
-      console.log("content", content);
       commentPost({ postId, content });
-      console.log("text1 ", content);
-
       setContent("");
-      //  If there isn't any comments we will render this comment
-      //  otherwise we  will display commentlist
-      if (commentsLength !== 0) {
-        console.log("commentLength", commentsLength);
-        setIsCommentsVisible(true);
-      }
     }
   };
 

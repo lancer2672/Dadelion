@@ -6,28 +6,76 @@ import ReadMore from "@fawazahmed/react-native-read-more";
 
 import { UrlAPI } from "@src/constants";
 import readImageData from "@src/utils/imageHandler";
-import { CommentMenu } from "./comment-menu-options.component";
+import { CommentMenu } from "./CommentMenuOptionscomponent";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/services/userService";
+import { commentCreatedTimeFormater } from "@src/utils/timeFormater";
 
+const dayjs = require("dayjs");
+const Comment = ({ comment, postId }) => {
+  // comment == {} then we return <></>
+  if (comment == false) {
+    return <></>;
+  }
+  const { user } = useSelector(userSelector);
+  const { data, isLoading, isSuccess } = useGetUserByIdQuery(comment.userId);
+  const [creator, setCreator] = useState({});
+  const [content, setContent] = useState("");
+  const [createTime, setCreateTime] = useState("");
+  console.log("render");
+  useEffect(() => {
+    if (isSuccess) {
+      if (comment.userId == user._id) {
+        setCreator(user);
+      } else {
+        setCreator(data.user);
+      }
+    }
+  }, [isLoading]);
+  useEffect(() => {
+    setContent(comment.content);
+  }, []);
+  return (
+    <CommentContainer>
+      <TouchableOpacity>
+        {creator.avatar ? (
+          <Avatar source={{ uri: creator.avatar }}></Avatar>
+        ) : (
+          <Avatar
+            source={require("../../../../assets/imgs/DefaultAvatar.png")}
+          ></Avatar>
+        )}
+      </TouchableOpacity>
+      <CommentContentWrapper>
+        <CommentInfo>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <UserName>{creator.nickname}</UserName>
+          </View>
+          <ReadMore numberOfLines={2}>
+            <CommentContent>{content}</CommentContent>
+          </ReadMore>
+        </CommentInfo>
+        <CreateTime>{commentCreatedTimeFormater(comment.createdAt)}</CreateTime>
+      </CommentContentWrapper>
+    </CommentContainer>
+  );
+};
 const CommentContainer = styled(View)`
   flex-direction: row;
-  margin-bottom: 4px;
+  margin-vertical: 4px;
 `;
 const CommentContentWrapper = styled(View)`
   flex-direction: row;
   height: auto;
   flex: 1;
   padding-left: 8px;
-  align-items: center;
-
-  background-color: ${(props) => props.theme.colors.bg.primary};
-  shadow-color: #000;
-  shadow-offset: 2px;
-  shadow-opacity: 0.2;
-  shadow-radius: 4px;
-  elevation: 4;
+  align-items: flex-start;
   border-radius: 10px;
 `;
 const Avatar = styled(Image)`
@@ -42,78 +90,22 @@ const CommentInfo = styled(View)`
   flex: 1;
 `;
 const UserName = styled(Text)`
-  font-size: ${(props) => props.theme.fontSizes.label};
+  font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: ${(props) => props.theme.fontWeights.medium};
   margin-right: 8px;
+  margin-bottom: 4px;
 `;
-const CommentContent = styled(Text)``;
-
+const CreateTime = styled(Text)`
+  color: ${(props) => props.theme.colors.text.secondary};
+`;
+const CommentContent = styled(Text)`
+  color: ${(props) => props.theme.colors.text.secondary};
+  line-height: 22px;
+`;
 const OptionsButton = styled(TouchableOpacity)`
   margin-left: 6px;
   position: absolute;
   top: 2px;
   right: 8px;
 `;
-const dayjs = require("dayjs");
-const Comment = ({ comment, postId }) => {
-  // comment == {} then we return <></>
-  if (comment == false) {
-    return <></>;
-  }
-  const { user } = useSelector(userSelector);
-  const { data, isLoading, isSuccess } = useGetUserByIdQuery(comment.userId);
-  const [creatorAvatar, setCreatorAvatar] = useState(null);
-  const [creatorName, setCreatorName] = useState("");
-  const [content, setContent] = useState("");
-  const [createTime, setCreateTime] = useState("");
-  useEffect(() => {
-    if (isSuccess) {
-      setCreatorName(data.user.nickname);
-      setCreatorAvatar(data.user.avatar);
-    }
-  }, [isLoading]);
-  useEffect(() => {
-    setContent(comment.content);
-    setCreateTime(
-      dayjs(comment.createdAt).format("DD/MM/YYYY" + " lúc " + "HH:mm")
-    );
-  }, []);
-  return (
-    <CommentContainer>
-      <TouchableOpacity>
-        {creatorAvatar == null ? (
-          <Avatar
-            source={require("../../../../assets/imgs/DefaultAvatar.png")}
-          ></Avatar>
-        ) : (
-          <Avatar source={{ uri: creatorAvatar }}></Avatar>
-        )}
-      </TouchableOpacity>
-      <CommentContentWrapper>
-        <CommentInfo>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <UserName>{creatorName}</UserName>
-            <Text>{createTime}</Text>
-          </View>
-          <ReadMore numberOfLines={2}>
-            <CommentContent>{content}</CommentContent>
-          </ReadMore>
-        </CommentInfo>
-
-        {/* check if it is user's comment */}
-        {comment.userId == user._id && (
-          <OptionsButton>
-            <CommentMenu postId={postId} commentId={comment._id}></CommentMenu>
-          </OptionsButton>
-        )}
-      </CommentContentWrapper>
-    </CommentContainer>
-  );
-};
-
 export default memo(Comment);

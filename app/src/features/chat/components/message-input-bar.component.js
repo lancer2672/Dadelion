@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
-import { EvilIcons } from "@expo/vector-icons";
+import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
@@ -150,7 +150,7 @@ const InputBar = ({ channelId, setListMessage }) => {
         />
       </Animated.View>
       <Icon>
-        <AntDesign name="heart" size={24} color={iconColor} />
+        <Ionicons name="heart" size={24} color={colors.black} />
       </Icon>
     </Container>
   );

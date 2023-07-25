@@ -13,7 +13,7 @@ import axios from "axios";
 import { Avatar } from "@src/features/post/shared-components";
 import { UrlAPI } from "@src/constants";
 import { ChatContext } from "@src/services/chat/chat.context";
-import ChatRoom from "../screens/chat-room.screen";
+import ChatRoom from "../screens/ChatRoom.screen";
 
 const Container = styled(TouchableOpacity)`
   width: 100%;
@@ -23,7 +23,7 @@ const Container = styled(TouchableOpacity)`
   flex-direction: row;
 `;
 const Name = styled(Text)`
-  font-size: ${(props) => props.theme.fontSizes.caption};
+  font-size: ${(props) => props.theme.fontSizes.large};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 

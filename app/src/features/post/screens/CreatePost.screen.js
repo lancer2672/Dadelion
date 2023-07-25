@@ -17,7 +17,6 @@ import styled from "styled-components/native";
 
 import { Spacer } from "@src/components/spacer/spacer.component";
 import Color from "@src/utils/color";
-import { PostContext } from "../../../services/post/post.context";
 import {
   Avatar,
   Seperator,
@@ -28,53 +27,15 @@ import {
 import { useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import { useCreatePostMutation } from "@src/store/services/postService";
+import {
+  useCreatePostMutation,
+  useReactPostMutation,
+} from "@src/store/services/postService";
 import { setIsLoading } from "@src/store/slices/appSlice";
 
-const Body = styled(View)`
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const UserInfo = styled(View)`
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex: 1;
-  margin-bottom: 16px;
-  margin-left: 8px;
-`;
-const PostContent = styled(TextInput)`
-  flex: 1;
-  padding: 4px;
-  border-radius: 8px;
-  background-color: ${(props) => props.theme.colors.bg.secondary}
-  margin-right: 8px;
-  line-height: 24px;
-  font-size: ${(props) => props.theme.fontSizes.body};
-`;
-const SelectedImage = styled(Image)`
-  margin-top: 16px;
-  resize-mode: stretch;
-  border-radius: 10px;
-  height: 250px;
-`;
-
-const Container = styled(View).attrs((props) => ({
-  width: props.SCREEN_WIDTH,
-  height: props.SCREEN_HEIGHT,
-}))`
-  align-items: center;
-  background-color: ${(props) => props.theme.colors.bg.primary}
-  justify-content: flex-start;
-`;
 const AddImageButton = styled(TouchableOpacity)``;
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_HEIGHT = Dimensions.get("window").height;
-
 const CreatePost = ({ setIsvisible }) => {
-  // const { createPost, error, isLoading } = useContext(PostContext);
   const [createPost, { isLoading, isSuccess, data, ...res }] =
     useCreatePostMutation();
   const { user } = useSelector(userSelector);
@@ -114,7 +75,7 @@ const CreatePost = ({ setIsvisible }) => {
     }
   };
   return (
-    <Container SCREEN_WIDTH={SCREEN_WIDTH} SCREEN_HEIGHT={SCREEN_HEIGHT}>
+    <Container>
       <Header
         onBackButtonPress={() => setIsvisible(false)}
         onButtonPress={handleCreatePost}
@@ -162,5 +123,40 @@ const CreatePost = ({ setIsvisible }) => {
     </Container>
   );
 };
+const Body = styled(View)`
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+`;
 
+const UserInfo = styled(View)`
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1;
+  margin-bottom: 16px;
+  margin-left: 8px;
+`;
+const PostContent = styled(TextInput)`
+  flex: 1;
+  padding: 4px;
+  border-radius: 8px;
+  background-color: ${(props) => props.theme.colors.bg.secondary}
+  margin-right: 8px;
+  line-height: 24px;
+  font-size: ${(props) => props.theme.fontSizes.body};
+`;
+const SelectedImage = styled(Image)`
+  margin-top: 16px;
+  resize-mode: stretch;
+  border-radius: 10px;
+  height: 250px;
+`;
+
+const Container = styled(View).attrs((props) => ({}))`
+  align-items: center;
+  flex:1;
+  background-color: ${(props) => props.theme.colors.bg.primary}
+  justify-content: flex-start;
+`;
 export default CreatePost;

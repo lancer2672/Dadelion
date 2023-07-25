@@ -5,12 +5,28 @@ import { UrlAPI } from "@src/constants";
 const postRoute = "/post/";
 
 export const postApi = createApi({
-  reducerPath: "post",
+  reducerPath: "postApi",
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Post"],
   endpoints: (builder) => ({
     getAllPosts: builder.query({
       query: () => `${postRoute}`,
+      transformResponse: (response, meta, arg) => {
+        if (response.data) {
+        }
+        const tranformedPosts = response.data.posts.map((post) => {
+          if (post.image != null) {
+            post.image = `${UrlAPI}/${post.image}`;
+          }
+          return post;
+        });
+        response.data.tranformedPosts = tranformedPosts;
+        return response.data;
+      },
+      providesTags: ["Post"],
+    }),
+    getPostByUserId: builder.query({
+      query: (userId) => `${postRoute}/?userId=${userId}`,
       transformResponse: (response, meta, arg) => {
         if (response.data) {
         }
@@ -86,9 +102,12 @@ export const postApi = createApi({
 
 export const {
   useGetAllPostsQuery,
+  useGetPostByUserIdQuery,
+
   useCreatePostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
+
   useReactPostMutation,
   useCommentPostMutation,
   useDeleteCommentMutation,

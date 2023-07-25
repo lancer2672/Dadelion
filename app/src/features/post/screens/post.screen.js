@@ -1,7 +1,6 @@
 import { StyleSheet, FlatList, Text, ActivityIndicator } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
-import PostItem from "../components/post.component";
-import { PostContext } from "../../../services/post/post.context";
+import PostItem from "../components/Post.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { useGetAllPostsQuery } from "@src/store/services/postService";
 import { useDispatch } from "react-redux";
@@ -14,7 +13,6 @@ const Post = ({ navigation }) => {
   const { isLoading, isSuccess, data } = useGetAllPostsQuery();
   useEffect(() => {
     if (isSuccess) {
-      console.log("data.posts", data.posts);
       setPosts(data.posts);
     }
     dispatch(setIsLoading(isLoading));
@@ -26,7 +24,7 @@ const Post = ({ navigation }) => {
       renderItem={({ item }) => {
         return (
           <Spacer position={"bottom"} size="medium">
-            <PostItem post={item} />
+            <PostItem navigation={navigation} post={item} />
           </Spacer>
         );
       }}

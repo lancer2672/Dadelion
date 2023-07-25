@@ -9,7 +9,6 @@ import {
 } from "react-native-popup-menu";
 import { Feather } from "@expo/vector-icons";
 
-import { PostContext } from "../../../services/post/post.context";
 import { useDeletePostMutation } from "@src/store/services/postService";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";

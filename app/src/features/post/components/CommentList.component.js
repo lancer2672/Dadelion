@@ -1,39 +1,25 @@
 import { StyleSheet, FlatList } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import Comment from "./comment.component";
+import Comment from "./Comment.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
 
 const CommentList = ({ postId, comments }) => {
-  let commentList;
-
-  // just render lesser than 4 comments
-  // if (comments.length > 5) {
-  //   commentList = comments.slice(-4).map((comment, index) => {
-  //     return {
-  //       comment,
-  //       postId,
-  //     };
-  //   });
-  // } else {
-  //   commentList = comments.map((comment, index) => {
-  //     return {
-  //       comment,
-  //       postId,
-  //     };
-  //   });
-  // }
-
-  commentList = comments.map((comment, index) => {
-    return {
-      comment,
-      postId,
-    };
-  });
+  const [commentList, setCommentList] = useState();
+  useEffect(() => {
+    setCommentList(
+      comments.map((comment, index) => {
+        return {
+          comment,
+          postId,
+        };
+      })
+    );
+  }, [comments]);
   return (
     <FlatList
       data={commentList}
-      initialNumToRender={4}
+      showsVerticalScrollIndicator={false}
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {
         const { postId, comment } = item;

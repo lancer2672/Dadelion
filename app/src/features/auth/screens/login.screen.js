@@ -8,9 +8,9 @@ import {
   AuthButtonContent,
 } from "../components/authentication.style";
 
-import InputText from "@src/features/auth/components/text-input.component";
-import RememberPassword from "../components/remember-checkbox.component";
-import AuthContainer from "../components/auth-container.component";
+import InputText from "@src/features/auth/components/TextInput.component";
+import RememberPassword from "../components/RememberCheckBox.component";
+import AuthContainer from "../components/AuthContainer.component";
 import { Text } from "@src/components/typography/text.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { accountSchema } from "@src/utils/validationSchemas";

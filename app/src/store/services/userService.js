@@ -1,7 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { transformUserInformation } from "@src/services/authentication/authentication.service";
 import { baseQueryWithReauth } from "./baseQuery";
-
+import { transformUserData } from "@src/utils/transformHelper";
 const userRoute = "/user/";
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -10,7 +9,7 @@ export const userApi = createApi({
     getUserById: builder.query({
       query: (userId) => `${userRoute}/${userId}`,
       transformResponse: (response, meta, arg) => {
-        const transformedUser = transformUserInformation(response.data.user);
+        const transformedUser = transformUserData(response.data.user);
         return { ...response.data, user: transformedUser };
       },
       transformErrorResponse: (response, meta, arg) => response.status,
@@ -22,7 +21,7 @@ export const userApi = createApi({
         body: authData,
       }),
       transformResponse: (response, meta, arg) => {
-        const transformedUser = transformUserInformation(response.data.user);
+        const transformedUser = transformUserData(response.data.user);
         return { ...response.data, user: transformedUser };
       },
       transformErrorResponse: (response, meta, arg) => response.data.message,
@@ -36,6 +35,10 @@ export const userApi = createApi({
           "Content-Type": "multipart/form-data",
         },
       }),
+      transformResponse: (response, meta, arg) => {
+        const transformedUser = transformUserData(response.data.user);
+        return { ...response.data, user: transformedUser };
+      },
     }),
     createUser: builder.mutation({
       query: (userData) => ({

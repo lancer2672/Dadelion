@@ -7,42 +7,83 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
+import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
 
-import CreatePost from "@src/features/post/screens/create-post.screen";
+import CreatePost from "@src/features/post/screens/CreatePost.screen";
 import Color from "@src/utils/color";
-import Search from "./components/search.component";
-import { AuthenticationContext } from "../../services/authentication/authentication.context";
+import Search from "./components/Search.component";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import { UrlAPI } from "@src/constants";
-//const
+import { colors } from "@src/infrastructure/theme/colors";
+import { Spacer } from "@src/components/spacer/spacer.component";
+import theme from "@src/infrastructure/theme";
+import { fontSizes } from "@src/infrastructure/theme/fonts";
+
 const HomeHeader = ({ navigation }) => {
   const userState = useSelector(userSelector);
+  const { user } = userState;
   const [modalVisible, setModalVisible] = useState(false);
-  const [userAvatar, setUserAvatar] = useState(null);
   const handleNavigationUser = () => {
     navigation.navigate("User");
   };
   const openCreatePostScreen = () => {
     setModalVisible(true);
   };
-  useEffect(() => {
-    if (userState.user.avatar) {
-      setUserAvatar(userState.user.avatar);
-    }
-  }, []);
+
   return (
     <View>
-      <Search></Search>
+      {/* <Search></Search> */}
+      <View
+        style={{
+          flexDirection: "row",
+
+          marginHorizontal: 24,
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ flex: 1, fontSize: 22, fontWeight: 500 }}>
+          Dandelions
+        </Text>
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.white,
+            minWidth: 38,
+            padding: 6,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 25,
+            elevation: 2,
+          }}
+        >
+          <FontAwesome5 name="bell" size={22} color={colors.black} />
+          <Entypo
+            style={{ position: "absolute", top: -13, right: -2 }}
+            name="dot-single"
+            size={40}
+            color="red"
+          />
+        </TouchableOpacity>
+        <Spacer position={"left"} size={"medium"}></Spacer>
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.white,
+            padding: 8,
+            borderRadius: 25,
+            elevation: 2,
+          }}
+        >
+          <Feather name="mail" size={24} color={colors.black} />
+        </TouchableOpacity>
+      </View>
       <View style={styles.container}>
         <TouchableOpacity onPress={handleNavigationUser}>
-          {userAvatar == null ? (
+          {user.avatar == null ? (
             <Image
               style={styles.avatar}
               source={require("./../../../assets/imgs/DefaultAvatar.png")}
             ></Image>
           ) : (
-            <Image source={{ uri: userAvatar }} style={styles.avatar}></Image>
+            <Image source={{ uri: user.avatar }} style={styles.avatar}></Image>
           )}
         </TouchableOpacity>
         <View style={styles.descriptionContainer}>

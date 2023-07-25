@@ -11,10 +11,10 @@ export const fontWeights = {
 };
 
 export const fontSizes = {
-  caption: "16px",
+  large: "18px",
   button: "14px",
-  body: "15px",
-  label: "18px",
+  body: "14px",
+  medium: "16px",
   title: "20px",
   h5: "24px",
   h4: "34px",

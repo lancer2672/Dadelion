@@ -9,9 +9,7 @@ import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
 import { ThemeProvider } from "styled-components/native";
 import theme from "./src/infrastructure/theme";
 import Navigator from "./src/infrastructure/navigation";
-import { AuthenticationContextProvider } from "./src/services/authentication/authentication.context";
-import { PostContextProvider } from "./src/services/post/post.context";
-import { ChatContextProvider } from "./src/services/chat/chat.context";
+// import { ChatContextProvider } from "./src/services/chat/chat.context";
 import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
 import store from "./src/store";
@@ -33,13 +31,9 @@ export default function App() {
     <MenuProvider>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <AuthenticationContextProvider>
-            <PostContextProvider>
-              <ChatContextProvider>
-                <Navigator></Navigator>
-              </ChatContextProvider>
-            </PostContextProvider>
-          </AuthenticationContextProvider>
+          {/* <ChatContextProvider> */}
+          <Navigator></Navigator>
+          {/* </ChatContextProvider> */}
         </Provider>
       </ThemeProvider>
     </MenuProvider>

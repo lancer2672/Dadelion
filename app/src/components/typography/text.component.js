@@ -24,7 +24,7 @@ const error = (theme) => `
 `;
 
 const caption = (theme) => `
-    font-size: ${theme.fontSizes.caption};
+    font-size: ${theme.fontSizes.large};
     font-weight: ${theme.fontWeights.bold};
 `;
 

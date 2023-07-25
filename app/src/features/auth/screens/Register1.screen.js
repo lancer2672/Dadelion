@@ -2,8 +2,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 
-import AuthContainer from "../components/auth-container.component";
-import InputText from "../components/text-input.component";
+import AuthContainer from "../components/AuthContainer.component";
+import InputText from "../components/TextInput.component";
 import {
   Error,
   AuthButton,

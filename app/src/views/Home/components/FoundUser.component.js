@@ -16,7 +16,7 @@ const Container = styled(TouchableOpacity)`
 // background-color: #d6c9c9;
 const Name = styled(Text)`
   flex: 1;
-  font-size: ${(props) => props.theme.fontSizes.caption};
+  font-size: ${(props) => props.theme.fontSizes.large};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 const FoundUser = ({ avatar, name }) => {

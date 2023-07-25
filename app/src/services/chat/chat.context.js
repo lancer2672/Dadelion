@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import { createContext } from "react";
 import { getChannels, getRoomMessages } from "./chat.service";
-import { AuthenticationContext } from "../authentication/authentication.context";
+
 import socket from "../../utils/socket";
 
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuthenticated, user } = useContext(AuthenticationContext);
+  const isAuthenticated = null,
+    user = null;
   const [channels, setChannels] = useState([]);
   const [error, setError] = useState(null);
   useEffect(() => {

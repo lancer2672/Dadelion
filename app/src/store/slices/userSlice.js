@@ -23,9 +23,8 @@ export const userSlice = createSlice({
         state.refreshToken = refToken;
       }
     },
-
-    update: (state, action) => {
-      state.user = action.payload.user;
+    updateUserState: (state, action) => {
+      state.user = action.payload;
     },
     loggout: (state) => {
       state.user = null;
@@ -36,4 +35,5 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {},
 });
 
-export const { update, setToken, loggout, setUser } = userSlice.actions;
+export const { updateUserState, setToken, loggout, setUser } =
+  userSlice.actions;

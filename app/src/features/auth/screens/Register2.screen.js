@@ -8,8 +8,8 @@ import {
   Error,
   AuthButtonContent,
 } from "../components/authentication.style";
-import AuthContainer from "../components/auth-container.component";
-import InputText from "../components/text-input.component";
+import AuthContainer from "../components/AuthContainer.component";
+import InputText from "../components/TextInput.component";
 import { Text } from "../../../components/typography/text.component";
 import { accountSchema } from "../../../utils/validationSchemas";
 import {

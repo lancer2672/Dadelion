@@ -1,15 +1,21 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 
 import User from "@src/views/User/User";
 import Home from "@src/views/Home/Home";
-import Map from "@src/features/map/screens/map.screen";
+import Map from "@src/features/map/screens/Mapscreen";
 import { ChatNavigator } from "./chat.navigation";
 import { colors } from "../theme/colors";
+import DetailPost from "@src/features/post/screens/PostDetail.screen";
 
-export const AppNavigator = () => {
-  const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+// const Tab = createBottomTabNavigator();
+
+const Tab = createBottomTabNavigator();
+const Tabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -56,5 +62,17 @@ export const AppNavigator = () => {
         component={User}
       />
     </Tab.Navigator>
+  );
+};
+
+export const AppNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="AppTabs"
+    >
+      <Stack.Screen name="AppTabs" component={Tabs} />
+      <Stack.Screen name="DetailPost" component={DetailPost} />
+    </Stack.Navigator>
   );
 };

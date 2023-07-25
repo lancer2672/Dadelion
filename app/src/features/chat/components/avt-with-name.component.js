@@ -13,7 +13,7 @@ const Container = styled(TouchableOpacity)`
 // font-size: ${(props) => props.theme.fontWeights.medium};
 const Name = styled(Text)`
   text-align: center;
-  font-size: ${(props) => props.theme.fontSizes.caption};
+  font-size: ${(props) => props.theme.fontSizes.large};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 

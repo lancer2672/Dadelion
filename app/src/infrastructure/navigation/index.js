@@ -6,11 +6,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
+
 import { appSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/services/userService";
 import { setToken, setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
-import { colors } from "../theme/colors";
+import { StatusBar } from "expo-status-bar";
 
 const Navigator = () => {
   const userState = useSelector(userSelector);
@@ -67,6 +68,7 @@ const Navigator = () => {
         <SafeAreaView
           style={{
             flex: 1,
+            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           }}
         >
           <AppNavigator></AppNavigator>

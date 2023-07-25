@@ -1,8 +1,8 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import ChatScreen from "@src/features/chat/screens/chat.screen";
-import ChatRoom from "@src/features/chat/screens/chat-room.screen";
+import ChatScreen from "@src/features/chat/screens/Chat.screen";
+import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
 
 const Stack = createNativeStackNavigator();
 export const ChatNavigator = () => (

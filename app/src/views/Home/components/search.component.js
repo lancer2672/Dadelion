@@ -11,7 +11,7 @@ import styled from "styled-components/native";
 import axios from "axios";
 
 import { UrlAPI } from "@src/constants";
-import FoundedUsersList from "./found-user-list.component";
+import FoundedUsersList from "./ResultListUser.component";
 
 const SearchContainer = styled(View)`
   padding: ${(props) => props.theme.space[2]};
