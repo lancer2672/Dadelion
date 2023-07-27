@@ -1,6 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { UrlAPI } from "@src/constants";
-import { loggout, setToken } from "../slices/userSlice";
+import { logout, setToken } from "../userSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: UrlAPI,
@@ -29,7 +29,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       // Reconstruct the headers with the new token and make the second request
       result = await baseQuery(args, api, extraOptions);
     } else {
-      api.dispatch(loggout());
+      api.dispatch(logout());
     }
   }
   return result;

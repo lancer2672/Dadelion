@@ -1,11 +1,18 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 
-import Channel from "./channel.component";
+import Channel from "./ChannelItem.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
-import { ChatContext } from "../../../services/chat/chat.context";
 const ListChannel = ({ navigation }) => {
-  const { channels } = useContext(ChatContext);
+  const channels = [
+    {
+      _id: "64c0f962cc848243cf3655dd",
+    },
+    {
+      _id: "64c22903ebac3f58a4c3b770",
+    },
+  ];
+
   return (
     <FlatList
       style={{ margin: 12, marginTop: 24, flexGrow: 0 }}

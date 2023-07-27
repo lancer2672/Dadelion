@@ -6,6 +6,10 @@ const initialState = {
   token: null,
   refreshToken: null,
 };
+export const logoutUser = createAsyncThunk("user/logout", async () => {
+  await AsyncStorage.multiRemove(["userId", "token"]);
+});
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -26,14 +30,14 @@ export const userSlice = createSlice({
     updateUserState: (state, action) => {
       state.user = action.payload;
     },
-    loggout: (state) => {
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logoutUser.fulfilled, (state) => {
       state.user = null;
       state.token = null;
       state.refreshToken = null;
-    },
+    });
   },
-  extraReducers: (builder) => {},
 });
 
-export const { updateUserState, setToken, loggout, setUser } =
-  userSlice.actions;
+export const { updateUserState, setToken, setUser } = userSlice.actions;

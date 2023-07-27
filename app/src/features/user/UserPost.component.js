@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { postSelector } from "@src/store/selector";
-import { useGetPostByUserIdQuery } from "@src/store/services/postService";
+import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 
 const UserPost = ({ userId }) => {
   const postState = useSelector(postSelector);

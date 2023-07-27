@@ -2,36 +2,23 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 
-import InputBar from "../components/message-input-bar.component";
-import ListUserMessages from "../components/list-user-messages.component";
-import ChatRoomHeader from "../components/chat-room-header.component";
-import { ChatContext } from "../../../services/chat/chat.context";
+import InputBar from "../components/InputBar.component";
+import ListUserMessages from "../components/ListMessage.component";
+import ChatRoomHeader from "../components/ChatRoomHeader.component";
+import { useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 
 const Container = styled(View)`
   flex: 1;
 `;
 const ChatRoom = ({ navigation, route }) => {
-  const { channelId, channelMessages } = route.params;
-  const { registerMessageListener, loadChatRoomMessages } =
-    useContext(ChatContext);
-  const [listMessage, setListMessage] = useState(channelMessages);
-  useEffect(() => {
-    registerMessageListener(setListMessage);
-  }, []);
-  useEffect(() => {
-    (async () => {
-      const result = await loadChatRoomMessages(channelId);
-      setListMessage(result);
-    })();
-  });
+  const { channelId } = route.params;
+  const { user } = useSelector(userSelector);
   return (
     <Container>
       <ChatRoomHeader navigation={navigation}></ChatRoomHeader>
-      <ListUserMessages listMessage={listMessage}></ListUserMessages>
-      <InputBar
-        setListMessage={setListMessage}
-        channelId={channelId}
-      ></InputBar>
+      <ListUserMessages channelId={channelId}></ListUserMessages>
+      <InputBar channelId={channelId}></InputBar>
     </Container>
   );
 };

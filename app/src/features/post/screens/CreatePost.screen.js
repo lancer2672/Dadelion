@@ -30,7 +30,7 @@ import { userSelector } from "@src/store/selector";
 import {
   useCreatePostMutation,
   useReactPostMutation,
-} from "@src/store/services/postService";
+} from "@src/store/slices/api/postApiSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 
 const AddImageButton = styled(TouchableOpacity)``;
@@ -158,5 +158,6 @@ const Container = styled(View).attrs((props) => ({}))`
   flex:1;
   background-color: ${(props) => props.theme.colors.bg.primary}
   justify-content: flex-start;
+
 `;
 export default CreatePost;

@@ -16,7 +16,7 @@ import { BackgroundImage } from "@src/features/auth/components/authentication.st
 import ReactionBar from "./ReactionBar.component";
 import { Avatar } from "../shared-components";
 import { postCreatedTimeFormater } from "@src/utils/timeFormater";
-import { useGetUserByIdQuery } from "@src/store/services/userService";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { colors } from "@src/infrastructure/theme/colors";
 import { setSelectedPost } from "@src/store/slices/postSlice";
 

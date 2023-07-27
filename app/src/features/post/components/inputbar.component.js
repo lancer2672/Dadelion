@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import styled from "styled-components/native";
 
-import { useCommentPostMutation } from "@src/store/services/postService";
+import { useCommentPostMutation } from "@src/store/slices/api/postApiSlice";
 
 const InputContainer = styled(View)`
   flex-direction: row;

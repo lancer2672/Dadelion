@@ -9,7 +9,7 @@ import {
 } from "react-native-popup-menu";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import { useDeleteCommentMutation } from "@src/store/services/postService";
+import { useDeleteCommentMutation } from "@src/store/slices/api/postApiSlice";
 export const CommentMenu = ({ postId, commentId }) => {
   const [deleteComment] = useDeleteCommentMutation();
   const handleDeleteComment = () => {

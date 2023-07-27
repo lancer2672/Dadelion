@@ -9,7 +9,7 @@ import {
 } from "react-native-popup-menu";
 import { Feather } from "@expo/vector-icons";
 
-import { useDeletePostMutation } from "@src/store/services/postService";
+import { useDeletePostMutation } from "@src/store/slices/api/postApiSlice";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
 export const HeaderMenu = ({ postId, setModalVisible, postCreatorId }) => {

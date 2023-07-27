@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { useState, useContext, useEffect } from "react";
 import React from "react";
 
@@ -17,7 +17,9 @@ import {
   handleValidateObject,
 } from "../../../utils/validator";
 import { ActivityIndicator } from "react-native-paper";
-import { useCreateUserMutation } from "@src/store/services/userService";
+import { useCreateUserMutation } from "@src/store/slices/api/userApiSlice";
+import { useDispatch } from "react-redux";
+import { setIsLoading } from "@src/store/slices/appSlice";
 
 const RegisterScreen2 = ({ navigation, route }) => {
   const [createUser, { error, isSuccess, isLoading, ...createUserResult }] =
@@ -28,6 +30,7 @@ const RegisterScreen2 = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
+  const dispatch = useDispatch();
   const navigateBack = () => {
     navigation.goBack();
   };
@@ -43,7 +46,8 @@ const RegisterScreen2 = ({ navigation, route }) => {
       setConfirmPassword("");
       navigation.navigate("Login");
     }
-  }, [isSuccess]);
+    dispatch(setIsLoading(isLoading));
+  }, [isLoading]);
   const handleRegistration = async () => {
     if (Object.keys(validationErrors) == 0) {
       try {
@@ -56,7 +60,9 @@ const RegisterScreen2 = ({ navigation, route }) => {
           dateOfBirth,
         };
         await createUser(data);
-      } catch (err) {}
+      } catch (err) {
+        console.log("error", er);
+      }
     }
   };
   if (isLoading) {

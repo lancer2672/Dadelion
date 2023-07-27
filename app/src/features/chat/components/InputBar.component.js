@@ -7,15 +7,18 @@ import {
 } from "react-native";
 import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
-import { EvilIcons, Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  EvilIcons,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
-import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-import { ChatContext } from "../../../services/chat/chat.context";
 import { userSelector } from "@src/store/selector";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { colors } from "@src/infrastructure/theme/colors";
+import { sendMessage } from "@src/store/slices/chatSlice";
 
 const Container = styled(View)`
   flex-direction: row;
@@ -41,15 +44,15 @@ const InputText = styled(TextInput)`
   margin-right: ${(props) => props.theme.space[2]};
 `;
 
-const InputBar = ({ channelId, setListMessage }) => {
+const InputBar = ({ channelId }) => {
   const { user } = useSelector(userSelector);
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputWidth, setTextInputWidth] = useState(0);
   const [photoUri, setPhotoUri] = useState(null);
   const [text, setText] = useState("");
-  const { handleSendMessage } = useContext(ChatContext);
   const iconSize = 28;
   const iconColor = "black";
+  const dispatch = useDispatch();
 
   //for animation
   const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
@@ -80,9 +83,9 @@ const InputBar = ({ channelId, setListMessage }) => {
       })
       .catch((err) => console.log(err));
   };
-  const sendMessage = () => {
-    handleSendMessage(channelId, user._id, text);
+  const handleSendMessage = () => {
     setText("");
+    dispatch(sendMessage({ channelId, userId: user._id, newMessage: text }));
   };
   return (
     <Container>
@@ -141,7 +144,7 @@ const InputBar = ({ channelId, setListMessage }) => {
                 padding: 0,
               }}
               icon={"send"}
-              onPress={sendMessage}
+              onPress={handleSendMessage}
             />
           }
           onLayout={(event) => {

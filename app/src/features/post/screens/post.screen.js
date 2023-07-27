@@ -2,7 +2,7 @@ import { StyleSheet, FlatList, Text, ActivityIndicator } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import PostItem from "../components/Post.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
-import { useGetAllPostsQuery } from "@src/store/services/postService";
+import { useGetAllPostsQuery } from "@src/store/slices/api/postApiSlice";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
 

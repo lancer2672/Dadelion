@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setAuth } from "@src/features/auth/authSlice";
 import { userSelector } from "@src/store/selector";
-import { useUpdateUserMutation } from "@src/store/services/userService";
+import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
 import styled from "styled-components/native";
 import { updateUserState } from "@src/store/slices/userSlice";
 import { colors } from "@src/infrastructure/theme/colors";
@@ -62,11 +62,6 @@ const User = ({ props, navigation }) => {
     }
   };
   const handleUpdateAvatar = () => updateUserImage(false, setAvatarUri);
-
-  const handleLogOut = () => {
-    dispatch(setAuth({ isAuthenticated: false, user: null }));
-    navigation.navigate("Login");
-  };
   return (
     <Container>
       <HeaderContainer>

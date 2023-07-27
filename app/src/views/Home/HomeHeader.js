@@ -94,23 +94,19 @@ const HomeHeader = ({ navigation }) => {
             <Text>Bạn đang nghĩ gì...</Text>
           </TouchableOpacity>
         </View>
-
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <CreatePost
-              setIsvisible={setModalVisible}
-              style={styles.postCreateContainer}
-            ></CreatePost>
-          </View>
-        </Modal>
       </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <CreatePost setIsvisible={setModalVisible}></CreatePost>
+        </View>
+      </Modal>
       {/* <CreatePostModal isVisible={isVisidbleCreatePost}></CreatePostModal> */}
     </View>
   );
@@ -151,7 +147,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(1, 1, 1, 0.2)",
     flex: 1,
     alignItems: "center",
-    marginTop: 22,
   },
   button: {
     borderRadius: 20,

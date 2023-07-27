@@ -2,8 +2,8 @@ import { StyleSheet, Text, View, Platform } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 
-import ListAvtWithName from "../components/list-avt-with-name.componet";
-import ListChannel from "../components/list-channel.component";
+import ListAvtWithName from "../components/ListAvatarUsername.componet";
+import ListChannel from "../components/ListChannel.component";
 
 const Heading = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.h4};

@@ -15,7 +15,7 @@ import { Text } from "@src/components/typography/text.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { accountSchema } from "@src/utils/validationSchemas";
 import { handleValidateField } from "@src/utils/validator";
-import { useLoginMutation } from "@src/store/services/userService";
+import { useLoginMutation } from "@src/store/slices/api/userApiSlice";
 import { setUser, update } from "@src/store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";

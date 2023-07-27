@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
-import AvtWithName from "./avt-with-name.component";
+import AvtWithName from "./AvatarUsername.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
 const ListAvtWithName = () => {
   const listUser = [

@@ -12,7 +12,6 @@ export const userApi = createApi({
         const transformedUser = transformUserData(response.data.user);
         return { ...response.data, user: transformedUser };
       },
-      transformErrorResponse: (response, meta, arg) => response.status,
     }),
     login: builder.mutation({
       query: (authData) => ({
@@ -47,7 +46,7 @@ export const userApi = createApi({
         body: userData,
       }),
       transformResponse: (response, meta, arg) => response.data,
-      transformErrorResponse: (response, meta, arg) => response.message,
+      transformErrorResponse: (response, meta, arg) => response.data.message,
     }),
   }),
 });

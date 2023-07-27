@@ -16,7 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { openImagePicker } from "@src/utils/openImagePicker";
 import { Header, Seperator, Avatar, UserName } from "../shared-components";
-import { useUpdatePostMutation } from "@src/store/services/postService";
+import { useUpdatePostMutation } from "@src/store/slices/api/postApiSlice";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
 

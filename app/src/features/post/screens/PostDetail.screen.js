@@ -18,7 +18,7 @@ import { postCreatedTimeFormater } from "@src/utils/timeFormater";
 import InputBar from "../components/Inputbar.component";
 
 import Comment from "../components/Comment.component";
-import { useReactPostMutation } from "@src/store/services/postService";
+import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
 
 const DetailPost = ({ route }) => {
   const userState = useSelector(userSelector);

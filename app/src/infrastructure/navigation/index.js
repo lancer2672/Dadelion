@@ -1,17 +1,17 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { AppNavigator } from "./app.navigator";
-import { AuthNavigator } from "./auth.navigator";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
+import { StatusBar } from "expo-status-bar";
 
+import { AuthNavigator } from "./auth.navigator";
+import { AppNavigator } from "./app.navigator";
 import { appSelector, userSelector } from "@src/store/selector";
-import { useGetUserByIdQuery } from "@src/store/services/userService";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { setToken, setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
-import { StatusBar } from "expo-status-bar";
 
 const Navigator = () => {
   const userState = useSelector(userSelector);

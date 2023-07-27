@@ -9,7 +9,7 @@ import readImageData from "@src/utils/imageHandler";
 import { CommentMenu } from "./CommentMenuOptionscomponent";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import { useGetUserByIdQuery } from "@src/store/services/userService";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormater";
 
 const dayjs = require("dayjs");

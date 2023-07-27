@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components/native";
 
 const Container = styled(View).attrs((props) => ({
-  flexDirection: props.myMessage ? "row-reverse" : "row",
+  flexDirection: props.isMyMessage ? "row-reverse" : "row",
   flex: 1,
 }))`
   align-content: center;
@@ -20,8 +20,8 @@ const Avatar = styled(Image)`
 
 const MessageContainer = styled(View).attrs((props) => {
   return {
-    marginLeft: props.myMessage ? 32 : 6,
-    marginRight: props.myMessage ? 6 : 40,
+    marginLeft: props.isMyMessage ? 32 : 6,
+    marginRight: props.isMyMessage ? 6 : 40,
   };
 })`
   align-self: flex-end;
@@ -29,7 +29,7 @@ const MessageContainer = styled(View).attrs((props) => {
 `;
 
 const Message = styled(Text).attrs((props) => {
-  return { textAlign: props.myMessage ? "right" : "left" };
+  return { textAlign: props.isMyMessage ? "right" : "left" };
 })`
   background-color: ${(props) => props.theme.colors.bg.primary};
   margin-top: 6px;
@@ -41,26 +41,21 @@ const Message = styled(Text).attrs((props) => {
   font-size: 15px;
 `;
 
-const UserMessage = ({ myMessage, messageBox }) => {
+const UserMessage = ({ isMyMessage, message }) => {
   return (
-    <Container myMessage={myMessage}>
-      {!myMessage && (
+    <Container isMyMessage={isMyMessage}>
+      {!isMyMessage && (
         <>
           <Avatar
             source={require("../../../../assets/imgs/DefaultAvatar.png")}
           ></Avatar>
         </>
       )}
-      <MessageContainer myMessage={myMessage}>
-        {messageBox.map((item, index) => {
-          const id = item._id;
-          return (
-            <View key={id} style={{ flexDirection: "row" }}>
-              {myMessage && <View style={{ flex: 1 }}></View>}
-              <Message myMessage={myMessage}>{item.message}</Message>
-            </View>
-          );
-        })}
+      <MessageContainer isMyMessage={isMyMessage}>
+        <View style={{ flexDirection: "row" }}>
+          {isMyMessage && <View style={{ flex: 1 }}></View>}
+          <Message isMyMessage={isMyMessage}>{message}</Message>
+        </View>
       </MessageContainer>
     </Container>
   );

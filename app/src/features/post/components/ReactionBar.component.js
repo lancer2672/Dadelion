@@ -8,7 +8,7 @@ import {
   Entypo,
 } from "@expo/vector-icons";
 import styled from "styled-components/native";
-import { useReactPostMutation } from "@src/store/services/postService";
+import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
