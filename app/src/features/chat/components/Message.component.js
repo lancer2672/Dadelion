@@ -1,6 +1,64 @@
 import { StyleSheet, Image, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components/native";
+import { TouchableOpacity } from "react-native";
+import { Pressable } from "react-native";
+import { Modal } from "react-native";
+
+const UserMessage = ({ isMyMessage, message, imageUrl }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleOpenImageFullScreen = () => {
+    setModalVisible(true);
+  };
+  return (
+    <Container isMyMessage={isMyMessage}>
+      {!isMyMessage && (
+        <>
+          <Avatar
+            source={require("../../../../assets/imgs/DefaultAvatar.png")}
+          ></Avatar>
+        </>
+      )}
+      <MessageContainer isMyMessage={isMyMessage}>
+        <View style={{ flexDirection: "row" }}>
+          {isMyMessage && <View style={{ flex: 1 }}></View>}
+          <View>
+            {message && <Message isMyMessage={isMyMessage}>{message}</Message>}
+            {imageUrl && (
+              <Pressable onPress={handleOpenImageFullScreen}>
+                <Image
+                  style={{
+                    borderRadius: 20,
+                    width: 140,
+                    height: 180,
+                    resizeMode: "cover",
+                  }}
+                  source={{ uri: imageUrl }}
+                ></Image>
+              </Pressable>
+            )}
+          </View>
+        </View>
+      </MessageContainer>
+      {imageUrl && (
+        <Modal
+          animationType="fade"
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+          visible={modalVisible}
+        >
+          <View style={{ flex: 1 }}>
+            <Image
+              source={{ uri: imageUrl }}
+              style={{ flex: 1, resizeMode: "contain" }}
+            ></Image>
+          </View>
+        </Modal>
+      )}
+    </Container>
+  );
+};
 
 const Container = styled(View).attrs((props) => ({
   flexDirection: props.isMyMessage ? "row-reverse" : "row",
@@ -31,7 +89,8 @@ const MessageContainer = styled(View).attrs((props) => {
 const Message = styled(Text).attrs((props) => {
   return { textAlign: props.isMyMessage ? "right" : "left" };
 })`
-  background-color: ${(props) => props.theme.colors.bg.primary};
+  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
+  color: ${(props) => props.theme.colors.chat.text};
   margin-top: 6px;
   border-radius: 15px;
   line-height: 24px;
@@ -40,26 +99,6 @@ const Message = styled(Text).attrs((props) => {
   padding-right: 10px;
   font-size: 15px;
 `;
-
-const UserMessage = ({ isMyMessage, message }) => {
-  return (
-    <Container isMyMessage={isMyMessage}>
-      {!isMyMessage && (
-        <>
-          <Avatar
-            source={require("../../../../assets/imgs/DefaultAvatar.png")}
-          ></Avatar>
-        </>
-      )}
-      <MessageContainer isMyMessage={isMyMessage}>
-        <View style={{ flexDirection: "row" }}>
-          {isMyMessage && <View style={{ flex: 1 }}></View>}
-          <Message isMyMessage={isMyMessage}>{message}</Message>
-        </View>
-      </MessageContainer>
-    </Container>
-  );
-};
 
 export default UserMessage;
 

@@ -10,13 +10,17 @@ import { userSelector } from "@src/store/selector";
 
 const Container = styled(View)`
   flex: 1;
+  background-color: ${(props) => props.theme.colors.chat.bg.primary};
 `;
 const ChatRoom = ({ navigation, route }) => {
-  const { channelId } = route.params;
+  const { channelId, chatFriend } = route.params;
   const { user } = useSelector(userSelector);
   return (
     <Container>
-      <ChatRoomHeader navigation={navigation}></ChatRoomHeader>
+      <ChatRoomHeader
+        chatFriend={chatFriend}
+        navigation={navigation}
+      ></ChatRoomHeader>
       <ListUserMessages channelId={channelId}></ListUserMessages>
       <InputBar channelId={channelId}></InputBar>
     </Container>

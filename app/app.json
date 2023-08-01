@@ -36,6 +36,21 @@
     "jsEngine": "hermes",
     "web": {
       "favicon": "./assets/imgs/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/DandelionIcon.png",
+          "color": "#ffffff"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "7e4dc656-f2c2-4d3f-a529-2882a78b2aa3"
+      }
+    },
+    "owner": "khanha"
   }
 }

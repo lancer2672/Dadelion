@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { postSelector, userSelector } from "@src/store/selector";
 import { BackgroundImage } from "@src/features/auth/components/authentication.style";
 import ReactionBar from "./ReactionBar.component";
-import { Avatar } from "../shared-components";
+import { Avatar } from "@src/components/Avatar";
 import { postCreatedTimeFormater } from "@src/utils/timeFormater";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { colors } from "@src/infrastructure/theme/colors";
@@ -67,9 +67,7 @@ const PostItem = ({ navigation, post }) => {
               {postCreator.avatar ? (
                 <Avatar source={{ uri: postCreator.avatar }} />
               ) : (
-                <Avatar
-                  source={require("./../../../../assets/imgs/DefaultAvatar.png")}
-                />
+                <Avatar source={undefined} />
               )}
             </TouchableOpacity>
             <PostInfoContainer>

@@ -13,7 +13,6 @@ const ListUserMessages = ({ channelId }) => {
   const { isLoading, error, isSuccess, data } =
     useLoadChatRoomMessagesQuery(channelId);
 
-  console.log("messageLength),", listMessage.length);
   useEffect(() => {
     if (isSuccess) {
       setListMessage(data);
@@ -39,12 +38,18 @@ const ListUserMessages = ({ channelId }) => {
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
       renderItem={({ item }) => {
-        const { userId: memberId, message } = item;
+        const { userId: memberId, message, imageUrl } = item;
         let isMyMessage = memberId == user._id ? true : false;
-        return <UserMessage isMyMessage={isMyMessage} message={message} />;
+        return (
+          <UserMessage
+            imageUrl={imageUrl}
+            isMyMessage={isMyMessage}
+            message={message}
+          />
+        );
       }}
       keyExtractor={(item) => {
-        return item._id;
+        return `$!@#${item._id}`;
       }}
     ></FlatList>
   );

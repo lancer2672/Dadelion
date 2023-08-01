@@ -3,11 +3,7 @@ import React from "react";
 import AvtWithName from "./AvatarUsername.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
 const ListAvtWithName = () => {
-  const listUser = [
-    {
-      name: "khánh",
-    },
-  ];
+  const listUser = [{}];
   return (
     <FlatList
       style={{

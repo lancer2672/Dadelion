@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import { StyleSheet, SafeAreaView, View, Platform } from "react-native";
 import {
   useFonts as useOswald,
@@ -7,24 +8,16 @@ import {
 import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
 
 import { ThemeProvider } from "styled-components/native";
-import theme from "./src/infrastructure/theme";
-import Navigator from "./src/infrastructure/navigation";
 import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
+import { registerForPushNotificationsAsync } from "@src/notification";
+import theme from "./src/infrastructure/theme";
+import Navigator from "./src/infrastructure/navigation";
 import store from "./src/store";
 export default function App() {
-  const [oswaldLoaded] = useOswald({
-    Oswald_400Regular,
-  });
-
-  const [latoLoaded] = useLato({
-    Lato_400Regular,
-  });
-
-  if (!oswaldLoaded || !latoLoaded) {
-    return null;
-  }
-
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+  }, []);
   return (
     // library "react-native-popup-menu";
     <MenuProvider>

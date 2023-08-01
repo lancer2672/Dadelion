@@ -15,6 +15,15 @@ const socketMiddleware = (socket) => (store) => {
         newMessage,
       });
     }
+    if (action.type == "chat/sendImage") {
+      // I want to trigger cache data of loadRoomMessage
+      const { channelId, userId, imageData } = action.payload;
+      socket.emit("send-image", {
+        channelId,
+        userId,
+        imageData,
+      });
+    }
     next(action);
   };
 };

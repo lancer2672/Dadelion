@@ -2,12 +2,6 @@ import { Image, View, Text, Pressable, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
-export const Avatar = styled(Image)`
-  width: 40px;
-  height: 40px;
-  resize-mode: stretch;
-  border-radius: 50px;
-`;
 export const Seperator = styled(View)`
   border-width: 1px;
   border-color: #9cabad;

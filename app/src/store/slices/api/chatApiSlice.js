@@ -26,6 +26,13 @@ export const chatApi = createApi({
               draft.unshift(newMess);
             });
           });
+          socket.on("receive-image", (newMess) => {
+            console.log("new Message", newMess);
+            updateCachedData((draft) => {
+              draft.unshift(newMess);
+              console.log("draft after receiving ", current(draft));
+            });
+          });
         } catch (err) {
           console.log("err", err);
         }
@@ -33,12 +40,20 @@ export const chatApi = createApi({
         await cacheEntryRemoved;
       },
     }),
+    getChannels: builder.query({
+      query: (userId) => ({ url: `${channelRoute}`, params: userId }),
+      transformResponse: (response, meta, arg) => response.data.channels || [],
+    }),
     getChannelMembers: builder.query({
-      query: (channelId) => `${channelRoute}/${channelId}/members`,
+      query: (channelId) => `${channelRoute}/members/${channelId}`,
+      transformResponse: (response, meta, arg) => response.data.members || [],
       transformErrorResponse: (response, meta, arg) => response.data.message,
     }),
   }),
 });
 
-export const { useLoadChatRoomMessagesQuery, useGetChannelMembersQuery } =
-  chatApi;
+export const {
+  useLoadChatRoomMessagesQuery,
+  useGetChannelsQuery,
+  useGetChannelMembersQuery,
+} = chatApi;

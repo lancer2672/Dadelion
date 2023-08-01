@@ -3,19 +3,28 @@ import React, { useState, useEffect, useContext } from "react";
 
 import Channel from "./ChannelItem.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
+import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
+import { useDispatch } from "react-redux";
+import { setIsLoading } from "@src/store/slices/appSlice";
+import { colors } from "@src/infrastructure/theme/colors";
 const ListChannel = ({ navigation }) => {
-  const channels = [
-    {
-      _id: "64c0f962cc848243cf3655dd",
-    },
-    {
-      _id: "64c22903ebac3f58a4c3b770",
-    },
-  ];
-
+  const [channels, setChannels] = useState([]);
+  const { isLoading, isSuccess, data } = useGetChannelsQuery();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setIsLoading(isLoading));
+    if (isSuccess) {
+      console.log("data channels", data);
+      setChannels(data);
+    }
+  }, [isLoading, data]);
   return (
     <FlatList
-      style={{ margin: 12, marginTop: 24, flexGrow: 0 }}
+      style={{
+        padding: 12,
+        backgroundColor: colors.chat.bg.primary,
+        flexGrow: 1,
+      }}
       data={channels}
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {

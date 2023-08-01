@@ -23,7 +23,6 @@ const Comment = ({ comment, postId }) => {
   const [creator, setCreator] = useState({});
   const [content, setContent] = useState("");
   const [createTime, setCreateTime] = useState("");
-  console.log("render");
   useEffect(() => {
     if (isSuccess) {
       if (comment.userId == user._id) {

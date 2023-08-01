@@ -17,15 +17,14 @@ export const colors = {
     error: "#e35d5d",
     success: "#138000",
   },
+  chat: {
+    bg: {
+      primary: "#FFFFFF",
+      secondary: "#f6f9ff",
+    },
+    text: "#000000",
+    icon: "#ecdfed",
+  },
   white: "#FFFFFF",
   black: "#000000",
 };
-//f1f4fa
-// mainColor: "#66dbf1",
-// subColor: "#a1e6f3",
-// textColor: "#e3c3de",
-// white: "#fff",
-// strongPink: "dfb1cb",
-// error: "#ed5351",
-// lightGray: "#d9d5d0",
-// gray: "#b3afab",
