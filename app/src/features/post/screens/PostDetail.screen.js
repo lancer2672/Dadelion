@@ -15,9 +15,9 @@ import { postSelector, userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import ReadMore from "@fawazahmed/react-native-read-more";
 import { postCreatedTimeFormater } from "@src/utils/timeFormater";
-import InputBar from "../components/Inputbar.component";
+import InputBar from "../components/inputbar.component";
 
-import Comment from "../components/Comment.component";
+import Comment from "../components/comment.component";
 import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
 
 const DetailPost = ({ route }) => {

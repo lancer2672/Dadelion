@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, Button, View, TouchableOpacity } from "react-native";
 
 import { MessageBar } from "@src/components/notification/message-bar.component";
-import Post from "@src/features/post/screens/Post.screen";
+import Post from "@src/features/post/screens/post.screen";
 import HomeHeader from "./HomeHeader";
 import { colors } from "@src/infrastructure/theme/colors";
 const Home = ({ navigation }) => {

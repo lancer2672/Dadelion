@@ -29,9 +29,10 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/imgs/DefaultBackground.jpg",
+        "foregroundImage": "./assets/imgs/DandelionIcon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.khanha.Dandelion"
     },
     "jsEngine": "hermes",
     "web": {

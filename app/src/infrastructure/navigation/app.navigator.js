@@ -7,10 +7,9 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import User from "@src/views/User/User";
 import Home from "@src/views/Home/Home";
 import Map from "@src/features/map/screens/Mapscreen";
-import { ChatNavigator } from "./chat.navigation";
 import { colors } from "../theme/colors";
 import DetailPost from "@src/features/post/screens/PostDetail.screen";
-import ChatScreen from "@src/features/chat/screens/Chat.screen";
+import ChatScreen from "@src/features/chat/screens/chat.screen";
 import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
 
 const Stack = createNativeStackNavigator();

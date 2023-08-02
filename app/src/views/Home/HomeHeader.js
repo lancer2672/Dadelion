@@ -11,7 +11,7 @@ import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
 
 import CreatePost from "@src/features/post/screens/CreatePost.screen";
 import Color from "@src/utils/color";
-import Search from "./components/Search.component";
+import Search from "./components/search.component";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";

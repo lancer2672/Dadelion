@@ -4,6 +4,7 @@ import { transformUserData } from "@src/utils/transformHelper";
 const userRoute = "/user/";
 export const userApi = createApi({
   reducerPath: "userApi",
+  tagTypes: "User",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getUserById: builder.query({
