@@ -9,7 +9,6 @@ import { setIsLoading } from "@src/store/slices/appSlice";
 const Post = ({ navigation }) => {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
-
   const { isLoading, isSuccess, data } = useGetAllPostsQuery();
   useEffect(() => {
     if (isSuccess) {

@@ -16,7 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 import styled from "styled-components/native";
 
 import { Spacer } from "@src/components/spacer/spacer.component";
-import Color from "@src/utils/color";
+
 import {
   Avatar,
   Seperator,

@@ -10,7 +10,7 @@ import { CommentMenu } from "./CommentMenuOptionscomponent";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { commentCreatedTimeFormater } from "@src/utils/timeFormater";
+import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 
 const dayjs = require("dayjs");
 const Comment = ({ comment, postId }) => {

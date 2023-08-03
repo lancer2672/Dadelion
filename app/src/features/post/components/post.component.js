@@ -15,7 +15,7 @@ import { postSelector, userSelector } from "@src/store/selector";
 import { BackgroundImage } from "@src/features/auth/components/authentication.style";
 import ReactionBar from "./ReactionBar.component";
 import { Avatar } from "@src/components/Avatar";
-import { postCreatedTimeFormater } from "@src/utils/timeFormater";
+import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { colors } from "@src/infrastructure/theme/colors";
 import { setSelectedPost } from "@src/store/slices/postSlice";
@@ -73,7 +73,7 @@ const PostItem = ({ navigation, post }) => {
             <PostInfoContainer>
               <CreatorName>{postCreator.nickname}</CreatorName>
               <Text style={{ color: colors.white }}>
-                {postCreatedTimeFormater(createdAt)}
+                {postCreatedTimeFormatter(createdAt)}
               </Text>
             </PostInfoContainer>
           </View>

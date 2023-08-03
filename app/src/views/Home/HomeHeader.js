@@ -10,7 +10,6 @@ import React, { useEffect, useState, useContext } from "react";
 import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
 
 import CreatePost from "@src/features/post/screens/CreatePost.screen";
-import Color from "@src/utils/color";
 import Search from "./components/search.component";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
@@ -19,7 +18,7 @@ import { Spacer } from "@src/components/spacer/spacer.component";
 import theme from "@src/infrastructure/theme";
 import { fontSizes } from "@src/infrastructure/theme/fonts";
 
-const HomeHeader = ({ navigation }) => {
+const HomeHeader = ({ navigation, showNotificationModal }) => {
   const userState = useSelector(userSelector);
   const { user } = userState;
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,6 +44,7 @@ const HomeHeader = ({ navigation }) => {
           Dandelions
         </Text>
         <TouchableOpacity
+          onPress={showNotificationModal}
           style={{
             backgroundColor: colors.white,
             minWidth: 38,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     left: 48,
   },
   description: {
-    backgroundColor: Color.lightGray,
+    backgroundColor: "gray",
     opacity: 0.5,
     padding: 8,
     borderRadius: 25,

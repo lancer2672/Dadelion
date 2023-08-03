@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { postSelector, userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import ReadMore from "@fawazahmed/react-native-read-more";
-import { postCreatedTimeFormater } from "@src/utils/timeFormater";
+import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import InputBar from "../components/inputbar.component";
 
 import Comment from "../components/comment.component";
@@ -54,7 +54,7 @@ const DetailPost = ({ route }) => {
         <View style={{ marginLeft: 12, justifyContent: "flex-end", flex: 1 }}>
           <CreatorName>{postCreator.nickname}</CreatorName>
           <Text style={{ color: colors.text.secondary }}>
-            {postCreatedTimeFormater(selectedPost.createdAt)}
+            {postCreatedTimeFormatter(selectedPost.createdAt)}
           </Text>
         </View>
         <TouchableOpacity onPress={handleReact}>

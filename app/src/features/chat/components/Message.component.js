@@ -5,7 +5,7 @@ import { TouchableOpacity } from "react-native";
 import { Pressable } from "react-native";
 import { Modal } from "react-native";
 
-const UserMessage = ({ isMyMessage, message, imageUrl }) => {
+const UserMessage = ({ isMyMessage, message, imageUrl, handleShowDialog }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const handleOpenImageFullScreen = () => {
     setModalVisible(true);
@@ -25,7 +25,10 @@ const UserMessage = ({ isMyMessage, message, imageUrl }) => {
           <View>
             {message && <Message isMyMessage={isMyMessage}>{message}</Message>}
             {imageUrl && (
-              <Pressable onPress={handleOpenImageFullScreen}>
+              <Pressable
+                onLongPress={handleShowDialog}
+                onPress={handleOpenImageFullScreen}
+              >
                 <Image
                   style={{
                     borderRadius: 20,

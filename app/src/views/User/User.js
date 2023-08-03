@@ -18,13 +18,15 @@ import { updateUserState } from "@src/store/slices/userSlice";
 import { colors } from "@src/infrastructure/theme/colors";
 import UserPost from "@src/features/user/UserPost.component";
 import FeatureTabs from "@src/features/user/FeatureTabs,component";
+import { useTranslation } from "react-i18next";
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [updateUser, { isLoading, data, isSuccess, ...res }] =
     useUpdateUserMutation();
   const [avatarUri, setAvatarUri] = useState(null);
-  const dispatch = useDispatch();
   const [selectedImageUri, setSelectedImageUri] = useState(null);
   useEffect(() => {
     setAvatarUri(user.avatar);
@@ -99,7 +101,7 @@ const User = ({ props, navigation }) => {
                   color: "#9971ee",
                 }}
               >
-                Thêm bạn
+                {t("sendFriendRequest")}
               </Text>
             </StyledButton1>
             <StyledButton2>
@@ -110,7 +112,7 @@ const User = ({ props, navigation }) => {
                   color: colors.white,
                 }}
               >
-                Nhắn tin
+                {t("sendMessage")}
               </Text>
             </StyledButton2>
           </View>

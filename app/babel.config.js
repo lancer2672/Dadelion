@@ -5,6 +5,7 @@ module.exports = function (api) {
     plugins: [
       [
         "babel-plugin-module-resolver",
+
         {
           alias: {
             "@assets": "./assets",
@@ -18,6 +19,7 @@ module.exports = function (api) {
           extensions: [".ts", ".tsx", ".js", ".json"],
         },
       ],
+      "react-native-reanimated/plugin",
     ],
   };
 };

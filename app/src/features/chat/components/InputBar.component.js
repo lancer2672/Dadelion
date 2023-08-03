@@ -27,7 +27,6 @@ const InputBar = ({ channelId }) => {
   const [textInputWidth, setTextInputWidth] = useState(0);
   const [photoUri, setPhotoUri] = useState(null);
   const [text, setText] = useState("");
-  const [showImageList, setShowImageList] = useState(false);
   const iconSize = 28;
   const iconColor = "black";
   const dispatch = useDispatch();

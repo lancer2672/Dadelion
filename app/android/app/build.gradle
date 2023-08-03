@@ -114,7 +114,6 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "true"

@@ -26,6 +26,7 @@ const Navigator = () => {
   } = useGetUserByIdQuery(userCredentials.userId, {});
   useEffect(() => {
     if (isSuccess && data) {
+      console.log("Data", data);
       dispatch(
         setUser({
           user: data.user,
@@ -35,7 +36,8 @@ const Navigator = () => {
       );
     }
     dispatch(setIsLoading(isFetching));
-  }, [isFetching]);
+  }, [isFetching, data]);
+  console.log("error when logining in", error);
   useEffect(() => {
     const getUser = async () => {
       try {

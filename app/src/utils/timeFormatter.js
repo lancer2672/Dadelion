@@ -1,7 +1,7 @@
 const dayjs = require("dayjs");
 
 // example createdAt: "2023-02-16T10:38:03.161+00:00"
-export const postCreatedTimeFormater = (createdAt) => {
+export const postCreatedTimeFormatter = (createdAt) => {
   let createdDate = new Date(createdAt);
   let currentDate = new Date();
   let difference = currentDate.getTime() - createdDate.getTime();
