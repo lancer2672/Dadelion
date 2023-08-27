@@ -10,7 +10,7 @@ import { AuthNavigator } from "./auth.navigator";
 import { AppNavigator } from "./app.navigator";
 import { appSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { setToken, setUser } from "@src/store/slices/userSlice";
+import { logoutUser, setToken, setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 
 const Navigator = () => {
@@ -23,10 +23,12 @@ const Navigator = () => {
     isSuccess,
     isLoading: isFetching,
     error,
-  } = useGetUserByIdQuery(userCredentials.userId, {});
+  } = useGetUserByIdQuery(userCredentials.userId, {
+    skip: !userCredentials.userId,
+  });
+
   useEffect(() => {
     if (isSuccess && data) {
-      console.log("Data", data);
       dispatch(
         setUser({
           user: data.user,
@@ -37,7 +39,7 @@ const Navigator = () => {
     }
     dispatch(setIsLoading(isFetching));
   }, [isFetching, data]);
-  console.log("error when logining in", error);
+
   useEffect(() => {
     const getUser = async () => {
       try {

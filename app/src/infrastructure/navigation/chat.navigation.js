@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import ChatScreen from "@src/features/chat/screens/Chat.screen";
+import ChatScreen from "@src/features/chat/screens/chat.screen";
 import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 

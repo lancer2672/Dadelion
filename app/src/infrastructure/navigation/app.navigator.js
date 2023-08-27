@@ -3,14 +3,17 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import messaging from "@react-native-firebase/messaging";
 
-import User from "@src/views/User/User";
-import Home from "@src/views/Home/Home";
+import User from "@src/views/User";
+import Home from "@src/views/Home";
 import Map from "@src/features/map/screens/Mapscreen";
 import { colors } from "../theme/colors";
 import DetailPost from "@src/features/post/screens/PostDetail.screen";
 import ChatScreen from "@src/features/chat/screens/chat.screen";
 import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
+import Guest from "@src/views/Guest";
+import { useSaveFCMtokenMutation } from "@src/store/slices/api/userApiSlice";
 
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
@@ -67,6 +70,29 @@ const Tabs = () => {
 };
 
 export const AppNavigator = () => {
+  const [saveFCMtoken, { error }] = useSaveFCMtokenMutation();
+  console.log("error", error);
+  useEffect(() => {
+    // Get the device token
+    messaging()
+      .getToken()
+      .then((token) => {
+        console.log("Token", token);
+        saveFCMtoken(token);
+      });
+    // Listen to whether the token changes
+    return messaging().onTokenRefresh((token) => {
+      saveFCMtoken(token);
+    });
+  }, []);
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      console.log("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
@@ -75,6 +101,7 @@ export const AppNavigator = () => {
       <Stack.Screen name="AppTabs" component={Tabs} />
       <Stack.Screen name="DetailPost" component={DetailPost} />
       <Stack.Screen name="ChatRoom" component={ChatRoom} />
+      <Stack.Screen name="Guest" component={Guest} />
     </Stack.Navigator>
   );
 };
