@@ -24,6 +24,7 @@ export const postCreatedTimeFormatter = (createdAt) => {
 };
 
 export const commentCreatedTimeFormater = (createdAt) => {
+  if (!createdAt) return "";
   const createdDate = new Date(createdAt);
   const currentDate = new Date();
   const milliseconds = currentDate - createdDate;
