@@ -19,13 +19,14 @@ const Name = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.large};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
-const FoundUser = ({ avatar, name }) => {
+const FoundUser = ({ navigation, userId, avatar, name }) => {
+  const onSearchResultClick = () => {
+    navigation.navigate("Guest", { guestId: userId });
+  };
   return (
-    <Container onPress={() => console.log("press")}>
+    <Container onPress={onSearchResultClick}>
       {avatar == null ? (
-        <Avatar
-          source={require("../../../../assets/imgs/DefaultAvatar.png")}
-        ></Avatar>
+        <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
       ) : (
         <Avatar source={{ uri: avatar }}></Avatar>
       )}

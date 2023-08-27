@@ -24,83 +24,36 @@ const NotificationItem = ({ notification = {} }) => {
     }
   }, [isLoading, data]);
   return (
-    <View
-      style={{
-        padding: 12,
-        flexDirection: "row",
-        justifyContent: "flex-start",
-      }}
-    >
+    <Container>
       <Avatar width={50} height={50} uri={notificationUser.avatar || null} />
-      {notification.isAddFriendRequest ? (
-        <View>
-          <NotificationContent>{t("sentUFriendRequest")}</NotificationContent>
-          <View style={{ flexDirection: "row", marginTop: 16 }}>
-            <StyledButton2>
-              <AcceptText>{t("accept")}</AcceptText>
-            </StyledButton2>
-            <StyledButton1>
-              <DeclineText>{t("decline")}</DeclineText>
-            </StyledButton1>
-          </View>
-        </View>
-      ) : (
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            marginLeft: 12,
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <NotificationContent>{`${notificationUser.nickname} ${notification.content}  `}</NotificationContent>
-          </View>
-          <CreatedAt>
-            {commentCreatedTimeFormater(notification.createdAt)}
-          </CreatedAt>
-        </View>
-      )}
-    </View>
+      <ContentContainer>
+        <NotificationContent>{`${notificationUser.nickname} ${notification.content}  `}</NotificationContent>
+        <CreatedAt>
+          {commentCreatedTimeFormater(notification.createdAt)}
+        </CreatedAt>
+      </ContentContainer>
+    </Container>
   );
 };
-export const NotificationContent = styled(Text)`
+
+const NotificationContent = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.medium};
   color: ${(props) => props.theme.colors.black};
-`;
-export const CreatedAt = styled(Text)`
-  font-size: ${(props) => props.theme.fontSizes.medium};
-  color: ${(props) => props.theme.colors.black};
-`;
-const StyledButton1 = styled.TouchableOpacity`
-  padding-horizontal: 12px;
-  margin-horizontal: 12px;
-  width: 100px;
-  border-radius: 2px;
-  border-width: 2px;
-  border-color: #9971ee;
-  justify-content: center;
-  align-items: center;
-  height: 36px;
-`;
-const StyledButton2 = styled.TouchableOpacity`
-  padding-horizontal: 12px;
-  margin-horizontal: 12px;
-  width: 100px;
-  border-radius: 2px;
-  background-color: #9971ee;
-  justify-content: center;
-  align-items: center;
-  height: 36px;
-`;
-const AcceptText = styled.Text`
-  font-weight: 500;
-  font-size: 16px;
-  color: ${(props) => props.theme.colors.white};
 `;
 
-const DeclineText = styled.Text`
-  font-weight: 500;
-  font-size: 16px;
-  color: #9971ee;
+const CreatedAt = styled(Text)`
+  font-size: ${(props) => props.theme.fontSizes.medium};
+  color: ${(props) => props.theme.colors.black};
+  opacity: 0.5;
 `;
+const Container = styled.View`
+  padding: 12px;
+  flex-direction: row;
+  justify-content: flex-start;
+`;
+const ContentContainer = styled.View`
+  flex: 1;
+  margin-left: 12px;
+`;
+
 export default NotificationItem;

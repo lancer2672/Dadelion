@@ -10,7 +10,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
 
 import CreatePost from "@src/features/post/screens/CreatePost.screen";
-import Search from "./components/search.component";
+import SearchComponent from "./components/Search.component";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
@@ -31,11 +31,13 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
 
   return (
     <View>
-      {/* <Search></Search> */}
+      <View style={{ zIndex: 1 }}>
+        <SearchComponent navigation={navigation}></SearchComponent>
+      </View>
       <View
         style={{
           flexDirection: "row",
-
+          marginTop: 12,
           marginHorizontal: 24,
           alignItems: "center",
         }}

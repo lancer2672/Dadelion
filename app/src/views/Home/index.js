@@ -10,12 +10,11 @@ const Home = ({ navigation }) => {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   return (
     <View style={styles.container}>
-      <View>
-        <HomeHeader
-          showNotificationModal={() => setShowNotificationModal(true)}
-          navigation={navigation}
-        ></HomeHeader>
-      </View>
+      <HomeHeader
+        showNotificationModal={() => setShowNotificationModal(true)}
+        navigation={navigation}
+      ></HomeHeader>
+
       <View style={styles.postContainer}>
         <Post navigation={navigation}></Post>
       </View>
