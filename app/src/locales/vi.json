@@ -4,7 +4,10 @@
   "notification": "Thông báo",
   "sendFriendRequest": "Kết bạn",
   "sentUFriendRequest": "đã gửi cho bạn lời mời kết bạn",
+  "sentRequest": "Đã gửi",
   "sendMessage": "Nhắn tin",
+  "friend": "Bạn bè",
   "accept": "Đồng ý",
-  "decline": "Từ chối"
+  "decline": "Từ chối",
+  "notFoundUser": "Không tìm thấy người dùng"
 }
