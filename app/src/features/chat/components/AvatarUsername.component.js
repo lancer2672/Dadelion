@@ -20,9 +20,7 @@ const Name = styled(Text)`
 const AvtWithName = ({ avatar, name }) => {
   return (
     <Container>
-      <Avatar
-        source={require("./../../../../assets/imgs/DefaultAvatar.png")}
-      ></Avatar>
+      <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
       <Name>{name}</Name>
     </Container>
   );

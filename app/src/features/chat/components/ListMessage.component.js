@@ -63,6 +63,7 @@ const ListUserMessages = ({ channelId }) => {
             paddingBottom: 8,
           }}
           inverted={true}
+          showsVerticalScrollIndicator={false}
           initialNumToRender={20}
           data={listMessage.slice(0, visibleMessages)}
           ListEmptyComponent={() => null}

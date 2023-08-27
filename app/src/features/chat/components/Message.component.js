@@ -14,9 +14,7 @@ const UserMessage = ({ isMyMessage, message, imageUrl, handleShowDialog }) => {
     <Container isMyMessage={isMyMessage}>
       {!isMyMessage && (
         <>
-          <Avatar
-            source={require("../../../../assets/imgs/DefaultAvatar.png")}
-          ></Avatar>
+          <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
         </>
       )}
       <MessageContainer isMyMessage={isMyMessage}>

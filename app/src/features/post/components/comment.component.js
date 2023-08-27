@@ -41,9 +41,7 @@ const Comment = ({ comment, postId }) => {
         {creator.avatar ? (
           <Avatar source={{ uri: creator.avatar }}></Avatar>
         ) : (
-          <Avatar
-            source={require("../../../../assets/imgs/DefaultAvatar.png")}
-          ></Avatar>
+          <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
         )}
       </TouchableOpacity>
       <CommentContentWrapper>

@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { appSelector } from "@src/store/selector";
 import { setIsLoading } from "@src/store/slices/appSlice";
-const LoginScreen = ({ navigation }) => {
+const Login = ({ navigation }) => {
   const [login, { error, isSuccess, isLoading: isFetching, ...loginResult }] =
     useLoginMutation();
   const dispatch = useDispatch();
@@ -39,7 +39,7 @@ const LoginScreen = ({ navigation }) => {
     );
     setProgress(() => percentCompleted / 100);
   };
-
+  console.log("login errors", error);
   const handleLogin = () => {
     login({ username, password });
   };
@@ -154,4 +154,4 @@ const LoginScreen = ({ navigation }) => {
     </AuthContainer>
   );
 };
-export default LoginScreen;
+export default Login;

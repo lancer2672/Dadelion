@@ -87,9 +87,7 @@ const CreatePost = ({ setIsvisible }) => {
       <Body>
         <UserInfo>
           {user.avatar == null ? (
-            <Avatar
-              source={require("./../../../../assets/imgs/DefaultAvatar.png")}
-            ></Avatar>
+            <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
           ) : (
             <Avatar source={{ uri: user.avatar }}></Avatar>
           )}
@@ -110,7 +108,7 @@ const CreatePost = ({ setIsvisible }) => {
       {imageUri == null ? (
         <SelectedImage
           style={{ width: SCREEN_WIDTH - 16 }}
-          source={require("./../../../../assets/imgs/ChooseAnImage.png")}
+          source={require("@assets/imgs/ChooseAnImage.png")}
         ></SelectedImage>
       ) : (
         <SelectedImage

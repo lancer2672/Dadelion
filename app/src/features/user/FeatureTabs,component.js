@@ -9,15 +9,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { TabView, SceneMap } from "react-native-tab-view";
 import UserPost from "./UserPost.component";
-import { useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 const TAB_ITEM_WIDTH = Dimensions.get("window").width / 2;
 const Tab = createMaterialTopTabNavigator();
-const FeatureTabs = () => {
-  const userState = useSelector(userSelector);
-
+const FeatureTabs = ({ userId }) => {
   return (
     <Tab.Navigator
       tabBar={(props) => <CustomTabBar {...props}></CustomTabBar>}
@@ -28,13 +24,9 @@ const FeatureTabs = () => {
         width: Dimensions.get("window").width,
       }}
     >
+      <Tab.Screen initialParams={{ userId }} name="Ảnh" component={UserPost} />
       <Tab.Screen
-        initialParams={{ userId: userState.user._id }}
-        name="Ảnh"
-        component={UserPost}
-      />
-      <Tab.Screen
-        initialParams={{ userId: userState.user._id }}
+        initialParams={{ userId }}
         name="Video"
         component={UserPost}
       />

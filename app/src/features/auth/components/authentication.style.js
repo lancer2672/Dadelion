@@ -10,7 +10,7 @@ import {
 import styled from "styled-components/native";
 
 export const BackgroundImage = styled.ImageBackground.attrs((props) => ({
-  source: require("../../../../assets/imgs/Auth.jpg"),
+  source: require("@assets/imgs/Auth.jpg"),
 }))`
   flex: 1;
   align-items: center;
@@ -18,7 +18,7 @@ export const BackgroundImage = styled.ImageBackground.attrs((props) => ({
 `;
 
 export const Logo = styled.Image.attrs((props) => ({
-  source: require("./../../../../assets/imgs/Logo.png"),
+  source: require("@assets/imgs/Logo.png"),
 }))`
   width: 200px;
   height: 200px;
@@ -49,13 +49,13 @@ export const Slogan = styled(Text)`
 `;
 
 export const Animation = styled(Animated.Image).attrs((props) => ({
-  source: require("./../../../../assets/imgs/LoginAnimation.gif"),
+  source: require("@assets/imgs/LoginAnimation.gif"),
 }))`
   width: 100%;
   height: 200px;
 `;
 export const Animation1 = styled(Animated.Image).attrs((props) => ({
-  source: require("./../../../../assets/imgs/DandelionSpreadAnimation.gif"),
+  source: require("@assets/imgs/DandelionSpreadAnimation.gif"),
 }))`
   width: 100%;
   height: 200px;

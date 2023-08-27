@@ -12,7 +12,9 @@ const ChatRoomHeader = ({ navigation, chatFriend = {} }) => {
         <Ionicons name="chevron-back" size={32} color="black" />
       </BackIcon>
 
-      <Avatar width={40} height={40} />
+      <TouchableOpacity>
+        <Avatar width={40} height={40} />
+      </TouchableOpacity>
 
       <HeaderInfo>
         <HeaderText>{chatFriend.nickname}</HeaderText>

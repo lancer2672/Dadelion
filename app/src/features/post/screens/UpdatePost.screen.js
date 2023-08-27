@@ -80,9 +80,7 @@ const UpdatePost = ({ ...props }) => {
 
       <PostInfo>
         {userAvatar == null ? (
-          <Avatar
-            source={require("../../../../assets/imgs/DefaultAvatar.png")}
-          ></Avatar>
+          <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
         ) : (
           <Avatar
             source={{
