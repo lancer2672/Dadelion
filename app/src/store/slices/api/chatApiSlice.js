@@ -20,7 +20,6 @@ export const chatApi = createApi({
         try {
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
-
           socket.on("receive-message", (newMess) => {
             updateCachedData((draft) => {
               draft.unshift(newMess);
@@ -43,6 +42,27 @@ export const chatApi = createApi({
     getChannels: builder.query({
       query: (userId) => ({ url: `${channelRoute}`, params: userId }),
       transformResponse: (response, meta, arg) => response.data.channels || [],
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        try {
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded;
+
+          socket.on("new-channel", (newChannel) => {
+            updateCachedData((draft) => {
+              console.log("Draft", draft);
+              draft.unshift(newChannel);
+              console.log("Aftaer Draft", draft);
+            });
+          });
+        } catch (err) {
+          console.log("err", err);
+        }
+        // cacheEntryRemoved will resolve when the cache subscription is no longer active
+        await cacheEntryRemoved;
+      },
     }),
     getChannelMembers: builder.query({
       query: (channelId) => `${channelRoute}/members/${channelId}`,

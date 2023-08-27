@@ -18,7 +18,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
   if (result.error && result.error.status === 401) {
     const refreshResult = await baseQuery(
       {
-        url: "/api/auth/refreshToken",
+        url: "/api/auth/refresh-token",
         method: "POST",
         body: { refreshToken: api.getState().user.refreshToken },
       },
@@ -26,7 +26,8 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
     );
     if (refreshResult.data) {
       api.dispatch(setToken({ token: refreshResult.data.accessToken }));
-      // Reconstruct the headers with the new token and make the second request
+
+      // retry the initial query
       result = await baseQuery(args, api, extraOptions);
     } else {
       api.dispatch(logout());

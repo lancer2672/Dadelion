@@ -2,7 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import { UrlAPI } from "@src/constants";
 
-const postRoute = "/post/";
+const postRoute = "/post";
 
 export const postApi = createApi({
   reducerPath: "postApi",
@@ -10,7 +10,7 @@ export const postApi = createApi({
   tagTypes: ["Post"],
   endpoints: (builder) => ({
     getAllPosts: builder.query({
-      query: () => `${postRoute}`,
+      query: () => `${postRoute}/all`,
       transformResponse: (response, meta, arg) => {
         if (response.data) {
         }
@@ -26,7 +26,7 @@ export const postApi = createApi({
       providesTags: ["Post"],
     }),
     getPostByUserId: builder.query({
-      query: (userId) => `${postRoute}/?userId=${userId}`,
+      query: (userId) => `${postRoute}/`,
       transformResponse: (response, meta, arg) => {
         if (response.data) {
         }

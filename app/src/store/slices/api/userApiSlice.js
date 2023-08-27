@@ -1,7 +1,9 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import { transformUserData } from "@src/utils/transformHelper";
-const userRoute = "/user/";
+
+const userRoute = "/user";
+
 export const userApi = createApi({
   reducerPath: "userApi",
   tagTypes: "User",
@@ -24,11 +26,13 @@ export const userApi = createApi({
         const transformedUser = transformUserData(response.data.user);
         return { ...response.data, user: transformedUser };
       },
-      transformErrorResponse: (response, meta, arg) => response.data.message,
+      transformErrorResponse: (response, meta, arg) => {
+        response.data.message;
+      },
     }),
     updateUser: builder.mutation({
       query: ({ newUserData, userId }) => ({
-        url: `${userRoute}/${userId}`,
+        url: `${userRoute}/update/${userId}`,
         method: "PUT",
         body: newUserData,
         headers: {
@@ -49,6 +53,34 @@ export const userApi = createApi({
       transformResponse: (response, meta, arg) => response.data,
       transformErrorResponse: (response, meta, arg) => response.data.message,
     }),
+    sendFriendRequest: builder.mutation({
+      query: (userData) => ({
+        url: `friend/register`,
+        method: "POST",
+        body: userData,
+      }),
+      transformResponse: (response, meta, arg) => response.data,
+      transformErrorResponse: (response, meta, arg) => response.data.message,
+    }),
+    acceptFriendRequest: builder.mutation({
+      query: (userData) => ({
+        url: `friend/register`,
+        method: "POST",
+        body: userData,
+      }),
+      transformResponse: (response, meta, arg) => response.data,
+      transformErrorResponse: (response, meta, arg) => response.data.message,
+    }),
+    saveFCMtoken: builder.mutation({
+      query: (token) => ({
+        url: `${userRoute}/save-token`,
+        method: "PUT",
+        body: { token },
+      }),
+    }),
+    searchUser: builder.query({
+      query: (keyword) => `${userRoute}/search/?q=${keyword}`,
+    }),
   }),
 });
 
@@ -57,4 +89,6 @@ export const {
   useLoginMutation,
   useUpdateUserMutation,
   useCreateUserMutation,
+  useSaveFCMtokenMutation,
+  useSearchUserQuery,
 } = userApi;
