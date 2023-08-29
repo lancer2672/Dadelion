@@ -7,8 +7,9 @@ import { postSlice } from "./slices/postSlice";
 import { userApi } from "./slices/api/userApiSlice";
 import { postApi } from "./slices/api/postApiSlice";
 import { chatApi } from "./slices/api/chatApiSlice";
+import { friendRequestApi } from "./slices/api/friendRequestApiSlice";
 import { chatSlice } from "./slices/chatSlice";
-import socketMiddleware from "./middlewares/socketMiddleware";
+import chatMiddleware from "./middlewares/chatMiddleware";
 import socket from "@src/utils/socket";
 
 export default configureStore({
@@ -20,11 +21,13 @@ export default configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
+    [friendRequestApi.reducerPath]: friendRequestApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(userApi.middleware)
       .concat(postApi.middleware)
       .concat(chatApi.middleware)
-      .concat(socketMiddleware(socket)),
+      .concat(friendRequestApi.middleware)
+      .concat(chatMiddleware(socket)),
 });

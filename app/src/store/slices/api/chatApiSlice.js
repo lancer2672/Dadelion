@@ -1,7 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import socket from "@src/utils/socket";
-import { transformMessageData } from "@src/utils/transformHelper"; // Assuming you have a function to transform message data
 import { current } from "@reduxjs/toolkit";
 const channelRoute = "/channel/";
 

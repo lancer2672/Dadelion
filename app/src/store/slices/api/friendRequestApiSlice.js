@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
+import socket from "@src/utils/socket";
 
 const friendRequestRoute = "/friend-request";
 
@@ -13,6 +14,27 @@ export const friendRequestApi = createApi({
     }),
     checkFriendStatus: builder.query({
       query: (receiverId) => `${friendRequestRoute}/check-status/${receiverId}`,
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        try {
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded;
+
+          socket.on("new-friendStatus", (newStatus) => {
+            updateCachedData((draft) => {
+              console.log("Draft", draft);
+              draft.data = newStatus;
+              console.log("Aftaer Draft", draft);
+            });
+          });
+        } catch (err) {
+          console.log("err", err);
+        }
+        // cacheEntryRemoved will resolve when the cache subscription is no longer active
+        await cacheEntryRemoved;
+      },
     }),
   }),
 });

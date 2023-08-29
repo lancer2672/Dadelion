@@ -11,7 +11,15 @@ export const chatSlice = createSlice({
     joinRoom: (state, action) => {},
     sendMessage: (state, action) => {},
     sendImage: (state, action) => {},
+    sendFriendRequest: (state, action) => {},
+    responseFriendRequest: (state, action) => {},
   },
 });
 
-export const { joinRoom, sendMessage, sendImage } = chatSlice.actions;
+export const {
+  joinRoom,
+  sendMessage,
+  sendImage,
+  sendFriendRequest,
+  responseFriendRequest,
+} = chatSlice.actions;
