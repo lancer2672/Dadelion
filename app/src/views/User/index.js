@@ -9,16 +9,27 @@ import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import styled from "styled-components/native";
 
-import { setAuth } from "@src/features/auth/authSlice";
 import { userSelector } from "@src/store/selector";
 import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
-import styled from "styled-components/native";
 import { updateUserState } from "@src/store/slices/userSlice";
 import { colors } from "@src/infrastructure/theme/colors";
-import UserPost from "@src/features/user/UserPost.component";
 import FeatureTabs from "@src/features/user/FeatureTabs,component";
-import { useTranslation } from "react-i18next";
+import {
+  StyledButton1,
+  StyledButton2,
+  UserDescription,
+  Name,
+  HeaderContent,
+  HeaderContainer,
+  BottomHeader,
+  ItemValue,
+  ItemLabel,
+  ItemContainer,
+} from "../sharedStyledComponents";
+import Settings from "./components/Settings.component";
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);
@@ -28,10 +39,10 @@ const User = ({ props, navigation }) => {
     useUpdateUserMutation();
   const [avatarUri, setAvatarUri] = useState(null);
   const [selectedImageUri, setSelectedImageUri] = useState(null);
+  const [settingVisible, setSettingVisible] = useState(false);
   useEffect(() => {
     setAvatarUri(user.avatar);
   }, []);
-  console.log("user", user);
   useEffect(() => {
     if (isSuccess) {
       setAvatarUri(selectedImageUri);
@@ -72,7 +83,11 @@ const User = ({ props, navigation }) => {
             <TouchableOpacity>
               {/* <AntDesign name="arrowleft" size={32} color="black" /> */}
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setSettingVisible(true);
+              }}
+            >
               <AntDesign name="setting" size={32} color="black" />
             </TouchableOpacity>
           </HeaderContent>
@@ -101,7 +116,7 @@ const User = ({ props, navigation }) => {
                   color: "#9971ee",
                 }}
               >
-                {t("sendFriendRequest")}
+                {t("changePassword")}
               </Text>
             </StyledButton1>
             <StyledButton2>
@@ -129,7 +144,14 @@ const User = ({ props, navigation }) => {
         </BottomHeader>
       </HeaderContainer>
 
-      <FeatureTabs></FeatureTabs>
+      <FeatureTabs userId={user._id}></FeatureTabs>
+      <Settings
+        user={user}
+        visible={settingVisible}
+        onClose={() => {
+          setSettingVisible(false);
+        }}
+      ></Settings>
     </Container>
   );
 };
@@ -175,71 +197,7 @@ const CameraIcon = styled.View`
   background-color: rgba(52, 52, 52, 0.4);
   padding-bottom: 10px;
 `;
-const StyledButton1 = styled.TouchableOpacity`
-  padding-horizontal: 20px;
-  margin-horizontal: 12px;
-  width: 120px;
-  border-radius: 2px;
-  border-width: 2px;
-  border-color: #9971ee;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-`;
-const StyledButton2 = styled.TouchableOpacity`
-  padding-horizontal: 20px;
-  margin-horizontal: 12px;
-  width: 120px;
-  border-radius: 2px;
-  background-color: #9971ee;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-`;
-const UserDescription = styled.View`
-  margin-bottom: 29px;
-  align-items: center;
-`;
 
-const Name = styled.Text`
-  font-size: ${(props) => props.theme.fontSizes.h5};
-  color: ${(props) => props.theme.colors.text.primary};
-  font-weight: bold;
-`;
-const HeaderContent = styled.View`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-horizontal: 24px;
-`;
-const HeaderContainer = styled.View`
-  height: 360px;
-  border-bottom-left-radius: 50px;
-  border-bottom-right-radius: 50px;
-  width: 100%;
-  background-color: #9971ee;
-  elevation: 5;
-`;
-const BottomHeader = styled.View`
-  flex: 1;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-`;
-const ItemValue = styled.Text`
-  font-size: ${(props) => props.theme.fontSizes.title};
-  font-weight: bold;
-  color: ${(props) => props.theme.colors.white};
-`;
-
-const ItemLabel = styled.Text`
-  font-size: ${(props) => props.theme.fontSizes.large};
-  color: ${(props) => props.theme.colors.white};
-`;
-const ItemContainer = styled.View`
-  align-items: center;
-  margin-horizontal: 12px;
-`;
 export default User;
 
 const styles = StyleSheet.create({});
