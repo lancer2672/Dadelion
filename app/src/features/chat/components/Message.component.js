@@ -1,11 +1,16 @@
-import { StyleSheet, Image, Text, View } from "react-native";
+import { StyleSheet, Image, Text, View, FlatList } from "react-native";
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { TouchableOpacity } from "react-native";
 import { Pressable } from "react-native";
 import { Modal } from "react-native";
 
-const UserMessage = ({ isMyMessage, message, imageUrl, handleShowDialog }) => {
+const UserMessage = ({
+  chatFriend = {},
+  isMyMessage,
+  messages,
+  handleShowDialog,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const handleOpenImageFullScreen = () => {
     setModalVisible(true);
@@ -14,34 +19,49 @@ const UserMessage = ({ isMyMessage, message, imageUrl, handleShowDialog }) => {
     <Container isMyMessage={isMyMessage}>
       {!isMyMessage && (
         <>
-          <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
+          {chatFriend.avatar ? (
+            <Avatar source={{ uri: chatFriend.avatar }}></Avatar>
+          ) : (
+            <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
+          )}
         </>
       )}
-      <MessageContainer isMyMessage={isMyMessage}>
-        <View style={{ flexDirection: "row" }}>
-          {isMyMessage && <View style={{ flex: 1 }}></View>}
-          <View>
-            {message && <Message isMyMessage={isMyMessage}>{message}</Message>}
-            {imageUrl && (
-              <Pressable
-                onLongPress={handleShowDialog}
-                onPress={handleOpenImageFullScreen}
-              >
-                <Image
-                  style={{
-                    borderRadius: 20,
-                    width: 140,
-                    height: 180,
-                    resizeMode: "cover",
-                  }}
-                  source={{ uri: imageUrl }}
-                ></Image>
-              </Pressable>
-            )}
-          </View>
-        </View>
-      </MessageContainer>
-      {imageUrl && (
+      <FlatList
+        data={messages}
+        renderItem={({ item }) => (
+          <MessageContainer isMyMessage={isMyMessage}>
+            <View style={{ flexDirection: "row" }}>
+              {isMyMessage && <View style={{ flex: 1 }}></View>}
+              <View>
+                {item.message && (
+                  <>
+                    <Message isMyMessage={isMyMessage}>{item.message}</Message>
+                  </>
+                )}
+                {item.imageUrl && (
+                  <Pressable
+                    onLongPress={handleShowDialog}
+                    onPress={handleOpenImageFullScreen}
+                  >
+                    <Image
+                      style={{
+                        borderRadius: 20,
+                        width: 140,
+                        height: 180,
+                        resizeMode: "cover",
+                      }}
+                      source={{ uri: item.imageUrl }}
+                    ></Image>
+                  </Pressable>
+                )}
+              </View>
+            </View>
+          </MessageContainer>
+        )}
+        keyExtractor={(item) => item._id}
+      />
+
+      {/* {imageUrl && (
         <Modal
           animationType="fade"
           onRequestClose={() => {
@@ -56,7 +76,7 @@ const UserMessage = ({ isMyMessage, message, imageUrl, handleShowDialog }) => {
             ></Image>
           </View>
         </Modal>
-      )}
+      )} */}
     </Container>
   );
 };
@@ -66,7 +86,9 @@ const Container = styled(View).attrs((props) => ({
   flex: 1,
 }))`
   align-content: center;
+
   margin: 8px;
+
   margin-bottom: 0px;
 `;
 
@@ -83,7 +105,6 @@ const MessageContainer = styled(View).attrs((props) => {
     marginRight: props.isMyMessage ? 6 : 40,
   };
 })`
-  align-self: flex-end;
   margin-bottom: 2px;
 `;
 

@@ -21,11 +21,12 @@ import { useLoadChatRoomMessagesQuery } from "@src/store/slices/api/chatApiSlice
 import ImageDialog from "@src/components/dialogs/ImageDialog.component";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
-const ListUserMessages = ({ channelId }) => {
+const ListUserMessages = ({ channelId, chatFriend }) => {
   const { user } = useSelector(userSelector);
 
   const [visibleMessages, setVisibleMessages] = useState(20);
   const [listMessage, setListMessage] = useState([]);
+  console.log("listMessage", listMessage);
 
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ["25%", "40%"], []);
@@ -44,8 +45,38 @@ const ListUserMessages = ({ channelId }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setListMessage(data);
+      console.log("data", data);
+      const groupedByUserId = [];
+      let obj = { userId: null, messages: [] };
+
+      const createMessage = (msg) => ({
+        _id: msg._id,
+        message: msg.message,
+        imageUrl: msg.imageUrl,
+        createdAt: msg.createdAt,
+      });
+
+      data.forEach((msg) => {
+        if (obj.userId === null) {
+          obj.userId = msg.userId;
+          obj.messages.unshift(createMessage(msg));
+        } else if (msg.userId === obj.userId) {
+          obj.messages.unshift(createMessage(msg));
+        } else {
+          groupedByUserId.push(obj);
+          obj = { userId: msg.userId, messages: [createMessage(msg)] };
+        }
+      });
+
+      // Add the last item
+      if (obj.user != null) {
+        groupedByUserId.push(obj);
+      }
+
+      console.log("groupedByUserId", groupedByUserId);
+      setListMessage(groupedByUserId);
     }
+
     if (error) {
       console.log("error", error);
     }
@@ -66,23 +97,23 @@ const ListUserMessages = ({ channelId }) => {
           showsVerticalScrollIndicator={false}
           initialNumToRender={20}
           data={listMessage.slice(0, visibleMessages)}
-          ListEmptyComponent={() => null}
+          ListEmptyComponent={() => <></>}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           renderItem={({ item }) => {
-            const { userId: memberId, message, imageUrl } = item;
+            const { userId: memberId, messages } = item;
             let isMyMessage = memberId == user._id ? true : false;
             return (
               <UserMessage
-                imageUrl={imageUrl}
                 isMyMessage={isMyMessage}
-                message={message}
+                chatFriend={chatFriend}
+                messages={messages}
                 handleShowDialog={handlePresentModalPress}
               />
             );
           }}
-          keyExtractor={(item) => {
-            return `$!@#${item._id}`;
+          keyExtractor={(item, index) => {
+            return `#!${item.userId} + ${index}`;
           }}
         ></FlatList>
       </Pressable>

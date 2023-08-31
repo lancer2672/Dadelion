@@ -10,7 +10,7 @@ import { chatApi } from "./slices/api/chatApiSlice";
 import { friendRequestApi } from "./slices/api/friendRequestApiSlice";
 import { chatSlice } from "./slices/chatSlice";
 import chatMiddleware from "./middlewares/chatMiddleware";
-import socket from "@src/utils/socket";
+import { getSocket } from "@src/utils/socket";
 
 export default configureStore({
   reducer: {
@@ -29,5 +29,5 @@ export default configureStore({
       .concat(postApi.middleware)
       .concat(chatApi.middleware)
       .concat(friendRequestApi.middleware)
-      .concat(chatMiddleware(socket)),
+      .concat(chatMiddleware()),
 });

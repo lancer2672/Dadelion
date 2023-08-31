@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import { transformUserData } from "@src/utils/transformHelper";
+import { getSocket } from "@src/utils/socket";
 
 const userRoute = "/user";
 
@@ -14,6 +15,38 @@ export const userApi = createApi({
       transformResponse: (response, meta, arg) => {
         const transformedUser = transformUserData(response.data.user);
         return { ...response.data, user: transformedUser };
+      },
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        try {
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded;
+          const socket = getSocket();
+          socket.on("online-users", (onlineUserIds) => {
+            console.log("onlineUserIds", onlineUserIds);
+            updateCachedData((draft) => {
+              const userId = draft.user._id;
+              if (onlineUserIds[userId] == true) {
+                draft.user.isOnline = 1;
+              }
+            });
+          });
+          socket.on("offline-users", (offlineUserId) => {
+            updateCachedData((draft) => {
+              const userId = draft.user._id;
+              if (offlineUserId == userId) {
+                draft.user.isOnline = 0;
+                draft.user.lastOnline = new Date().toISOString();
+              }
+            });
+          });
+        } catch (err) {
+          console.log("err", err);
+        }
+        // cacheEntryRemoved will resolve when the cache subscription is no longer active
+        await cacheEntryRemoved;
       },
     }),
     login: builder.mutation({

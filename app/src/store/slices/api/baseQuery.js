@@ -1,6 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { UrlAPI } from "@src/constants";
-import { logout, setToken } from "../userSlice";
+import { logoutUser, setToken } from "../userSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: UrlAPI,
@@ -30,7 +30,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       // retry the initial query
       result = await baseQuery(args, api, extraOptions);
     } else {
-      api.dispatch(logout());
+      api.dispatch(logoutUser());
     }
   }
   return result;

@@ -1,15 +1,16 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
-import socket from "@src/utils/socket";
+import { getSocket } from "@src/utils/socket";
 import { current } from "@reduxjs/toolkit";
-const channelRoute = "/channel/";
+import { UrlAPI } from "@src/constants";
+const chatRoute = "/chat";
 
 export const chatApi = createApi({
   reducerPath: "chatApi",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     loadChatRoomMessages: builder.query({
-      query: (channelId) => `${channelRoute}/messages/${channelId}`,
+      query: (channelId) => `${chatRoute}/messages/${channelId}`,
       transformResponse: (response, meta, arg) => response.data.messages || [],
       transformErrorResponse: (response, meta, arg) => response.data.message,
       async onCacheEntryAdded(
@@ -19,8 +20,10 @@ export const chatApi = createApi({
         try {
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
-          socket.on("receive-message", (newMess) => {
+          const socket = getSocket();
+          socket.on("receive-message", (newMess, channelId) => {
             updateCachedData((draft) => {
+              console.log("currentdraft", current(draft));
               draft.unshift(newMess);
             });
           });
@@ -28,7 +31,6 @@ export const chatApi = createApi({
             console.log("new Message", newMess);
             updateCachedData((draft) => {
               draft.unshift(newMess);
-              console.log("draft after receiving ", current(draft));
             });
           });
         } catch (err) {
@@ -39,7 +41,7 @@ export const chatApi = createApi({
       },
     }),
     getChannels: builder.query({
-      query: (userId) => ({ url: `${channelRoute}`, params: userId }),
+      query: (userId) => ({ url: `${chatRoute}/channels`, params: userId }),
       transformResponse: (response, meta, arg) => response.data.channels || [],
       async onCacheEntryAdded(
         arg,
@@ -48,12 +50,11 @@ export const chatApi = createApi({
         try {
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
+          const socket = getSocket();
 
           socket.on("new-channel", (newChannel) => {
             updateCachedData((draft) => {
-              console.log("Draft", draft);
               draft.unshift(newChannel);
-              console.log("Aftaer Draft", draft);
             });
           });
         } catch (err) {
@@ -63,10 +64,33 @@ export const chatApi = createApi({
         await cacheEntryRemoved;
       },
     }),
-    getChannelMembers: builder.query({
-      query: (channelId) => `${channelRoute}/members/${channelId}`,
-      transformResponse: (response, meta, arg) => response.data.members || [],
-      transformErrorResponse: (response, meta, arg) => response.data.message,
+    getLastMessage: builder.query({
+      query: (channelId) => ({
+        url: `${chatRoute}/last-message/${channelId}`,
+      }),
+      transformResponse: (response, meta, arg) => response.data,
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        try {
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded;
+          const socket = getSocket();
+          socket.on("receive-message", (newMess, channelId) => {
+            updateCachedData((draft) => {
+              console.log("new Message", current(draft));
+              if (draft.channelId === channelId) {
+                draft.lastMessage = newMess;
+              }
+            });
+          });
+        } catch (err) {
+          console.log("err", err);
+        }
+        // cacheEntryRemoved will resolve when the cache subscription is no longer active
+        await cacheEntryRemoved;
+      },
     }),
   }),
 });
@@ -74,5 +98,5 @@ export const chatApi = createApi({
 export const {
   useLoadChatRoomMessagesQuery,
   useGetChannelsQuery,
-  useGetChannelMembersQuery,
+  useGetLastMessageQuery,
 } = chatApi;

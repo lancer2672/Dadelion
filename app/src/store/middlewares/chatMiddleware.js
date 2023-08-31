@@ -1,5 +1,8 @@
-const chatMiddleware = (socket) => (store) => {
+import { getSocket } from "@src/utils/socket";
+
+const chatMiddleware = () => (store) => {
   return (next) => (action) => {
+    const socket = getSocket();
     switch (action.type) {
       case "chat/joinRoom": {
         const channelId = action.payload;

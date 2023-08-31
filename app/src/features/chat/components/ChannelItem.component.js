@@ -9,24 +9,48 @@ import {
 import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components/native";
 
-import { Avatar } from "../../../components/Avatar";
-import { useDispatch } from "react-redux";
-import { joinRoom } from "@src/store/slices/chatSlice";
-import { useGetChannelMembersQuery } from "@src/store/slices/api/chatApiSlice";
+import { Avatar } from "@src/components/Avatar";
+import { useDispatch, useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
+import { userSelector } from "@src/store/selector";
+
+import { joinRoom } from "@src/store/slices/chatSlice";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
+import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
+import { useGetLastMessageQuery } from "@src/store/slices/api/chatApiSlice";
 
 const Channel = ({ navigation, channel }) => {
-  const { _id: channelId } = channel;
-  //hiện giờ chỉ cho chat với 1 người nên đặt tên k có "s"
+  const { _id: channelId, memberIds, channelMessages } = channel;
+  console.log("channelId", channelId);
+  const { user } = useSelector(userSelector);
   const [chatFriend, setChatFriend] = useState(null);
+  const [chatFriendId, setChatFriendId] = useState(null);
+  const [lastMessage, setLastMessage] = useState(null);
+  const { data: lastMsgData, isLoading: isLoadLastMsg } =
+    useGetLastMessageQuery(channelId, {
+      cacheTime: 0,
+      staleTime: 0,
+    });
+  console.log("lastMsgData", lastMsgData);
   const dispatch = useDispatch();
-  const { isLoading, isSuccess, data, error } =
-    useGetChannelMembersQuery(channelId);
-
+  const { isLoading, isSuccess, data, error } = useGetUserByIdQuery(
+    chatFriendId,
+    {
+      skip: !chatFriendId,
+    }
+  );
+  useEffect(() => {
+    const friendId = memberIds.filter((id) => id != user._id);
+    setChatFriendId(friendId[0]);
+  }, []);
+  useEffect(() => {
+    if (lastMsgData) {
+      setLastMessage(lastMsgData.lastMessage);
+    }
+  }, [isLoadLastMsg, lastMsgData]);
   useEffect(() => {
     if (isSuccess) {
-      setChatFriend(data[0]);
-      console.log("setChatFriend data", data);
+      setChatFriend(() => data.user);
     } else console.log("error", error);
   }, [isLoading, data]);
   return (
@@ -35,7 +59,7 @@ const Channel = ({ navigation, channel }) => {
         dispatch(joinRoom(channelId));
         navigation.navigate("ChatRoom", {
           channelId,
-          chatFriend,
+          memberIds,
         });
       }}
     >
@@ -51,49 +75,59 @@ const Channel = ({ navigation, channel }) => {
               : undefined
           }
         ></Avatar>
-        <Entypo
-          style={{
-            position: "absolute",
+        {chatFriend?.isOnline == 1 && (
+          <Entypo
+            style={{
+              position: "absolute",
 
-            right: "-20%",
-            bottom: "-20%",
-          }}
-          name="dot-single"
-          size={44}
-          color="green"
-        />
+              right: "-24%",
+              bottom: "-24%",
+            }}
+            name="dot-single"
+            size={52}
+            color="green"
+          />
+        )}
       </TouchableOpacity>
-      <View style={{ flex: 1, marginLeft: 8 }}>
-        <Name>{chatFriend ? chatFriend.nickname : "Tin nhắn"}</Name>
+      <View style={{ flex: 1, marginVertical: 8, marginHorizontal: 8 }}>
+        <Name>{chatFriend ? chatFriend.nickname : ""}</Name>
 
-        <LastMessage>empty</LastMessage>
+        {lastMessage && <LastMessage>{lastMessage.message}</LastMessage>}
       </View>
-      <View>
-        <Text style={{ opacity: 0.5 }}>20 mins ago</Text>
-        <Text> </Text>
-        <Text> 3 </Text>
-      </View>
+      {lastMessage && (
+        <View
+          style={{
+            height: "100%",
+            justifyContent: "flex-end",
+            marginBottom: 12,
+          }}
+        >
+          <Text style={{ opacity: 0.5 }}>
+            {commentCreatedTimeFormater(lastMessage.createdAt)}
+          </Text>
+        </View>
+      )}
     </Container>
   );
 };
 
 const Container = styled(TouchableOpacity)`
   width: 100%;
-  height: auto;
+  height: 80px;
   justify-content: flex-start;
   align-items: center;
-
   border-color: ${(props) => props.theme.colors.bg.secondary}
   flex-direction: row;
-  padding-bottom: 12px;
+  marginVertical: 8px;
 `;
 const Name = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.large};
-  margin-bottom: 6px;
+  flex: 1;
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 
 const LastMessage = styled(Text)`
+  margin-bottom: 4px;
   font-size: ${(props) => props.theme.fontSizes.body};
 `;
 export default Channel;

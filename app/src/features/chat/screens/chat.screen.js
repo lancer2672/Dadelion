@@ -18,7 +18,6 @@ import ChatTabs from "../components/ChatTabs.component";
 
 const ChatScreen = ({ navigation }) => {
   const { user } = useSelector(userSelector);
-  console.log("user.avatar", user.avatar);
   return (
     <View style={{ backgroundColor: colors.white, flex: 1 }}>
       {/* <ListAvtWithName></ListAvtWithName> */}
@@ -31,11 +30,11 @@ const ChatScreen = ({ navigation }) => {
         }}
       >
         <Heading>Đoạn Chat</Heading>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{ position: "absolute", right: 12, top: 0, bottom: 0 }}
         >
           <Avatar uri={user.avatar}></Avatar>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {/* <ListChannel navigation={navigation}></ListChannel> */}
       <ChatTabs navigation={navigation}></ChatTabs>

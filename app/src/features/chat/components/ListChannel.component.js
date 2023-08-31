@@ -18,21 +18,17 @@ const ListChannel = ({ navigation }) => {
       setChannels(data);
     }
   }, [isLoading, data]);
+  console.log("channels", channels);
   return (
     <FlatList
       style={{
         padding: 12,
         backgroundColor: colors.chat.bg.primary,
-        flexGrow: 1,
       }}
       data={channels}
       ListEmptyComponent={() => null}
       renderItem={({ item }) => {
-        return (
-          <Spacer position={"bottom"} size={"large"}>
-            <Channel navigation={navigation} channel={item} />
-          </Spacer>
-        );
+        return <Channel navigation={navigation} channel={item} />;
       }}
       keyExtractor={(item) => {
         return item._id;
@@ -42,5 +38,3 @@ const ListChannel = ({ navigation }) => {
 };
 
 export default ListChannel;
-
-const styles = StyleSheet.create({});

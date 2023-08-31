@@ -4,8 +4,10 @@ import { Ionicons, FontAwesome, Entypo, Feather } from "@expo/vector-icons";
 import { Avatar } from "../../../components/Avatar";
 import { TouchableOpacity, View } from "react-native";
 import { colors } from "@src/infrastructure/theme/colors";
+import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 
 const ChatRoomHeader = ({ navigation, chatFriend = {} }) => {
+  console.log("chatFriend chatRoom", chatFriend);
   return (
     <Container>
       <BackIcon onPress={() => navigation.goBack()}>
@@ -13,20 +15,26 @@ const ChatRoomHeader = ({ navigation, chatFriend = {} }) => {
       </BackIcon>
 
       <TouchableOpacity>
-        <Avatar width={40} height={40} />
+        <Avatar width={40} height={40} uri={chatFriend.avatar} />
       </TouchableOpacity>
 
       <HeaderInfo>
         <HeaderText>{chatFriend.nickname}</HeaderText>
-        <View style={{ flexDirection: "row" }}>
-          <Entypo
-            style={{ position: "absolute", left: "-10%", top: "-30%" }}
-            name="dot-single"
-            size={32}
-            color="green"
-          />
-          <StatusText>Đang hoạt động</StatusText>
-        </View>
+        {chatFriend.isOnline == 1 ? (
+          <View style={{ flexDirection: "row" }}>
+            <Entypo
+              style={{ position: "absolute", left: "-12%", top: "-30%" }}
+              name="dot-single"
+              size={32}
+              color="green"
+            />
+            <StatusText>Đang hoạt động</StatusText>
+          </View>
+        ) : (
+          <StatusText>{`${commentCreatedTimeFormater(
+            chatFriend.lastOnline
+          )} ago`}</StatusText>
+        )}
       </HeaderInfo>
       <TouchableOpacity style={{ padding: 4 }}>
         <FontAwesome name="video-camera" size={24} color={colors.chat.text} />
@@ -65,7 +73,6 @@ const HeaderText = styled.Text`
 
 const StatusText = styled.Text`
   font-size: 14px;
-  margin-left: 4px;
 `;
 
 export default memo(ChatRoomHeader);
