@@ -10,8 +10,8 @@ const chatMiddleware = () => (store) => {
         break;
       }
       case "chat/joinRoom": {
-        const { channelId, unseenMessageIds } = action.payload;
-        socket.emit("join-chatRoom", { channelId, unseenMessageIds });
+        const { channelId } = action.payload;
+        socket.emit("join-chatRoom", { channelId });
         break;
       }
       case "chat/sendMessage": {

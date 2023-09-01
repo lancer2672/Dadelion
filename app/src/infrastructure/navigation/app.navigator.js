@@ -14,6 +14,7 @@ import ChatScreen from "@src/features/chat/screens/chat.screen";
 import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
 import Guest from "@src/views/Guest";
 import { useSaveFCMtokenMutation } from "@src/store/slices/api/userApiSlice";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
@@ -71,6 +72,7 @@ const Tabs = () => {
 
 export const AppNavigator = () => {
   const [saveFCMtoken, { error }] = useSaveFCMtokenMutation();
+  const navigation = useNavigation();
   useEffect(() => {
     // Get the device token
     messaging()
@@ -79,6 +81,22 @@ export const AppNavigator = () => {
         console.log("Token", token);
         saveFCMtoken(token);
       });
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log("Message handled in the background!", remoteMessage);
+    });
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log(
+        "Notification caused app to open from background state:",
+        remoteMessage.notification
+      );
+      if ((remoteMessage.data.type = "chat")) {
+        navigation.navigate("ChatRoom", {
+          channelId: remoteMessage.data.channelId,
+          memberIds: JSON.parse(remoteMessage.data.memberIds),
+        });
+      }
+    });
+
     // Listen to whether the token changes
     return messaging().onTokenRefresh((token) => {
       saveFCMtoken(token);

@@ -20,12 +20,10 @@ import {
   useGetLastMessageQuery,
   useLoadChatRoomMessagesQuery,
 } from "@src/store/slices/api/chatApiSlice";
-import { joinRoom } from "@src/store/slices/chatSlice";
 
 const Channel = ({ navigation, channel }) => {
   const { _id: channelId, memberIds } = channel;
   console.log("channelId", channelId);
-  const dispatch = useDispatch();
   const { user } = useSelector(userSelector);
   const [chatFriend, setChatFriend] = useState(null);
   const [chatFriendId, setChatFriendId] = useState(null);
@@ -84,7 +82,7 @@ const Channel = ({ navigation, channel }) => {
         if (lastMessage) {
           setLastMessage((prev) => ({ ...prev, isSeen: true }));
         }
-        dispatch(joinRoom({ channelId, unseenMessageIds }));
+
         setUnseenMessageIds([]);
       }}
     >

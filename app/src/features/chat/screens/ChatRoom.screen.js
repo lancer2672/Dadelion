@@ -6,11 +6,16 @@ import InputBar from "../components/InputBar.component";
 import ListUserMessages from "../components/ListMessage.component";
 import ChatRoomHeader from "../components/ChatRoomHeader.component";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
+import AnimatedEllipsis from "react-native-animated-ellipsis";
+import { useTranslation } from "react-i18next";
+import { joinRoom } from "@src/store/slices/chatSlice";
 
 const ChatRoom = ({ navigation, route }) => {
   const { user } = useSelector(userSelector);
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
   const { channelId, memberIds } = route.params;
   const [chatFriendId, setChatFriendId] = useState(null);
   const [chatFriend, setChatFriend] = useState({});
@@ -23,6 +28,7 @@ const ChatRoom = ({ navigation, route }) => {
   useEffect(() => {
     const friendId = memberIds.filter((id) => id != user._id);
     setChatFriendId(friendId[0]);
+    dispatch(joinRoom({ channelId }));
   }, []);
   useEffect(() => {
     if (isSuccess) {
@@ -40,6 +46,16 @@ const ChatRoom = ({ navigation, route }) => {
         chatFriend={chatFriend}
         channelId={channelId}
       ></ListUserMessages>
+      {/* <View
+        style={{
+          backgroundColor: "red",
+          flexDirection: "row",
+          alignItems: "center",
+          paddingLeft: 20,
+        }}
+      >
+        <AnimatedEllipsis />
+      </View> */}
       <InputBar channelId={channelId}></InputBar>
     </Container>
   );
