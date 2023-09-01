@@ -23,12 +23,11 @@ export const chatApi = createApi({
           const socket = getSocket();
           socket.on("receive-message", (newMess, channelId) => {
             updateCachedData((draft) => {
-              console.log("currentdraft", current(draft));
               draft.unshift(newMess);
             });
           });
           socket.on("receive-image", (newMess) => {
-            console.log("new Message", newMess);
+            console.log("new image", newMess);
             updateCachedData((draft) => {
               draft.unshift(newMess);
             });
@@ -51,10 +50,18 @@ export const chatApi = createApi({
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
           const socket = getSocket();
-
           socket.on("new-channel", (newChannel) => {
             updateCachedData((draft) => {
               draft.unshift(newChannel);
+            });
+          });
+          socket.on("receive-message", (newMess, channelId) => {
+            updateCachedData((draft) => {
+              const c = draft.findIndex((channel) => channel._id == channelId);
+              if (c != -1) {
+                let firstElement = draft.shift();
+                draft.splice(c, 0, firstElement);
+              }
             });
           });
         } catch (err) {
@@ -78,6 +85,7 @@ export const chatApi = createApi({
           await cacheDataLoaded;
           const socket = getSocket();
           socket.on("receive-message", (newMess, channelId) => {
+            console.log("receivemessage", newMess);
             updateCachedData((draft) => {
               console.log("new Message", current(draft));
               if (draft.channelId === channelId) {

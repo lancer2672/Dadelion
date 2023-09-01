@@ -4,25 +4,30 @@ const chatMiddleware = () => (store) => {
   return (next) => (action) => {
     const socket = getSocket();
     switch (action.type) {
+      case "chat/joinChannels": {
+        const channelIds = action.payload;
+        socket.emit("join-channels", channelIds);
+        break;
+      }
       case "chat/joinRoom": {
-        const channelId = action.payload;
-        socket.emit("join-chatRoom", channelId);
+        const { channelId, unseenMessageIds } = action.payload;
+        socket.emit("join-chatRoom", { channelId, unseenMessageIds });
         break;
       }
       case "chat/sendMessage": {
-        const { channelId, userId, newMessage } = action.payload;
+        const { channelId, senderId, newMessage } = action.payload;
         socket.emit("send-message", {
           channelId,
-          userId,
+          senderId,
           newMessage,
         });
         break;
       }
       case "chat/sendImage": {
-        const { channelId, userId, imageData } = action.payload;
+        const { channelId, senderId, imageData } = action.payload;
         socket.emit("send-image", {
           channelId,
-          userId,
+          senderId,
           imageData,
         });
         break;

@@ -10,8 +10,9 @@ import { AuthNavigator } from "./auth.navigator";
 import { AppNavigator } from "./app.navigator";
 import { appSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { logoutUser, setToken, setUser } from "@src/store/slices/userSlice";
+import { setToken, setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { initSocket } from "@src/utils/socket";
 
 const Navigator = () => {
   const userState = useSelector(userSelector);
@@ -36,6 +37,8 @@ const Navigator = () => {
           refreshToken: userCredentials.refreshToken,
         })
       );
+      console.log("user", data.user);
+      initSocket(data.user._id);
     }
     dispatch(setIsLoading(isFetching));
   }, [isFetching, data]);

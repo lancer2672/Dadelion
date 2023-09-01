@@ -56,7 +56,7 @@ const InputBar = ({ channelId }) => {
       if (!result.canceled) {
         const base64String = await readBase64(result.assets[0].uri);
         dispatch(
-          sendImage({ channelId, userId: user._id, imageData: base64String })
+          sendImage({ channelId, senderId: user._id, imageData: base64String })
         );
       }
     } catch (err) {
@@ -66,7 +66,7 @@ const InputBar = ({ channelId }) => {
 
   const handleSendMessage = () => {
     setText("");
-    dispatch(sendMessage({ channelId, userId: user._id, newMessage: text }));
+    dispatch(sendMessage({ channelId, senderId: user._id, newMessage: text }));
   };
 
   const openImagePicker = async () => {

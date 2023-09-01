@@ -7,6 +7,7 @@ import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { colors } from "@src/infrastructure/theme/colors";
+import { joinChannels } from "@src/store/slices/chatSlice";
 const ListChannel = ({ navigation }) => {
   const [channels, setChannels] = useState([]);
   const { isLoading, isSuccess, data } = useGetChannelsQuery();
@@ -14,11 +15,11 @@ const ListChannel = ({ navigation }) => {
   useEffect(() => {
     dispatch(setIsLoading(isLoading));
     if (isSuccess) {
-      console.log("data channels", data);
       setChannels(data);
+      const channelIds = data.map((c) => c._id);
+      dispatch(joinChannels(channelIds));
     }
   }, [isLoading, data]);
-  console.log("channels", channels);
   return (
     <FlatList
       style={{

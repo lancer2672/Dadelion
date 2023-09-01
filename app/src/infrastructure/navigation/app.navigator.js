@@ -71,7 +71,6 @@ const Tabs = () => {
 
 export const AppNavigator = () => {
   const [saveFCMtoken, { error }] = useSaveFCMtokenMutation();
-  console.log("error", error);
   useEffect(() => {
     // Get the device token
     messaging()

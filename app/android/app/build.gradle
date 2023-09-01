@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
+apply plugin: "com.google.gms.google-services"
 
 import com.android.build.OutputFile
 
@@ -109,11 +110,12 @@ def reactNativeArchitectures() {
 }
 
 android {
+
     ndkVersion rootProject.ext.ndkVersion
-
     compileSdkVersion 33
-
+ 
     defaultConfig {
+        applicationId "com.khanha.Dandelion"   
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "true"
@@ -220,6 +222,9 @@ dependencies {
     }
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {

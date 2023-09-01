@@ -16,42 +16,6 @@ const NotificationModal = ({ visible, onClose }) => {
       setFriendRequests(data.data.requests);
     }
   }, [isLoading, data]);
-  const data1 = [
-    {
-      userId: "64b4eef936b29d10c1fc7335",
-      content: "đã thích bài viết của bạn",
-      createdAt: new Date("2023-07-17T07:34:17.229+00:00"),
-      isSeen: false,
-    },
-    {
-      userId: "64b4eef936b29d10c1fc7335",
-      content: "đã thích bài viết của bạn",
-      createdAt: new Date("2023-07-17T07:34:17.229+00:00"),
-      isSeen: false,
-    },
-    {
-      userId: "64b4eef936b29d10c1fc7335",
-      content: "đã thích bài viết của bạn đã thích bài viết của bạn",
-      createdAt: new Date("2023-07-17T07:34:17.229+00:00"),
-      isSeen: false,
-    },
-  ];
-  const fr = [
-    {
-      _id: " 123",
-      sender: "64b4eef936b29d10c1fc7335",
-      receiver: "64b4eef936b29d10c1fc7335",
-      status: "pending",
-      createdAt: new Date("2023-07-17T07:34:17.229+00:00"),
-    },
-    {
-      _id: " 123",
-      sender: "64b4eef936b29d10c1fc7335",
-      receiver: "64b4eef936b29d10c1fc7335",
-      status: "pending",
-      createdAt: new Date("2023-07-17T07:34:17.229+00:00"),
-    },
-  ];
   return (
     <Modal animationType="fade" visible={visible} onRequestClose={onClose}>
       <View style={{ flex: 1 }}>

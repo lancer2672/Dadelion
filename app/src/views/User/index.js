@@ -16,7 +16,7 @@ import { userSelector } from "@src/store/selector";
 import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
 import { updateUserState } from "@src/store/slices/userSlice";
 import { colors } from "@src/infrastructure/theme/colors";
-import FeatureTabs from "@src/features/user/FeatureTabs,component";
+import FeatureTabs from "@src/features/user/FeatureTabs.component";
 import {
   StyledButton1,
   StyledButton2,

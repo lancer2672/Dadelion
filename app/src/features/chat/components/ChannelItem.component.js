@@ -14,25 +14,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 import { userSelector } from "@src/store/selector";
 
-import { joinRoom } from "@src/store/slices/chatSlice";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
-import { useGetLastMessageQuery } from "@src/store/slices/api/chatApiSlice";
+import {
+  useGetLastMessageQuery,
+  useLoadChatRoomMessagesQuery,
+} from "@src/store/slices/api/chatApiSlice";
+import { joinRoom } from "@src/store/slices/chatSlice";
 
 const Channel = ({ navigation, channel }) => {
-  const { _id: channelId, memberIds, channelMessages } = channel;
+  const { _id: channelId, memberIds } = channel;
   console.log("channelId", channelId);
+  const dispatch = useDispatch();
   const { user } = useSelector(userSelector);
   const [chatFriend, setChatFriend] = useState(null);
   const [chatFriendId, setChatFriendId] = useState(null);
-  const [lastMessage, setLastMessage] = useState(null);
+  const [lastMessage, setLastMessage] = useState({});
+  const [unseenMessageIds, setUnseenMessageIds] = useState([]);
   const { data: lastMsgData, isLoading: isLoadLastMsg } =
     useGetLastMessageQuery(channelId, {
       cacheTime: 0,
       staleTime: 0,
     });
-  console.log("lastMsgData", lastMsgData);
-  const dispatch = useDispatch();
+  const { data: dataChannelMsg } = useLoadChatRoomMessagesQuery(channelId);
   const { isLoading, isSuccess, data, error } = useGetUserByIdQuery(
     chatFriendId,
     {
@@ -40,9 +44,26 @@ const Channel = ({ navigation, channel }) => {
     }
   );
   useEffect(() => {
+    if (dataChannelMsg && chatFriend) {
+      let countUnseenMsg = [];
+      let index = 0;
+      while (
+        index < dataChannelMsg.length &&
+        dataChannelMsg[index].userId == chatFriend._id &&
+        dataChannelMsg[index].isSeen == false
+      ) {
+        countUnseenMsg.push(dataChannelMsg[index]._id);
+        index++;
+      }
+      setUnseenMessageIds(countUnseenMsg);
+    }
+  }, [dataChannelMsg, chatFriend]);
+
+  useEffect(() => {
     const friendId = memberIds.filter((id) => id != user._id);
-    setChatFriendId(friendId[0]);
+    setChatFriendId(() => friendId[0]);
   }, []);
+
   useEffect(() => {
     if (lastMsgData) {
       setLastMessage(lastMsgData.lastMessage);
@@ -56,11 +77,15 @@ const Channel = ({ navigation, channel }) => {
   return (
     <Container
       onPress={() => {
-        dispatch(joinRoom(channelId));
         navigation.navigate("ChatRoom", {
           channelId,
           memberIds,
         });
+        if (lastMessage) {
+          setLastMessage((prev) => ({ ...prev, isSeen: true }));
+        }
+        dispatch(joinRoom({ channelId, unseenMessageIds }));
+        setUnseenMessageIds([]);
       }}
     >
       <TouchableOpacity>
@@ -79,7 +104,6 @@ const Channel = ({ navigation, channel }) => {
           <Entypo
             style={{
               position: "absolute",
-
               right: "-24%",
               bottom: "-24%",
             }}
@@ -92,7 +116,27 @@ const Channel = ({ navigation, channel }) => {
       <View style={{ flex: 1, marginVertical: 8, marginHorizontal: 8 }}>
         <Name>{chatFriend ? chatFriend.nickname : ""}</Name>
 
-        {lastMessage && <LastMessage>{lastMessage.message}</LastMessage>}
+        {lastMessage && (
+          <Text
+            style={{
+              opacity:
+                lastMessage.userId == user._id
+                  ? 0.5
+                  : lastMessage.isSeen
+                  ? 0.5
+                  : 1,
+              fontWeight:
+                lastMessage.userId == user._id
+                  ? "400"
+                  : lastMessage.isSeen
+                  ? "400"
+                  : "bold",
+              fontSize: 16,
+            }}
+          >
+            {lastMessage.message}
+          </Text>
+        )}
       </View>
       {lastMessage && (
         <View
@@ -102,7 +146,38 @@ const Channel = ({ navigation, channel }) => {
             marginBottom: 12,
           }}
         >
-          <Text style={{ opacity: 0.5 }}>
+          {unseenMessageIds.length > 0 && (
+            <Text
+              style={{
+                fontSize: 16,
+
+                paddingVertical: 4,
+                marginBottom: 12,
+                color: "tomato",
+                textAlign: "center",
+              }}
+            >
+              {unseenMessageIds.length}
+            </Text>
+          )}
+
+          <Text
+            style={{
+              opacity:
+                lastMessage.userId == user._id
+                  ? 0.5
+                  : lastMessage.isSeen
+                  ? 0.5
+                  : 1,
+              fontWeight:
+                lastMessage.userId == user._id
+                  ? "400"
+                  : lastMessage.isSeen
+                  ? "400"
+                  : "bold",
+              fontSize: 16,
+            }}
+          >
             {commentCreatedTimeFormater(lastMessage.createdAt)}
           </Text>
         </View>
@@ -126,10 +201,6 @@ const Name = styled(Text)`
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 
-const LastMessage = styled(Text)`
-  margin-bottom: 4px;
-  font-size: ${(props) => props.theme.fontSizes.body};
-`;
 export default Channel;
 
 const styles = StyleSheet.create({});

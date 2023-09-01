@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { appSelector } from "@src/store/selector";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { initSocket } from "@src/utils/socket";
 const Login = ({ navigation }) => {
   const [login, { error, isSuccess, isLoading: isFetching, ...loginResult }] =
     useLoginMutation();
@@ -33,13 +34,13 @@ const Login = ({ navigation }) => {
   const toggleSavePasswordCheck = () => {
     setSavePassword(!savePassword);
   };
+  console.log("error", error);
   const updateProgressBarEvent = (progEvent) => {
     var percentCompleted = Math.round(
       (progEvent.loaded * 100) / progEvent.total
     );
     setProgress(() => percentCompleted / 100);
   };
-  console.log("login errors", error);
   const handleLogin = () => {
     login({ username, password });
   };
@@ -55,6 +56,7 @@ const Login = ({ navigation }) => {
               "userId",
               JSON.stringify(loginResult.data.user._id)
             );
+
             await AsyncStorage.setItem(
               "token",
               JSON.stringify(loginResult.data.token)
@@ -64,6 +66,7 @@ const Login = ({ navigation }) => {
               JSON.stringify(loginResult.data.refreshToken)
             );
           }
+          initSocket(loginResult.data.user._id);
         }
       } catch (er) {
         console.log("err", er);

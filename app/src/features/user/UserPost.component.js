@@ -20,7 +20,6 @@ const UserPost = ({ userId }) => {
       setPost(data.posts);
     }
   }, [isLoading]);
-  console.log("posts", posts);
   return (
     <View style={{ flex: 1, marginHorizontal: 8 }}>
       <FlatList
@@ -29,7 +28,6 @@ const UserPost = ({ userId }) => {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => null}
         renderItem={({ item }) => {
-          console.log("item", item);
           return (
             <View
               style={{

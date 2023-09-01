@@ -10,7 +10,7 @@ export const Avatar = styled(Image).attrs((props) => {
     };
   }
 })`
-  border-radius: 25px;
+  border-radius: 1000px;
   width: ${({ width }) => width || "50px"};
   height: ${({ height }) => height || "50px"};
 `;

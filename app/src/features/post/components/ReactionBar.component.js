@@ -40,7 +40,7 @@ const ReactionBar = ({ post }) => {
         {heart == true ? (
           <Ionicons name="heart" size={24} color="red" />
         ) : (
-          <Ionicons name="heart-outline" size={24} color={colors.black} />
+          <Ionicons name="heart-outline" size={24} color={colors.white} />
         )}
       </ButtonWrapper>
       <Number>{reactionNumber}</Number>
