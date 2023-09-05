@@ -26,32 +26,32 @@ import FeatureTabs from "@src/features/user/FeatureTabs.component";
 import { useTranslation } from "react-i18next";
 import { sendFriendRequest } from "@src/store/slices/chatSlice";
 import { useCheckFriendStatusQuery } from "@src/store/slices/api/friendRequestApiSlice";
+import { useFindOrCreateChannelMutation } from "@src/store/slices/api/chatApiSlice";
 
 const Guest = ({ props, navigation, route }) => {
   const { guestId } = route.params;
   const { t } = useTranslation();
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
+  const [guest, setGuest] = useState({});
+  const [friendStatus, setFriendStatus] = useState("");
+  const [showEntireAvatar, setShowEntireAvatar] = useState(false);
   const {
     isLoading: isLoadingUser,
     isSuccess: getUserSuccess,
     data: userData,
     status,
   } = useGetUserByIdQuery(guestId);
-  console.log("friendStatus", friendStatus);
-  const {
-    data,
-    isLoading: isChecking,
-    error,
-  } = useCheckFriendStatusQuery(userData?.user?._id, {
-    skip: status !== "fulfilled" || !userData,
-  });
-  console.log("isChecking", isChecking);
-  const [guest, setGuest] = useState({});
-  const [friendStatus, setFriendStatus] = useState("");
-
-  const [showEntireAvatar, setShowEntireAvatar] = useState(false);
-
+  const { data, isLoading: isChecking } = useCheckFriendStatusQuery(
+    userData?.user?._id,
+    {
+      skip: status !== "fulfilled" || !userData,
+    }
+  );
+  const [
+    findOrCreateChannel,
+    { data: channelData, isSuccess, isLoading: isFindOrCreating },
+  ] = useFindOrCreateChannelMutation();
   useEffect(() => {
     if (data) {
       setFriendStatus(data.data.result);
@@ -59,13 +59,31 @@ const Guest = ({ props, navigation, route }) => {
   }, [isChecking, data]);
 
   useEffect(() => {
-    if (getUserSuccess && userData) {
+    if (getUserSuccess) {
       setGuest(userData.user);
     }
   }, [isLoadingUser, userData]);
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("channelData", channelData);
+      const channel = channelData.channel;
+      navigation.navigate("ChatRoom", {
+        channelId: channel._id,
+        memberIds: channel.memberIds,
+      });
+    }
+  }, [isFindOrCreating, channelData]);
 
   const handleSendAddFriendRequest = () => {
     dispatch(sendFriendRequest({ senderId: user._id, receiverId: guestId }));
+  };
+  const handleJoinChatRoom = () => {
+    if (guest) {
+      findOrCreateChannel({
+        channelName: "",
+        memberIds: [user._id, guest._id],
+      });
+    }
   };
   const showAvatar = () => {
     if (guest.avatar) {
@@ -79,9 +97,6 @@ const Guest = ({ props, navigation, route }) => {
           <HeaderContent>
             <TouchableOpacity>
               {/* <AntDesign name="arrowleft" size={32} color="black" /> */}
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <AntDesign name="setting" size={32} color="black" />
             </TouchableOpacity>
           </HeaderContent>
 
@@ -105,7 +120,7 @@ const Guest = ({ props, navigation, route }) => {
                 {t(`${friendStatus}`)}
               </Text>
             </StyledButton2>
-            <StyledButton1>
+            <StyledButton1 onPress={handleJoinChatRoom}>
               <Text
                 style={{
                   fontWeight: 500,

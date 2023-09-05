@@ -3,6 +3,7 @@ import { getSocket } from "@src/utils/socket";
 const chatMiddleware = () => (store) => {
   return (next) => (action) => {
     const socket = getSocket();
+    console.log("action/type", action.type);
     switch (action.type) {
       case "chat/joinChannels": {
         const channelIds = action.payload;
@@ -46,6 +47,10 @@ const chatMiddleware = () => (store) => {
           requestId,
           responseValue,
         });
+        break;
+      }
+      case "user/logout/fulfilled": {
+        socket.disconnect();
         break;
       }
     }

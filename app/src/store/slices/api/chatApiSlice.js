@@ -52,6 +52,7 @@ export const chatApi = createApi({
           const socket = getSocket();
           socket.on("new-channel", (newChannel) => {
             updateCachedData((draft) => {
+              console.log("Channel draft", draft);
               draft.unshift(newChannel);
             });
           });
@@ -100,6 +101,16 @@ export const chatApi = createApi({
         await cacheEntryRemoved;
       },
     }),
+    findOrCreateChannel: builder.mutation({
+      query: (data) => ({
+        url: `${chatRoute}/channel/findOrCreate`,
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response, meta, arg) => {
+        return response.data;
+      },
+    }),
   }),
 });
 
@@ -107,4 +118,5 @@ export const {
   useLoadChatRoomMessagesQuery,
   useGetChannelsQuery,
   useGetLastMessageQuery,
+  useFindOrCreateChannelMutation,
 } = chatApi;

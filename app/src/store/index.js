@@ -10,7 +10,6 @@ import { chatApi } from "./slices/api/chatApiSlice";
 import { friendRequestApi } from "./slices/api/friendRequestApiSlice";
 import { chatSlice } from "./slices/chatSlice";
 import chatMiddleware from "./middlewares/chatMiddleware";
-import { getSocket } from "@src/utils/socket";
 
 export default configureStore({
   reducer: {

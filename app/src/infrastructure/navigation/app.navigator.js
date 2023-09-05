@@ -15,6 +15,7 @@ import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
 import Guest from "@src/views/Guest";
 import { useSaveFCMtokenMutation } from "@src/store/slices/api/userApiSlice";
 import { useNavigation } from "@react-navigation/native";
+import Notification from "@src/features/notification/screens/Notification.screen";
 
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
@@ -118,6 +119,7 @@ export const AppNavigator = () => {
       <Stack.Screen name="AppTabs" component={Tabs} />
       <Stack.Screen name="DetailPost" component={DetailPost} />
       <Stack.Screen name="ChatRoom" component={ChatRoom} />
+      <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="Guest" component={Guest} />
     </Stack.Navigator>
   );

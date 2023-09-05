@@ -23,8 +23,6 @@ const Search = ({ navigation }) => {
     searchKeyword,
     {
       skip: isTyping || searchKeyword.trim() == "",
-      cacheTime: 0,
-      staleTime: 0,
     }
   );
 

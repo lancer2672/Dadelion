@@ -31,8 +31,7 @@ const Channel = ({ navigation, channel }) => {
   const [unseenMessageIds, setUnseenMessageIds] = useState([]);
   const { data: lastMsgData, isLoading: isLoadLastMsg } =
     useGetLastMessageQuery(channelId, {
-      cacheTime: 0,
-      staleTime: 0,
+      refetchOnMountOrArgChange: true,
     });
   const { data: dataChannelMsg } = useLoadChatRoomMessagesQuery(channelId);
   const { isLoading, isSuccess, data, error } = useGetUserByIdQuery(

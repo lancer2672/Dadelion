@@ -28,7 +28,7 @@ export const userApi = createApi({
             console.log("onlineUserIds", onlineUserIds);
             updateCachedData((draft) => {
               const userId = draft.user._id;
-              if (onlineUserIds[userId] == true) {
+              if (onlineUserIds[userId] != null) {
                 draft.user.isOnline = 1;
               }
             });
