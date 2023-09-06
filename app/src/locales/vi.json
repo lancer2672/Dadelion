@@ -19,5 +19,15 @@
   "notifications": "Thông báo",
   "darkmode": "Chế độ tối",
   "personalInfo": "Thông tin cá nhân",
-  "emptyMessage": "Chưa có tin nhắn nào"
+  "emptyMessage": "Chưa có tin nhắn nào",
+  "editProfile": "Chỉnh sửa thông tin",
+  "nickname": "Tên hiển thị",
+  "save": "Lưu",
+  "phoneNumber": "Số điện thoại",
+  "dateOfBirth": "Ngày sinh",
+  "gender": "Giới tính",
+  "male": "Nam",
+  "female": "Nữ",
+  "updateSucceeded": "Cập nhật thông tin thành công",
+  "updateFailed": "Cập nhật thông tin thất bại"
 }

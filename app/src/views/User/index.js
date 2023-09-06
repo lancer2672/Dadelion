@@ -16,20 +16,18 @@ import { userSelector } from "@src/store/selector";
 import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
 import { updateUserState } from "@src/store/slices/userSlice";
 import { colors } from "@src/infrastructure/theme/colors";
-import FeatureTabs from "@src/features/user/FeatureTabs.component";
+import FeatureTabs from "@src/features/user/components/FeatureTabs.component";
 import {
-  StyledButton1,
-  StyledButton2,
   UserDescription,
   Name,
   HeaderContent,
-  HeaderContainer,
   BottomHeader,
   ItemValue,
   ItemLabel,
   ItemContainer,
 } from "../sharedStyledComponents";
-import Settings from "./components/Settings.component";
+import Settings from "@src/features/user/screens/Settings.screen";
+import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);
@@ -37,6 +35,8 @@ const User = ({ props, navigation }) => {
   const { t } = useTranslation();
   const [updateUser, { isLoading, data, isSuccess, ...res }] =
     useUpdateUserMutation();
+  const { data: postData } = useGetPostByUserIdQuery();
+  console.log("postData", postData);
   const [avatarUri, setAvatarUri] = useState(null);
   const [selectedImageUri, setSelectedImageUri] = useState(null);
   const [settingVisible, setSettingVisible] = useState(false);
@@ -68,7 +68,7 @@ const User = ({ props, navigation }) => {
           type: "image/jpg",
         });
         newUserData.append("isWallpaper", isWallpaper);
-        updateUser({ newUserData, userId: user._id });
+        updateUser({ newUserData });
       }
     } catch (err) {
       console.log("Error selecting image", err);
@@ -85,7 +85,7 @@ const User = ({ props, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                setSettingVisible(true);
+                navigation.navigate("Settings");
               }}
             >
               <AntDesign name="setting" size={32} color="black" />
@@ -107,51 +107,20 @@ const User = ({ props, navigation }) => {
             <Name>{user.nickname}</Name>
             {/* <Text>User description "ICON"</Text> */}
           </UserDescription>
-          <View style={{ flexDirection: "row" }}>
-            <StyledButton1>
-              <Text
-                style={{
-                  fontWeight: 500,
-                  fontSize: 16,
-                  color: "#9971ee",
-                }}
-              >
-                {t("changePassword")}
-              </Text>
-            </StyledButton1>
-            <StyledButton2>
-              <Text
-                style={{
-                  fontWeight: 500,
-                  fontSize: 16,
-                  color: colors.white,
-                }}
-              >
-                {t("sendMessage")}
-              </Text>
-            </StyledButton2>
-          </View>
         </Header>
         <BottomHeader>
           <ItemContainer>
-            <ItemValue>85</ItemValue>
+            <ItemValue>{postData ? postData.length : 0}</ItemValue>
             <ItemLabel>Bài viết</ItemLabel>
           </ItemContainer>
           <ItemContainer>
-            <ItemValue>85</ItemValue>
+            <ItemValue>{user.friends.length}</ItemValue>
             <ItemLabel>Bạn bè</ItemLabel>
           </ItemContainer>
         </BottomHeader>
       </HeaderContainer>
 
       <FeatureTabs userId={user._id}></FeatureTabs>
-      <Settings
-        user={user}
-        visible={settingVisible}
-        onClose={() => {
-          setSettingVisible(false);
-        }}
-      ></Settings>
     </Container>
   );
 };
@@ -160,7 +129,14 @@ const Container = styled.View`
   flex: 1;
   background-color: ${(props) => props.theme.colors.bg.primary};
 `;
-
+const HeaderContainer = styled.View`
+  height: 300px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  width: 100%;
+  background-color: #9971ee;
+  elevation: 5;
+`;
 const Header = styled.View`
   width: 100%;
   height: 80%;

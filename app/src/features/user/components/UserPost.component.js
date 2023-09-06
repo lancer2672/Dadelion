@@ -7,23 +7,14 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { postSelector } from "@src/store/selector";
 import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 
 const UserPost = ({ userId }) => {
-  const postState = useSelector(postSelector);
   const { isSuccess, isLoading, data } = useGetPostByUserIdQuery(userId);
-  const [posts, setPost] = useState();
-  useEffect(() => {
-    if (isSuccess) {
-      setPost(data.posts);
-    }
-  }, [isLoading]);
   return (
-    <View style={{ flex: 1, marginHorizontal: 8 }}>
+    <View style={{ flex: 1, marginHorizontal: 8, backgroundColor: "red" }}>
       <FlatList
-        data={posts}
+        data={data}
         numColumns={2}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => null}

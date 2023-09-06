@@ -26,7 +26,7 @@ export const postApi = createApi({
       providesTags: ["Post"],
     }),
     getPostByUserId: builder.query({
-      query: (userId) => `${postRoute}/`,
+      query: () => `${postRoute}/`,
       transformResponse: (response, meta, arg) => {
         if (response.data) {
         }
@@ -37,7 +37,7 @@ export const postApi = createApi({
           return post;
         });
         response.data.tranformedPosts = tranformedPosts;
-        return response.data;
+        return response.data.posts;
       },
       providesTags: ["Post"],
     }),

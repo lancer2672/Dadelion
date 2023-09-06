@@ -10,13 +10,10 @@ import React, { useEffect, useState, useContext } from "react";
 import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
 
 import CreatePost from "@src/features/post/screens/CreatePost.screen";
-import SearchComponent from "./components/Search.component";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import { Spacer } from "@src/components/spacer/spacer.component";
-import theme from "@src/infrastructure/theme";
-import { fontSizes } from "@src/infrastructure/theme/fonts";
 
 const HomeHeader = ({ navigation, showNotificationModal }) => {
   const userState = useSelector(userSelector);
@@ -31,9 +28,6 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
 
   return (
     <View>
-      <View style={{ zIndex: 1 }}>
-        <SearchComponent navigation={navigation}></SearchComponent>
-      </View>
       <View
         style={{
           flexDirection: "row",

@@ -3,17 +3,18 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import styled from "styled-components/native";
-import SettingItem from "./SettingItem.component";
+import SettingItem from "../components/SettingItem.component";
 import { Avatar } from "@src/components/Avatar";
 import { logoutUser } from "@src/store/slices/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 
-const Settings = ({ visible, onClose, user }) => {
+const Settings = ({ navigation }) => {
+  const { user } = useSelector(userSelector);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleLogout = () => {
     console.log("click");
-
     dispatch(logoutUser());
   };
   const onClick = ({ selection }) => {
@@ -46,46 +47,51 @@ const Settings = ({ visible, onClose, user }) => {
     },
   ];
   return (
-    <Modal animationType="slide" visible={visible} onRequestClose={onClose}>
-      <Container>
-        <Header>
-          <BackButton onPress={onClose}>
-            <AntDesign name="arrowleft" size={24} color="black" />
-          </BackButton>
-          <Heading>{t("settings")}</Heading>
-        </Header>
+    <Container>
+      <Header>
+        <BackButton
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <AntDesign name="arrowleft" size={24} color="black" />
+        </BackButton>
+        <Heading>{t("settings")}</Heading>
+      </Header>
 
-        <Body>
-          <SettingCategory>{t("account")}</SettingCategory>
-          <TouchableOpacity
-            style={{
-              marginTop: 12,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Avatar uri={user.avatar} width={50} height={50}></Avatar>
-            <View style={{ marginLeft: 12, flex: 1 }}>
-              <Text>{user.nickname}</Text>
-              <Text>{t("personalInfo")}</Text>
-            </View>
-            <IconContainer>
-              <Entypo name="chevron-right" size={24} color="white" />
-            </IconContainer>
-          </TouchableOpacity>
+      <Body>
+        <SettingCategory>{t("account")}</SettingCategory>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("EditProfile");
+          }}
+          style={{
+            marginTop: 12,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Avatar uri={user.avatar} width={50} height={50}></Avatar>
+          <View style={{ marginLeft: 12, flex: 1 }}>
+            <Text>{user.nickname}</Text>
+            <Text>{t("personalInfo")}</Text>
+          </View>
+          <IconContainer>
+            <Entypo name="chevron-right" size={24} color="white" />
+          </IconContainer>
+        </TouchableOpacity>
 
-          <SettingCategory>{t("settings")}</SettingCategory>
-          <FlatList
-            data={data}
-            renderItem={({ item }) => <SettingItem {...item} />}
-            keyExtractor={(item) => item.name}
-          />
-        </Body>
-        <LogoutButton onPress={handleLogout}>
-          <LogoutText>{t("logout")}</LogoutText>
-        </LogoutButton>
-      </Container>
-    </Modal>
+        <SettingCategory>{t("settings")}</SettingCategory>
+        <FlatList
+          data={data}
+          renderItem={({ item }) => <SettingItem {...item} />}
+          keyExtractor={(item) => item.name}
+        />
+      </Body>
+      <LogoutButton onPress={handleLogout}>
+        <LogoutText>{t("logout")}</LogoutText>
+      </LogoutButton>
+    </Container>
   );
 };
 

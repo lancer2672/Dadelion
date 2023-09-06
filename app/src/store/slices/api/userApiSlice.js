@@ -7,7 +7,7 @@ const userRoute = "/user";
 
 export const userApi = createApi({
   reducerPath: "userApi",
-  tagTypes: "User",
+  tagTypes: ["User"],
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getUserById: builder.query({
@@ -16,6 +16,7 @@ export const userApi = createApi({
         const transformedUser = transformUserData(response.data.user);
         return { ...response.data, user: transformedUser };
       },
+      providesTags: ["User"],
       async onCacheEntryAdded(
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
@@ -77,18 +78,19 @@ export const userApi = createApi({
       },
     }),
     updateUser: builder.mutation({
-      query: ({ newUserData, userId }) => ({
-        url: `${userRoute}/update/${userId}`,
+      query: ({ newUserData }) => ({
+        url: `${userRoute}/update`,
         method: "PUT",
         body: newUserData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        // headers: {
+        //   "Content-Type": "multipart/form-data",
+        // },
       }),
       transformResponse: (response, meta, arg) => {
         const transformedUser = transformUserData(response.data.user);
         return { ...response.data, user: transformedUser };
       },
+      invalidatesTags: ["User"],
     }),
     createUser: builder.mutation({
       query: (userData) => ({

@@ -6,6 +6,7 @@ import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18next from "i18next";
 import { PermissionsAndroid } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import FlashMessage from "react-native-flash-message";
 
 import en from "@src/locales/en.json";
 import vi from "@src/locales/vi.json";
@@ -35,6 +36,7 @@ export default function App() {
             <ThemeProvider theme={theme}>
               <Provider store={store}>
                 <Navigator />
+                <FlashMessage position="top" />
               </Provider>
             </ThemeProvider>
           </MenuProvider>

@@ -21,8 +21,8 @@ import {
 import styled from "styled-components/native";
 import { updateUserState } from "@src/store/slices/userSlice";
 import { colors } from "@src/infrastructure/theme/colors";
-import UserPost from "@src/features/user/UserPost.component";
-import FeatureTabs from "@src/features/user/FeatureTabs.component";
+import UserPost from "@src/features/user/components/UserPost.component";
+import FeatureTabs from "@src/features/user/components/FeatureTabs.component";
 import { useTranslation } from "react-i18next";
 import { joinChannel, sendFriendRequest } from "@src/store/slices/chatSlice";
 import { useCheckFriendStatusQuery } from "@src/store/slices/api/friendRequestApiSlice";
