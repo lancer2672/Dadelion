@@ -6,21 +6,25 @@ import { TouchableOpacity, View } from "react-native";
 import { colors } from "@src/infrastructure/theme/colors";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 
-const ChatRoomHeader = ({ navigation, chatFriend = {} }) => {
-  console.log("chatFriend chatRoom", chatFriend);
+const ChatRoomHeader = ({ navigation, chatFriend }) => {
+  const handleNavigateToGuest = () => {
+    if (chatFriend) {
+      navigation.navigate("Guest", { guestId: chatFriend._id });
+    }
+  };
   return (
     <Container>
       <BackIcon onPress={() => navigation.goBack()}>
         <Ionicons name="chevron-back" size={32} color="black" />
       </BackIcon>
 
-      <TouchableOpacity>
-        <Avatar width={40} height={40} uri={chatFriend.avatar} />
+      <TouchableOpacity onPress={handleNavigateToGuest}>
+        <Avatar width={40} height={40} uri={chatFriend?.avatar} />
       </TouchableOpacity>
 
       <HeaderInfo>
-        <HeaderText>{chatFriend.nickname}</HeaderText>
-        {chatFriend.isOnline == 1 ? (
+        <HeaderText>{chatFriend?.nickname}</HeaderText>
+        {chatFriend?.isOnline == 1 ? (
           <View style={{ flexDirection: "row" }}>
             <Entypo
               style={{ position: "absolute", left: "-12%", top: "-30%" }}
@@ -32,7 +36,7 @@ const ChatRoomHeader = ({ navigation, chatFriend = {} }) => {
           </View>
         ) : (
           <StatusText>{`${commentCreatedTimeFormater(
-            chatFriend.lastOnline
+            chatFriend?.lastOnline
           )} ago`}</StatusText>
         )}
       </HeaderInfo>

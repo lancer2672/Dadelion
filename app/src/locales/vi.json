@@ -18,5 +18,6 @@
   "language": "Ngôn ngữ",
   "notifications": "Thông báo",
   "darkmode": "Chế độ tối",
-  "personalInfo": "Thông tin cá nhân"
+  "personalInfo": "Thông tin cá nhân",
+  "emptyMessage": "Chưa có tin nhắn nào"
 }

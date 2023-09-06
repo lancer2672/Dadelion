@@ -1,25 +1,9 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 
 import Channel from "./ChannelItem.component";
-import { Spacer } from "@src/components/spacer/spacer.component";
-import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
-import { useDispatch } from "react-redux";
-import { setIsLoading } from "@src/store/slices/appSlice";
 import { colors } from "@src/infrastructure/theme/colors";
-import { joinChannels } from "@src/store/slices/chatSlice";
-const ListChannel = ({ navigation }) => {
-  const [channels, setChannels] = useState([]);
-  const { isLoading, isSuccess, data } = useGetChannelsQuery();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setIsLoading(isLoading));
-    if (isSuccess) {
-      setChannels(data);
-      const channelIds = data.map((c) => c._id);
-      dispatch(joinChannels(channelIds));
-    }
-  }, [isLoading, data]);
+const ListChannel = ({ navigation, route, channels }) => {
   return (
     <FlatList
       style={{

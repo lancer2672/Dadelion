@@ -29,7 +29,6 @@ const ChatScreen = ({ navigation }) => {
           marginTop: 16,
         }}
       >
-        <Heading>Đoạn Chat</Heading>
         {/* <TouchableOpacity
           style={{ position: "absolute", right: 12, top: 0, bottom: 0 }}
         >

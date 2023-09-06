@@ -25,7 +25,6 @@ export const userApi = createApi({
           await cacheDataLoaded;
           const socket = getSocket();
           socket.on("online-users", (onlineUserIds) => {
-            console.log("onlineUserIds", onlineUserIds);
             updateCachedData((draft) => {
               const userId = draft.user._id;
               if (onlineUserIds[userId] != null) {
@@ -61,6 +60,20 @@ export const userApi = createApi({
       },
       transformErrorResponse: (response, meta, arg) => {
         response.data.message;
+      },
+    }),
+    getListUser: builder.mutation({
+      query: (listIds) => ({
+        url: `${userRoute}/list`,
+        method: "POST",
+        body: { listIds },
+      }),
+      transformResponse: (response, meta, arg) => {
+        console.log("response.data.user", response.data);
+        response.data.users = response.data.users.map((user) => {
+          return transformUserData(user);
+        });
+        return response.data.users;
       },
     }),
     updateUser: builder.mutation({
@@ -119,6 +132,7 @@ export const userApi = createApi({
 
 export const {
   useGetUserByIdQuery,
+  useGetListUserMutation,
   useLoginMutation,
   useUpdateUserMutation,
   useCreateUserMutation,

@@ -3,11 +3,15 @@ import { getSocket } from "@src/utils/socket";
 const chatMiddleware = () => (store) => {
   return (next) => (action) => {
     const socket = getSocket();
-    console.log("action/type", action.type);
     switch (action.type) {
       case "chat/joinChannels": {
         const channelIds = action.payload;
         socket.emit("join-channels", channelIds);
+        break;
+      }
+      case "chat/joinChannel": {
+        const { userBId, channelId } = action.payload;
+        socket.emit("join-channel", { userBId, channelId });
         break;
       }
       case "chat/joinRoom": {

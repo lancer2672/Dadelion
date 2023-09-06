@@ -27,7 +27,6 @@ export const chatApi = createApi({
             });
           });
           socket.on("receive-image", (newMess) => {
-            console.log("new image", newMess);
             updateCachedData((draft) => {
               draft.unshift(newMess);
             });
@@ -52,7 +51,6 @@ export const chatApi = createApi({
           const socket = getSocket();
           socket.on("new-channel", (newChannel) => {
             updateCachedData((draft) => {
-              console.log("Channel draft", draft);
               draft.unshift(newChannel);
             });
           });
@@ -61,8 +59,20 @@ export const chatApi = createApi({
               const c = draft.findIndex((channel) => channel._id == channelId);
               if (c != -1) {
                 let firstElement = draft.shift();
+                firstElement.channelMessages.unshift(newMess);
                 draft.splice(c, 0, firstElement);
               }
+            });
+          });
+          socket.on("join-chatRoom", (channelId) => {
+            updateCachedData((draft) => {
+              draft.forEach((channel) => {
+                if (channel._id == channelId) {
+                  channel.channelMessages = channel.channelMessages.map(
+                    (message) => ({ ...message, isSeen: true })
+                  );
+                }
+              });
             });
           });
         } catch (err) {
@@ -86,9 +96,7 @@ export const chatApi = createApi({
           await cacheDataLoaded;
           const socket = getSocket();
           socket.on("receive-message", (newMess, channelId) => {
-            console.log("receivemessage", newMess);
             updateCachedData((draft) => {
-              console.log("new Message", current(draft));
               if (draft.channelId === channelId) {
                 draft.lastMessage = newMess;
               }

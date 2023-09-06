@@ -30,7 +30,7 @@ const PostItem = ({ navigation, post }) => {
   const { user } = userState;
   //post.user is id of owner
   const { isSuccess, data } = useGetUserByIdQuery(post.user);
-  const [postCreator, setPostCreator] = useState({});
+  const [postCreator, setPostCreator] = useState(null);
   useEffect(() => {
     if (isSuccess) {
       if (post.user == user._id) {
@@ -52,6 +52,11 @@ const PostItem = ({ navigation, post }) => {
   //     dispatch(setSelectedPost(post));
   //   }
   // }, [post]);
+  const handleNavigateToGuest = () => {
+    if (postCreator) {
+      navigation.navigate("Guest", { guestId: postCreator._id });
+    }
+  };
   return (
     <Pressable onPress={navigatePostDetail}>
       <Container postImage={postImage}>
@@ -63,15 +68,15 @@ const PostItem = ({ navigation, post }) => {
           }}
         >
           <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity>
-              {postCreator.avatar ? (
-                <Avatar source={{ uri: postCreator.avatar }} />
+            <TouchableOpacity onPress={handleNavigateToGuest}>
+              {postCreator?.avatar ? (
+                <Avatar source={{ uri: postCreator?.avatar }} />
               ) : (
                 <Avatar source={undefined} />
               )}
             </TouchableOpacity>
             <PostInfoContainer>
-              <CreatorName>{postCreator.nickname}</CreatorName>
+              <CreatorName>{postCreator?.nickname}</CreatorName>
               <Text style={{ color: colors.white }}>
                 {postCreatedTimeFormatter(createdAt)}
               </Text>

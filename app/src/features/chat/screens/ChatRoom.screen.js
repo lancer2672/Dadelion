@@ -11,6 +11,7 @@ import { userSelector } from "@src/store/selector";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { useTranslation } from "react-i18next";
 import { joinRoom } from "@src/store/slices/chatSlice";
+import { chatApi } from "@src/store/slices/api/chatApiSlice";
 
 const ChatRoom = ({ navigation, route }) => {
   const { user } = useSelector(userSelector);

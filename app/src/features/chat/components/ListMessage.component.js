@@ -26,7 +26,6 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
 
   const [visibleMessages, setVisibleMessages] = useState(20);
   const [listMessage, setListMessage] = useState([]);
-  console.log("listMessage", listMessage);
 
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ["25%", "40%"], []);
@@ -42,10 +41,8 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
   }, []);
   const { isLoading, error, isSuccess, data } =
     useLoadChatRoomMessagesQuery(channelId);
-
   useEffect(() => {
     if (isSuccess) {
-      console.log("data", data);
       const groupedByUserId = [];
       let obj = { userId: null, messages: [] };
 
@@ -72,8 +69,6 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
       if (obj.user != null) {
         groupedByUserId.push(obj);
       }
-
-      console.log("groupedByUserId", groupedByUserId);
       setListMessage(groupedByUserId);
     }
 

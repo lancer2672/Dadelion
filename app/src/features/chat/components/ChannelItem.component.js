@@ -8,12 +8,12 @@ import {
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components/native";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { Entypo } from "@expo/vector-icons";
 
 import { Avatar } from "@src/components/Avatar";
-import { useDispatch, useSelector } from "react-redux";
-import { Entypo } from "@expo/vector-icons";
 import { userSelector } from "@src/store/selector";
-
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 import {
@@ -23,7 +23,7 @@ import {
 
 const Channel = ({ navigation, channel }) => {
   const { _id: channelId, memberIds } = channel;
-  console.log("channelId", channelId);
+  const { t } = useTranslation();
   const { user } = useSelector(userSelector);
   const [chatFriend, setChatFriend] = useState(null);
   const [chatFriendId, setChatFriendId] = useState(null);
@@ -40,6 +40,11 @@ const Channel = ({ navigation, channel }) => {
       skip: !chatFriendId,
     }
   );
+  const handleNavigateToGuest = () => {
+    if (chatFriendId) {
+      navigation.navigate("Guest", { guestId: chatFriendId });
+    }
+  };
   useEffect(() => {
     if (dataChannelMsg && chatFriend) {
       let countUnseenMsg = [];
@@ -55,7 +60,6 @@ const Channel = ({ navigation, channel }) => {
       setUnseenMessageIds(countUnseenMsg);
     }
   }, [dataChannelMsg, chatFriend]);
-
   useEffect(() => {
     const friendId = memberIds.filter((id) => id != user._id);
     setChatFriendId(() => friendId[0]);
@@ -85,7 +89,7 @@ const Channel = ({ navigation, channel }) => {
         setUnseenMessageIds([]);
       }}
     >
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleNavigateToGuest}>
         <Avatar
           width={60}
           height={60}
@@ -113,7 +117,7 @@ const Channel = ({ navigation, channel }) => {
       <View style={{ flex: 1, marginVertical: 8, marginHorizontal: 8 }}>
         <Name>{chatFriend ? chatFriend.nickname : ""}</Name>
 
-        {lastMessage && (
+        {lastMessage ? (
           <Text
             style={{
               opacity:
@@ -132,6 +136,17 @@ const Channel = ({ navigation, channel }) => {
             }}
           >
             {lastMessage.message}
+          </Text>
+        ) : (
+          <Text
+            style={{
+              opacity: 0.5,
+              fontWeight: "400",
+              fontStyle: "italic",
+              fontSize: 16,
+            }}
+          >
+            {t("emptyMessage")}
           </Text>
         )}
       </View>

@@ -6,39 +6,163 @@ import {
   Animated,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import ListChannel from "./ListChannel.component";
 import { colors } from "@src/infrastructure/theme/colors";
+import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLoading } from "@src/store/slices/appSlice";
+import { joinChannels } from "@src/store/slices/chatSlice";
+import { userSelector } from "@src/store/selector";
+import SearchChannel from "./SearchChannel.component";
+import { useGetListUserMutation } from "@src/store/slices/api/userApiSlice";
 
 const TAB_ITEM_WIDTH = Dimensions.get("window").width / 2 - 16;
 const Tab = createMaterialTopTabNavigator();
 //Chat tab "friend messages/ stranger messages"
 const ChatTabs = ({ navigation }) => {
+  const { user } = useSelector(userSelector);
+  const dispatch = useDispatch();
+  const [friendChannels, setFriendChannels] = useState([]);
+  const [pendingChannels, setPendingChannels] = useState([]);
+  const [channels, setChannels] = useState([]);
+  const [channelIdsResult, setChannelIdsResult] = useState([]);
+  const [listUser, setListUser] = useState([]);
+
+  const [hasUnreadMsgFriendChannel, setHasUnreadMsgFriendChannel] =
+    useState(false);
+  const [hasUnreadMsgPendingChannel, setHasUnreadMsgPendingChannel] =
+    useState(false);
+
+  const { isLoading, isSuccess, data } = useGetChannelsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const [
+    getListUser,
+    {
+      data: listUserData,
+      isLoading: getListUserLoading,
+      isSuccess: getListUserSuccess,
+    },
+  ] = useGetListUserMutation();
+  console.log("channel", channels);
+  useLayoutEffect(() => {
+    dispatch(setIsLoading(isLoading));
+    if (isSuccess) {
+      //socket join channels
+      const channelIds = data.map((c) => c._id);
+      dispatch(joinChannels(channelIds));
+
+      // get all members from all channels for searching
+      const chatMemberIds = data.map((c) => {
+        return c.memberIds.filter((id) => id != user._id);
+      });
+      getListUser(chatMemberIds);
+
+      // get channels of users exclude those with empty messages
+      // and its member is not in user's friend list
+      setChannels(() =>
+        data.filter((channel) => {
+          if (channel.isInWaitingList == true) {
+            return channel.channelMessages.length > 0;
+          }
+          return true;
+        })
+      );
+      setFriendChannels(() => data.filter((c) => c.isInWaitingList == false));
+      setPendingChannels(() =>
+        data.filter((c) => {
+          if (c.channelMessages.length > 0) {
+            return c.isInWaitingList == true;
+          }
+        })
+      );
+      const check1 = data.some(
+        (channel) =>
+          channel.isInWaitingList == false &&
+          channel.channelMessages.some(
+            (message) => !message.isSeen && message.userId != user._id
+          )
+      );
+      setHasUnreadMsgFriendChannel(check1);
+      const check2 = data.some(
+        (channel) =>
+          channel.isInWaitingList == true &&
+          channel.channelMessages.some(
+            (message) => !message.isSeen && message.userId != user._id
+          )
+      );
+      setHasUnreadMsgPendingChannel(check2);
+    }
+  }, [isLoading, data]);
+
+  useEffect(() => {
+    if (getListUserSuccess) {
+      setListUser(listUserData);
+    }
+  }, [getListUserLoading, listUserData]);
+
+  //for searching
+  const resetSearchData = () => {
+    setFriendChannels(channels.filter((c) => c.isInWaitingList == false));
+    setPendingChannels(channels.filter((c) => c.isInWaitingList == true));
+  };
+  useEffect(() => {
+    setFriendChannels(
+      channels.filter(
+        (c) => c.isInWaitingList == false && channelIdsResult.includes(c._id)
+      )
+    );
+    setPendingChannels(
+      channels.filter(
+        (c) => c.isInWaitingList == true && channelIdsResult.includes(c._id)
+      )
+    );
+  }, [channelIdsResult]);
+
   return (
-    <Tab.Navigator
-      tabBar={(props) => <CustomTabBar {...props}></CustomTabBar>}
-      screenOptions={{
-        tabBarActiveTintColor: "#fff",
-      }}
-      initialLayout={{
-        width: Dimensions.get("window").width,
-      }}
-    >
-      <Tab.Screen
-        initialParams={{ navigation }}
-        name="Bạn bè"
-        component={ListChannel}
-      />
-      <Tab.Screen
-        initialParams={{ navigation }}
-        name="Tin nhắn chờ"
-        component={ListChannel}
-      />
-    </Tab.Navigator>
+    <>
+      <SearchChannel
+        listUser={listUser}
+        channels={channels}
+        setChannelIdsResult={setChannelIdsResult}
+        resetSearchData={resetSearchData}
+      ></SearchChannel>
+      <Tab.Navigator
+        tabBar={(props) => (
+          <CustomTabBar
+            {...props}
+            hasUnreadMsgLeft={hasUnreadMsgFriendChannel}
+            hasUnreadMsgRight={hasUnreadMsgPendingChannel}
+          ></CustomTabBar>
+        )}
+        screenOptions={{
+          tabBarActiveTintColor: "#fff",
+        }}
+        initialLayout={{
+          width: Dimensions.get("window").width,
+        }}
+      >
+        <Tab.Screen name="Bạn bè">
+          {(props) => <ListChannel {...props} channels={friendChannels} />}
+        </Tab.Screen>
+        <Tab.Screen name="Tin nhắn chờ">
+          {(props) => <ListChannel {...props} channels={pendingChannels} />}
+        </Tab.Screen>
+      </Tab.Navigator>
+    </>
   );
 };
-const CustomTabBar = ({ state, descriptors, navigation, position }) => {
+const CustomTabBar = ({
+  state,
+  descriptors,
+  navigation,
+  position,
+  hasUnreadMsgLeft,
+  hasUnreadMsgRight,
+}) => {
   const inputRange = state.routes.map((_, i) => i);
   return (
     <View
@@ -74,7 +198,6 @@ const CustomTabBar = ({ state, descriptors, navigation, position }) => {
                   target: route.key,
                   canPreventDefault: true,
                 });
-
                 if (!event.defaultPrevented) {
                   navigation.navigate(route.name);
                 }
@@ -83,6 +206,32 @@ const CustomTabBar = ({ state, descriptors, navigation, position }) => {
               <Animated.Text style={[styles.tabButtonText, { opacity }]}>
                 {options.title || route.name}
               </Animated.Text>
+              {route.name == "Bạn bè" && hasUnreadMsgLeft && (
+                <View
+                  style={{
+                    position: "absolute",
+                    backgroundColor: "red",
+                    width: 12,
+                    height: 12,
+                    borderRadius: 25,
+                    top: 0,
+                    right: 0,
+                  }}
+                ></View>
+              )}
+              {route.name == "Tin nhắn chờ" && hasUnreadMsgRight && (
+                <View
+                  style={{
+                    position: "absolute",
+                    backgroundColor: "red",
+                    width: 12,
+                    height: 12,
+                    borderRadius: 25,
+                    top: 0,
+                    right: 0,
+                  }}
+                ></View>
+              )}
             </TouchableOpacity>
           );
         })}

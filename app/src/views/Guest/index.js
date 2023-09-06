@@ -24,7 +24,7 @@ import { colors } from "@src/infrastructure/theme/colors";
 import UserPost from "@src/features/user/UserPost.component";
 import FeatureTabs from "@src/features/user/FeatureTabs.component";
 import { useTranslation } from "react-i18next";
-import { sendFriendRequest } from "@src/store/slices/chatSlice";
+import { joinChannel, sendFriendRequest } from "@src/store/slices/chatSlice";
 import { useCheckFriendStatusQuery } from "@src/store/slices/api/friendRequestApiSlice";
 import { useFindOrCreateChannelMutation } from "@src/store/slices/api/chatApiSlice";
 
@@ -65,8 +65,10 @@ const Guest = ({ props, navigation, route }) => {
   }, [isLoadingUser, userData]);
   useEffect(() => {
     if (isSuccess) {
-      console.log("channelData", channelData);
       const channel = channelData.channel;
+
+      dispatch(joinChannel({ userBId: guest._id, channelId: channel._id }));
+
       navigation.navigate("ChatRoom", {
         channelId: channel._id,
         memberIds: channel.memberIds,
