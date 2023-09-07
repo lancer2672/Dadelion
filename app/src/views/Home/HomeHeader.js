@@ -27,7 +27,9 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
   const openCreatePostScreen = () => {
     setModalVisible(true);
   };
-
+  const navigateToSearchScreen = () => {
+    navigation.navigate("Search");
+  };
   return (
     <View>
       <View
@@ -48,6 +50,21 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
         >
           Dandelions
         </Text>
+
+        <TouchableOpacity
+          onPress={navigateToSearchScreen}
+          style={{
+            backgroundColor: colors.white,
+            padding: 8,
+            borderRadius: 25,
+            elevation: 2,
+          }}
+        >
+          <Feather name="search" size={20} color={colors.black} />
+        </TouchableOpacity>
+
+        <Spacer position={"left"} size={"large"}></Spacer>
+
         <TouchableOpacity
           onPress={showNotificationModal}
           style={{
@@ -67,17 +84,6 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
             size={40}
             color="red"
           />
-        </TouchableOpacity>
-        <Spacer position={"left"} size={"medium"}></Spacer>
-        <TouchableOpacity
-          style={{
-            backgroundColor: colors.white,
-            padding: 8,
-            borderRadius: 25,
-            elevation: 2,
-          }}
-        >
-          <Feather name="mail" size={24} color={colors.black} />
         </TouchableOpacity>
       </View>
       <View style={styles.container}>

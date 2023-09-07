@@ -19,6 +19,7 @@ import Notification from "@src/features/notification/screens/Notification.screen
 import Settings from "@src/features/user/screens/Settings.screen";
 import EditProfile from "@src/features/user/screens/EditProfile.screens";
 import { useTheme } from "styled-components";
+import Search from "@src/features/search/screens";
 
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
@@ -136,6 +137,7 @@ export const AppNavigator = () => {
       <Stack.Screen name="Guest" component={Guest} />
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );
 };

@@ -101,24 +101,6 @@ export const userApi = createApi({
       transformResponse: (response, meta, arg) => response.data,
       transformErrorResponse: (response, meta, arg) => response.data.message,
     }),
-    sendFriendRequest: builder.mutation({
-      query: (userData) => ({
-        url: `friend/register`,
-        method: "POST",
-        body: userData,
-      }),
-      transformResponse: (response, meta, arg) => response.data,
-      transformErrorResponse: (response, meta, arg) => response.data.message,
-    }),
-    acceptFriendRequest: builder.mutation({
-      query: (userData) => ({
-        url: `friend/register`,
-        method: "POST",
-        body: userData,
-      }),
-      transformResponse: (response, meta, arg) => response.data,
-      transformErrorResponse: (response, meta, arg) => response.data.message,
-    }),
     saveFCMtoken: builder.mutation({
       query: (token) => ({
         url: `${userRoute}/save-token`,
@@ -128,6 +110,9 @@ export const userApi = createApi({
     }),
     searchUser: builder.query({
       query: (keyword) => `${userRoute}/search/?q=${keyword}`,
+      transformResponse: (response, meta, arg) => {
+        return response.data.map((user) => transformUserData(user));
+      },
     }),
   }),
 });

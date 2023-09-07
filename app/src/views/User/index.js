@@ -117,11 +117,11 @@ const User = ({ props, navigation }) => {
         <BottomHeader>
           <ItemContainer>
             <ItemValue>{postData ? postData.length : 0}</ItemValue>
-            <ItemLabel>Bài viết</ItemLabel>
+            <ItemLabel>{t("post")}</ItemLabel>
           </ItemContainer>
           <ItemContainer>
             <ItemValue>{user.friends.length}</ItemValue>
-            <ItemLabel>Bạn bè</ItemLabel>
+            <ItemLabel>{t("friend")}</ItemLabel>
           </ItemContainer>
         </BottomHeader>
       </HeaderContainer>
