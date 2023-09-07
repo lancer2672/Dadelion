@@ -13,8 +13,9 @@ const SettingItem = ({
   onClick,
   selectionName = "",
   isToggleMode = false,
+  defaultSwitchValue = false,
 }) => {
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(defaultSwitchValue);
   const theme = useTheme();
 
   return (

@@ -19,8 +19,10 @@ import InputBar from "../components/inputbar.component";
 
 import Comment from "../components/comment.component";
 import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
+import { useTheme } from "styled-components";
 
 const DetailPost = ({ route }) => {
+  const theme = useTheme();
   const userState = useSelector(userSelector);
   const postState = useSelector(postSelector);
   const { selectedPost } = postState;
@@ -61,7 +63,11 @@ const DetailPost = ({ route }) => {
           {heart == true ? (
             <HeartIcon name="heart" size={24} color="red" />
           ) : (
-            <HeartIcon name="heart-outline" size={24} color={colors.black} />
+            <HeartIcon
+              name="heart-outline"
+              size={24}
+              color={theme.colors.chat.text}
+            />
           )}
         </TouchableOpacity>
       </UserInfoContainer>
@@ -97,13 +103,13 @@ const DetailPost = ({ route }) => {
 const Container = styled(View)`
   flex: 1;
   padding-bottom: 12px;
-  background-color: ${(props) => props.theme.colors.bg.primary};
+  background-color: ${(props) => props.theme.colors.chat.bg.primary};
 `;
 
 const CreatorName = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.large};
   font-weight: ${(props) => props.theme.fontWeights.medium};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 
 const PostDescriptionContainer = styled(ReadMore)`
@@ -112,7 +118,7 @@ const PostDescriptionContainer = styled(ReadMore)`
   margin-bottom: 20px;
   line-height: 22px;
   font-size: ${(props) => props.theme.fontSizes.body};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 
 const PostDescription = styled(Text)`

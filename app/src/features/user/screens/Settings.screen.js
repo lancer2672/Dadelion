@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { ThemeContext } from "../../../../App";
 import LanguageSelection from "../components/LanguageSelection.component";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Settings = ({ navigation }) => {
   const { user } = useSelector(userSelector);
   const theme = useTheme();
@@ -21,12 +22,9 @@ const Settings = ({ navigation }) => {
   const [showLanguageSelection, setShowLanguageSelection] = useState(false);
   const dispatch = useDispatch();
   const handleLogout = () => {
-    console.log("click");
     dispatch(logoutUser());
   };
-  const onClick = ({ selection }) => {
-    console.log("click");
-  };
+  console.log(isDarkTheme);
   const data = [
     {
       name: t("language"),
@@ -43,7 +41,6 @@ const Settings = ({ navigation }) => {
       icon: "bell",
       iconColor: "#3da9fc",
       backgroundIconColor: "#a3d3f7",
-      onClick,
     },
     {
       name: t("darkmode"),
@@ -51,7 +48,9 @@ const Settings = ({ navigation }) => {
       iconColor: "#8024c7",
       backgroundIconColor: "#ae9bbd",
       isToggleMode: true,
-      onClick: () => {
+      defaultSwitchValue: isDarkTheme,
+      onClick: async () => {
+        await AsyncStorage.setItem("AppTheme", !isDarkTheme ? "dark" : "light");
         setIsDarkTheme((prev) => !prev);
       },
     },
@@ -111,8 +110,9 @@ const Settings = ({ navigation }) => {
       </LogoutButton>
 
       <LanguageSelection
-        setAppLanguage={(value) => {
+        setAppLanguage={async (value) => {
           i18next.changeLanguage(value);
+          await AsyncStorage.setItem("Language", value);
         }}
         currentLanguage={i18next.language}
         visible={showLanguageSelection}

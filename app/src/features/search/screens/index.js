@@ -84,7 +84,9 @@ const Search = ({ navigation }) => {
           color={theme.colors.chat.text}
         />
       )}
+
       <FlatList
+        style
         data={searchResult}
         renderItem={({ item }) => {
           const isFriend = user.friends.some(
@@ -107,5 +109,7 @@ const Search = ({ navigation }) => {
 
 const SearchContainer = styled(View)`
   padding: ${(props) => props.theme.space[2]};
+  flex: 1;
+  background-color: ${(props) => props.theme.colors.chat.bg.primary};
 `;
 export default Search;

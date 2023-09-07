@@ -32,13 +32,18 @@ PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 export const ThemeContext = createContext();
 export default function App() {
-  const [isDarktheme, setIsDarkTheme] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
   useEffect(() => {
     (async () => {
-      const isUseDarkTheme = await AsyncStorage.getItem("darkTheme");
+      const isUseDarkTheme = await AsyncStorage.getItem("AppTheme");
       console.log("darkTheme", isUseDarkTheme);
-      if (isUseDarkTheme) {
+      if (isUseDarkTheme == "dark") {
         setIsDarkTheme(true);
+      }
+      const language = await AsyncStorage.getItem("Language");
+      console.log("language", language);
+      if (language) {
+        i18next.changeLanguage(language);
       }
     })();
   }, []);
@@ -47,9 +52,9 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
           <MenuProvider>
-            <ThemeProvider theme={isDarktheme ? darkTheme : theme}>
+            <ThemeProvider theme={isDarkTheme ? darkTheme : theme}>
               <ThemeContext.Provider
-                value={{ isDarktheme: isDarktheme, setIsDarkTheme }}
+                value={{ isDarkTheme: isDarkTheme, setIsDarkTheme }}
               >
                 <Provider store={store}>
                   <Navigator />

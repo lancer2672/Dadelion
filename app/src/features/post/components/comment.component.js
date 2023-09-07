@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
+import { useTheme } from "styled-components";
 
 const dayjs = require("dayjs");
 const Comment = ({ comment, postId }) => {
@@ -18,6 +19,7 @@ const Comment = ({ comment, postId }) => {
   if (comment == false) {
     return <></>;
   }
+  const theme = useTheme();
   const { user } = useSelector(userSelector);
   const { data, isLoading, isSuccess } = useGetUserByIdQuery(comment.userId);
   const [creator, setCreator] = useState({});
@@ -91,12 +93,13 @@ const UserName = styled(Text)`
   font-weight: ${(props) => props.theme.fontWeights.medium};
   margin-right: 8px;
   margin-bottom: 4px;
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 const CreateTime = styled(Text)`
-  color: ${(props) => props.theme.colors.text.secondary};
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 const CommentContent = styled(Text)`
-  color: ${(props) => props.theme.colors.text.secondary};
+  color: ${(props) => props.theme.colors.chat.text};
   line-height: 22px;
 `;
 const OptionsButton = styled(TouchableOpacity)`

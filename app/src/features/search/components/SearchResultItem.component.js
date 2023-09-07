@@ -56,5 +56,6 @@ const Email = styled(Text)`
   flex: 1;
   font-size: ${(props) => props.theme.fontSizes.medium};
   opacity: 0.7;
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 export default SearchResultItem;
