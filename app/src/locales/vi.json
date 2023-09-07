@@ -29,5 +29,7 @@
   "male": "Nam",
   "female": "Nữ",
   "updateSucceeded": "Cập nhật thông tin thành công",
-  "updateFailed": "Cập nhật thông tin thất bại"
+  "updateFailed": "Cập nhật thông tin thất bại",
+  "en": "Tiếng Anh",
+  "vi": "Tiếng Việt"
 }

@@ -45,7 +45,6 @@ const EditProfile = ({ navigation }) => {
     const newUserData = { nickname, gender, dateOfBirth, email, phoneNumber };
     updateUser({ newUserData });
   };
-  console.log("errorerror", error);
   const onGenderFieldClick = () => {
     setShowGenderSelection(true);
   };

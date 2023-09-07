@@ -3,19 +3,22 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import styled from "styled-components/native";
+import { useTheme } from "styled-components";
+import i18next from "i18next";
+
 import SettingItem from "../components/SettingItem.component";
 import { Avatar } from "@src/components/Avatar";
 import { logoutUser } from "@src/store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import { colors } from "@src/infrastructure/theme/colors";
-import { useTheme } from "styled-components";
 import { ThemeContext } from "../../../../App";
+import LanguageSelection from "../components/LanguageSelection.component";
 const Settings = ({ navigation }) => {
   const { user } = useSelector(userSelector);
   const theme = useTheme();
   const { isDarkTheme, setIsDarkTheme } = useContext(ThemeContext);
   const { t } = useTranslation();
+  const [showLanguageSelection, setShowLanguageSelection] = useState(false);
   const dispatch = useDispatch();
   const handleLogout = () => {
     console.log("click");
@@ -30,8 +33,10 @@ const Settings = ({ navigation }) => {
       icon: "globe",
       iconColor: "#fca312",
       backgroundIconColor: "#ffdba1",
-      selectionName: "Tiếng Việt",
-      onClick,
+      selectionName: t(i18next.language),
+      onClick: () => {
+        setShowLanguageSelection(true);
+      },
     },
     {
       name: t("notifications"),
@@ -47,7 +52,6 @@ const Settings = ({ navigation }) => {
       backgroundIconColor: "#ae9bbd",
       isToggleMode: true,
       onClick: () => {
-        console.log("setDarkTheme");
         setIsDarkTheme((prev) => !prev);
       },
     },
@@ -105,6 +109,17 @@ const Settings = ({ navigation }) => {
       <LogoutButton onPress={handleLogout}>
         <LogoutText>{t("logout")}</LogoutText>
       </LogoutButton>
+
+      <LanguageSelection
+        setAppLanguage={(value) => {
+          i18next.changeLanguage(value);
+        }}
+        currentLanguage={i18next.language}
+        visible={showLanguageSelection}
+        onClose={() => {
+          setShowLanguageSelection(false);
+        }}
+      ></LanguageSelection>
     </Container>
   );
 };
