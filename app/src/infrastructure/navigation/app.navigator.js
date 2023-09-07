@@ -18,17 +18,22 @@ import { useNavigation } from "@react-navigation/native";
 import Notification from "@src/features/notification/screens/Notification.screen";
 import Settings from "@src/features/user/screens/Settings.screen";
 import EditProfile from "@src/features/user/screens/EditProfile.screens";
+import { useTheme } from "styled-components";
 
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
 
 const Tab = createBottomTabNavigator();
 const Tabs = () => {
+  const theme = useTheme();
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: theme.colors.chat.bg.secondary,
+        },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           if (route.name === "Home") {
@@ -42,12 +47,18 @@ const Tabs = () => {
               <Ionicons
                 name="ios-chatbubble-ellipses-outline"
                 size={24}
-                color={color}
+                color={theme.colors.chat.text}
               />
             );
           }
           // You can return any component that you like here!
-          return <Feather name={iconName} size={size} color={color} />;
+          return (
+            <Feather
+              name={iconName}
+              size={size}
+              color={theme.colors.chat.text}
+            />
+          );
         },
         tabBarActiveTintColor: colors.text.primary,
         tabBarInactiveTintColor: "gray",

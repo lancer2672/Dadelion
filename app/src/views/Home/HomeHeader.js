@@ -14,10 +14,12 @@ import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import { Spacer } from "@src/components/spacer/spacer.component";
+import { useTheme } from "styled-components";
 
 const HomeHeader = ({ navigation, showNotificationModal }) => {
   const userState = useSelector(userSelector);
   const { user } = userState;
+  const theme = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
   const handleNavigationUser = () => {
     navigation.navigate("User");
@@ -36,7 +38,14 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
           alignItems: "center",
         }}
       >
-        <Text style={{ flex: 1, fontSize: 22, fontWeight: 500 }}>
+        <Text
+          style={{
+            flex: 1,
+            fontSize: 22,
+            fontWeight: 500,
+            color: theme.colors.chat.text,
+          }}
+        >
           Dandelions
         </Text>
         <TouchableOpacity

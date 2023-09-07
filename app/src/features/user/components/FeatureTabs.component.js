@@ -10,10 +10,12 @@ import React, { useEffect, useState } from "react";
 import { TabView, SceneMap } from "react-native-tab-view";
 import UserPost from "./UserPost.component";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { useTheme } from "styled-components";
 
 const TAB_ITEM_WIDTH = Dimensions.get("window").width / 2;
 const Tab = createMaterialTopTabNavigator();
 const FeatureTabs = ({ userId }) => {
+  const theme = useTheme();
   return (
     <Tab.Navigator
       tabBar={(props) => <CustomTabBar {...props}></CustomTabBar>}

@@ -13,8 +13,11 @@ import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import { Spacer } from "@src/components/spacer/spacer.component";
+import { useTheme } from "styled-components";
+
 const ReactionBar = ({ post }) => {
   const { likes } = post;
+  const theme = useTheme();
   const [heart, setHeart] = useState(false);
   const userState = useSelector(userSelector);
   const [reactionNumber, setReactionNumber] = useState(0);
@@ -40,17 +43,17 @@ const ReactionBar = ({ post }) => {
         {heart == true ? (
           <Ionicons name="heart" size={24} color="red" />
         ) : (
-          <Ionicons name="heart-outline" size={24} color={colors.white} />
+          <Ionicons name="heart-outline" size={24} color={"white"} />
         )}
       </ButtonWrapper>
       <Number>{reactionNumber}</Number>
       <ButtonWrapper onPress={null}>
-        <FontAwesome5 name="comment-dots" size={24} color={colors.white} />
+        <FontAwesome5 name="comment-dots" size={24} color={"white"} />
       </ButtonWrapper>
 
       <Number>{post.comments.length}</Number>
       <ButtonWrapper onPress={null}>
-        <Entypo name="dots-three-horizontal" size={24} color={colors.white} />
+        <Entypo name="dots-three-horizontal" size={24} color={"white"} />
       </ButtonWrapper>
     </ReactSectionContainer>
   );
@@ -66,7 +69,7 @@ const Number = styled(Text)`
   margin-bottom: 12px;
   margin-top: 4px;
   font-weight: 500;
-  color: ${(props) => props.theme.colors.white};
+  color: white;
 `;
 const ButtonWrapper = styled(TouchableOpacity)`
   flex-direction: row;

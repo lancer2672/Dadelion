@@ -8,11 +8,19 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
+import { useTheme } from "styled-components";
 
 const UserPost = ({ userId }) => {
   const { isSuccess, isLoading, data } = useGetPostByUserIdQuery(userId);
+  const theme = useTheme();
   return (
-    <View style={{ flex: 1, marginHorizontal: 8, backgroundColor: "red" }}>
+    <View
+      style={{
+        flex: 1,
+        paddingHorizontal: 8,
+        backgroundColor: theme.colors.chat.bg.primary,
+      }}
+    >
       <FlatList
         data={data}
         numColumns={2}

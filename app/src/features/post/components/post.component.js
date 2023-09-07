@@ -19,11 +19,13 @@ import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { colors } from "@src/infrastructure/theme/colors";
 import { setSelectedPost } from "@src/store/slices/postSlice";
+import { useTheme } from "styled-components";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 const PostItem = ({ navigation, post }) => {
   const { image: postImage = null, createdAt } = post;
+  const theme = useTheme();
   const postState = useSelector(postSelector);
   const userState = useSelector(userSelector);
   const dispatch = useDispatch();
@@ -77,7 +79,7 @@ const PostItem = ({ navigation, post }) => {
             </TouchableOpacity>
             <PostInfoContainer>
               <CreatorName>{postCreator?.nickname}</CreatorName>
-              <Text style={{ color: colors.white }}>
+              <Text style={{ color: "white" }}>
                 {postCreatedTimeFormatter(createdAt)}
               </Text>
             </PostInfoContainer>
@@ -130,20 +132,6 @@ const PostItem = ({ navigation, post }) => {
         </View>
       </Modal> */}
         <ReactionBar post={post}> </ReactionBar>
-        {/* {!isCommentsVisible && (
-        <Comment postId={post._id} comment={lastComment}></Comment>
-      )} */}
-
-        {/* {isCommentsVisible && comments.length > 1 && (
-        <CommentListContainer>
-          <CommentList postId={postId} comments={comments}></CommentList>
-        </CommentListContainer>
-      )} */}
-        {/* <InputBar
-        commentsLength={comments.length}
-        setIsCommentsVisible={setIsCommentsVisible}
-        postId={postId}
-      ></InputBar> */}
       </Container>
     </Pressable>
   );
@@ -156,7 +144,7 @@ const Container = styled(BackgroundImage).attrs((props) => ({
   margin-vertical: 12px;
   overflow: hidden;
   min-height: 480px;
-  background-color: blue;
+  background-color: gray;
   align-items: flex-start;
   justify-content: flex-end;
   padding-bottom: 12px;
@@ -167,7 +155,7 @@ const Container = styled(BackgroundImage).attrs((props) => ({
 const CreatorName = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: ${(props) => props.theme.fontWeights.medium};
-  color: ${(props) => props.theme.colors.white};
+  color: white;
 `;
 
 const PostInfoContainer = styled(View)`
@@ -179,11 +167,11 @@ const PostDescriptionContainer = styled(ReadMore)`
   margin-bottom: 4px;
   margin-top: 4px;
   font-size: ${(props) => props.theme.fontSizes.body};
-  color: ${(props) => props.theme.colors.white};
+  color: white;
 `;
 const PostDescription = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.body};
-  color: ${(props) => props.theme.colors.white};
+  color: white;
 `;
 
 export default PostItem;

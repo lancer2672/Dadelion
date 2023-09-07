@@ -4,6 +4,7 @@ import { Entypo } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { Switch } from "react-native";
 import { useState } from "react";
+import { useTheme } from "styled-components";
 const SettingItem = ({
   name,
   icon,
@@ -14,11 +15,10 @@ const SettingItem = ({
   isToggleMode = false,
 }) => {
   const [isEnabled, setIsEnabled] = useState(false);
+  const theme = useTheme();
+
   return (
-    <TouchableOpacity
-      onPress={onClick}
-      style={{ flexDirection: "row", alignItems: "center", marginTop: 20 }}
-    >
+    <View style={{ flexDirection: "row", alignItems: "center", marginTop: 20 }}>
       <View
         style={{
           backgroundColor: backgroundIconColor,
@@ -30,20 +30,23 @@ const SettingItem = ({
         <Entypo name={icon} size={20} color={iconColor} />
       </View>
       <View style={{ flex: 1 }}>
-        <Text>{name}</Text>
+        <Text style={{ color: theme.colors.chat.text }}>{name}</Text>
       </View>
-      <Text>{selectionName}</Text>
+      <Text style={{ color: theme.colors.chat.text }}>{selectionName}</Text>
 
       {isToggleMode ? (
         <Switch
-          thumbColor={isEnabled ? "black" : "white"}
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={theme.colors.chat.text == "white" ? "white" : "black"}
           onValueChange={() => {
             setIsEnabled((prev) => !prev);
+            onClick();
           }}
           value={isEnabled}
         />
       ) : (
-        <View
+        <TouchableOpacity
+          onPress={onClick}
           style={{
             borderRadius: 8,
             backgroundColor: "gray",
@@ -52,9 +55,9 @@ const SettingItem = ({
           }}
         >
           <Entypo name="chevron-right" size={24} color="white" />
-        </View>
+        </TouchableOpacity>
       )}
-    </TouchableOpacity>
+    </View>
   );
 };
 

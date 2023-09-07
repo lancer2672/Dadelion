@@ -3,7 +3,7 @@ import { space, lineHeights } from "./spacing";
 import { sizes, buttonSizes } from "./sizes";
 import { fonts, fontWeights, fontSizes } from "./fonts";
 
-const theme = {
+export const theme = {
   colors,
   space,
   lineHeights,
@@ -13,5 +13,25 @@ const theme = {
   fontSizes,
   fontWeights,
 };
-
-export default theme;
+export const darkTheme = {
+  colors: {
+    ...colors,
+    white: "black",
+    black: "white",
+    chat: {
+      bg: {
+        primary: "black",
+        secondary: "#1c1c1c",
+      },
+      text: "white",
+      icon: "#ecdfed",
+    },
+  },
+  space,
+  lineHeights,
+  sizes,
+  fonts,
+  buttonSizes,
+  fontSizes,
+  fontWeights,
+};

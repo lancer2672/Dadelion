@@ -15,11 +15,13 @@ import { colors } from "@src/infrastructure/theme/colors";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import ChatTabs from "../components/ChatTabs.component";
+import { useTheme } from "styled-components";
 
 const ChatScreen = ({ navigation }) => {
   const { user } = useSelector(userSelector);
+  const theme = useTheme();
   return (
-    <View style={{ backgroundColor: colors.white, flex: 1 }}>
+    <View style={{ backgroundColor: theme.colors.chat.bg.primary, flex: 1 }}>
       {/* <ListAvtWithName></ListAvtWithName> */}
       <View
         style={{
@@ -28,14 +30,8 @@ const ChatScreen = ({ navigation }) => {
           justifyContent: "center",
           marginTop: 16,
         }}
-      >
-        {/* <TouchableOpacity
-          style={{ position: "absolute", right: 12, top: 0, bottom: 0 }}
-        >
-          <Avatar uri={user.avatar}></Avatar>
-        </TouchableOpacity> */}
-      </View>
-      {/* <ListChannel navigation={navigation}></ListChannel> */}
+      ></View>
+
       <ChatTabs navigation={navigation}></ChatTabs>
     </View>
   );

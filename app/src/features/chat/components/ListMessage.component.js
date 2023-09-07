@@ -66,7 +66,7 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
       });
 
       // Add the last item
-      if (obj.user != null) {
+      if (obj.userId != null) {
         groupedByUserId.push(obj);
       }
       setListMessage(groupedByUserId);
@@ -76,6 +76,8 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
       console.log("error", error);
     }
   }, [isLoading, data]);
+  console.log("listMessage", listMessage);
+  console.log("data", data);
 
   const handleLoadMore = () => {
     setVisibleMessages(visibleMessages + 10);

@@ -60,12 +60,12 @@ export const BottomHeader = styled.View`
 export const ItemValue = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.title};
   font-weight: bold;
-  color: ${(props) => props.theme.colors.white};
+  color: white;
 `;
 
 export const ItemLabel = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.large};
-  color: ${(props) => props.theme.colors.white};
+  color: white;
 `;
 
 export const ItemContainer = styled.View`

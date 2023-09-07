@@ -20,8 +20,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { colors } from "@src/infrastructure/theme/colors";
 import { sendImage, sendMessage } from "@src/store/slices/chatSlice";
 import { readBase64 } from "@src/utils/imageHelper";
+import { useTheme } from "styled-components";
 
 const InputBar = ({ channelId }) => {
+  const theme = useTheme();
   const { user } = useSelector(userSelector);
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputWidth, setTextInputWidth] = useState(0);
@@ -101,12 +103,20 @@ const InputBar = ({ channelId }) => {
           <LeftIconContainer>
             <TouchableOpacity onPress={handleOpenCamera}>
               <Icon>
-                <EvilIcons name="camera" size={iconSize} color={iconColor} />
+                <EvilIcons
+                  name="camera"
+                  size={iconSize}
+                  color={theme.colors.chat.text}
+                />
               </Icon>
             </TouchableOpacity>
             <TouchableOpacity onPress={openImagePicker}>
               <Icon>
-                <EvilIcons name="image" size={iconSize} color={iconColor} />
+                <EvilIcons
+                  name="image"
+                  size={iconSize}
+                  color={theme.colors.chat.text}
+                />
               </Icon>
             </TouchableOpacity>
             <TouchableOpacity>
@@ -114,7 +124,7 @@ const InputBar = ({ channelId }) => {
                 <MaterialCommunityIcons
                   name="microphone"
                   size={iconSize}
-                  color={iconColor}
+                  color={theme.colors.chat.text}
                 />
               </Icon>
             </TouchableOpacity>
@@ -127,10 +137,12 @@ const InputBar = ({ channelId }) => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={"Nhắn tin"}
+          placeholderTextColor={theme.colors.chat.text}
           style={{
             flex: 1,
             minHeight: 32,
             padding: 6,
+            color: theme.colors.chat.text,
             marginHorizontal: 12,
           }}
           multiline

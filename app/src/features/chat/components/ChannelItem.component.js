@@ -20,10 +20,12 @@ import {
   useGetLastMessageQuery,
   useLoadChatRoomMessagesQuery,
 } from "@src/store/slices/api/chatApiSlice";
+import { useTheme } from "styled-components";
 
 const Channel = ({ navigation, channel }) => {
   const { _id: channelId, memberIds } = channel;
   const { t } = useTranslation();
+  const theme = useTheme();
   const { user } = useSelector(userSelector);
   const [chatFriend, setChatFriend] = useState(null);
   const [chatFriendId, setChatFriendId] = useState(null);
@@ -85,7 +87,6 @@ const Channel = ({ navigation, channel }) => {
         if (lastMessage) {
           setLastMessage((prev) => ({ ...prev, isSeen: true }));
         }
-
         setUnseenMessageIds([]);
       }}
     >
@@ -118,36 +119,11 @@ const Channel = ({ navigation, channel }) => {
         <Name>{chatFriend ? chatFriend.nickname : ""}</Name>
 
         {lastMessage ? (
-          <Text
-            style={{
-              opacity:
-                lastMessage.userId == user._id
-                  ? 0.5
-                  : lastMessage.isSeen
-                  ? 0.5
-                  : 1,
-              fontWeight:
-                lastMessage.userId == user._id
-                  ? "400"
-                  : lastMessage.isSeen
-                  ? "400"
-                  : "bold",
-              fontSize: 16,
-            }}
-          >
+          <LastMessage userId={user._id} lastMessage={lastMessage}>
             {lastMessage.message}
-          </Text>
+          </LastMessage>
         ) : (
-          <Text
-            style={{
-              opacity: 0.5,
-              fontWeight: "400",
-              fontStyle: "italic",
-              fontSize: 16,
-            }}
-          >
-            {t("emptyMessage")}
-          </Text>
+          <EmptyMessage>{t("emptyMessage")}</EmptyMessage>
         )}
       </View>
       {lastMessage && (
@@ -162,7 +138,6 @@ const Channel = ({ navigation, channel }) => {
             <Text
               style={{
                 fontSize: 16,
-
                 paddingVertical: 4,
                 marginBottom: 12,
                 color: "tomato",
@@ -173,25 +148,9 @@ const Channel = ({ navigation, channel }) => {
             </Text>
           )}
 
-          <Text
-            style={{
-              opacity:
-                lastMessage.userId == user._id
-                  ? 0.5
-                  : lastMessage.isSeen
-                  ? 0.5
-                  : 1,
-              fontWeight:
-                lastMessage.userId == user._id
-                  ? "400"
-                  : lastMessage.isSeen
-                  ? "400"
-                  : "bold",
-              fontSize: 16,
-            }}
-          >
+          <LastMessage userId={user._id} lastMessage={lastMessage}>
             {commentCreatedTimeFormater(lastMessage.createdAt)}
-          </Text>
+          </LastMessage>
         </View>
       )}
     </Container>
@@ -207,9 +166,34 @@ const Container = styled(TouchableOpacity)`
   flex-direction: row;
   marginVertical: 8px;
 `;
+const LastMessage = styled(Text).attrs((props) => ({
+  opacity:
+    props.lastMessage.userId == props.userId
+      ? 0.5
+      : props.lastMessage.isSeen
+      ? 0.5
+      : 1,
+  fontWeight:
+    props.lastMessage.userId == props.userId
+      ? "400"
+      : props.lastMessage.isSeen
+      ? "400"
+      : "bold",
+}))`
+  font-size: 16px;
+  color: ${(props) => props.theme.colors.chat.text};
+`;
+const EmptyMessage = styled(Text).attrs((props) => ({}))`
+  font-size: 16px;
+  opacity: 0.5;
+  font-weight: 400;
+  font-style: italic;
+  color: ${(props) => props.theme.colors.chat.text};
+`;
 const Name = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.large};
   flex: 1;
+  color: ${(props) => props.theme.colors.chat.text};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 

@@ -28,11 +28,13 @@ import {
 } from "../sharedStyledComponents";
 import Settings from "@src/features/user/screens/Settings.screen";
 import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
+import { useTheme } from "styled-components";
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);
-  const dispatch = useDispatch();
   const { t } = useTranslation();
+  const theme = useTheme();
+  const dispatch = useDispatch();
   const [updateUser, { isLoading, data, isSuccess, ...res }] =
     useUpdateUserMutation();
   const { data: postData } = useGetPostByUserIdQuery();
@@ -88,7 +90,11 @@ const User = ({ props, navigation }) => {
                 navigation.navigate("Settings");
               }}
             >
-              <AntDesign name="setting" size={32} color="black" />
+              <AntDesign
+                name="setting"
+                size={32}
+                color={theme.colors.chat.text}
+              />
             </TouchableOpacity>
           </HeaderContent>
           <Avatar avatarUri={avatarUri}>
@@ -98,7 +104,7 @@ const User = ({ props, navigation }) => {
                   style={{ opacity: 1 }}
                   name="camera"
                   size={24}
-                  color="black"
+                  color={theme.colors.chat.text}
                 />
               </CameraIcon>
             </TouchableOpacity>
@@ -145,7 +151,7 @@ const Header = styled.View`
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   overflow: hidden;
-  background-color: ${(props) => props.theme.colors.bg.primary};
+  background-color: ${(props) => props.theme.colors.chat.bg.primary};
   elevation: 5;
   padding-bottom: 24px;
   padding-top: 12px;
