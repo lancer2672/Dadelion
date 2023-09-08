@@ -17,13 +17,7 @@ import styled from "styled-components/native";
 
 import { Spacer } from "@src/components/spacer/spacer.component";
 
-import {
-  Avatar,
-  Seperator,
-  BackButton,
-  Header,
-  UserName,
-} from "../shared-components";
+import { Seperator, BackButton, Header, UserName } from "../shared-components";
 import { useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
@@ -31,11 +25,11 @@ import {
   useCreatePostMutation,
   useReactPostMutation,
 } from "@src/store/slices/api/postApiSlice";
+import { Avatar } from "@src/components/Avatar";
 import { setIsLoading } from "@src/store/slices/appSlice";
 
-const AddImageButton = styled(TouchableOpacity)``;
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const CreatePost = ({ setIsvisible }) => {
+const CreatePost = ({ navigation }) => {
   const [createPost, { isLoading, isSuccess, data, ...res }] =
     useCreatePostMutation();
   const { user } = useSelector(userSelector);
@@ -44,7 +38,7 @@ const CreatePost = ({ setIsvisible }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (isSuccess) {
-      setIsvisible(false);
+      navigation.goBack();
     }
     dispatch(setIsLoading(isLoading));
   }, [isLoading]);
@@ -77,7 +71,7 @@ const CreatePost = ({ setIsvisible }) => {
   return (
     <Container>
       <Header
-        onBackButtonPress={() => setIsvisible(false)}
+        onBackButtonPress={() => navigation.goBack()}
         onButtonPress={handleCreatePost}
         heading={"Tạo bài viết"}
         buttonContent={"Đăng"}
@@ -86,11 +80,7 @@ const CreatePost = ({ setIsvisible }) => {
       <Spacer size={"medium"} position={"bottom"}></Spacer>
       <Body>
         <UserInfo>
-          {user.avatar == null ? (
-            <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
-          ) : (
-            <Avatar source={{ uri: user.avatar }}></Avatar>
-          )}
+          <Avatar uri={user.avatar}></Avatar>
           <Spacer position={"left"} size={"small"}></Spacer>
           <UserName>{user.nickname}</UserName>
         </UserInfo>
@@ -126,7 +116,7 @@ const Body = styled(View)`
   justify-content: flex-start;
   align-items: center;
 `;
-
+const AddImageButton = styled(TouchableOpacity)``;
 const UserInfo = styled(View)`
   flex-direction: row;
   justify-content: flex-start;

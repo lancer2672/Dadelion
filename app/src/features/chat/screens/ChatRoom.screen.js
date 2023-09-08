@@ -10,16 +10,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { useTranslation } from "react-i18next";
-import { joinRoom } from "@src/store/slices/chatSlice";
+import { joinRoom, typing } from "@src/store/slices/chatSlice";
 import { chatApi } from "@src/store/slices/api/chatApiSlice";
+import { getSocket } from "@src/utils/socket";
 
 const ChatRoom = ({ navigation, route }) => {
   const { user } = useSelector(userSelector);
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const socket = getSocket();
   const { channelId, memberIds } = route.params;
   const [chatFriendId, setChatFriendId] = useState(null);
   const [chatFriend, setChatFriend] = useState({});
+  const [isTyping, setIsTyping] = useState(false);
   const { isLoading, isSuccess, data, error } = useGetUserByIdQuery(
     chatFriendId,
     {
@@ -30,6 +33,10 @@ const ChatRoom = ({ navigation, route }) => {
     const friendId = memberIds.filter((id) => id != user._id);
     setChatFriendId(friendId[0]);
     dispatch(joinRoom({ channelId }));
+    socket.on("typing", (channelId, isTyping) => {
+      setIsTyping(() => isTyping);
+      console.log("socket on typing", channelId, isTyping);
+    });
   }, []);
   useEffect(() => {
     if (isSuccess) {
@@ -47,16 +54,17 @@ const ChatRoom = ({ navigation, route }) => {
         chatFriend={chatFriend}
         channelId={channelId}
       ></ListUserMessages>
-      {/* <View
-        style={{
-          backgroundColor: "red",
-          flexDirection: "row",
-          alignItems: "center",
-          paddingLeft: 20,
-        }}
-      >
-        <AnimatedEllipsis />
-      </View> */}
+      {isTyping && (
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingLeft: 20,
+          }}
+        >
+          <Text style={{ color: "red" }}>User Typing</Text>
+        </View>
+      )}
       <InputBar channelId={channelId}></InputBar>
     </Container>
   );

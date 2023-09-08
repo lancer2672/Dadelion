@@ -12,7 +12,7 @@ export const colors = {
   },
   text: {
     primary: "#e3c3de",
-    secondary: "#a19f9f",
+    secondary: "#d649c0",
     disabled: "#9C9C9C",
     error: "#e35d5d",
     success: "#138000",

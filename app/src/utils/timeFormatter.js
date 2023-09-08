@@ -30,7 +30,7 @@ export const commentCreatedTimeFormater = (createdAt) => {
   const milliseconds = currentDate - createdDate;
   let seconds = milliseconds / 1000;
   if (seconds < 60) {
-    return `${Math.floor(seconds)}s`;
+    return `vừa xong`;
   }
   let minutes = seconds / 60;
   if (minutes < 60) {

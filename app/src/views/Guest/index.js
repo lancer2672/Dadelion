@@ -27,8 +27,10 @@ import { useTranslation } from "react-i18next";
 import { joinChannel, sendFriendRequest } from "@src/store/slices/chatSlice";
 import { useCheckFriendStatusQuery } from "@src/store/slices/api/friendRequestApiSlice";
 import { useFindOrCreateChannelMutation } from "@src/store/slices/api/chatApiSlice";
+import { useTheme } from "styled-components";
 
 const Guest = ({ props, navigation, route }) => {
+  const theme = useTheme();
   const { guestId } = route.params;
   const { t } = useTranslation();
   const { user } = useSelector(userSelector);
@@ -147,7 +149,7 @@ const Guest = ({ props, navigation, route }) => {
         </BottomHeader>
       </HeaderContainer>
 
-      {/* <FeatureTabs ></FeatureTabs> */}
+      <FeatureTabs></FeatureTabs>
       <Modal
         animationType="fade"
         transparent={true}
@@ -169,7 +171,7 @@ const Guest = ({ props, navigation, route }) => {
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${(props) => props.theme.colors.bg.primary};
+  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
 `;
 
 const Header = styled.View`
@@ -180,7 +182,7 @@ const Header = styled.View`
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   overflow: hidden;
-  background-color: ${(props) => props.theme.colors.bg.primary};
+  background-color: ${(props) => props.theme.colors.chat.bg.primary};
   elevation: 5;
   padding-bottom: 24px;
   padding-top: 12px;
@@ -262,12 +264,12 @@ const BottomHeader = styled.View`
 const ItemValue = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.title};
   font-weight: bold;
-  color: ${(props) => props.theme.colors.white};
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 
 const ItemLabel = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.large};
-  color: ${(props) => props.theme.colors.white};
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 const ItemContainer = styled.View`
   align-items: center;

@@ -5,6 +5,7 @@ import {
   View,
   Animated,
   TextInput,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState } from "react";
 import styled from "styled-components/native";
@@ -18,9 +19,11 @@ import * as ImagePicker from "expo-image-picker";
 import { userSelector } from "@src/store/selector";
 import { useDispatch, useSelector } from "react-redux";
 import { colors } from "@src/infrastructure/theme/colors";
-import { sendImage, sendMessage } from "@src/store/slices/chatSlice";
+import { sendImage, sendMessage, typing } from "@src/store/slices/chatSlice";
 import { readBase64 } from "@src/utils/imageHelper";
 import { useTheme } from "styled-components";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 const InputBar = ({ channelId }) => {
   const theme = useTheme();
@@ -30,14 +33,20 @@ const InputBar = ({ channelId }) => {
   const [photoUri, setPhotoUri] = useState(null);
   const [text, setText] = useState("");
   const iconSize = 28;
-  const iconColor = "black";
   const dispatch = useDispatch();
-
   const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
   const inputWidth = textInputWidth + iconContainerWidth;
   const animation = new Animated.Value(inputWidth);
+  useEffect(() => {
+    if (text.trim() != "") {
+      dispatch(typing({ channelId, isTyping: true }));
+    } else {
+      dispatch(typing({ channelId, isTyping: false }));
+    }
+  }, [text]);
   const handleFocus = () => {
     setLeftIconVisible(false);
+
     Animated.timing(animation, {
       toValue: textInputWidth,
       duration: 1000,
@@ -72,12 +81,13 @@ const InputBar = ({ channelId }) => {
   };
 
   const openImagePicker = async () => {
+    console.log("openImagePicker", openImagePicker);
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         selectionLimit: 5, // Set the maximum number of images the user can select
       });
-      if (!result.canceled) {
+      if (!result.cancelled) {
         const base64String = await readBase64(result.assets[0].uri);
         dispatch(
           sendImage({ channelId, userId: user._id, imageData: base64String })
@@ -130,7 +140,6 @@ const InputBar = ({ channelId }) => {
             </TouchableOpacity>
           </LeftIconContainer>
         )}
-
         <TextInput
           value={text}
           onChangeText={(newText) => setText(newText)}
@@ -151,6 +160,7 @@ const InputBar = ({ channelId }) => {
           }}
         />
       </Animated.View>
+
       <TouchableOpacity
         onPress={handleSendMessage}
         style={{
@@ -168,8 +178,6 @@ const InputBar = ({ channelId }) => {
 const Container = styled(View)`
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-
   padding: 6px;
   border-radius: 40px;
   margin-horizontal: 12px;

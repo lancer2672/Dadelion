@@ -18,7 +18,7 @@ const FeatureTabs = ({ userId }) => {
   const theme = useTheme();
   return (
     <Tab.Navigator
-      tabBar={(props) => <CustomTabBar {...props}></CustomTabBar>}
+      tabBar={(props) => <CustomTabBar theme={theme} {...props}></CustomTabBar>}
       screenOptions={{
         tabBarActiveTintColor: "#fff",
       }}
@@ -35,10 +35,15 @@ const FeatureTabs = ({ userId }) => {
     </Tab.Navigator>
   );
 };
-const CustomTabBar = ({ state, descriptors, navigation, position }) => {
+const CustomTabBar = ({ state, descriptors, theme, navigation, position }) => {
   const inputRange = state.routes.map((_, i) => i);
   return (
-    <View style={styles.tabBar}>
+    <View
+      style={[
+        styles.tabBar,
+        { backgroundColor: theme.colors.chat.bg.secondary },
+      ]}
+    >
       {state.routes.map((route, index) => {
         const opacity = position.interpolate({
           inputRange,

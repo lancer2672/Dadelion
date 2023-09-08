@@ -24,12 +24,14 @@ import { useState, useEffect } from "react";
 import GenderSelection from "../components/GenderSelection.component";
 import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { useTheme } from "styled-components";
 
 const dayjs = require("dayjs");
 
 const EditProfile = ({ navigation }) => {
   const { t } = useTranslation();
   const { user } = useSelector(userSelector);
+  const theme = useTheme();
   const dispatch = useDispatch();
   const [nickname, setNickname] = useState(user.nickname);
   const [gender, setGender] = useState(user.gender);
@@ -72,6 +74,7 @@ const EditProfile = ({ navigation }) => {
     <ScrollView
       style={{
         padding: 20,
+        backgroundColor: theme.colors.chat.bg.primary,
         flex: 1,
         opacity: showGenderSelection || isLoading ? 0.6 : 1,
       }}
@@ -82,14 +85,26 @@ const EditProfile = ({ navigation }) => {
             navigation.goBack();
           }}
         >
-          <AntDesign name="arrowleft" size={24} color="black" />
+          <AntDesign
+            name="arrowleft"
+            size={24}
+            color={theme.colors.chat.text}
+          />
         </BackButton>
         <Heading>{t("editProfile")}</Heading>
       </Header>
 
       <Body>
         <Avatar uri={user.avatar} width={80} height={80}></Avatar>
-        <Text style={{ fontSize: 18, fontWeight: 500 }}>{user.nickname}</Text>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 500,
+            color: theme.colors.chat.text,
+          }}
+        >
+          {user.nickname}
+        </Text>
         <Text
           style={{ fontSize: 18, color: "gray", fontWeight: 400 }}
         >{`${user.email}`}</Text>
@@ -194,6 +209,7 @@ const SaveBtnText = styled.Text`
   color: ${(props) => props.theme.colors.white};
   font-size: 20px;
   font-weight: 500;
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 const Heading = styled.Text`
   font-weight: bold;

@@ -31,7 +31,6 @@ const ChatScreen = ({ navigation }) => {
           marginTop: 16,
         }}
       ></View>
-
       <ChatTabs navigation={navigation}></ChatTabs>
     </View>
   );

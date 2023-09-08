@@ -5,6 +5,7 @@ import { AntDesign, Entypo } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import { useTheme } from "styled-components";
 import i18next from "i18next";
+import * as Animatable from "react-native-animatable";
 
 import SettingItem from "../components/SettingItem.component";
 import { Avatar } from "@src/components/Avatar";
@@ -24,7 +25,7 @@ const Settings = ({ navigation }) => {
   const handleLogout = () => {
     dispatch(logoutUser());
   };
-  console.log(isDarkTheme);
+  const viewRef = React.useRef(null);
   const data = [
     {
       name: t("language"),
@@ -50,64 +51,72 @@ const Settings = ({ navigation }) => {
       isToggleMode: true,
       defaultSwitchValue: isDarkTheme,
       onClick: async () => {
-        await AsyncStorage.setItem("AppTheme", !isDarkTheme ? "dark" : "light");
         setIsDarkTheme((prev) => !prev);
+        viewRef.current.animate({ 0: { opacity: 0.65 }, 1: { opacity: 1 } });
+        await AsyncStorage.setItem("AppTheme", !isDarkTheme ? "dark" : "light");
       },
     },
   ];
   return (
     <Container>
-      <Header>
-        <BackButton
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <AntDesign
-            name="arrowleft"
-            size={24}
-            color={theme.colors.chat.text}
+      <Animatable.View
+        useNativeDriver={true}
+        style={{ flex: 1 }}
+        ref={viewRef}
+        easing={"ease-in-out"}
+      >
+        <Header>
+          <BackButton
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <AntDesign
+              name="arrowleft"
+              size={24}
+              color={theme.colors.chat.text}
+            />
+          </BackButton>
+          <Heading>{t("settings")}</Heading>
+        </Header>
+
+        <Body>
+          <SettingCategory>{t("account")}</SettingCategory>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("EditProfile");
+            }}
+            style={{
+              marginTop: 12,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Avatar uri={user.avatar} width={50} height={50}></Avatar>
+            <View style={{ marginLeft: 12, flex: 1 }}>
+              <Text style={{ color: theme.colors.chat.text, fontSize: 18 }}>
+                {user.nickname}
+              </Text>
+              <Text style={{ color: theme.colors.chat.text }}>
+                {t("personalInfo")}
+              </Text>
+            </View>
+            <IconContainer>
+              <Entypo name="chevron-right" size={24} color="white" />
+            </IconContainer>
+          </TouchableOpacity>
+
+          <SettingCategory>{t("settings")}</SettingCategory>
+          <FlatList
+            data={data}
+            renderItem={({ item }) => <SettingItem {...item} />}
+            keyExtractor={(item) => item.name}
           />
-        </BackButton>
-        <Heading>{t("settings")}</Heading>
-      </Header>
-
-      <Body>
-        <SettingCategory>{t("account")}</SettingCategory>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("EditProfile");
-          }}
-          style={{
-            marginTop: 12,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Avatar uri={user.avatar} width={50} height={50}></Avatar>
-          <View style={{ marginLeft: 12, flex: 1 }}>
-            <Text style={{ color: theme.colors.chat.text, fontSize: 18 }}>
-              {user.nickname}
-            </Text>
-            <Text style={{ color: theme.colors.chat.text }}>
-              {t("personalInfo")}
-            </Text>
-          </View>
-          <IconContainer>
-            <Entypo name="chevron-right" size={24} color="white" />
-          </IconContainer>
-        </TouchableOpacity>
-
-        <SettingCategory>{t("settings")}</SettingCategory>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <SettingItem {...item} />}
-          keyExtractor={(item) => item.name}
-        />
-      </Body>
-      <LogoutButton onPress={handleLogout}>
-        <LogoutText>{t("logout")}</LogoutText>
-      </LogoutButton>
+        </Body>
+        <LogoutButton onPress={handleLogout}>
+          <LogoutText>{t("logout")}</LogoutText>
+        </LogoutButton>
+      </Animatable.View>
 
       <LanguageSelection
         setAppLanguage={async (value) => {

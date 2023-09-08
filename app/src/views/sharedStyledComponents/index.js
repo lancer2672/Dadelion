@@ -68,7 +68,7 @@ export const ItemLabel = styled.Text`
   color: white;
 `;
 
-export const ItemContainer = styled.View`
+export const ItemContainer = styled.Pressable`
   align-items: center;
   margin-horizontal: 12px;
 `;

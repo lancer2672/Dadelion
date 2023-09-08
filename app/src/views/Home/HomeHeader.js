@@ -15,6 +15,7 @@ import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { useTheme } from "styled-components";
+import { Avatar } from "@src/components/Avatar";
 
 const HomeHeader = ({ navigation, showNotificationModal }) => {
   const userState = useSelector(userSelector);
@@ -35,15 +36,17 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
       <View
         style={{
           flexDirection: "row",
-          marginTop: 12,
+          marginVertical: 20,
           marginHorizontal: 24,
           alignItems: "center",
         }}
       >
+        <Avatar width={40} height={40} uri={user.avatar}></Avatar>
         <Text
           style={{
             flex: 1,
             fontSize: 22,
+            marginLeft: 12,
             fontWeight: 500,
             color: theme.colors.chat.text,
           }}
@@ -86,38 +89,7 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handleNavigationUser}>
-          {user.avatar == null ? (
-            <Image
-              style={styles.avatar}
-              source={require("./../../../assets/imgs/DefaultAvatar.png")}
-            ></Image>
-          ) : (
-            <Image source={{ uri: user.avatar }} style={styles.avatar}></Image>
-          )}
-        </TouchableOpacity>
-        <View style={styles.descriptionContainer}>
-          <TouchableOpacity
-            onPress={openCreatePostScreen}
-            style={styles.description}
-          >
-            <Text>Bạn đang nghĩ gì...</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <CreatePost setIsvisible={setModalVisible}></CreatePost>
-        </View>
-      </Modal>
+
       {/* <CreatePostModal isVisible={isVisidbleCreatePost}></CreatePostModal> */}
     </View>
   );

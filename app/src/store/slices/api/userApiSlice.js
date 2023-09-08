@@ -70,7 +70,6 @@ export const userApi = createApi({
         body: { listIds },
       }),
       transformResponse: (response, meta, arg) => {
-        console.log("response.data.user", response.data);
         response.data.users = response.data.users.map((user) => {
           return transformUserData(user);
         });

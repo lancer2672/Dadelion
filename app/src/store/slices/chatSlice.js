@@ -10,6 +10,7 @@ export const chatSlice = createSlice({
     //logic handled in socket middleware
     joinChannels: (state, action) => {},
     joinChannel: (state, action) => {},
+    typing: (state, action) => {},
     joinRoom: (state, action) => {},
     sendMessage: (state, action) => {},
     sendImage: (state, action) => {},
@@ -22,6 +23,7 @@ export const {
   joinChannels,
   joinChannel,
   joinRoom,
+  typing,
   sendMessage,
   sendImage,
   sendFriendRequest,

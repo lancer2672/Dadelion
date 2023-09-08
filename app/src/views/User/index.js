@@ -38,10 +38,12 @@ const User = ({ props, navigation }) => {
   const [updateUser, { isLoading, data, isSuccess, ...res }] =
     useUpdateUserMutation();
   const { data: postData } = useGetPostByUserIdQuery();
-  console.log("postData", postData);
   const [avatarUri, setAvatarUri] = useState(null);
   const [selectedImageUri, setSelectedImageUri] = useState(null);
-  const [settingVisible, setSettingVisible] = useState(false);
+
+  const navigateToFriendListScreen = () => {
+    navigation.navigate("FriendList");
+  };
   useEffect(() => {
     setAvatarUri(user.avatar);
   }, []);
@@ -119,7 +121,7 @@ const User = ({ props, navigation }) => {
             <ItemValue>{postData ? postData.length : 0}</ItemValue>
             <ItemLabel>{t("post")}</ItemLabel>
           </ItemContainer>
-          <ItemContainer>
+          <ItemContainer onPress={navigateToFriendListScreen}>
             <ItemValue>{user.friends.length}</ItemValue>
             <ItemLabel>{t("friend")}</ItemLabel>
           </ItemContainer>
@@ -133,7 +135,7 @@ const User = ({ props, navigation }) => {
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${(props) => props.theme.colors.bg.primary};
+  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
 `;
 const HeaderContainer = styled.View`
   height: 300px;

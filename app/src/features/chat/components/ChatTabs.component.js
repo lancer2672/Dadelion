@@ -17,12 +17,16 @@ import { joinChannels } from "@src/store/slices/chatSlice";
 import { userSelector } from "@src/store/selector";
 import SearchChannel from "./SearchChannel.component";
 import { useGetListUserMutation } from "@src/store/slices/api/userApiSlice";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "styled-components";
 
 const TAB_ITEM_WIDTH = Dimensions.get("window").width / 2 - 16;
 const Tab = createMaterialTopTabNavigator();
 //Chat tab "friend messages/ stranger messages"
 const ChatTabs = ({ navigation }) => {
   const { user } = useSelector(userSelector);
+  const { t } = useTranslation();
+  const theme = useTheme();
   const dispatch = useDispatch();
   const [friendChannels, setFriendChannels] = useState([]);
   const [pendingChannels, setPendingChannels] = useState([]);
@@ -47,7 +51,6 @@ const ChatTabs = ({ navigation }) => {
       isSuccess: getListUserSuccess,
     },
   ] = useGetListUserMutation();
-  console.log("channel", channels);
   useLayoutEffect(() => {
     dispatch(setIsLoading(isLoading));
     if (isSuccess) {
@@ -124,12 +127,31 @@ const ChatTabs = ({ navigation }) => {
 
   return (
     <>
-      <SearchChannel
-        listUser={listUser}
-        channels={channels}
-        setChannelIdsResult={setChannelIdsResult}
-        resetSearchData={resetSearchData}
-      ></SearchChannel>
+      <View
+        style={{
+          paddingHorizontal: 12,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: 500,
+            color: theme.colors.chat.text,
+          }}
+        >
+          {t("chat")}
+        </Text>
+
+        <SearchChannel
+          listUser={listUser}
+          channels={channels}
+          setChannelIdsResult={setChannelIdsResult}
+          resetSearchData={resetSearchData}
+        ></SearchChannel>
+      </View>
       <Tab.Navigator
         tabBar={(props) => (
           <CustomTabBar

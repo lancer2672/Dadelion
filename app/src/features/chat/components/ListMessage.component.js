@@ -76,8 +76,6 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
       console.log("error", error);
     }
   }, [isLoading, data]);
-  console.log("listMessage", listMessage);
-  console.log("data", data);
 
   const handleLoadMore = () => {
     setVisibleMessages(visibleMessages + 10);

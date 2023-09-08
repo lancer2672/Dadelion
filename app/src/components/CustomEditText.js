@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
+import { useTheme } from "styled-components";
 
 const CustomEditText = ({
   style,
@@ -11,6 +12,7 @@ const CustomEditText = ({
   onPress = null,
   editable = true,
 }) => {
+  const theme = useTheme();
   return (
     <Pressable onPress={onPress} style={[styles.defaultStyle, style]}>
       <Text style={styles.label}>{label}</Text>
@@ -20,7 +22,7 @@ const CustomEditText = ({
           editable={editable}
           value={value}
           numberOfLines={1}
-          style={[styles.input, { color: "black" }]}
+          style={[styles.input, { color: theme.colors.chat.text }]}
           defaultValue={defaultValue}
         ></TextInput>
       </View>

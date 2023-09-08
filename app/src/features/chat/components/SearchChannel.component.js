@@ -4,6 +4,7 @@ import { Searchbar, Snackbar } from "react-native-paper";
 import styled from "styled-components/native";
 
 import { useTranslation } from "react-i18next";
+import { Animated } from "react-native";
 
 const SearchChannel = ({
   listUser,
@@ -15,24 +16,23 @@ const SearchChannel = ({
   const [isSearching, setIsSearching] = useState(false);
   const { t } = useTranslation();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [containerWidth, setContainerWidth] = useState(0);
   const searchTimeout = useRef();
-
+  const searchBarRef = useRef();
+  const animation = new Animated.Value(52);
   const search = () => {
     const userResult = listUser.filter((user) =>
       user.nickname.toLowerCase().includes(searchKeyword.toLowerCase())
     );
-    console.log("userResult", userResult);
+
     const userResultIds = userResult.map((res) => {
       return res._id;
     });
-    console.log("userResultIds", userResultIds);
     const channelResult = channels.filter((channel) =>
       channel.memberIds.some((id) => userResultIds.includes(id))
     );
     const channelResultIds = channelResult.map((channel) => channel._id);
     setChannelIdsResult(channelResultIds);
-    console.log("channelResult", channelResult);
-    console.log("channelResultIds", channelResultIds);
   };
   useEffect(() => {
     if (searchKeyword.trim() == "") {
@@ -47,19 +47,61 @@ const SearchChannel = ({
       if (searchTimeout.current) clearTimeout(searchTimeout.current);
     };
   }, [searchKeyword]);
+  const handleFocus = () => {
+    Animated.timing(animation, {
+      toValue: containerWidth,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  };
+  const handleBlur = () => {
+    Animated.timing(animation, {
+      toValue: 52,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start(() => {
+      setSearchKeyword("");
+    });
+  };
+  const onIconPress = () => {
+    if (searchBarRef.current.isFocused()) {
+      handleBlur();
+      searchBarRef.current.blur();
+    } else {
+      handleFocus();
+      searchBarRef.current.focus();
+    }
+  };
   return (
-    <SearchContainer>
-      <Searchbar
-        icon={"account-search"}
-        placeholder="Tìm kiếm"
-        value={searchKeyword}
-        onChange={(newKeyword) => setSearchKeyword(newKeyword)}
-        onIconPress={() => console.log("press")}
-        onChangeText={(text) => {
-          setSearchKeyword((prevKeyword) => text);
+    <SearchContainer
+      onLayout={(event) => {
+        setContainerWidth(event.nativeEvent.layout.width);
+      }}
+    >
+      <Animated.View
+        style={{
+          width: animation,
+          height: 52,
+          marginVertical: 8,
+          flexDirection: "row",
         }}
-        iconColor={"#bdafaf"}
-      />
+      >
+        <Searchbar
+          ref={searchBarRef}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          style={{ flex: 1 }}
+          icon={"account-search"}
+          placeholder="Tìm kiếm"
+          value={searchKeyword}
+          onChange={(newKeyword) => setSearchKeyword(newKeyword)}
+          onIconPress={onIconPress}
+          onChangeText={(text) => {
+            setSearchKeyword((prevKeyword) => text);
+          }}
+          iconColor={"#bdafaf"}
+        />
+      </Animated.View>
       <Snackbar
         visible={snackbarVisible}
         duration={1000}
@@ -83,6 +125,10 @@ const SearchChannel = ({
 };
 
 const SearchContainer = styled(View)`
-  padding: ${(props) => props.theme.space[2]};
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  margin-left: 12px;
 `;
 export default SearchChannel;
