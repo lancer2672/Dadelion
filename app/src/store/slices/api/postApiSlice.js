@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import { UrlAPI } from "@src/constants";
+import { Blurhash } from "react-native-blurhash";
 
 const postRoute = "/post";
 
@@ -12,16 +13,15 @@ export const postApi = createApi({
     getAllPosts: builder.query({
       query: () => `${postRoute}/all`,
       transformResponse: (response, meta, arg) => {
-        if (response.data) {
-        }
-        const tranformedPosts = response.data.posts.map((post) => {
+        console.log("response.data", response.data);
+        const posts = response.data.posts.map((post) => {
           if (post.image != null) {
             post.image = `${UrlAPI}/${post.image}`;
           }
           return post;
         });
-        response.data.tranformedPosts = tranformedPosts;
-        return response.data;
+        console.log("posts", posts);
+        return { posts };
       },
       providesTags: ["Post"],
     }),

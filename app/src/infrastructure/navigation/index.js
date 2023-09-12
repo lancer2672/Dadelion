@@ -1,10 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, StatusBar } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
-import { StatusBar } from "expo-status-bar";
 
 import { AuthNavigator } from "./auth.navigator";
 import { AppNavigator } from "./app.navigator";
@@ -75,7 +74,6 @@ const Navigator = () => {
         <SafeAreaView
           style={{
             flex: 1,
-            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           }}
         >
           <AppNavigator></AppNavigator>

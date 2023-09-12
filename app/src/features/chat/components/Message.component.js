@@ -15,6 +15,8 @@ const UserMessage = ({
   const handleOpenImageFullScreen = () => {
     setModalVisible(true);
   };
+  console.log("messages", messages);
+  ``;
   return (
     <Container isMyMessage={isMyMessage}>
       {!isMyMessage && (
@@ -46,6 +48,7 @@ const UserMessage = ({
                     <Image
                       style={{
                         borderRadius: 20,
+                        marginTop: 12,
                         width: 140,
                         height: 180,
                         resizeMode: "cover",

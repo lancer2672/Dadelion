@@ -94,43 +94,6 @@ const PostItem = ({ navigation, post }) => {
           </PostDescriptionContainer>
         </View>
 
-        {/* {postImage && (
-        <Pressable
-          onPress={() => {
-            setModalVisible(true);
-          }}
-          style={{
-            width: SCREEN_WIDTH_WITH_MARGIN_L_R_12,
-            height: 350,
-          }}
-        >
-          <Image
-            source={{
-              uri: imageUri,
-            }}
-            style={{
-              flex: 1,
-            }}
-          ></Image>
-        </Pressable>
-      )}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <Image
-            source={{
-              uri: imageUri,
-            }}
-            style={{ width: imageSize.width, height: imageSize.height }}
-          ></Image>
-        </View>
-      </Modal> */}
         <ReactionBar post={post}> </ReactionBar>
       </Container>
     </Pressable>

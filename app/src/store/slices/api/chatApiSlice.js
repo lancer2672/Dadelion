@@ -11,7 +11,16 @@ export const chatApi = createApi({
   endpoints: (builder) => ({
     loadChatRoomMessages: builder.query({
       query: (channelId) => `${chatRoute}/messages/${channelId}`,
-      transformResponse: (response, meta, arg) => response.data.messages || [],
+      transformResponse: (response, meta, arg) => {
+        response.data.messages = response.data.messages.map((mes) => {
+          return {
+            ...mes,
+            imageUrl: mes.imageUrl && `${UrlAPI}${mes.imageUrl}`,
+          };
+        });
+        return response.data.messages || [];
+      },
+
       transformErrorResponse: (response, meta, arg) => response.data.message,
       async onCacheEntryAdded(
         arg,

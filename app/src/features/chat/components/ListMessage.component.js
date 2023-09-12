@@ -24,12 +24,10 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 const ListUserMessages = ({ channelId, chatFriend }) => {
   const { user } = useSelector(userSelector);
 
-  const [visibleMessages, setVisibleMessages] = useState(20);
+  // const [visibleMessages, setVisibleMessages] = useState(20);
   const [listMessage, setListMessage] = useState([]);
-
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ["25%", "40%"], []);
-
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -45,7 +43,6 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
     if (isSuccess) {
       const groupedByUserId = [];
       let obj = { userId: null, messages: [] };
-
       const createMessage = (msg) => ({
         _id: msg._id,
         message: msg.message,
@@ -77,9 +74,6 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
     }
   }, [isLoading, data]);
 
-  const handleLoadMore = () => {
-    setVisibleMessages(visibleMessages + 10);
-  };
   return (
     <>
       <Pressable style={{ flex: 1 }} onPress={handleHideModal}>
@@ -91,9 +85,8 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
           inverted={true}
           showsVerticalScrollIndicator={false}
           initialNumToRender={20}
-          data={listMessage.slice(0, visibleMessages)}
+          data={listMessage}
           ListEmptyComponent={() => <></>}
-          onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           renderItem={({ item }) => {
             const { userId: memberId, messages } = item;

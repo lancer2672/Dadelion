@@ -34,10 +34,9 @@ const chatMiddleware = () => (store) => {
         break;
       }
       case "chat/sendImage": {
-        const { channelId, senderId, imageData } = action.payload;
+        const { channelId, imageData } = action.payload;
         socket.emit("send-image", {
           channelId,
-          senderId,
           imageData,
         });
         break;

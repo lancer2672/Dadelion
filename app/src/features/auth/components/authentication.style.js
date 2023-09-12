@@ -28,18 +28,20 @@ export const Logo = styled.Image.attrs((props) => ({
 export const AuthButton = styled(TouchableOpacity).attrs((props) => ({
   // disabled: props.isValidated ? false : true,
 }))`
-  min-width: 200px;
+  min-width: 300px;
   padding-top: ${(props) => props.theme.space[2]};
   padding-bottom: ${(props) => props.theme.space[2]};
-  background-color: ${(props) => props.theme.colors.ui.quaternary};
+  background-color: ${(props) => props.theme.colors.text.primary};
   border-radius: 25px;
+  elevation: 2;
 `;
 
 export const AuthButtonContent = styled(Text)`
   align-self: center;
   font-weight: bold;
+  padding-vertical: 2px;
   font-size: 16px;
-  color: ${(props) => props.theme.colors.text.primary};
+  color: ${(props) => props.theme.colors.text.secondary};
 `;
 export const Slogan = styled(Text)`
   font-style: italic;

@@ -12,7 +12,8 @@ import {
 import React, { useState, useContext, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
+// import * as ImagePicker from "expo-image-picker";
+import { openImagePicker } from "@src/utils/imageHelper";
 import styled from "styled-components/native";
 
 import { Spacer } from "@src/components/spacer/spacer.component";
@@ -30,7 +31,7 @@ import { setIsLoading } from "@src/store/slices/appSlice";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const CreatePost = ({ navigation }) => {
-  const [createPost, { isLoading, isSuccess, data, ...res }] =
+  const [createPost, { isLoading, isSuccess, data, error }] =
     useCreatePostMutation();
   const { user } = useSelector(userSelector);
   const [description, setDescription] = useState("");
@@ -42,10 +43,8 @@ const CreatePost = ({ navigation }) => {
     }
     dispatch(setIsLoading(isLoading));
   }, [isLoading]);
+  console.log("error", error);
   const handleCreatePost = async () => {
-    if (!imageUri && description.trim(" ") == "") {
-      //TODO:
-    }
     const newPostData = new FormData();
     if (imageUri != null) {
       newPostData.append("postImage", {
@@ -55,18 +54,11 @@ const CreatePost = ({ navigation }) => {
       });
     }
     newPostData.append("description", description);
+    console.log("newPostData", newPostData);
     createPost(newPostData);
   };
   const handleSelectImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.cancelled) {
-      setImageUri(result.uri);
-    }
+    openImagePicker();
   };
   return (
     <Container>

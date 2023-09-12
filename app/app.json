@@ -27,6 +27,7 @@
       "usesIcloudStorage ": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/imgs/DandelionIcon.png",
@@ -43,6 +44,7 @@
         "projectId": "7e4dc656-f2c2-4d3f-a529-2882a78b2aa3"
       }
     },
-    "owner": "khanha"
+    "owner": "khanha",
+    "plugins": ["@react-native-google-signin/google-signin"]
   }
 }

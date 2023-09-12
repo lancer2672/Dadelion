@@ -1,12 +1,25 @@
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 
+import { launchImageLibrary } from "react-native-image-picker";
+
 export const openImagePicker = () => {
-  return ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 1,
+  return new Promise((resolve, reject) => {
+    launchImageLibrary(
+      {
+        mediaType: "photo",
+        includeBase64: true,
+      },
+      (response) => {
+        if (response.didCancel) {
+          reject("User cancelled image picker");
+        } else if (response.error) {
+          reject("ImagePicker Error: ", response.error);
+        } else {
+          resolve(response);
+        }
+      }
+    );
   });
 };
 

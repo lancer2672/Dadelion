@@ -55,7 +55,7 @@ const DetailPost = ({ route }) => {
         <UserAvatar source={{ uri: postCreator.avatar }} />
         <View style={{ marginLeft: 12, justifyContent: "flex-end", flex: 1 }}>
           <CreatorName>{postCreator.nickname}</CreatorName>
-          <Text style={{ color: colors.text.secondary }}>
+          <Text style={{ color: theme.colors.chat.text }}>
             {postCreatedTimeFormatter(selectedPost.createdAt)}
           </Text>
         </View>
@@ -119,6 +119,9 @@ const PostDescriptionContainer = styled(ReadMore)`
   line-height: 22px;
   font-size: ${(props) => props.theme.fontSizes.body};
   color: ${(props) => props.theme.colors.chat.text};
+  padding-bottom: 12px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props) => props.theme.colors.chat.text};
 `;
 
 const PostDescription = styled(Text)`
@@ -135,6 +138,7 @@ const UserInfoContainer = styled(View)`
   flex-direction: row;
   margin-top: -28px;
   align-items: flex-end;
+
   margin-horizontal: 24px;
 `;
 

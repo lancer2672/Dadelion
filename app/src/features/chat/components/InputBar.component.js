@@ -62,13 +62,12 @@ const InputBar = ({ channelId }) => {
     }).start();
   };
   const handleOpenCamera = async () => {
+    console.log("handleOpenCamera");
     try {
       const result = await ImagePicker.launchCameraAsync();
       if (!result.canceled) {
         const base64String = await readBase64(result.assets[0].uri);
-        dispatch(
-          sendImage({ channelId, senderId: user._id, imageData: base64String })
-        );
+        dispatch(sendImage({ channelId, imageData: base64String }));
       }
     } catch (err) {
       console.log(err);
@@ -81,7 +80,6 @@ const InputBar = ({ channelId }) => {
   };
 
   const openImagePicker = async () => {
-    console.log("openImagePicker", openImagePicker);
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -89,9 +87,7 @@ const InputBar = ({ channelId }) => {
       });
       if (!result.cancelled) {
         const base64String = await readBase64(result.assets[0].uri);
-        dispatch(
-          sendImage({ channelId, userId: user._id, imageData: base64String })
-        );
+        dispatch(sendImage({ channelId, imageData: base64String }));
       }
     } catch (err) {
       console.log(err);
@@ -111,33 +107,29 @@ const InputBar = ({ channelId }) => {
       >
         {leftIconsVisible && (
           <LeftIconContainer>
-            <TouchableOpacity onPress={handleOpenCamera}>
-              <Icon>
-                <EvilIcons
-                  name="camera"
-                  size={iconSize}
-                  color={theme.colors.chat.text}
-                />
-              </Icon>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={openImagePicker}>
-              <Icon>
-                <EvilIcons
-                  name="image"
-                  size={iconSize}
-                  color={theme.colors.chat.text}
-                />
-              </Icon>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon>
-                <MaterialCommunityIcons
-                  name="microphone"
-                  size={iconSize}
-                  color={theme.colors.chat.text}
-                />
-              </Icon>
-            </TouchableOpacity>
+            <Icon onPress={handleOpenCamera}>
+              <EvilIcons
+                name="camera"
+                size={iconSize}
+                color={theme.colors.chat.text}
+              />
+            </Icon>
+
+            <Icon onPress={openImagePicker}>
+              <EvilIcons
+                name="image"
+                size={iconSize}
+                color={theme.colors.chat.text}
+              />
+            </Icon>
+
+            <Icon>
+              <MaterialCommunityIcons
+                name="microphone"
+                size={iconSize}
+                color={theme.colors.chat.text}
+              />
+            </Icon>
           </LeftIconContainer>
         )}
         <TextInput
