@@ -7,24 +7,21 @@ import {
   TextInput,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components/native";
 import {
   EvilIcons,
   MaterialCommunityIcons,
   Ionicons,
 } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-
+import { launchCameraAsync } from "expo-image-picker";
 import { userSelector } from "@src/store/selector";
 import { useDispatch, useSelector } from "react-redux";
 import { colors } from "@src/infrastructure/theme/colors";
 import { sendImage, sendMessage, typing } from "@src/store/slices/chatSlice";
 import { readBase64 } from "@src/utils/imageHelper";
 import { useTheme } from "styled-components";
-import { useRef } from "react";
-import { useEffect } from "react";
-
+import ImagePicker from "react-native-image-crop-picker";
 const InputBar = ({ channelId }) => {
   const theme = useTheme();
   const { user } = useSelector(userSelector);
@@ -62,12 +59,12 @@ const InputBar = ({ channelId }) => {
     }).start();
   };
   const handleOpenCamera = async () => {
-    console.log("handleOpenCamera");
     try {
-      const result = await ImagePicker.launchCameraAsync();
+      const result = await launchCameraAsync();
       if (!result.canceled) {
+        console.log("handleOpenCamera", result.assets[0]);
         const base64String = await readBase64(result.assets[0].uri);
-        dispatch(sendImage({ channelId, imageData: base64String }));
+        dispatch(sendImage({ channelId, imagesData: [base64String] }));
       }
     } catch (err) {
       console.log(err);
@@ -80,18 +77,33 @@ const InputBar = ({ channelId }) => {
   };
 
   const openImagePicker = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        selectionLimit: 5, // Set the maximum number of images the user can select
-      });
-      if (!result.cancelled) {
-        const base64String = await readBase64(result.assets[0].uri);
-        dispatch(sendImage({ channelId, imageData: base64String }));
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    ImagePicker.openPicker({
+      multiple: true,
+    })
+      .then((images) => {
+        console.log("images", images);
+        return Promise.all(
+          images.map(async (image, index) => {
+            return await readBase64(image.path);
+          })
+        );
+      })
+      .then((data) => {
+        dispatch(sendImage({ channelId, imagesData: data }));
+      })
+      .catch((er) => console.log("er", er));
+    // try {
+    //   const result = await ImagePicker.launchImageLibraryAsync({
+    //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+    //     selectionLimit: 5, // Set the maximum number of images the user can select
+    //   });
+    //   if (!result.cancelled) {
+    //     const base64String = await readBase64(result.assets[0].uri);
+    //     dispatch(sendImage({ channelId, imageData: base64String }));
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (

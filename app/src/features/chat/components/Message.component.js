@@ -12,11 +12,15 @@ const UserMessage = ({
   handleShowDialog,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const handleOpenImageFullScreen = () => {
-    setModalVisible(true);
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+  const handleOpenImageFullScreen = (imageUrl) => {
+    setSelectedImageUrl(() => imageUrl);
+    if (selectedImageUrl != null) {
+      setModalVisible(true);
+    }
   };
-  console.log("messages", messages);
-  ``;
+  console.log("selectedImageUrl", selectedImageUrl);
+
   return (
     <Container isMyMessage={isMyMessage}>
       {!isMyMessage && (
@@ -40,22 +44,30 @@ const UserMessage = ({
                     <Message isMyMessage={isMyMessage}>{item.message}</Message>
                   </>
                 )}
-                {item.imageUrl && (
-                  <Pressable
-                    onLongPress={handleShowDialog}
-                    onPress={handleOpenImageFullScreen}
-                  >
-                    <Image
-                      style={{
-                        borderRadius: 20,
-                        marginTop: 12,
-                        width: 140,
-                        height: 180,
-                        resizeMode: "cover",
-                      }}
-                      source={{ uri: item.imageUrl }}
-                    ></Image>
-                  </Pressable>
+                {item?.imageUrls?.length > 0 && (
+                  <View style={{ flexDirection: "row" }}>
+                    {item.imageUrls.map((imageUrl, index) => {
+                      return (
+                        <Pressable
+                          key={`chat-image` + index}
+                          onLongPress={handleShowDialog}
+                          onPress={() => handleOpenImageFullScreen(imageUrl)}
+                        >
+                          <Image
+                            style={{
+                              borderRadius: 20,
+                              marginTop: 12,
+                              marginRight: 12,
+                              width: 140,
+                              height: 180,
+                              resizeMode: "cover",
+                            }}
+                            source={{ uri: imageUrl }}
+                          ></Image>
+                        </Pressable>
+                      );
+                    })}
+                  </View>
                 )}
               </View>
             </View>
@@ -64,22 +76,20 @@ const UserMessage = ({
         keyExtractor={(item) => item._id}
       />
 
-      {/* {imageUrl && (
-        <Modal
-          animationType="fade"
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-          visible={modalVisible}
-        >
-          <View style={{ flex: 1 }}>
-            <Image
-              source={{ uri: imageUrl }}
-              style={{ flex: 1, resizeMode: "contain" }}
-            ></Image>
-          </View>
-        </Modal>
-      )} */}
+      <Modal
+        animationType="fade"
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+        visible={modalVisible}
+      >
+        <View style={{ flex: 1 }}>
+          <Image
+            source={{ uri: selectedImageUrl }}
+            style={{ flex: 1, resizeMode: "contain" }}
+          ></Image>
+        </View>
+      </Modal>
     </Container>
   );
 };

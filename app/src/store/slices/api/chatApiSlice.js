@@ -13,9 +13,15 @@ export const chatApi = createApi({
       query: (channelId) => `${chatRoute}/messages/${channelId}`,
       transformResponse: (response, meta, arg) => {
         response.data.messages = response.data.messages.map((mes) => {
+          const imageUrls = mes.imageUrls
+            ? mes.imageUrls.map((imageUrl) => {
+                return `${UrlAPI}${imageUrl}`;
+              })
+            : [];
+          console.log("imageUrls", imageUrls);
           return {
             ...mes,
-            imageUrl: mes.imageUrl && `${UrlAPI}${mes.imageUrl}`,
+            imageUrls,
           };
         });
         return response.data.messages || [];
@@ -36,6 +42,7 @@ export const chatApi = createApi({
             });
           });
           socket.on("receive-image", (newMess) => {
+            console.log("newMess", newMess);
             updateCachedData((draft) => {
               draft.unshift(newMess);
             });

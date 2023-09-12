@@ -115,13 +115,13 @@ android {
     compileSdkVersion 33
  
     defaultConfig {
-        applicationId "com.khanha.Dandelion"   
+        applicationId 'com.khanha.Dandelion'   
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "true"
         buildConfigField "boolean", "IS_HERMES_ENABLED", "false"
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
     }
 

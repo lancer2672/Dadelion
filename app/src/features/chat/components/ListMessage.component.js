@@ -46,7 +46,7 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
       const createMessage = (msg) => ({
         _id: msg._id,
         message: msg.message,
-        imageUrl: msg.imageUrl,
+        imageUrls: msg.imageUrls,
         createdAt: msg.createdAt,
       });
 

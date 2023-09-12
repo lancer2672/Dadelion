@@ -17,8 +17,6 @@ import Navigator from "./src/infrastructure/navigation";
 import store from "./src/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext } from "react";
-import { Voximplant } from "react-native-voximplant";
-// import { Voximplant } from "react-native-voximplant";
 
 i18next.use(initReactI18next).init({
   compatibilityJSON: "v3",
@@ -35,26 +33,13 @@ export const ThemeContext = createContext();
 
 export default function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const voximplant = Voximplant.getInstance();
   useEffect(() => {
-    // const connectVoximplant = async () => {
-    //   let clientState = await voximplant.getClientState();
-    //   if (clientState === Voximplant.ClientState.DISCONNECTED) {
-    //     await voximplant.connect();
-    //     console.log("Disconnected In");
-    //   } else if (clientState === Voximplant.ClientState.LOGGED_IN) {
-    //     console.log("Logged In");
-    //   }
-    // };
-    // connectVoximplant();
     (async () => {
       const isUseDarkTheme = await AsyncStorage.getItem("AppTheme");
-      console.log("darkTheme", isUseDarkTheme);
       if (isUseDarkTheme == "dark") {
         setIsDarkTheme(true);
       }
       const language = await AsyncStorage.getItem("Language");
-      console.log("language", language);
       if (language) {
         i18next.changeLanguage(language);
       }
