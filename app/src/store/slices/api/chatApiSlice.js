@@ -18,7 +18,6 @@ export const chatApi = createApi({
                 return `${UrlAPI}${imageUrl}`;
               })
             : [];
-          console.log("imageUrls", imageUrls);
           return {
             ...mes,
             imageUrls,
@@ -42,7 +41,9 @@ export const chatApi = createApi({
             });
           });
           socket.on("receive-image", (newMess) => {
-            console.log("newMess", newMess);
+            newMess.imageUrls = newMess.imageUrls.map((imageUrl) => {
+              return `${UrlAPI}${imageUrl}`;
+            });
             updateCachedData((draft) => {
               draft.unshift(newMess);
             });
@@ -71,6 +72,16 @@ export const chatApi = createApi({
             });
           });
           socket.on("receive-message", (newMess, channelId) => {
+            updateCachedData((draft) => {
+              const c = draft.findIndex((channel) => channel._id == channelId);
+              if (c != -1) {
+                let firstElement = draft.shift();
+                firstElement.channelMessages.unshift(newMess);
+                draft.splice(c, 0, firstElement);
+              }
+            });
+          });
+          socket.on("receive-image", (newMess, channelId) => {
             updateCachedData((draft) => {
               const c = draft.findIndex((channel) => channel._id == channelId);
               if (c != -1) {
@@ -112,6 +123,13 @@ export const chatApi = createApi({
           await cacheDataLoaded;
           const socket = getSocket();
           socket.on("receive-message", (newMess, channelId) => {
+            updateCachedData((draft) => {
+              if (draft.channelId === channelId) {
+                draft.lastMessage = newMess;
+              }
+            });
+          });
+          socket.on("receive-image", (newMess, channelId) => {
             updateCachedData((draft) => {
               if (draft.channelId === channelId) {
                 draft.lastMessage = newMess;

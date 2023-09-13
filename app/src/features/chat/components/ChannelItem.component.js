@@ -120,7 +120,7 @@ const Channel = ({ navigation, channel }) => {
 
         {lastMessage ? (
           <LastMessage userId={user._id} lastMessage={lastMessage}>
-            {lastMessage.message}
+            {lastMessage.message || t("sentImage")}
           </LastMessage>
         ) : (
           <EmptyMessage>{t("emptyMessage")}</EmptyMessage>

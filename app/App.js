@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18next from "i18next";
-import { PermissionsAndroid } from "react-native";
+import { PermissionsAndroid, StatusBar } from "react-native";
 import { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import FlashMessage from "react-native-flash-message";

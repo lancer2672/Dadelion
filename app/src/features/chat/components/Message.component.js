@@ -1,10 +1,21 @@
-import { StyleSheet, Image, Text, View, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  Text,
+  View,
+  FlatList,
+  ImageBackground,
+  TouchableOpacity,
+  Pressable,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import styled from "styled-components/native";
-import { TouchableOpacity } from "react-native";
-import { Pressable } from "react-native";
 import { Modal } from "react-native";
-
+import RNFetchBlob from "rn-fetch-blob";
+import { Entypo, Feather } from "@expo/vector-icons";
+import { hasAndroidPermission } from "@src/permissions/cameraRollPermissions";
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 const UserMessage = ({
   chatFriend = {},
   isMyMessage,
@@ -13,14 +24,44 @@ const UserMessage = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState(null);
-  const handleOpenImageFullScreen = (imageUrl) => {
+  const [selectedImageList, setSelectedImageList] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const handlePressLeft = () => {
+    setSelectedIndex(
+      selectedIndex - 1 < 0 ? selectedImageList.length - 1 : selectedIndex - 1
+    );
+    setSelectedImageUrl(selectedImageList[selectedIndex]);
+  };
+  const handlePressRight = () => {
+    setSelectedIndex(
+      selectedIndex + 1 >= selectedImageList.length ? 0 : selectedIndex + 1
+    );
+    setSelectedImageUrl(selectedImageList[selectedIndex]);
+  };
+  const handleOpenImageFullScreen = (imageListUrl, imageUrl) => {
+    setSelectedImageList(() => imageListUrl);
     setSelectedImageUrl(() => imageUrl);
     if (selectedImageUrl != null) {
       setModalVisible(true);
     }
   };
-  console.log("selectedImageUrl", selectedImageUrl);
-
+  const handleDownloadImage = async (imageUrl) => {
+    if (Platform.OS === "android" && (await hasAndroidPermission())) {
+      RNFetchBlob.config({
+        fileCache: true,
+        appendExt: "png",
+      })
+        .fetch("GET", imageUrl)
+        .then((res) => {
+          return CameraRoll.save(res.path());
+        })
+        .then((uri) => console.log("Image saved to", uri))
+        .catch((error) => {
+          setDownloading(false);
+          console.error(error);
+        });
+    }
+  };
   return (
     <Container isMyMessage={isMyMessage}>
       {!isMyMessage && (
@@ -47,25 +88,61 @@ const UserMessage = ({
                 {item?.imageUrls?.length > 0 && (
                   <View style={{ flexDirection: "row" }}>
                     {item.imageUrls.map((imageUrl, index) => {
-                      return (
-                        <Pressable
-                          key={`chat-image` + index}
-                          onLongPress={handleShowDialog}
-                          onPress={() => handleOpenImageFullScreen(imageUrl)}
-                        >
-                          <Image
-                            style={{
-                              borderRadius: 20,
-                              marginTop: 12,
-                              marginRight: 12,
-                              width: 140,
-                              height: 180,
-                              resizeMode: "cover",
-                            }}
-                            source={{ uri: imageUrl }}
-                          ></Image>
-                        </Pressable>
-                      );
+                      if (
+                        index == 0 ||
+                        (index == 1 && item.imageUrls.length <= 2)
+                      ) {
+                        return (
+                          <ImageContainer
+                            key={`chat-image` + index}
+                            onPress={() =>
+                              handleOpenImageFullScreen(
+                                item.imageUrls,
+                                imageUrl
+                              )
+                            }
+                          >
+                            <Image
+                              style={{
+                                flex: 1,
+                              }}
+                              resizeMode="cover"
+                              source={{ uri: imageUrl }}
+                            ></Image>
+                          </ImageContainer>
+                        );
+                      } else if (index == 1 && item.imageUrls.length > 2) {
+                        return (
+                          <ImageContainer
+                            key={`chat-image` + index}
+                            onPress={() =>
+                              handleOpenImageFullScreen(
+                                item.imageUrls,
+                                imageUrl
+                              )
+                            }
+                          >
+                            <Image
+                              style={{
+                                flex: 1,
+                              }}
+                              resizeMode="cover"
+                              source={{ uri: imageUrl }}
+                            ></Image>
+                            <ImageOverlay>
+                              <Text
+                                style={{
+                                  fontSize: 28,
+                                  fontWeight: 500,
+                                  color: "white",
+                                }}
+                              >
+                                {item.imageUrls.length - 1}
+                              </Text>
+                            </ImageOverlay>
+                          </ImageContainer>
+                        );
+                      }
                     })}
                   </View>
                 )}
@@ -83,12 +160,63 @@ const UserMessage = ({
         }}
         visible={modalVisible}
       >
-        <View style={{ flex: 1 }}>
-          <Image
-            source={{ uri: selectedImageUrl }}
-            style={{ flex: 1, resizeMode: "contain" }}
-          ></Image>
-        </View>
+        <ImageBackground
+          source={{ uri: selectedImageUrl }}
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+          resizeMode="cover"
+        >
+          <TouchableOpacity
+            onPress={() => handleDownloadImage(selectedImageUrl)}
+            style={{ position: "absolute", top: 16, right: 16, padding: 12 }}
+          >
+            <Feather name="download" size={40} color="gray" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handlePressLeft} style={{ padding: 24 }}>
+            <Entypo name="chevron-left" size={40} color="gray" />
+          </TouchableOpacity>
+          <View
+            style={{
+              height: 80,
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              left: 0,
+              backgroundColor: "rgba(52, 52, 52, 0.5)",
+              paddingVertical: 8,
+            }}
+          >
+            <FlatList
+              data={selectedImageList}
+              horizontal
+              renderItem={({ item, index }) => {
+                return (
+                  <Pressable
+                    onPress={() => {
+                      setSelectedImageUrl(() => item);
+                    }}
+                  >
+                    <Image
+                      key={`list-image-item` + index}
+                      style={{ width: 80, height: 72, marginHorizontal: 8 }}
+                      resizeMode="cover"
+                      source={{ uri: item }}
+                      title={item.title}
+                    />
+                  </Pressable>
+                );
+              }}
+              keyExtractor={(item) => item}
+            />
+          </View>
+          <TouchableOpacity onPress={handlePressRight} style={{ padding: 24 }}>
+            <Entypo name="chevron-right" size={40} color="gray" />
+          </TouchableOpacity>
+        </ImageBackground>
       </Modal>
     </Container>
   );
@@ -99,12 +227,20 @@ const Container = styled(View).attrs((props) => ({
   flex: 1,
 }))`
   align-content: center;
-
   margin: 8px;
-
   margin-bottom: 0px;
 `;
 
+const ImageOverlay = styled(View)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(52, 52, 52, 0.5);
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+`;
 const Avatar = styled(Image)`
   border-radius: 25px;
   width: 32px;
@@ -134,7 +270,14 @@ const Message = styled(Text).attrs((props) => {
   padding-right: 10px;
   font-size: 15px;
 `;
-
+const ImageContainer = styled(Pressable)`
+  border-radius: 20px;
+  margin-top: 12px;
+  margin-right: 12px;
+  width: 140px;
+  overflow: hidden;
+  height: 180px;
+`;
 export default UserMessage;
 
 const styles = StyleSheet.create({});
