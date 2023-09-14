@@ -1,6 +1,7 @@
 import { View, Keyboard, Pressable, Image, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
-import ProgressBar from "react-native-progress/Bar";
+import * as Progress from "react-native-progress";
+
 import {
   AuthButton,
   Error,
@@ -23,6 +24,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { initSocket } from "@src/utils/socket";
 import { Avatar } from "@src/components/Avatar";
+import { ActivityIndicator } from "react-native-paper";
+import { loginVoximplant } from "@src/voximplant/services/Client";
 
 const Login = ({ navigation }) => {
   const [login, { error, isSuccess, isLoading: isFetching, ...loginResult }] =
@@ -37,16 +40,9 @@ const Login = ({ navigation }) => {
   const toggleSavePasswordCheck = () => {
     setSavePassword(!savePassword);
   };
-  const updateProgressBarEvent = (progEvent) => {
-    var percentCompleted = Math.round(
-      (progEvent.loaded * 100) / progEvent.total
-    );
-    setProgress(() => percentCompleted / 100);
-  };
   const handleLogin = () => {
     login({ username, password });
   };
-
   const handleSignInGoogle = () => {};
   useEffect(() => {
     // handle result when login succeeded
@@ -57,27 +53,23 @@ const Login = ({ navigation }) => {
           dispatch(setUser(payload));
           //auto enable save password
           if (true) {
-            await AsyncStorage.setItem(
-              "userId",
-              JSON.stringify(loginResult.data.user._id)
-            );
-
-            await AsyncStorage.setItem(
-              "token",
-              JSON.stringify(loginResult.data.token)
-            );
-            await AsyncStorage.setItem(
-              "refreshToken",
-              JSON.stringify(loginResult.data.refreshToken)
+            ["userId", "token", "refreshToken", "username", "password"].forEach(
+              async (key) => {
+                await AsyncStorage.setItem(
+                  key,
+                  JSON.stringify(loginResult.data[key] || eval(key))
+                );
+              }
             );
           }
+          loginVoximplant(username, password);
           initSocket(loginResult.data.user._id);
         }
       } catch (er) {
         console.log("err", er);
       }
+      dispatch(setIsLoading(isFetching));
     })();
-    dispatch(setIsLoading(isFetching));
   }, [isFetching]);
   const navigateToRegister1Screen = () => {
     // setError(null);
@@ -85,17 +77,6 @@ const Login = ({ navigation }) => {
   };
   return (
     <AuthContainer>
-      {false && (
-        <View style={{ position: "absolute", top: 345 }}>
-          <ProgressBar
-            color={"#9b92e5"}
-            unfilledColor={"#ddd5e0"}
-            borderWidth={0}
-            progress={progress}
-            width={200}
-          />
-        </View>
-      )}
       {false ? (
         <View>
           <Avatar width={80} height={80}></Avatar>

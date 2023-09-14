@@ -1,18 +1,25 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useRef } from "react";
 import styled from "styled-components/native";
 import { Ionicons, FontAwesome, Entypo, Feather } from "@expo/vector-icons";
 import { Avatar } from "../../../components/Avatar";
 import { TouchableOpacity, View } from "react-native";
-import { colors } from "@src/infrastructure/theme/colors";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 import { useTheme } from "styled-components";
-
+import { Platform } from "react-native";
+import { requestCallingPermission } from "@src/permissions";
+import { Voximplant } from "react-native-voximplant";
+import { useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
 const ChatRoomHeader = ({ navigation, chatFriend }) => {
+  const { user } = useSelector(userSelector);
   const theme = useTheme();
   const handleNavigateToGuest = () => {
     if (chatFriend) {
       navigation.navigate("Guest", { guestId: chatFriend._id });
     }
+  };
+  const makeCall = () => {
+    navigation.navigate("CallingScreen", { user: chatFriend });
   };
   return (
     <Container>
@@ -46,7 +53,7 @@ const ChatRoomHeader = ({ navigation, chatFriend }) => {
           )} ago`}</StatusText>
         )}
       </HeaderInfo>
-      <TouchableOpacity style={{ padding: 4 }}>
+      <TouchableOpacity onPress={makeCall} style={{ padding: 4 }}>
         <FontAwesome
           name="video-camera"
           size={24}

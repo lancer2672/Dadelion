@@ -9,10 +9,8 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setAuth } from "@src/features/auth/authSlice";
 import { userSelector } from "@src/store/selector";
 import {
   useGetUserByIdQuery,

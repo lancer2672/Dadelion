@@ -14,8 +14,9 @@ import styled from "styled-components/native";
 import { Modal } from "react-native";
 import RNFetchBlob from "rn-fetch-blob";
 import { Entypo, Feather } from "@expo/vector-icons";
-import { hasAndroidPermission } from "@src/permissions/cameraRollPermissions";
+import { imageStoragePermission } from "@src/permissions";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import { showMessage } from "react-native-flash-message";
 const UserMessage = ({
   chatFriend = {},
   isMyMessage,
@@ -46,7 +47,7 @@ const UserMessage = ({
     }
   };
   const handleDownloadImage = async (imageUrl) => {
-    if (Platform.OS === "android" && (await hasAndroidPermission())) {
+    if (Platform.OS === "android" && (await imageStoragePermission())) {
       RNFetchBlob.config({
         fileCache: true,
         appendExt: "png",
@@ -55,9 +56,17 @@ const UserMessage = ({
         .then((res) => {
           return CameraRoll.save(res.path());
         })
-        .then((uri) => console.log("Image saved to", uri))
+        .then((uri) => {
+          showMessage({
+            message: t("success"),
+            type: "success",
+          });
+        })
         .catch((error) => {
-          setDownloading(false);
+          showMessage({
+            message: t("failed"),
+            type: "alert",
+          });
           console.error(error);
         });
     }

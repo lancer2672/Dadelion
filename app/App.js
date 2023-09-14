@@ -17,7 +17,11 @@ import Navigator from "./src/infrastructure/navigation";
 import store from "./src/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext } from "react";
-
+import { connectVoximplant } from "@src/voximplant/services/Client";
+import { Voximplant } from "react-native-voximplant";
+import CallingScreen from "@src/features/call/screens/CallingScreen.screen";
+import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
+import CallScreen from "@src/features/call/screens/Call.screen";
 i18next.use(initReactI18next).init({
   compatibilityJSON: "v3",
   interpolation: { escapeValue: false },
@@ -33,6 +37,7 @@ export const ThemeContext = createContext();
 
 export default function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+
   useEffect(() => {
     (async () => {
       const isUseDarkTheme = await AsyncStorage.getItem("AppTheme");
@@ -44,6 +49,7 @@ export default function App() {
         i18next.changeLanguage(language);
       }
     })();
+    connectVoximplant();
   }, []);
   return (
     <I18nextProvider i18n={i18next}>

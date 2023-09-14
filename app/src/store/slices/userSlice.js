@@ -7,7 +7,13 @@ const initialState = {
   refreshToken: null,
 };
 export const logoutUser = createAsyncThunk("user/logout", async () => {
-  await AsyncStorage.multiRemove(["userId", "token"]);
+  await AsyncStorage.multiRemove([
+    "userId",
+    "token",
+    "refreshToken",
+    "username",
+    "password",
+  ]);
 });
 
 export const userSlice = createSlice({

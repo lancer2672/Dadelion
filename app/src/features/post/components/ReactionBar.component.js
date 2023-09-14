@@ -9,21 +9,22 @@ import {
 } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { useTheme } from "styled-components";
-
+import { reactPost } from "@src/store/slices/postSlice";
 const ReactionBar = ({ post }) => {
   const { likes } = post;
   const theme = useTheme();
+  const dispatch = useDispatch();
   const [heart, setHeart] = useState(false);
   const userState = useSelector(userSelector);
   const [reactionNumber, setReactionNumber] = useState(0);
-  const [reactPost, {}] = useReactPostMutation();
+  // const [reactPost, {}] = useReactPostMutation();
   const handleReact = () => {
-    reactPost(post._id);
+    dispatch(reactPost({ postId: post._id, postCreatorId: post.user }));
   };
   useEffect(() => {
     //check if user reacted this post
@@ -35,6 +36,7 @@ const ReactionBar = ({ post }) => {
     } else {
       setHeart(false);
     }
+
     setReactionNumber(post.likes.length);
   }, [post.likes]);
   return (

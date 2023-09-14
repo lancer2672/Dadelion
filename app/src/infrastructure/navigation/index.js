@@ -12,6 +12,7 @@ import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { setToken, setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { initSocket } from "@src/utils/socket";
+import { loginVoximplant } from "@src/voximplant/services/Client";
 
 const Navigator = () => {
   const userState = useSelector(userSelector);
@@ -45,10 +46,16 @@ const Navigator = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const userId = await AsyncStorage.getItem("userId");
-        const token = await AsyncStorage.getItem("token");
-        const refreshToken = await AsyncStorage.getItem("refreshToken");
-        // update token for header RTK query
+        const keys = [
+          "userId",
+          "token",
+          "refreshToken",
+          "username",
+          "password",
+        ];
+        const [userId, token, refreshToken, username, password] =
+          await Promise.all(keys.map((key) => AsyncStorage.getItem(key)));
+
         dispatch(
           setToken({
             token: JSON.parse(token),
@@ -62,8 +69,10 @@ const Navigator = () => {
             refreshToken: JSON.parse(refreshToken),
           });
         }
+
+        await loginVoximplant(username, password);
       } catch (er) {
-        console.log(er);
+        console.log("er", er);
       }
     };
     getUser();
@@ -94,7 +103,7 @@ const Navigator = () => {
             right: 0,
           }}
         >
-          <ActivityIndicator size="large" color="#FFF" />
+          <ActivityIndicator size="large" color={"rgba(54, 100, 186,0.4)"} />
         </View>
       )}
     </NavigationContainer>

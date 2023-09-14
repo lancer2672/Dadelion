@@ -2,6 +2,8 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import { UrlAPI } from "@src/constants";
 import { Blurhash } from "react-native-blurhash";
+import { getSocket } from "@src/utils/socket";
+import { current } from "@reduxjs/toolkit";
 
 const postRoute = "/post";
 
@@ -13,18 +15,51 @@ export const postApi = createApi({
     getAllPosts: builder.query({
       query: () => `${postRoute}/all`,
       transformResponse: (response, meta, arg) => {
-        console.log("response.data", response.data);
         const posts = response.data.posts.map((post) => {
           if (post.image != null) {
             post.image = `${UrlAPI}/${post.image}`;
           }
           return post;
         });
-        console.log("posts", posts);
+
         return { posts };
+      },
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        try {
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded;
+          const socket = getSocket();
+          socket.on("react-post", (postId, reactUserId, isAddedToList) => {
+            console.log("postId, ", postId, reactUserId, isAddedToList);
+            updateCachedData((draft) => {
+              console.log("currentDraftPost", current(draft));
+              const i = draft.posts.findIndex((post) => post._id == postId);
+
+              if (i >= 0) {
+                if (isAddedToList) {
+                  draft.posts[i].likes.push({ userId: reactUserId });
+                } else {
+                  const index = draft.posts[i].likes.findIndex(
+                    (userId) => userId == reactUserId
+                  );
+                  draft.posts[i].likes.splice(index, i);
+                }
+              }
+              console.log("afterDraft", current(draft));
+            });
+          });
+        } catch (err) {
+          console.log("err", err);
+        }
+        // cacheEntryRemoved will resolve when the cache subscription is no longer active
+        await cacheEntryRemoved;
       },
       providesTags: ["Post"],
     }),
+
     getPostByUserId: builder.query({
       query: () => `${postRoute}/`,
       transformResponse: (response, meta, arg) => {

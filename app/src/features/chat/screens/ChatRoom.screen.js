@@ -11,12 +11,13 @@ import { userSelector } from "@src/store/selector";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { useTranslation } from "react-i18next";
 import { joinRoom, typing } from "@src/store/slices/chatSlice";
-import { chatApi } from "@src/store/slices/api/chatApiSlice";
 import { getSocket } from "@src/utils/socket";
+import { useTheme } from "styled-components";
 
 const ChatRoom = ({ navigation, route }) => {
   const { user } = useSelector(userSelector);
   const { t } = useTranslation();
+  const theme = useTheme();
   const dispatch = useDispatch();
   const socket = getSocket();
   const { channelId, memberIds } = route.params;
@@ -33,9 +34,8 @@ const ChatRoom = ({ navigation, route }) => {
     const friendId = memberIds.filter((id) => id != user._id);
     setChatFriendId(friendId[0]);
     dispatch(joinRoom({ channelId }));
-    socket.on("typing", (channelId, isTyping) => {
+    socket.on("typing", (channelId, chatFriendId, isTyping) => {
       setIsTyping(() => isTyping);
-      console.log("socket on typing", channelId, isTyping);
     });
   }, []);
   useEffect(() => {
@@ -55,22 +55,43 @@ const ChatRoom = ({ navigation, route }) => {
         channelId={channelId}
       ></ListUserMessages>
       {isTyping && (
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingLeft: 20,
-          }}
-        >
-          <Text style={{ color: "red" }}>User Typing</Text>
-        </View>
+        <TypingWrapper>
+          <Text
+            style={{
+              fontWeight: 500,
+              fontSize: 16,
+              color: theme.colors.chat.text,
+            }}
+          >
+            {t("typing")}
+          </Text>
+          <AnimatedEllipsis
+            style={{
+              color: theme.colors.chat.text,
+              fontSize: 20,
+            }}
+          ></AnimatedEllipsis>
+        </TypingWrapper>
       )}
-      <InputBar channelId={channelId}></InputBar>
+      <InputBar chatFriendId={chatFriendId} channelId={channelId}></InputBar>
     </Container>
   );
 };
 const Container = styled(View)`
   flex: 1;
+  background-color: ${(props) => props.theme.colors.chat.bg.primary};
+`;
+const TypingWrapper = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 20px;
+  align-self: baseline;
+  margin-top: 8px;
+  border-radius: 1000px;
+  padding-vertical: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
   background-color: ${(props) => props.theme.colors.chat.bg.primary};
 `;
 export default ChatRoom;

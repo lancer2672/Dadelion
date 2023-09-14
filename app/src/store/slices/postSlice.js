@@ -10,7 +10,9 @@ export const postSlice = createSlice({
     setSelectedPost: (state, action) => {
       state.selectedPost = action.payload;
     },
+    reactPost: () => {},
+    commentPost: () => {},
   },
 });
 
-export const { setSelectedPost } = postSlice.actions;
+export const { setSelectedPost, reactPost, commentPost } = postSlice.actions;

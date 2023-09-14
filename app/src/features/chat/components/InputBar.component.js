@@ -13,6 +13,7 @@ import {
   EvilIcons,
   MaterialCommunityIcons,
   Ionicons,
+  Feather,
 } from "@expo/vector-icons";
 import { launchCameraAsync } from "expo-image-picker";
 import { userSelector } from "@src/store/selector";
@@ -22,10 +23,12 @@ import { sendImage, sendMessage, typing } from "@src/store/slices/chatSlice";
 import { readBase64 } from "@src/utils/imageHelper";
 import { useTheme } from "styled-components";
 import ImagePicker from "react-native-image-crop-picker";
-const InputBar = ({ channelId }) => {
+const InputBar = ({ channelId, chatFriendId }) => {
   const theme = useTheme();
   const { user } = useSelector(userSelector);
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
+  const [textInputVisible, setTextInputVisible] = useState(true);
+  const [trashIconVisible, setTrashIconVisible] = useState(false);
   const [textInputWidth, setTextInputWidth] = useState(0);
   const [photoUri, setPhotoUri] = useState(null);
   const [text, setText] = useState("");
@@ -34,11 +37,12 @@ const InputBar = ({ channelId }) => {
   const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
   const inputWidth = textInputWidth + iconContainerWidth;
   const animation = new Animated.Value(inputWidth);
+
   useEffect(() => {
     if (text.trim() != "") {
-      dispatch(typing({ channelId, isTyping: true }));
+      dispatch(typing({ channelId, chatFriendId, isTyping: true }));
     } else {
-      dispatch(typing({ channelId, isTyping: false }));
+      dispatch(typing({ channelId, chatFriendId, isTyping: false }));
     }
   }, [text]);
   const handleFocus = () => {
@@ -70,12 +74,10 @@ const InputBar = ({ channelId }) => {
       console.log(err);
     }
   };
-
   const handleSendMessage = () => {
     setText("");
     dispatch(sendMessage({ channelId, senderId: user._id, newMessage: text }));
   };
-
   const openImagePicker = async () => {
     ImagePicker.openPicker({
       multiple: true,
@@ -105,18 +107,21 @@ const InputBar = ({ channelId }) => {
     //   console.log(err);
     // }
   };
-
+  const recordVoice = () => {};
   return (
     <Container>
       <Animated.View
         style={{
           flexDirection: "row",
-          justifyContent: "center",
+          justifyContent: "space-between",
           alignItems: "center",
           width: animation,
           flex: 1,
         }}
       >
+        {/* <TouchableOpacity style={{ marginLeft: 4 }}>
+          <Feather name="trash" size={24} color={theme.colors.chat.text} />
+        </TouchableOpacity> */}
         {leftIconsVisible && (
           <LeftIconContainer>
             <Icon onPress={handleOpenCamera}>
@@ -144,25 +149,27 @@ const InputBar = ({ channelId }) => {
             </Icon>
           </LeftIconContainer>
         )}
-        <TextInput
-          value={text}
-          onChangeText={(newText) => setText(newText)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          placeholder={"Nhắn tin"}
-          placeholderTextColor={theme.colors.chat.text}
-          style={{
-            flex: 1,
-            minHeight: 32,
-            padding: 6,
-            color: theme.colors.chat.text,
-            marginHorizontal: 12,
-          }}
-          multiline
-          onLayout={(event) => {
-            setTextInputWidth(event.nativeEvent.layout.width);
-          }}
-        />
+        {textInputVisible && (
+          <TextInput
+            value={text}
+            onChangeText={(newText) => setText(newText)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder={"Nhắn tin"}
+            placeholderTextColor={theme.colors.chat.text}
+            style={{
+              flex: 1,
+              minHeight: 32,
+              padding: 6,
+              color: theme.colors.chat.text,
+              marginHorizontal: 12,
+            }}
+            multiline
+            onLayout={(event) => {
+              setTextInputWidth(event.nativeEvent.layout.width);
+            }}
+          />
+        )}
       </Animated.View>
 
       <TouchableOpacity

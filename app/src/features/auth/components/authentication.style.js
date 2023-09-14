@@ -41,7 +41,7 @@ export const AuthButtonContent = styled(Text)`
   font-weight: bold;
   padding-vertical: 2px;
   font-size: 16px;
-  color: ${(props) => props.theme.colors.text.secondary};
+  color: white;
 `;
 export const Slogan = styled(Text)`
   font-style: italic;

@@ -1,5 +1,5 @@
 import { Platform, PermissionsAndroid } from "react-native";
-export async function hasAndroidPermission() {
+export async function imageStoragePermission() {
   const getCheckPermissionPromise = () => {
     if (Platform.Version >= 33) {
       return Promise.all([
@@ -45,3 +45,24 @@ export async function hasAndroidPermission() {
 
   return await getRequestPermissionPromise();
 }
+
+export const requestCallingPermission = async () => {
+  const permissions = [
+    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+    PermissionsAndroid.PERMISSIONS.CAMERA,
+  ];
+
+  const granted = await PermissionsAndroid.requestMultiple(permissions);
+  const recordAudioGranted =
+    granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] === "granted";
+  const cameraGranted =
+    granted[PermissionsAndroid.PERMISSIONS.CAMERA] === "granted";
+  if (!cameraGranted || !recordAudioGranted) {
+    console.log("permissions not granted");
+    return false;
+  } else {
+    console.log("permissions granted");
+
+    return true;
+  }
+};

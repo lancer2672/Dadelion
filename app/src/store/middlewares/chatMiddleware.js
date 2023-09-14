@@ -15,8 +15,8 @@ const chatMiddleware = () => (store) => {
         break;
       }
       case "chat/typing": {
-        const { channelId, isTyping } = action.payload;
-        socket.emit("typing", { channelId, isTyping });
+        const { channelId, chatFriendId, isTyping } = action.payload;
+        socket.emit("typing", { channelId, chatFriendId, isTyping });
         break;
       }
       case "chat/joinRoom": {

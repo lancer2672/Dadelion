@@ -25,7 +25,10 @@ import CreatePost from "@src/features/post/screens/CreatePost.screen";
 import { Image, Pressable, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
-
+import { Voximplant } from "react-native-voximplant";
+import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
+import CallScreen from "@src/features/call/screens/Call.screen";
+import CallingScreen from "@src/features/call/screens/CallingScreen.screen";
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
 
@@ -146,6 +149,8 @@ const Tabs = () => {
 export const AppNavigator = () => {
   const [saveFCMtoken, { error }] = useSaveFCMtokenMutation();
   const navigation = useNavigation();
+  const voximplant = Voximplant.getInstance();
+  //messsaging
   useEffect(() => {
     // Get the device token
     messaging()
@@ -162,11 +167,20 @@ export const AppNavigator = () => {
         "Notification caused app to open from background state:",
         remoteMessage.notification
       );
-      if ((remoteMessage.data.type = "chat")) {
-        navigation.navigate("ChatRoom", {
-          channelId: remoteMessage.data.channelId,
-          memberIds: JSON.parse(remoteMessage.data.memberIds),
-        });
+      switch (remoteMessage.data.type) {
+        case "chat": {
+          navigation.navigate("ChatRoom", {
+            channelId: remoteMessage.data.channelId,
+            memberIds: JSON.parse(remoteMessage.data.memberIds),
+          });
+          break;
+        }
+        case "post/react": {
+          // navigation.navigate("DetailPost", {
+          //   channelId: remoteMessage.data.channelId,
+          //   memberIds: JSON.parse(remoteMessage.data.memberIds),
+          // });
+        }
       }
     });
 
@@ -179,10 +193,20 @@ export const AppNavigator = () => {
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       console.log("A new FCM message arrived!", JSON.stringify(remoteMessage));
     });
-
     return unsubscribe;
   }, []);
 
+  //calling
+  useEffect(() => {
+    voximplant.on(Voximplant.ClientEvents.IncomingCall, (incomingCallEvent) => {
+      navigation.navigate("IncomingCall", {
+        call: incomingCallEvent.call,
+      });
+    });
+    return () => {
+      voximplant.off(Voximplant.ClientEvents.IncomingCall);
+    };
+  }, []);
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
@@ -197,6 +221,10 @@ export const AppNavigator = () => {
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="FriendList" component={FriendList} />
+
+      <Stack.Screen name="IncomingCall" component={IncomingCallScreen} />
+      <Stack.Screen name="CallScreen" component={CallScreen} />
+      <Stack.Screen name="CallingScreen" component={CallingScreen} />
     </Stack.Navigator>
   );
 };

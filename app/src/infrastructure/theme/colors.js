@@ -1,6 +1,6 @@
 export const colors = {
   ui: {
-    primary: "#66dbf1",
+    primary: "rgba(54, 100, 186,0.4)",
     secondary: "#a1e6f3",
     disabled: "#DEDEDE",
     error: "#f03030",

@@ -12,7 +12,6 @@ import {
 import React, { useState, useContext, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-// import * as ImagePicker from "expo-image-picker";
 import { openImagePicker } from "@src/utils/imageHelper";
 import styled from "styled-components/native";
 

@@ -35,5 +35,8 @@
   "at": "lúc",
   "chat": "Đoạn chat",
   "post": "Bài viết",
+  "success": "Thành công",
+  "fail": "Thất bại",
+
   "sentImage": "Đã gửi ảnh"
 }
