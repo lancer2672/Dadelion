@@ -32,23 +32,27 @@ export const postApi = createApi({
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
           const socket = getSocket();
-          socket.on("react-post", (postId, reactUserId, isAddedToList) => {
-            console.log("postId, ", postId, reactUserId, isAddedToList);
+          socket.on("new-comment", (postId, newComment) => {
             updateCachedData((draft) => {
-              console.log("currentDraftPost", current(draft));
               const i = draft.posts.findIndex((post) => post._id == postId);
-
+              if (i >= 0) {
+                draft.posts[i].comments.unshift(newComment);
+              }
+            });
+          });
+          socket.on("react-post", (postId, reactUserId, isAddedToList) => {
+            updateCachedData((draft) => {
+              const i = draft.posts.findIndex((post) => post._id == postId);
               if (i >= 0) {
                 if (isAddedToList) {
-                  draft.posts[i].likes.push({ userId: reactUserId });
+                  draft.posts[i].likes.unshift({ userId: reactUserId });
                 } else {
                   const index = draft.posts[i].likes.findIndex(
                     (userId) => userId == reactUserId
                   );
-                  draft.posts[i].likes.splice(index, i);
+                  draft.posts[i].likes.splice(index, 1);
                 }
               }
-              console.log("afterDraft", current(draft));
             });
           });
         } catch (err) {
@@ -73,6 +77,16 @@ export const postApi = createApi({
         });
         response.data.tranformedPosts = tranformedPosts;
         return response.data.posts;
+      },
+      providesTags: ["Post"],
+    }),
+    getPostById: builder.query({
+      query: (postId) => `${postRoute}/${postId}`,
+      transformResponse: (response, meta, arg) => {
+        if (response.data.post.image) {
+          response.data.post.image = `${UrlAPI}/${response.data.post.image}`;
+        }
+        return response.data.post;
       },
       providesTags: ["Post"],
     }),
@@ -105,22 +119,22 @@ export const postApi = createApi({
       }),
       invalidatesTags: ["Post"],
     }),
-    reactPost: builder.mutation({
-      query: (postId) => ({
-        url: `${postRoute}/react/${postId}`,
-        method: "PUT",
-        body: { react: true },
-      }),
-      invalidatesTags: ["Post"],
-    }),
-    commentPost: builder.mutation({
-      query: ({ postId, content }) => ({
-        url: `${postRoute}/comment/${postId}`,
-        method: "PUT",
-        body: { content },
-      }),
-      invalidatesTags: ["Post"],
-    }),
+    // reactPost: builder.mutation({
+    //   query: (postId) => ({
+    //     url: `${postRoute}/react/${postId}`,
+    //     method: "PUT",
+    //     body: { react: true },
+    //   }),
+    //   invalidatesTags: ["Post"],
+    // }),
+    // commentPost: builder.mutation({
+    //   query: ({ postId, content }) => ({
+    //     url: `${postRoute}/comment/${postId}`,
+    //     method: "PUT",
+    //     body: { content },
+    //   }),
+    //   invalidatesTags: ["Post"],
+    // }),
     deleteComment: builder.mutation({
       query: ({ postId, commentId }) => ({
         url: `${postRoute}/comment/${postId}`,
@@ -136,6 +150,7 @@ export const postApi = createApi({
 });
 
 export const {
+  useGetPostByIdQuery,
   useGetAllPostsQuery,
   useGetPostByUserIdQuery,
 
@@ -143,7 +158,7 @@ export const {
   useUpdatePostMutation,
   useDeletePostMutation,
 
-  useReactPostMutation,
-  useCommentPostMutation,
+  // useReactPostMutation,
+  // useCommentPostMutation,
   useDeleteCommentMutation,
 } = postApi;

@@ -28,14 +28,15 @@ import { ActivityIndicator } from "react-native-paper";
 import { loginVoximplant } from "@src/voximplant/services/Client";
 
 const Login = ({ navigation }) => {
-  const [login, { error, isSuccess, isLoading: isFetching, ...loginResult }] =
-    useLoginMutation();
+  const [
+    login,
+    { error, isSuccess, isLoading: isLoginLoading, ...loginResult },
+  ] = useLoginMutation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [savePassword, setSavePassword] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [validationErrors, setValidationErrors] = useState({});
   const toggleSavePasswordCheck = () => {
     setSavePassword(!savePassword);
@@ -53,13 +54,17 @@ const Login = ({ navigation }) => {
           dispatch(setUser(payload));
           //auto enable save password
           if (true) {
-            ["userId", "token", "refreshToken", "username", "password"].forEach(
+            ["token", "refreshToken", "username", "password"].forEach(
               async (key) => {
                 await AsyncStorage.setItem(
                   key,
                   JSON.stringify(loginResult.data[key] || eval(key))
                 );
               }
+            );
+            await AsyncStorage.setItem(
+              "userId",
+              JSON.stringify(loginResult.data.user._id)
             );
           }
           loginVoximplant(username, password);
@@ -68,15 +73,15 @@ const Login = ({ navigation }) => {
       } catch (er) {
         console.log("err", er);
       }
-      dispatch(setIsLoading(isFetching));
+      dispatch(setIsLoading(isLoginLoading));
     })();
-  }, [isFetching]);
+  }, [isLoginLoading]);
   const navigateToRegister1Screen = () => {
     // setError(null);
     navigation.navigate("Register1", {});
   };
   return (
-    <AuthContainer>
+    <AuthContainer isLoading={isLoginLoading}>
       {false ? (
         <View>
           <Avatar width={80} height={80}></Avatar>
@@ -132,7 +137,7 @@ const Login = ({ navigation }) => {
       ></RememberPassword> */}
       {/* <Text style={{ fontSize: 16, color: "white" }}>Quên mật khẩu ?</Text> */}
 
-      {error && <Error variant="error">{error}</Error>}
+      {error && <Error variant="error">{error.message}</Error>}
       <Spacer variant="top" size="large"></Spacer>
       <View style={{ marginTop: 12 }}>
         <AuthButton
@@ -163,7 +168,7 @@ const Login = ({ navigation }) => {
         </Pressable>
         <Pressable
           onPress={handleSignInGoogle}
-          style={[styles.google, { backgroundColor: theme.colors.chat.text }]}
+          style={[styles.google, { backgroundColor: "white" }]}
         >
           <Image
             resizeMode="contain"

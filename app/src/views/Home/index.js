@@ -6,7 +6,7 @@ import Post from "@src/features/post/screens/post.screen";
 import HomeHeader from "./HomeHeader";
 import { colors } from "@src/infrastructure/theme/colors";
 import { useTheme } from "styled-components";
-const Home = ({ navigation }) => {
+const Home = ({}) => {
   const theme = useTheme();
   return (
     <View
@@ -15,15 +15,10 @@ const Home = ({ navigation }) => {
         backgroundColor: theme.colors.chat.bg.primary,
       }}
     >
-      <HomeHeader
-        showNotificationModal={() => {
-          navigation.navigate("Notification");
-        }}
-        navigation={navigation}
-      ></HomeHeader>
+      <HomeHeader></HomeHeader>
 
       <View>
-        <Post navigation={navigation}></Post>
+        <Post></Post>
       </View>
     </View>
   );

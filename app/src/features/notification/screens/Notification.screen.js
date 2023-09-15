@@ -6,29 +6,36 @@ import styled from "styled-components/native";
 import NotificationItem from "../components/NotificationItem.component";
 import FriendRequestItem from "../../../views/Home/components/FriendRequestItem.component";
 import { useGetFriendRequestsQuery } from "@src/store/slices/api/friendRequestApiSlice";
+import { useTheme } from "styled-components";
+import { useGetNotificationsQuery } from "@src/store/slices/api/notificationApiSlice";
 
 const Notification = ({ navigation }) => {
   const { t } = useTranslation();
-  const [friendRequests, setFriendRequests] = useState([]);
+  const theme = useTheme();
 
-  const { data, isLoading, isSuccess } = useGetFriendRequestsQuery(undefined, {
+  const { data: friendRequests } = useGetFriendRequestsQuery(undefined, {
     //always make new request
     refetchOnMountOrArgChange: true,
   });
-  console.log("request", data);
-  useEffect(() => {
-    if (isSuccess) {
-      setFriendRequests(data.data.requests);
-    }
-  }, [isLoading, data]);
+  console.log("notification show");
+
+  const {
+    data: notifications,
+    isLoading,
+    isSuccess,
+  } = useGetNotificationsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.chat.bg.primary }}>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
           padding: 12,
           borderBottomWidth: 2,
+          borderBottomColor: theme.colors.chat.text,
         }}
       >
         <TouchableOpacity
@@ -40,7 +47,11 @@ const Notification = ({ navigation }) => {
             paddingVertical: 4,
           }}
         >
-          <AntDesign name="arrowleft" size={24} color="black" />
+          <AntDesign
+            name="arrowleft"
+            size={24}
+            color={theme.colors.chat.text}
+          />
         </TouchableOpacity>
         <Heading>{t("notification")}</Heading>
       </View>
@@ -48,23 +59,23 @@ const Notification = ({ navigation }) => {
         <FlatList
           item
           data={friendRequests}
-          keyExtractor={(item, index) => item._id.toString()}
+          keyExtractor={(item, index) => item._id}
           renderItem={({ item }) => <FriendRequestItem friendRequest={item} />}
         />
       </View>
-      {/* <FlatList
-          style={{ backgroundColor: "red", flex: 1 }}
-          data={data1} 
-          keyExtractor={(item, index) => item._id.toString()}
-          renderItem={({ item }) => <NotificationItem notification={item} />}
-        /> */}
+      <FlatList
+        style={{ flex: 1 }}
+        data={notifications}
+        keyExtractor={(item, index) => item._id}
+        renderItem={({ item }) => <NotificationItem notification={item} />}
+      />
     </View>
   );
 };
 const Heading = styled(Text)`
   font-weight: bold;
   font-size: ${(props) => props.theme.fontSizes.h5};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 
 export default Notification;

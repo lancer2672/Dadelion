@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import {
   useCreatePostMutation,
-  useReactPostMutation,
+  // useReactPostMutation
 } from "@src/store/slices/api/postApiSlice";
 import { Avatar } from "@src/components/Avatar";
 import { setIsLoading } from "@src/store/slices/appSlice";

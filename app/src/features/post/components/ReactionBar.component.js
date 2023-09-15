@@ -8,7 +8,7 @@ import {
   Entypo,
 } from "@expo/vector-icons";
 import styled from "styled-components/native";
-import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
+// import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
@@ -36,7 +36,6 @@ const ReactionBar = ({ post }) => {
     } else {
       setHeart(false);
     }
-
     setReactionNumber(post.likes.length);
   }, [post.likes]);
   return (

@@ -11,6 +11,7 @@ import styled from "styled-components/native";
 
 export const BackgroundImage = styled.ImageBackground.attrs((props) => ({
   source: require("@assets/imgs/Auth.jpg"),
+  opacity: props.isLoading ? 0.5 : 1,
 }))`
   flex: 1;
   align-items: center;

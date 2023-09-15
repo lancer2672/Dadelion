@@ -17,8 +17,8 @@ export const connectVoximplant = async () => {
 
 export const loginVoximplant = async (username, password) => {
   try {
-    let authResult = await voximplant.login(`${username}@${AppName}`, password);
-    console.log("voximplant login successfully", authResult);
+    // let authResult = await voximplant.login(`${username}@${AppName}`, password);
+    // console.log("voximplant login successfully", authResult);
   } catch (er) {
     console.log("voximplant ", er);
   }

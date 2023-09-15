@@ -10,16 +10,23 @@ import { requestCallingPermission } from "@src/permissions";
 import { Voximplant } from "react-native-voximplant";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
+import { useTranslation } from "react-i18next";
 const ChatRoomHeader = ({ navigation, chatFriend }) => {
   const { user } = useSelector(userSelector);
   const theme = useTheme();
+  const { t } = useTranslation();
   const handleNavigateToGuest = () => {
     if (chatFriend) {
       navigation.navigate("Guest", { guestId: chatFriend._id });
     }
   };
   const makeCall = () => {
-    navigation.navigate("CallingScreen", { user: chatFriend });
+    //just allow to call if they're friend
+    if (user.friends.includes((friend) => friend.userId == chatFriend._id)) {
+      navigation.navigate("CallingScreen", { user: chatFriend });
+    } else {
+      Alert.alert(t("notify"), t("notFriend"), [{ text: "OK" }]);
+    }
   };
   return (
     <Container>

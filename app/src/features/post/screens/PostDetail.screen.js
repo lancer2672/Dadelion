@@ -15,20 +15,24 @@ import { postSelector, userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import ReadMore from "@fawazahmed/react-native-read-more";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
-import InputBar from "../components/inputbar.component";
+import InputBar from "../components/PostInputbar.component";
 
 import Comment from "../components/comment.component";
-import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
+// import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
 import { useTheme } from "styled-components";
+import { reactPost, updateSelectedPost } from "@src/store/slices/postSlice";
+import { getSocket } from "@src/utils/socket";
 
 const DetailPost = ({ route }) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const socket = getSocket();
   const userState = useSelector(userSelector);
   const postState = useSelector(postSelector);
   const { selectedPost } = postState;
   const { postCreator } = route.params;
   const [heart, setHeart] = useState(false);
-  const [reactPost, { isSuccess }] = useReactPostMutation();
+  // const [reactPost, { isSuccess }] = useReactPostMutation();
   useEffect(() => {
     //check if user reacted this selectedPost
     const res = selectedPost.likes.find((object) => {
@@ -41,12 +45,31 @@ const DetailPost = ({ route }) => {
     }
   }, [selectedPost.likes]);
   useEffect(() => {
-    if (isSuccess) {
-      setHeart(!heart);
-    }
-  }, [isSuccess]);
+    socket.on("new-comment", (postId, newComment) => {
+      dispatch(updateSelectedPost({ type: "comment", postId, newComment }));
+    });
+    socket.on("react-post", (postId, reactUserId, isAddedToList) => {
+      dispatch(
+        updateSelectedPost({
+          type: "react",
+          postId,
+          reactUserId,
+          isAddedToList,
+        })
+      );
+    });
+  }, [socket]);
+  console.log("selectedPost  - postDetail", selectedPost);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     setHeart(!heart);
+  //   }
+  // }, [isSuccess])
   const handleReact = () => {
-    reactPost(selectedPost._id);
+    dispatch(
+      reactPost({ postId: selectedPost._id, postCreatorId: selectedPost.user })
+    );
+    setHeart(!heart);
   };
   return (
     <Container>
@@ -102,7 +125,6 @@ const DetailPost = ({ route }) => {
 };
 const Container = styled(View)`
   flex: 1;
-  padding-bottom: 12px;
   background-color: ${(props) => props.theme.colors.chat.bg.primary};
 `;
 

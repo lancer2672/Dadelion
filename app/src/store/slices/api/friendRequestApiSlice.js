@@ -12,6 +12,8 @@ export const friendRequestApi = createApi({
   endpoints: (builder) => ({
     getFriendRequests: builder.query({
       query: () => `${friendRequestRoute}/requests`,
+      transformResponse: (response, meta, arg) => response.data.requests,
+
       async onCacheEntryAdded(
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
@@ -25,11 +27,11 @@ export const friendRequestApi = createApi({
             ({ requestId, responseValue }) => {
               updateCachedData((draft) => {
                 console.log("datadraft", current(draft));
-                const index = draft.data.requests.findIndex(
+                const index = draft.findIndex(
                   (request) => request._id == requestId
                 );
                 if (index != -1) {
-                  draft.data.requests.splice(index, 1);
+                  draft.splice(index, 1);
                 }
               });
             }

@@ -5,31 +5,78 @@ import {
   Modal,
   Text,
   View,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
 
 import CreatePost from "@src/features/post/screens/CreatePost.screen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { colors } from "@src/infrastructure/theme/colors";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { useTheme } from "styled-components";
 import { Avatar } from "@src/components/Avatar";
+import { useNavigation } from "@react-navigation/native";
+import { useGetFriendRequestsQuery } from "@src/store/slices/api/friendRequestApiSlice";
+import { useGetNotificationsQuery } from "@src/store/slices/api/notificationApiSlice";
+import { markSeenNotifications } from "@src/store/slices/notificationSlice";
+import { getSocket } from "@src/utils/socket";
 
-const HomeHeader = ({ navigation, showNotificationModal }) => {
+const HomeHeader = ({}) => {
   const userState = useSelector(userSelector);
+  const socket = getSocket();
   const { user } = userState;
   const theme = useTheme();
-  const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const [hasNewNotification, setHasNewNotification] = useState(false);
+  const { data: friendRequests } = useGetFriendRequestsQuery(undefined, {
+    //always make new request
+    refetchOnMountOrArgChange: true,
+  });
+  const { data: notifications } = useGetNotificationsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  useEffect(() => {
+    console.log("data changed", notifications);
+    let checkNewFriendRequest = false;
+    let checkNewNotification = false;
+    if (friendRequests) {
+      checkNewFriendRequest = friendRequests.some((request) => !request.isSeen);
+    }
+    if (notifications) {
+      checkNewNotification = notifications.some(
+        (notification) => !notification.isSeen
+      );
+    }
+    if (checkNewFriendRequest || checkNewNotification) {
+      setHasNewNotification(() => true);
+    }
+  }, [notifications, friendRequests]);
+  useEffect(() => {
+    if (socket) {
+      socket.on("new-notification", () => {
+        console.log("socket.set");
+        setHasNewNotification(() => true);
+      });
+    }
+  }, [socket]);
   const handleNavigationUser = () => {
     navigation.navigate("User");
   };
-  const openCreatePostScreen = () => {
-    setModalVisible(true);
-  };
   const navigateToSearchScreen = () => {
     navigation.navigate("Search");
+  };
+  const navigateToNotificationScreen = () => {
+    navigation.navigate("Notification");
+
+    setHasNewNotification(() => false);
+    const friendRequestIds = friendRequests.map((request) => request._id);
+    const notificationIds = notifications.map(
+      (notification) => notification._id
+    );
+    dispatch(markSeenNotifications({ friendRequestIds, notificationIds }));
   };
   return (
     <View>
@@ -41,7 +88,9 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
           alignItems: "center",
         }}
       >
-        <Avatar width={40} height={40} uri={user.avatar}></Avatar>
+        <Pressable onPress={handleNavigationUser}>
+          <Avatar width={40} height={40} uri={user.avatar}></Avatar>
+        </Pressable>
         <Text
           style={{
             flex: 1,
@@ -69,7 +118,7 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
         <Spacer position={"left"} size={"large"}></Spacer>
 
         <TouchableOpacity
-          onPress={showNotificationModal}
+          onPress={navigateToNotificationScreen}
           style={{
             backgroundColor: colors.white,
             minWidth: 38,
@@ -81,12 +130,14 @@ const HomeHeader = ({ navigation, showNotificationModal }) => {
           }}
         >
           <FontAwesome5 name="bell" size={22} color={colors.black} />
-          <Entypo
-            style={{ position: "absolute", top: -13, right: -2 }}
-            name="dot-single"
-            size={40}
-            color="red"
-          />
+          {hasNewNotification && (
+            <Entypo
+              style={{ position: "absolute", top: -13, right: -2 }}
+              name="dot-single"
+              size={40}
+              color="red"
+            />
+          )}
         </TouchableOpacity>
       </View>
 

@@ -81,6 +81,7 @@ const InputBar = ({ channelId, chatFriendId }) => {
   const openImagePicker = async () => {
     ImagePicker.openPicker({
       multiple: true,
+      mediaType: "photo",
     })
       .then((images) => {
         console.log("images", images);
@@ -94,18 +95,6 @@ const InputBar = ({ channelId, chatFriendId }) => {
         dispatch(sendImage({ channelId, imagesData: data }));
       })
       .catch((er) => console.log("er", er));
-    // try {
-    //   const result = await ImagePicker.launchImageLibraryAsync({
-    //     mediaTypes: ImagePicker.MediaTypeOptions.All,
-    //     selectionLimit: 5, // Set the maximum number of images the user can select
-    //   });
-    //   if (!result.cancelled) {
-    //     const base64String = await readBase64(result.assets[0].uri);
-    //     dispatch(sendImage({ channelId, imageData: base64String }));
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
   };
   const recordVoice = () => {};
   return (

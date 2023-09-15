@@ -55,7 +55,9 @@ const Navigator = () => {
         ];
         const [userId, token, refreshToken, username, password] =
           await Promise.all(keys.map((key) => AsyncStorage.getItem(key)));
-
+        console.log("userId", userId);
+        console.log("token", token);
+        console.log("refreshToken", refreshToken);
         dispatch(
           setToken({
             token: JSON.parse(token),
@@ -70,7 +72,7 @@ const Navigator = () => {
           });
         }
 
-        await loginVoximplant(username, password);
+        // await loginVoximplant(username, password);
       } catch (er) {
         console.log("er", er);
       }

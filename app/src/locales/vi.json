@@ -37,6 +37,7 @@
   "post": "Bài viết",
   "success": "Thành công",
   "fail": "Thất bại",
-
+  "notify": "Thông báo",
+  "notFriend": "Bạn không phải là bạn bè",
   "sentImage": "Đã gửi ảnh"
 }

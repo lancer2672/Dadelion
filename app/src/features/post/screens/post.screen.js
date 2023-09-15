@@ -5,9 +5,11 @@ import { Spacer } from "@src/components/spacer/spacer.component";
 import { useGetAllPostsQuery } from "@src/store/slices/api/postApiSlice";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { useNavigation } from "@react-navigation/native";
 
-const Post = ({ navigation }) => {
+const Post = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
   const { isLoading, isSuccess, data } = useGetAllPostsQuery();
   useEffect(() => {

@@ -4,9 +4,9 @@ import styled from "styled-components/native";
 import { AppSlogan } from "@src/utils/slogan";
 import { BackgroundImage, Logo, Slogan } from "./authentication.style";
 
-const AuthContainer = ({ children }) => {
+const AuthContainer = ({ children, isLoading }) => {
   return (
-    <BackgroundImage>
+    <BackgroundImage isLoading={isLoading}>
       <Logo></Logo>
       <Slogan>{AppSlogan}</Slogan>
       {children}

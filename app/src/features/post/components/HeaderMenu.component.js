@@ -12,12 +12,14 @@ import { Feather } from "@expo/vector-icons";
 import { useDeletePostMutation } from "@src/store/slices/api/postApiSlice";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
+
 export const HeaderMenu = ({ postId, setModalVisible, postCreatorId }) => {
   const [deletePost, { isSuccess, isLoading }] = useDeletePostMutation();
   const dispatch = useDispatch();
   const handleDeletePost = async () => {
     deletePost(postId);
   };
+
   useEffect(() => {
     dispatch(setIsLoading(isLoading));
     if (isSuccess) {

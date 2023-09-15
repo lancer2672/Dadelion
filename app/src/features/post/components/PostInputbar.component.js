@@ -12,13 +12,15 @@ import { useState } from "react";
 import styled from "styled-components/native";
 
 import { useCommentPostMutation } from "@src/store/slices/api/postApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { commentPost } from "@src/store/slices/postSlice";
+import { postSelector, userSelector } from "@src/store/selector";
 
 const InputContainer = styled(View)`
   flex-direction: row;
-  margin-top: 4px;
-  min-height: 36px;
+  min-height: 40px;
+  border-top-width-color: ${(props) => props.theme.colors.chat.text};
   align-items: center;
-  border-radius: 25px;
   overflow: hidden;
 `;
 const InputContent = styled(TextInput)`
@@ -38,14 +40,24 @@ const SubmitButton = styled(TouchableOpacity)`
   padding-bottom: 5px;
 `;
 
-const InputBar = ({ postId }) => {
+const InputBar = () => {
   const [content, setContent] = useState("");
-  const [commentPost] = useCommentPostMutation();
+  const { user } = useSelector(userSelector);
+  const { selectedPost } = useSelector(postSelector);
+
+  const dispatch = useDispatch();
   const handlePostComment = async () => {
     Keyboard.dismiss();
     if (content != "") {
-      commentPost({ postId, content });
       setContent("");
+      dispatch(
+        commentPost({
+          commentUserId: user._id,
+          postCreatorId: selectedPost.user,
+          postId: selectedPost._id,
+          content,
+        })
+      );
     }
   };
 
@@ -57,7 +69,7 @@ const InputBar = ({ postId }) => {
         onChangeText={(newText) => setContent(newText)}
       ></InputContent>
       <SubmitButton onPress={handlePostComment}>
-        <Ionicons name="send" size={24} color="black" />
+        <Ionicons name="send" size={24} color="white" />
       </SubmitButton>
     </InputContainer>
   );

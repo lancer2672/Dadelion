@@ -1,0 +1,45 @@
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
+import { getSocket } from "@src/utils/socket";
+import { current } from "@reduxjs/toolkit";
+import { UrlAPI } from "@src/constants";
+const notificationRoute = "/notification";
+
+export const notificationApi = createApi({
+  reducerPath: "notificationApi",
+  baseQuery: baseQueryWithReauth,
+  endpoints: (builder) => ({
+    getNotifications: builder.query({
+      query: () => ({ url: `${notificationRoute}/` }),
+      transformResponse: (response, meta, arg) => response.data.notifications,
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        try {
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded;
+          const socket = getSocket();
+
+          socket.on("mark-seen-notifications", () => {
+            updateCachedData((draft) => {
+              console.log("notif draft", current(draft));
+              draft.notifications = draft.notifications.map((notification) => {
+                return {
+                  ...notification,
+                  isSeen: true,
+                };
+              });
+            });
+          });
+        } catch (err) {
+          console.log("err", err);
+        }
+        // cacheEntryRemoved will resolve when the cache subscription is no longer active
+        await cacheEntryRemoved;
+      },
+    }),
+  }),
+});
+
+export const { useGetNotificationsQuery } = notificationApi;

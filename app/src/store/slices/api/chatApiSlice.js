@@ -157,8 +157,8 @@ export const chatApi = createApi({
 });
 
 export const {
-  useLoadChatRoomMessagesQuery,
   useGetChannelsQuery,
   useGetLastMessageQuery,
+  useLoadChatRoomMessagesQuery,
   useFindOrCreateChannelMutation,
 } = chatApi;
