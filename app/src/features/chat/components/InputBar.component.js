@@ -78,7 +78,7 @@ const InputBar = ({ channelId, chatFriendId }) => {
     setText("");
     dispatch(sendMessage({ channelId, senderId: user._id, newMessage: text }));
   };
-  const openImagePicker = async () => {
+  const openImagePicker = () => {
     ImagePicker.openPicker({
       multiple: true,
       mediaType: "photo",

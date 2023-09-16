@@ -17,6 +17,7 @@ import { Entypo, Feather } from "@expo/vector-icons";
 import { imageStoragePermission } from "@src/permissions";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { showMessage } from "react-native-flash-message";
+import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 const UserMessage = ({
   chatFriend = {},
   isMyMessage,
@@ -86,6 +87,11 @@ const UserMessage = ({
         data={messages}
         renderItem={({ item }) => (
           <MessageContainer isMyMessage={isMyMessage}>
+            {item.timeMarker && (
+              <Text style={{ flex: 1, textAlign: "center" }}>
+                {postCreatedTimeFormatter(item.createdAt)}
+              </Text>
+            )}
             <View style={{ flexDirection: "row" }}>
               {isMyMessage && <View style={{ flex: 1 }}></View>}
               <View>

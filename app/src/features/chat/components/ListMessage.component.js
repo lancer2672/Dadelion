@@ -41,8 +41,6 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
     useLoadChatRoomMessagesQuery(channelId);
   useEffect(() => {
     if (isSuccess) {
-      const groupedByUserId = [];
-      let obj = { userId: null, messages: [] };
       const createMessage = (msg) => ({
         _id: msg._id,
         message: msg.message,
@@ -50,22 +48,28 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
         createdAt: msg.createdAt,
       });
 
-      data.forEach((msg) => {
-        if (obj.userId === null) {
-          obj.userId = msg.userId;
-          obj.messages.unshift(createMessage(msg));
-        } else if (msg.userId === obj.userId) {
-          obj.messages.unshift(createMessage(msg));
-        } else {
-          groupedByUserId.push(obj);
-          obj = { userId: msg.userId, messages: [createMessage(msg)] };
-        }
-      });
+      const groupedByUserId = data.reduce((acc, msg) => {
+        const lastGroup = acc[acc.length - 1];
+        const newMessage = createMessage(msg);
+        if (lastGroup) {
+          const lastMessage = lastGroup.messages[0];
+          const timeDifference =
+            new Date(lastMessage.createdAt) - new Date(newMessage.createdAt);
 
-      // Add the last item
-      if (obj.userId != null) {
-        groupedByUserId.push(obj);
-      }
+          if (timeDifference > 30 * 60 * 1000) {
+            newMessage.timeMarker = true;
+            lastMessage.timeMarker = true;
+          }
+        }
+        if (!lastGroup || lastGroup.userId !== msg.userId) {
+          acc.push({ userId: msg.userId, messages: [newMessage] });
+        } else {
+          lastGroup.messages.unshift(newMessage);
+        }
+
+        return acc;
+      }, []);
+
       setListMessage(groupedByUserId);
     }
 
@@ -73,7 +77,7 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
       console.log("error", error);
     }
   }, [isLoading, data]);
-
+  console.log("listMsg", listMessage);
   return (
     <>
       <Pressable style={{ flex: 1 }} onPress={handleHideModal}>
