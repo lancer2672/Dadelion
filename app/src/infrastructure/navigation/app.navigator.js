@@ -27,7 +27,6 @@ import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import { Voximplant } from "react-native-voximplant";
 import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
-import CallScreen from "@src/features/call/screens/Call.screen";
 import CallingScreen from "@src/features/call/screens/CallingScreen.screen";
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
@@ -213,17 +212,19 @@ export const AppNavigator = () => {
       initialRouteName="AppTabs"
     >
       <Stack.Screen name="AppTabs" component={Tabs} />
+
       <Stack.Screen name="DetailPost" component={DetailPost} />
       <Stack.Screen name="ChatRoom" component={ChatRoom} />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="Guest" component={Guest} />
+
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
+
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="FriendList" component={FriendList} />
 
       <Stack.Screen name="IncomingCall" component={IncomingCallScreen} />
-      <Stack.Screen name="CallScreen" component={CallScreen} />
       <Stack.Screen name="CallingScreen" component={CallingScreen} />
     </Stack.Navigator>
   );

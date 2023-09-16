@@ -1,11 +1,13 @@
 import { FlatList, Modal, Text, TouchableOpacity, View } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import { useTheme } from "styled-components";
 import i18next from "i18next";
 import * as Animatable from "react-native-animatable";
+import messaging from "@react-native-firebase/messaging";
+import { Linking } from "react-native";
 
 import SettingItem from "../components/SettingItem.component";
 import { Avatar } from "@src/components/Avatar";
@@ -15,16 +17,21 @@ import { userSelector } from "@src/store/selector";
 import { ThemeContext } from "../../../../App";
 import LanguageSelection from "../components/LanguageSelection.component";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const Settings = ({ navigation }) => {
   const { user } = useSelector(userSelector);
   const theme = useTheme();
-  const { isDarkTheme, setIsDarkTheme } = useContext(ThemeContext);
   const { t } = useTranslation();
-  const [showLanguageSelection, setShowLanguageSelection] = useState(false);
   const dispatch = useDispatch();
+  const { isDarkTheme, setIsDarkTheme } = useContext(ThemeContext);
+  const [showLanguageSelection, setShowLanguageSelection] = useState(false);
   const handleLogout = () => {
     dispatch(logoutUser());
   };
+  const openDeviceSetting = () => {
+    Linking.openSettings();
+  };
+
   const viewRef = React.useRef(null);
   const data = [
     {
@@ -41,7 +48,10 @@ const Settings = ({ navigation }) => {
       name: t("notifications"),
       icon: "bell",
       iconColor: "#3da9fc",
+
       backgroundIconColor: "#a3d3f7",
+
+      onClick: openDeviceSetting,
     },
     {
       name: t("darkmode"),

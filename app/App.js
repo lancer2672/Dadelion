@@ -3,14 +3,11 @@ import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { I18nextProvider, initReactI18next } from "react-i18next";
-import i18next from "i18next";
+import i18next from "@src/locales/i18n";
 import { PermissionsAndroid, StatusBar } from "react-native";
 import { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import FlashMessage from "react-native-flash-message";
-
-import en from "@src/locales/en.json";
-import vi from "@src/locales/vi.json";
 
 import { theme, darkTheme } from "./src/infrastructure/theme";
 import Navigator from "./src/infrastructure/navigation";
@@ -18,20 +15,7 @@ import store from "./src/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext } from "react";
 import { connectVoximplant } from "@src/voximplant/services/Client";
-import { Voximplant } from "react-native-voximplant";
-import CallingScreen from "@src/features/call/screens/CallingScreen.screen";
-import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
-import CallScreen from "@src/features/call/screens/Call.screen";
-i18next.use(initReactI18next).init({
-  compatibilityJSON: "v3",
-  interpolation: { escapeValue: false },
-  lng: "vi", // default
-  resources: {
-    en: { translation: en },
-    vi: { translation: vi },
-  },
-});
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+import { requestNotificationPermission } from "@src/permissions";
 
 export const ThemeContext = createContext();
 
@@ -41,6 +25,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const isUseDarkTheme = await AsyncStorage.getItem("AppTheme");
+
       if (isUseDarkTheme == "dark") {
         setIsDarkTheme(true);
       }
@@ -50,6 +35,7 @@ export default function App() {
       }
     })();
     connectVoximplant();
+    requestNotificationPermission();
   }, []);
   return (
     <I18nextProvider i18n={i18next}>

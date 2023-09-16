@@ -66,3 +66,7 @@ export const requestCallingPermission = async () => {
     return true;
   }
 };
+
+export const requestNotificationPermission = () => {
+  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+};
