@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18next from "@src/locales/i18n";
-import { PermissionsAndroid, StatusBar } from "react-native";
 import { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import FlashMessage from "react-native-flash-message";
@@ -16,8 +15,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext } from "react";
 import { connectVoximplant } from "@src/voximplant/services/Client";
 import { requestNotificationPermission } from "@src/permissions";
-import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
-import Verification from "@src/features/auth/screens/Verification.screen";
 
 export const ThemeContext = createContext();
 

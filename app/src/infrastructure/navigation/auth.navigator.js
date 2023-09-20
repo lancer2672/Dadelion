@@ -5,6 +5,7 @@ import LoginScreenComponent from "@src/features/auth/screens/SignIn.screen";
 import RegisterScreen1 from "@src/features/auth/screens/Register1.screen";
 import RegisterScreen2 from "@src/features/auth/screens/Register2.screen";
 import Verification from "@src/features/auth/screens/Verification.screen";
+import ForgotPassword from "@src/features/auth/screens/ForgotPassword.screen";
 const Stack = createNativeStackNavigator();
 
 export const AuthNavigator = () => (
@@ -18,5 +19,6 @@ export const AuthNavigator = () => (
     <Stack.Screen name="Register1" component={RegisterScreen1} />
     <Stack.Screen name="Register2" component={RegisterScreen2} />
     <Stack.Screen name="Verification" component={Verification} />
+    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
   </Stack.Navigator>
 );

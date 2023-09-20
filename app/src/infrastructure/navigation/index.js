@@ -25,6 +25,7 @@ const Navigator = () => {
   const {
     data,
     isSuccess,
+    refetch,
     isLoading: isFetching,
     error,
   } = useGetUserByIdQuery(userCredentials.userId, {

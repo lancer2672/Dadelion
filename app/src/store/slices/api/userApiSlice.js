@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import { transformUserData } from "@src/utils/transformHelper";
 import { getSocket } from "@src/utils/socket";
+import { current } from "@reduxjs/toolkit";
 
 const userRoute = "/user";
 
@@ -36,17 +37,19 @@ export const userApi = createApi({
 
           socket.on(
             "response-friendRequest",
-            ({ requestId, responseValue }) => {
+            ({ requestId, responseValue, userIds }) => {
               updateCachedData((draft) => {
-                const index = draft.findIndex(
-                  (request) => request._id == requestId
-                );
-                if (index != -1) {
-                  draft.splice(index, 1);
+                if ((responseValue = "accept")) {
+                  const userId = draft.user._id;
+                  const friendId = userIds.filter((id) => id != userId);
+                  draft.user.friends.unshift({
+                    userId: friendId[0],
+                  });
                 }
               });
             }
           );
+
           socket.on("offline-users", (offlineUserId) => {
             updateCachedData((draft) => {
               const userId = draft.user._id;

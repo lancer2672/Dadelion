@@ -69,7 +69,7 @@ const FriendList = ({ navigation }) => {
               friend={item}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => `item.id, ${index}`}
         />
       </Body>
     </View>

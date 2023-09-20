@@ -19,8 +19,6 @@ export const loginVoximplant = async (username, password) => {
   if (!username) {
     return;
   }
-  console.log("username.spli", username.split("@")[0].toLowerCase());
-  console.log("username.spli", password);
   try {
     if (voximplant.getClientState() === Voximplant.ClientState.DISCONNECTED) {
       await voximplant.connect();

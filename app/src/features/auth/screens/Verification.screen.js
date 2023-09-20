@@ -14,7 +14,7 @@ import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "react-i18next";
 
 const Verification = () => {
-  const { email, password } = useRoute();
+  const { email, password, isResetPassword = false } = useRoute().params;
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -41,12 +41,12 @@ const Verification = () => {
     data,
     isSuccess: isEmailVerified,
   } = useVerifyEmailQuery(
-    { code: code.current, password },
+    { code: code.current, password, isResetPassword },
     {
       skip: code.current.length !== 6,
     }
   );
-  console.log("isVerifying", isVerifying, isEmailVerified);
+  console.log("isVerifying", isVerifying, isEmailVerified, isResetPassword);
   useEffect(() => {
     code.current = `${pin1}${pin2}${pin3}${pin4}${pin5}${pin6}`;
   }, [pin1, pin2, pin3, pin4, pin5, pin6]);
@@ -56,7 +56,11 @@ const Verification = () => {
       setIsFirstMount(() => false);
     } else {
       if (!isVerifying && isEmailVerified) {
-        navigation.navigate("Login");
+        if (isResetPassword) {
+          navigation.navigate("ForgotPassword", { isVerified: true });
+        } else {
+          navigation.navigate("Login");
+        }
       } else if (!isVerifying && !isEmailVerified) {
         showMessage({
           message: t("failed"),
@@ -81,7 +85,7 @@ const Verification = () => {
     }
   }, [seconds]);
   const handleResendOTP = () => {
-    sendVerificationEmail(email);
+    sendVerificationEmail({ email, isResetPassword: true });
   };
   const handleVerification = () => {};
 

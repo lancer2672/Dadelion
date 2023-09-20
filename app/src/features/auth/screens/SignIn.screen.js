@@ -26,6 +26,9 @@ import { initSocket } from "@src/utils/socket";
 import { Avatar } from "@src/components/Avatar";
 import { ActivityIndicator } from "react-native-paper";
 import { loginVoximplant } from "@src/voximplant/services/Client";
+import { useSendVerificationEmailMutation } from "@src/store/slices/api/authApi";
+import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native";
 
 const Login = ({ navigation }) => {
   const [
@@ -38,6 +41,7 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [savePassword, setSavePassword] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
+
   const toggleSavePasswordCheck = () => {
     setSavePassword(!savePassword);
   };
@@ -45,6 +49,9 @@ const Login = ({ navigation }) => {
     login({ username, password });
   };
   const handleSignInGoogle = () => {};
+  const handleSendEmailResetPassword = () => {
+    navigation.navigate("ForgotPassword", {});
+  };
   useEffect(() => {
     // handle resulcat when login succeeded
     (async () => {
@@ -136,12 +143,17 @@ const Login = ({ navigation }) => {
         savePassword={savePassword}
         onIconPress={toggleSavePasswordCheck}
       ></RememberPassword> */}
-      {/* <Text style={{ fontSize: 16, color: "white" }}>Quên mật khẩu ?</Text> */}
+      <TouchableOpacity
+        style={{ marginTop: 12 }}
+        onPress={handleSendEmailResetPassword}
+      >
+        <Text style={{ fontSize: 16, color: "white" }}>Quên mật khẩu ?</Text>
+      </TouchableOpacity>
 
       {error && (
         <Error variant="error">Tên đăng nhập hoặc mật khẩu không hợp lệ</Error>
       )}
-      <Spacer variant="top" size="large"></Spacer>
+
       <View style={{ marginTop: 12 }}>
         <AuthButton
           // isValidated={Object.keys(validationErrors).length == 0 ? true : false}

@@ -10,11 +10,12 @@ export const authApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     verifyEmail: builder.query({
-      query: ({ code, password }) => ({
-        url: `${authRoute}/verify-email/?code=${code}&password=${password}`,
+      query: ({ code, password, isResetPassword }) => ({
+        url: `${authRoute}/verify-email/?code=${code}&password=${password}&isResetPassword=${isResetPassword}`,
       }),
       //   transformResponse: (response, meta, arg) => response.data
     }),
+
     sendVerificationEmail: builder.mutation({
       query: (data) => ({
         url: `${authRoute}/send-email-verification`,
@@ -25,8 +26,21 @@ export const authApi = createApi({
         return response.data;
       },
     }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: `${authRoute}/reset-password`,
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response, meta, arg) => {
+        return response.data;
+      },
+    }),
   }),
 });
 
-export const { useVerifyEmailQuery, useSendVerificationEmailMutation } =
-  authApi;
+export const {
+  useResetPasswordMutation,
+  useVerifyEmailQuery,
+  useSendVerificationEmailMutation,
+} = authApi;
