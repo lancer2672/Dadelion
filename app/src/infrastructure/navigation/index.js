@@ -11,7 +11,7 @@ import { appSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { setToken, setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
-import { initSocket } from "@src/utils/socket";
+import { getSocket, initSocket } from "@src/utils/socket";
 import {
   loginVoximplant,
   loginWithTokenVoximplant,
@@ -22,6 +22,7 @@ const Navigator = () => {
   const appState = useSelector(appSelector);
   const dispatch = useDispatch();
   const [userCredentials, setCredentials] = useState({});
+  const socket = getSocket();
   const {
     data,
     isSuccess,
@@ -31,7 +32,20 @@ const Navigator = () => {
   } = useGetUserByIdQuery(userCredentials.userId, {
     skip: !userCredentials.userId,
   });
+  useEffect(() => {
+    if (socket) {
+      socket.on("unfriend", () => {
+        refetch();
+      });
 
+      socket.on(
+        "response-friendRequest",
+        ({ requestId, responseValue, userIds }) => {
+          refetch();
+        }
+      );
+    }
+  }, [socket]);
   useEffect(() => {
     if (isSuccess && data) {
       dispatch(

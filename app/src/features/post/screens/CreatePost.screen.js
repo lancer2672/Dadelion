@@ -44,13 +44,14 @@ const CreatePost = ({ navigation }) => {
   console.log("error", error);
   const handleCreatePost = async () => {
     const newPostData = new FormData();
-    if (imageUri != null) {
-      newPostData.append("postImage", {
-        uri: imageUri,
-        name: new Date() + "_profile",
-        type: "image/jpg",
-      });
+    if (imageUri == null) {
+      return;
     }
+    newPostData.append("postImage", {
+      uri: imageUri,
+      name: new Date() + "_profile",
+      type: "image/jpg",
+    });
     newPostData.append("description", description);
     console.log("newPostData", newPostData);
     createPost(newPostData);

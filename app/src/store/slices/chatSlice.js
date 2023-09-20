@@ -13,7 +13,7 @@ export const chatSlice = createSlice({
     typing: (state, action) => {},
     joinRoom: (state, action) => {},
     sendMessage: (state, action) => {},
-
+    unfriend: (state, action) => {},
     sendFriendRequest: (state, action) => {},
     responseFriendRequest: (state, action) => {},
 
@@ -34,6 +34,7 @@ export const {
   typing,
   sendMessage,
 
+  unfriend,
   sendFriendRequest,
   responseFriendRequest,
 

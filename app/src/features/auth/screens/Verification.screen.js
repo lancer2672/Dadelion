@@ -69,6 +69,7 @@ const Verification = () => {
       }
       dispatch(setIsLoading(isVerifying));
     }
+    dispatch(setIsLoading(isVerifying));
   }, [isVerifying, isEmailVerified]);
 
   useEffect(() => {

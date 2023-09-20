@@ -61,16 +61,16 @@ const Login = ({ navigation }) => {
           dispatch(setUser(payload));
           //auto enable save password
           if (true) {
-            // ["token", "refreshToken", "username"].forEach(async (key) => {
-            //   await AsyncStorage.setItem(
-            //     key,
-            //     JSON.stringify(loginResult.data[key]) || eval(key)
-            //   );
-            // });
-            // await AsyncStorage.setItem(
-            //   "userId",
-            //   JSON.stringify(loginResult.data.user._id)
-            // );
+            ["token", "refreshToken", "username"].forEach(async (key) => {
+              await AsyncStorage.setItem(
+                key,
+                JSON.stringify(loginResult.data[key]) || eval(key)
+              );
+            });
+            await AsyncStorage.setItem(
+              "userId",
+              JSON.stringify(loginResult.data.user._id)
+            );
           }
           initSocket(loginResult.data.user._id);
           const tokenVoximplant = await loginVoximplant(username, password);

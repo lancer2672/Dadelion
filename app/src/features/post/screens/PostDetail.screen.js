@@ -22,6 +22,7 @@ import Comment from "../components/comment.component";
 import { useTheme } from "styled-components";
 import { reactPost, updateSelectedPost } from "@src/store/slices/postSlice";
 import { getSocket } from "@src/utils/socket";
+import { Avatar } from "@src/components/Avatar";
 
 const DetailPost = ({ route }) => {
   const theme = useTheme();
@@ -75,7 +76,7 @@ const DetailPost = ({ route }) => {
     <Container>
       <PostImage source={{ uri: selectedPost.image }} />
       <UserInfoContainer>
-        <UserAvatar source={{ uri: selectedPost.postCreator.avatar }} />
+        <Avatar width={70} height={70} uri={selectedPost.postCreator.avatar} />
         <View style={{ marginLeft: 12, justifyContent: "flex-end", flex: 1 }}>
           <CreatorName>{selectedPost.postCreator.nickname}</CreatorName>
           <Text style={{ color: theme.colors.chat.text }}>
@@ -162,12 +163,6 @@ const UserInfoContainer = styled(View)`
   align-items: flex-end;
 
   margin-horizontal: 24px;
-`;
-
-const UserAvatar = styled(Image)`
-  height: 70px;
-  width: 70px;
-  border-radius: 50px;
 `;
 
 const HeartIcon = styled(Ionicons)`

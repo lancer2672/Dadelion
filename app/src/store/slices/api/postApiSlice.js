@@ -65,7 +65,7 @@ export const postApi = createApi({
     }),
 
     getPostByUserId: builder.query({
-      query: () => `${postRoute}/`,
+      query: (userId) => `${postRoute}/${userId}`,
       transformResponse: (response, meta, arg) => {
         if (response.data) {
         }
@@ -119,22 +119,6 @@ export const postApi = createApi({
       }),
       invalidatesTags: ["Post"],
     }),
-    // reactPost: builder.mutation({
-    //   query: (postId) => ({
-    //     url: `${postRoute}/react/${postId}`,
-    //     method: "PUT",
-    //     body: { react: true },
-    //   }),
-    //   invalidatesTags: ["Post"],
-    // }),
-    // commentPost: builder.mutation({
-    //   query: ({ postId, content }) => ({
-    //     url: `${postRoute}/comment/${postId}`,
-    //     method: "PUT",
-    //     body: { content },
-    //   }),
-    //   invalidatesTags: ["Post"],
-    // }),
     deleteComment: builder.mutation({
       query: ({ postId, commentId }) => ({
         url: `${postRoute}/comment/${postId}`,

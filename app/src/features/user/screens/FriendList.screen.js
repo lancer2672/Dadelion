@@ -22,16 +22,21 @@ import { colors } from "@src/infrastructure/theme/colors";
 import { useState, useEffect } from "react";
 
 import GenderSelection from "../components/GenderSelection.component";
-import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
+import {
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+} from "@src/store/slices/api/userApiSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { useTheme } from "styled-components";
 import Friend from "../components/Friend.component";
+import { useRoute } from "@react-navigation/native";
 
 const dayjs = require("dayjs");
 
 const FriendList = ({ navigation }) => {
   const { t } = useTranslation();
-  const { user } = useSelector(userSelector);
+  const { userId } = useRoute().params;
+  const { data } = useGetUserByIdQuery(userId);
   const theme = useTheme();
   const dispatch = useDispatch();
 
@@ -61,7 +66,7 @@ const FriendList = ({ navigation }) => {
       </Header>
       <Body>
         <FlatList
-          data={user.friends}
+          data={data ? data.user.friends : []}
           renderItem={({ item, index }) => (
             <Friend
               key={`friend-item ${index}`}

@@ -18,7 +18,7 @@ import { postSelector, userSelector } from "@src/store/selector";
 
 const InputContainer = styled(View)`
   flex-direction: row;
-  min-height: 40px;
+  height: 40px;
   border-top-width-color: ${(props) => props.theme.colors.chat.text};
   align-items: center;
   overflow: hidden;
@@ -34,6 +34,7 @@ const SubmitButton = styled(TouchableOpacity)`
   background-color: ${(props) => props.theme.colors.bg.secondary};
   justify-content: center;
   align-items: center;
+  height: 100%;
   padding-left: 8px;
   padding-right: 8px;
   padding-top: 5px;
@@ -49,7 +50,7 @@ const InputBar = ({ autoFocus }) => {
   const handlePostComment = async () => {
     Keyboard.dismiss();
     if (content != "") {
-      setContent("");
+      setContent(() => "");
       dispatch(
         commentPost({
           commentUserId: user._id,

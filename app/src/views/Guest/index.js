@@ -1,5 +1,5 @@
 import {
-  Dimensions,
+  Pressable,
   Image,
   Modal,
   StyleSheet,
@@ -22,10 +22,16 @@ import { colors } from "@src/infrastructure/theme/colors";
 import UserPost from "@src/features/user/components/UserPost.component";
 import FeatureTabs from "@src/features/user/components/FeatureTabs.component";
 import { useTranslation } from "react-i18next";
-import { joinChannel, sendFriendRequest } from "@src/store/slices/chatSlice";
+import {
+  joinChannel,
+  sendFriendRequest,
+  unfriend,
+} from "@src/store/slices/chatSlice";
 import { useCheckFriendStatusQuery } from "@src/store/slices/api/friendRequestApiSlice";
 import { useFindOrCreateChannelMutation } from "@src/store/slices/api/chatApiSlice";
 import { useTheme } from "styled-components";
+import { getSocket } from "@src/utils/socket";
+import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 
 const Guest = ({ props, navigation, route }) => {
   const theme = useTheme();
@@ -35,6 +41,7 @@ const Guest = ({ props, navigation, route }) => {
   const dispatch = useDispatch();
   const [guest, setGuest] = useState({});
   const [friendStatus, setFriendStatus] = useState("");
+  const { data: postData } = useGetPostByUserIdQuery(guestId);
   const [showEntireAvatar, setShowEntireAvatar] = useState(false);
   const {
     isLoading: isLoadingUser,
@@ -42,12 +49,19 @@ const Guest = ({ props, navigation, route }) => {
     data: userData,
     status,
   } = useGetUserByIdQuery(guestId);
-  const { data, isLoading: isChecking } = useCheckFriendStatusQuery(
-    userData?.user?._id,
-    {
-      skip: status !== "fulfilled" || !userData,
-    }
-  );
+  const {
+    data,
+    isLoading: isChecking,
+    refetch,
+  } = useCheckFriendStatusQuery(userData?.user?._id, {
+    skip: status !== "fulfilled" || !userData,
+  });
+  useEffect(() => {
+    const socket = getSocket();
+    socket.on("unfriend", () => {
+      refetch();
+    });
+  }, []);
   const [
     findOrCreateChannel,
     { data: channelData, isSuccess, isLoading: isFindOrCreating },
@@ -60,7 +74,7 @@ const Guest = ({ props, navigation, route }) => {
 
   useEffect(() => {
     if (getUserSuccess) {
-      setGuest(userData.user);
+      setGuest(() => userData.user);
     }
   }, [isLoadingUser, userData]);
   useEffect(() => {
@@ -79,6 +93,9 @@ const Guest = ({ props, navigation, route }) => {
   const handleSendAddFriendRequest = () => {
     dispatch(sendFriendRequest({ senderId: user._id, receiverId: guestId }));
   };
+  const handleUnfriend = () => {
+    dispatch(unfriend({ friendId: guestId }));
+  };
   const handleJoinChatRoom = () => {
     if (guest) {
       findOrCreateChannel({
@@ -91,6 +108,10 @@ const Guest = ({ props, navigation, route }) => {
     if (guest.avatar) {
       setShowEntireAvatar(true);
     }
+  };
+  const navigateToFriendListScreen = () => {
+    console.log("navigate");
+    navigation.navigate("FriendList", { userId: guestId });
   };
   return (
     <Container>
@@ -111,7 +132,15 @@ const Guest = ({ props, navigation, route }) => {
             {/* <Text>User description "ICON"</Text> */}
           </UserDescription>
           <View style={{ flexDirection: "row" }}>
-            <StyledButton2 onPress={handleSendAddFriendRequest}>
+            <StyledButton2
+              onPress={() => {
+                if (friendStatus === "friend") {
+                  handleUnfriend();
+                } else {
+                  handleSendAddFriendRequest();
+                }
+              }}
+            >
               <Text
                 style={{
                   fontWeight: 500,
@@ -119,7 +148,9 @@ const Guest = ({ props, navigation, route }) => {
                   color: colors.white,
                 }}
               >
-                {t(`${friendStatus}`)}
+                {friendStatus === "friend"
+                  ? t("unfriend")
+                  : t(`${friendStatus}`)}
               </Text>
             </StyledButton2>
             <StyledButton1 onPress={handleJoinChatRoom}>
@@ -137,17 +168,17 @@ const Guest = ({ props, navigation, route }) => {
         </Header>
         <BottomHeader>
           <ItemContainer>
-            <ItemValue>85</ItemValue>
+            <ItemValue>{postData ? postData.length : 0}</ItemValue>
             <ItemLabel>Bài viết</ItemLabel>
           </ItemContainer>
-          <ItemContainer>
-            <ItemValue>85</ItemValue>
+          <ItemContainer onPress={navigateToFriendListScreen}>
+            <ItemValue>{guest.friends?.length}</ItemValue>
             <ItemLabel>Bạn bè</ItemLabel>
           </ItemContainer>
         </BottomHeader>
       </HeaderContainer>
 
-      <FeatureTabs></FeatureTabs>
+      <FeatureTabs userId={guestId}></FeatureTabs>
       <Modal
         animationType="fade"
         transparent={true}
@@ -211,7 +242,7 @@ const CameraIcon = styled.View`
 const StyledButton1 = styled.TouchableOpacity`
   padding-horizontal: 20px;
   margin-horizontal: 12px;
-  width: 120px;
+  width: 128px;
   border-radius: 2px;
   border-width: 2px;
   border-color: #9971ee;
@@ -222,7 +253,7 @@ const StyledButton1 = styled.TouchableOpacity`
 const StyledButton2 = styled.TouchableOpacity`
   padding-horizontal: 20px;
   margin-horizontal: 12px;
-  width: 120px;
+  width: 128px;
   border-radius: 2px;
   background-color: #9971ee;
   justify-content: center;
@@ -269,7 +300,7 @@ const ItemLabel = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.large};
   color: ${(props) => props.theme.colors.chat.text};
 `;
-const ItemContainer = styled.View`
+const ItemContainer = styled.Pressable`
   align-items: center;
   margin-horizontal: 12px;
 `;

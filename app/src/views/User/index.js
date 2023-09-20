@@ -37,12 +37,12 @@ const User = ({ props, navigation }) => {
   const dispatch = useDispatch();
   const [updateUser, { isLoading, data, isSuccess, ...res }] =
     useUpdateUserMutation();
-  const { data: postData } = useGetPostByUserIdQuery();
+  const { data: postData } = useGetPostByUserIdQuery(user._id);
   const [avatarUri, setAvatarUri] = useState(null);
   const [selectedImageUri, setSelectedImageUri] = useState(null);
 
   const navigateToFriendListScreen = () => {
-    navigation.navigate("FriendList");
+    navigation.navigate("FriendList", { userId: user._id });
   };
   useEffect(() => {
     setAvatarUri(user.avatar);

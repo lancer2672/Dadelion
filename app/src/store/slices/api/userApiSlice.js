@@ -34,22 +34,6 @@ export const userApi = createApi({
               }
             });
           });
-
-          socket.on(
-            "response-friendRequest",
-            ({ requestId, responseValue, userIds }) => {
-              updateCachedData((draft) => {
-                if ((responseValue = "accept")) {
-                  const userId = draft.user._id;
-                  const friendId = userIds.filter((id) => id != userId);
-                  draft.user.friends.unshift({
-                    userId: friendId[0],
-                  });
-                }
-              });
-            }
-          );
-
           socket.on("offline-users", (offlineUserId) => {
             updateCachedData((draft) => {
               const userId = draft.user._id;
