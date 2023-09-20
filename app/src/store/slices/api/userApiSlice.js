@@ -33,6 +33,20 @@ export const userApi = createApi({
               }
             });
           });
+
+          socket.on(
+            "response-friendRequest",
+            ({ requestId, responseValue }) => {
+              updateCachedData((draft) => {
+                const index = draft.findIndex(
+                  (request) => request._id == requestId
+                );
+                if (index != -1) {
+                  draft.splice(index, 1);
+                }
+              });
+            }
+          );
           socket.on("offline-users", (offlineUserId) => {
             updateCachedData((draft) => {
               const userId = draft.user._id;

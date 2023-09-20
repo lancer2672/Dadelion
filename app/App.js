@@ -16,6 +16,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext } from "react";
 import { connectVoximplant } from "@src/voximplant/services/Client";
 import { requestNotificationPermission } from "@src/permissions";
+import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
+import Verification from "@src/features/auth/screens/Verification.screen";
 
 export const ThemeContext = createContext();
 

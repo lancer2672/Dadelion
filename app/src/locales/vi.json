@@ -39,5 +39,12 @@
   "fail": "Thất bại",
   "notify": "Thông báo",
   "notFriend": "Bạn không phải là bạn bè",
-  "sentImage": "Đã gửi ảnh"
+  "missCall": "Bạn đã bỏ lỡ cuộc gọi",
+  "calledYou": "Đã gọi cho bạn",
+  "call": "Cuộc gọi thoại",
+  "recall": "Gọi lại",
+  "justNow": "Vừa xong",
+  "sentImage": "Đã gửi ảnh",
+  "succeeded": "Thành công",
+  "failed": "Thất bại"
 }

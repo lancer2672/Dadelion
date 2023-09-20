@@ -39,7 +39,6 @@ const HomeHeader = ({}) => {
     refetchOnMountOrArgChange: true,
   });
   useEffect(() => {
-    console.log("data changed", notifications);
     let checkNewFriendRequest = false;
     let checkNewNotification = false;
     if (friendRequests) {

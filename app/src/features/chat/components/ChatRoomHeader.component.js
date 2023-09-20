@@ -2,28 +2,33 @@ import React, { memo, useEffect, useRef } from "react";
 import styled from "styled-components/native";
 import { Ionicons, FontAwesome, Entypo, Feather } from "@expo/vector-icons";
 import { Avatar } from "../../../components/Avatar";
-import { TouchableOpacity, View } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 import { useTheme } from "styled-components";
-import { Platform } from "react-native";
-import { requestCallingPermission } from "@src/permissions";
-import { Voximplant } from "react-native-voximplant";
 import { useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
+import { chatSelector, userSelector } from "@src/store/selector";
 import { useTranslation } from "react-i18next";
-const ChatRoomHeader = ({ navigation, chatFriend }) => {
+import { useNavigation } from "@react-navigation/native";
+
+const ChatRoomHeader = () => {
   const { user } = useSelector(userSelector);
+  const navigation = useNavigation();
+  const { selectedChannel } = useSelector(chatSelector);
   const theme = useTheme();
   const { t } = useTranslation();
   const handleNavigateToGuest = () => {
-    if (chatFriend) {
-      navigation.navigate("Guest", { guestId: chatFriend._id });
+    if (selectedChannel.chatFriend) {
+      navigation.navigate("Guest", { guestId: selectedChannel.chatFriend._id });
     }
   };
   const makeCall = () => {
     //just allow to call if they're friend
-    if (user.friends.includes((friend) => friend.userId == chatFriend._id)) {
-      navigation.navigate("CallingScreen", { user: chatFriend });
+    if (
+      user.friends.some(
+        (friend) => friend.userId == selectedChannel.chatFriend._id
+      )
+    ) {
+      navigation.navigate("CallingScreen", {});
     } else {
       Alert.alert(t("notify"), t("notFriend"), [{ text: "OK" }]);
     }
@@ -39,12 +44,16 @@ const ChatRoomHeader = ({ navigation, chatFriend }) => {
       </BackIcon>
 
       <TouchableOpacity onPress={handleNavigateToGuest}>
-        <Avatar width={40} height={40} uri={chatFriend?.avatar} />
+        <Avatar
+          width={40}
+          height={40}
+          uri={selectedChannel.chatFriend?.avatar}
+        />
       </TouchableOpacity>
 
       <HeaderInfo>
-        <HeaderText>{chatFriend?.nickname}</HeaderText>
-        {chatFriend?.isOnline == 1 ? (
+        <HeaderText>{selectedChannel.chatFriend?.nickname}</HeaderText>
+        {selectedChannel.chatFriend?.isOnline == 1 ? (
           <View style={{ flexDirection: "row" }}>
             <Entypo
               style={{ position: "absolute", left: "-12%", top: "-30%" }}
@@ -56,8 +65,8 @@ const ChatRoomHeader = ({ navigation, chatFriend }) => {
           </View>
         ) : (
           <StatusText>{`${commentCreatedTimeFormater(
-            chatFriend?.lastOnline
-          )} ago`}</StatusText>
+            selectedChannel.chatFriend?.lastOnline
+          )}`}</StatusText>
         )}
       </HeaderInfo>
       <TouchableOpacity onPress={makeCall} style={{ padding: 4 }}>

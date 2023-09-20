@@ -34,12 +34,29 @@ export const commentCreatedTimeFormater = (createdAt) => {
   }
   let minutes = seconds / 60;
   if (minutes < 60) {
-    return `${Math.floor(minutes)}m`;
+    return `${Math.floor(minutes)} phút`;
   }
   let hours = minutes / 60;
   if (hours < 24) {
-    return `${Math.floor(hours)}h`;
+    return `${Math.floor(hours)} giờ`;
   }
   let days = hours / 24;
-  return `${Math.floor(days)}d`;
+  return `${Math.floor(days)} ngày`;
+};
+
+export const callingTimeFormatter = (duration) => {
+  if (!duration) return "";
+  if (duration < 60) {
+    return `${duration} giây`;
+  }
+  let minutes = duration / 60;
+  if (minutes < 60) {
+    return `${Math.floor(minutes)} phút`;
+  }
+  let hours = minutes / 60;
+  if (hours < 24) {
+    return `${Math.floor(hours)} giờ`;
+  }
+  let days = hours / 24;
+  return `${Math.floor(days)} ngày`;
 };

@@ -35,16 +35,19 @@ export const chatApi = createApi({
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
           const socket = getSocket();
-          socket.on("receive-message", (newMess, channelId) => {
+          socket.on("receive-message", ({ newMess, channelId, type }) => {
             updateCachedData((draft) => {
-              draft.unshift(newMess);
-            });
-          });
-          socket.on("receive-image", (newMess) => {
-            newMess.imageUrls = newMess.imageUrls.map((imageUrl) => {
-              return `${UrlAPI}${imageUrl}`;
-            });
-            updateCachedData((draft) => {
+              switch (type) {
+                case "message":
+                  break;
+                case "image": {
+                  newMess.imageUrls = newMess.imageUrls.map((imageUrl) => {
+                    return `${UrlAPI}${imageUrl}`;
+                  });
+                  console.log("newMessage", newMess.imageUrls);
+                  break;
+                }
+              }
               draft.unshift(newMess);
             });
           });
@@ -71,7 +74,7 @@ export const chatApi = createApi({
               draft.unshift(newChannel);
             });
           });
-          socket.on("receive-message", (newMess, channelId) => {
+          socket.on("receive-message", ({ newMess, channelId, type }) => {
             updateCachedData((draft) => {
               const c = draft.findIndex((channel) => channel._id == channelId);
               if (c != -1) {
@@ -81,16 +84,7 @@ export const chatApi = createApi({
               }
             });
           });
-          socket.on("receive-image", (newMess, channelId) => {
-            updateCachedData((draft) => {
-              const c = draft.findIndex((channel) => channel._id == channelId);
-              if (c != -1) {
-                let firstElement = draft.shift();
-                firstElement.channelMessages.unshift(newMess);
-                draft.splice(c, 0, firstElement);
-              }
-            });
-          });
+
           socket.on("join-chatRoom", (channelId) => {
             updateCachedData((draft) => {
               draft.forEach((channel) => {
@@ -122,14 +116,7 @@ export const chatApi = createApi({
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
           const socket = getSocket();
-          socket.on("receive-message", (newMess, channelId) => {
-            updateCachedData((draft) => {
-              if (draft.channelId === channelId) {
-                draft.lastMessage = newMess;
-              }
-            });
-          });
-          socket.on("receive-image", (newMess, channelId) => {
+          socket.on("receive-message", ({ newMess, channelId, type }) => {
             updateCachedData((draft) => {
               if (draft.channelId === channelId) {
                 draft.lastMessage = newMess;

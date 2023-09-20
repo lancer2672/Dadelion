@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import styled from "styled-components/native";
 
-import { useCommentPostMutation } from "@src/store/slices/api/postApiSlice";
+// import { useCommentPostMutation } from "@src/store/slices/api/postApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { commentPost } from "@src/store/slices/postSlice";
 import { postSelector, userSelector } from "@src/store/selector";
@@ -40,7 +40,7 @@ const SubmitButton = styled(TouchableOpacity)`
   padding-bottom: 5px;
 `;
 
-const InputBar = () => {
+const InputBar = ({ autoFocus }) => {
   const [content, setContent] = useState("");
   const { user } = useSelector(userSelector);
   const { selectedPost } = useSelector(postSelector);
@@ -64,6 +64,7 @@ const InputBar = () => {
   return (
     <InputContainer>
       <InputContent
+        autoFocus={autoFocus}
         placeholder="Viết bình luận..."
         value={content}
         onChangeText={(newText) => setContent(newText)}

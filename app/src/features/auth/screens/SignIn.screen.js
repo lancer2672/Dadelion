@@ -46,7 +46,7 @@ const Login = ({ navigation }) => {
   };
   const handleSignInGoogle = () => {};
   useEffect(() => {
-    // handle result when login succeeded
+    // handle resulcat when login succeeded
     (async () => {
       try {
         if (isSuccess) {
@@ -54,21 +54,22 @@ const Login = ({ navigation }) => {
           dispatch(setUser(payload));
           //auto enable save password
           if (true) {
-            ["token", "refreshToken", "username", "password"].forEach(
-              async (key) => {
-                await AsyncStorage.setItem(
-                  key,
-                  JSON.stringify(loginResult.data[key] || eval(key))
-                );
-              }
-            );
-            await AsyncStorage.setItem(
-              "userId",
-              JSON.stringify(loginResult.data.user._id)
-            );
+            // ["token", "refreshToken", "username"].forEach(async (key) => {
+            //   await AsyncStorage.setItem(
+            //     key,
+            //     JSON.stringify(loginResult.data[key]) || eval(key)
+            //   );
+            // });
+            // await AsyncStorage.setItem(
+            //   "userId",
+            //   JSON.stringify(loginResult.data.user._id)
+            // );
           }
-          loginVoximplant(username, password);
           initSocket(loginResult.data.user._id);
+          const tokenVoximplant = await loginVoximplant(username, password);
+          if (tokenVoximplant) {
+            await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
+          }
         }
       } catch (er) {
         console.log("err", er);
@@ -95,7 +96,7 @@ const Login = ({ navigation }) => {
             iconLeft={"account"}
             setText={setUsername}
             hasValidationError={validationErrors.username}
-            placeholder={"Tên đăng nhập"}
+            placeholder={"Email"}
             onBlur={() =>
               handleValidateField(
                 accountSchema,
@@ -137,7 +138,9 @@ const Login = ({ navigation }) => {
       ></RememberPassword> */}
       {/* <Text style={{ fontSize: 16, color: "white" }}>Quên mật khẩu ?</Text> */}
 
-      {error && <Error variant="error">{error.message}</Error>}
+      {error && (
+        <Error variant="error">Tên đăng nhập hoặc mật khẩu không hợp lệ</Error>
+      )}
       <Spacer variant="top" size="large"></Spacer>
       <View style={{ marginTop: 12 }}>
         <AuthButton

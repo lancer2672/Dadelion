@@ -18,12 +18,15 @@ import { imageStoragePermission } from "@src/permissions";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { showMessage } from "react-native-flash-message";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
+import { useTheme } from "styled-components";
+import ChatMessageItem from "./ChatMessageItem.component";
 const UserMessage = ({
   chatFriend = {},
   isMyMessage,
   messages,
   handleShowDialog,
 }) => {
+  const theme = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   const [selectedImageList, setSelectedImageList] = useState(null);
@@ -88,7 +91,13 @@ const UserMessage = ({
         renderItem={({ item }) => (
           <MessageContainer isMyMessage={isMyMessage}>
             {item.timeMarker && (
-              <Text style={{ flex: 1, textAlign: "center" }}>
+              <Text
+                style={{
+                  flex: 1,
+                  color: theme.colors.chat.text,
+                  textAlign: "center",
+                }}
+              >
                 {postCreatedTimeFormatter(item.createdAt)}
               </Text>
             )}
@@ -100,7 +109,7 @@ const UserMessage = ({
                     <Message isMyMessage={isMyMessage}>{item.message}</Message>
                   </>
                 )}
-                {item?.imageUrls?.length > 0 && (
+                {item.imageUrls?.length > 0 && (
                   <View style={{ flexDirection: "row" }}>
                     {item.imageUrls.map((imageUrl, index) => {
                       if (
@@ -160,6 +169,9 @@ const UserMessage = ({
                       }
                     })}
                   </View>
+                )}
+                {item.callHistory && (
+                  <ChatMessageItem message={item}></ChatMessageItem>
                 )}
               </View>
             </View>

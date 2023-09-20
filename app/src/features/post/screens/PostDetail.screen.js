@@ -30,7 +30,7 @@ const DetailPost = ({ route }) => {
   const userState = useSelector(userSelector);
   const postState = useSelector(postSelector);
   const { selectedPost } = postState;
-  const { postCreator } = route.params;
+  const { autoFocus } = route.params;
   const [heart, setHeart] = useState(false);
   // const [reactPost, { isSuccess }] = useReactPostMutation();
   useEffect(() => {
@@ -75,9 +75,9 @@ const DetailPost = ({ route }) => {
     <Container>
       <PostImage source={{ uri: selectedPost.image }} />
       <UserInfoContainer>
-        <UserAvatar source={{ uri: postCreator.avatar }} />
+        <UserAvatar source={{ uri: selectedPost.postCreator.avatar }} />
         <View style={{ marginLeft: 12, justifyContent: "flex-end", flex: 1 }}>
-          <CreatorName>{postCreator.nickname}</CreatorName>
+          <CreatorName>{selectedPost.postCreator.nickname}</CreatorName>
           <Text style={{ color: theme.colors.chat.text }}>
             {postCreatedTimeFormatter(selectedPost.createdAt)}
           </Text>
@@ -119,7 +119,7 @@ const DetailPost = ({ route }) => {
           </CommentContainer>
         </View>
       </ScrollView>
-      <InputBar postId={selectedPost._id} />
+      <InputBar autoFocus={autoFocus} postId={selectedPost._id} />
     </Container>
   );
 };

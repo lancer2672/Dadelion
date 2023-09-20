@@ -1,10 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { Voximplant } from "react-native-voximplant";
 
 const initialState = {
   user: null,
   token: null,
   refreshToken: null,
+
+  registrationForm: null,
 };
 export const logoutUser = createAsyncThunk("user/logout", async () => {
   await AsyncStorage.multiRemove([
@@ -12,8 +15,9 @@ export const logoutUser = createAsyncThunk("user/logout", async () => {
     "token",
     "refreshToken",
     "username",
-    "password",
+    "tokenVoximplant",
   ]);
+  await Voximplant.getInstance().disconnect();
 });
 
 export const userSlice = createSlice({

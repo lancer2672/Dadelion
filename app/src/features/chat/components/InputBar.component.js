@@ -16,16 +16,18 @@ import {
   Feather,
 } from "@expo/vector-icons";
 import { launchCameraAsync } from "expo-image-picker";
-import { userSelector } from "@src/store/selector";
+import { chatSelector, userSelector } from "@src/store/selector";
 import { useDispatch, useSelector } from "react-redux";
 import { colors } from "@src/infrastructure/theme/colors";
-import { sendImage, sendMessage, typing } from "@src/store/slices/chatSlice";
+import { sendMessage, typing } from "@src/store/slices/chatSlice";
 import { readBase64 } from "@src/utils/imageHelper";
 import { useTheme } from "styled-components";
 import ImagePicker from "react-native-image-crop-picker";
-const InputBar = ({ channelId, chatFriendId }) => {
+const InputBar = ({ chatFriendId }) => {
   const theme = useTheme();
   const { user } = useSelector(userSelector);
+  const { selectedChannel } = useSelector(chatSelector);
+  const { channelId } = selectedChannel;
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputVisible, setTextInputVisible] = useState(true);
   const [trashIconVisible, setTrashIconVisible] = useState(false);
@@ -68,7 +70,9 @@ const InputBar = ({ channelId, chatFriendId }) => {
       if (!result.canceled) {
         console.log("handleOpenCamera", result.assets[0]);
         const base64String = await readBase64(result.assets[0].uri);
-        dispatch(sendImage({ channelId, imagesData: [base64String] }));
+        dispatch(
+          sendMessage({ channelId, imagesData: [base64String], type: "image" })
+        );
       }
     } catch (err) {
       console.log(err);
@@ -76,7 +80,14 @@ const InputBar = ({ channelId, chatFriendId }) => {
   };
   const handleSendMessage = () => {
     setText("");
-    dispatch(sendMessage({ channelId, senderId: user._id, newMessage: text }));
+    dispatch(
+      sendMessage({
+        channelId,
+        senderId: user._id,
+        newMessage: text,
+        type: "message",
+      })
+    );
   };
   const openImagePicker = () => {
     ImagePicker.openPicker({
@@ -92,7 +103,7 @@ const InputBar = ({ channelId, chatFriendId }) => {
         );
       })
       .then((data) => {
-        dispatch(sendImage({ channelId, imagesData: data }));
+        dispatch(sendMessage({ channelId, imagesData: data, type: "image" }));
       })
       .catch((er) => console.log("er", er));
   };

@@ -16,10 +16,43 @@ export const connectVoximplant = async () => {
 };
 
 export const loginVoximplant = async (username, password) => {
+  if (!username) {
+    return;
+  }
+  console.log("username.spli", username.split("@")[0].toLowerCase());
+  console.log("username.spli", password);
   try {
-    // let authResult = await voximplant.login(`${username}@${AppName}`, password);
-    // console.log("voximplant login successfully", authResult);
+    if (voximplant.getClientState() === Voximplant.ClientState.DISCONNECTED) {
+      await voximplant.connect();
+    }
+    // remove email part
+    let authResult = await voximplant.login(
+      `${username.split("@")[0].toLowerCase()}@${AppName}`,
+      password
+    );
+
+    console.log("voximplant login successfully", authResult);
+    return authResult.tokens.accessToken;
   } catch (er) {
     console.log("voximplant ", er);
+  }
+};
+
+export const loginWithTokenVoximplant = async (username, token) => {
+  if (!username) {
+    return;
+  }
+  try {
+    //remove email part
+    if (voximplant.getClientState() === Voximplant.ClientState.DISCONNECTED) {
+      await voximplant.connect();
+    }
+    let authResult = await voximplant.loginWithToken(
+      `${username.split("@")[0].toLowerCase()}@${AppName}`,
+      token
+    );
+    console.log("voximplant login using token successfully", authResult);
+  } catch (er) {
+    console.log("voximplant login er ", er);
   }
 };

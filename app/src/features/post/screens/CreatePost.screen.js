@@ -8,17 +8,14 @@ import {
   Dimensions,
   Pressable,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import { openImagePicker } from "@src/utils/imageHelper";
 import styled from "styled-components/native";
-
+import ImagePicker from "react-native-image-crop-picker";
 import { Spacer } from "@src/components/spacer/spacer.component";
 
 import { Seperator, BackButton, Header, UserName } from "../shared-components";
-import { useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import {
@@ -27,11 +24,13 @@ import {
 } from "@src/store/slices/api/postApiSlice";
 import { Avatar } from "@src/components/Avatar";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { useTheme } from "styled-components";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const CreatePost = ({ navigation }) => {
   const [createPost, { isLoading, isSuccess, data, error }] =
     useCreatePostMutation();
+  const theme = useTheme();
   const { user } = useSelector(userSelector);
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
@@ -56,9 +55,17 @@ const CreatePost = ({ navigation }) => {
     console.log("newPostData", newPostData);
     createPost(newPostData);
   };
-  const handleSelectImage = async () => {
-    openImagePicker();
-  };
+  useEffect(() => {
+    ImagePicker.openPicker({
+      multiple: false,
+      mediaType: "photo",
+    })
+      .then((image) => {
+        // console.log("image", image);
+        setImageUri(image.path);
+      })
+      .catch((er) => console.log("er", er));
+  }, []);
   return (
     <Container>
       <Header
@@ -72,8 +79,11 @@ const CreatePost = ({ navigation }) => {
       <Body>
         <UserInfo>
           <Avatar uri={user.avatar}></Avatar>
-          <Spacer position={"left"} size={"small"}></Spacer>
-          <UserName>{user.nickname}</UserName>
+          <Spacer position={"left"} size={"medium"}></Spacer>
+          <View>
+            <UserName>{user.nickname}</UserName>
+            <UserName>{user.email}</UserName>
+          </View>
         </UserInfo>
       </Body>
       <View style={{ flexDirection: "row", alignItems: "center", padding: 8 }}>
@@ -81,24 +91,22 @@ const CreatePost = ({ navigation }) => {
           multiline={true}
           onChangeText={(newDescript) => setDescription(newDescript)}
           placeholder="Bạn đang nghĩ gì..."
+          placeholderTextColor={theme.colors.chat.text}
         ></PostContent>
-        <AddImageButton onPress={handleSelectImage}>
-          <Entypo name="images" size={24} color="black" />
-        </AddImageButton>
       </View>
-      {imageUri == null ? (
+      <TouchableOpacity>
         <SelectedImage
           style={{ width: SCREEN_WIDTH - 16 }}
-          source={require("@assets/imgs/ChooseAnImage.png")}
+          resizeMode="contain"
+          source={
+            imageUri == null
+              ? require("@assets/imgs/ChooseImage.png")
+              : {
+                  uri: imageUri,
+                }
+          }
         ></SelectedImage>
-      ) : (
-        <SelectedImage
-          style={{ width: SCREEN_WIDTH - 16 }}
-          source={{
-            uri: imageUri,
-          }}
-        ></SelectedImage>
-      )}
+      </TouchableOpacity>
     </Container>
   );
 };
@@ -118,16 +126,17 @@ const UserInfo = styled(View)`
 `;
 const PostContent = styled(TextInput)`
   flex: 1;
-  padding: 4px;
+  
   border-radius: 8px;
-  background-color: ${(props) => props.theme.colors.bg.secondary}
+  background-color: ${(props) => props.theme.colors.chat.bg.secondary}
+  color: ${(props) => props.theme.colors.chat.text}
   margin-right: 8px;
   line-height: 24px;
+  padding:4px;
   font-size: ${(props) => props.theme.fontSizes.body};
 `;
-const SelectedImage = styled(Image)`
+const SelectedImage = styled(ImageBackground)`
   margin-top: 16px;
-  resize-mode: stretch;
   border-radius: 10px;
   height: 250px;
 `;
@@ -135,7 +144,7 @@ const SelectedImage = styled(Image)`
 const Container = styled(View).attrs((props) => ({}))`
   align-items: center;
   flex:1;
-  background-color: ${(props) => props.theme.colors.bg.primary}
+  background-color: ${(props) => props.theme.colors.chat.bg.primary}
   justify-content: flex-start;
 
 `;

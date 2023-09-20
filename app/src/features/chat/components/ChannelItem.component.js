@@ -9,7 +9,7 @@ import {
 import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components/native";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 
 import { Avatar } from "@src/components/Avatar";
@@ -21,11 +21,13 @@ import {
   useLoadChatRoomMessagesQuery,
 } from "@src/store/slices/api/chatApiSlice";
 import { useTheme } from "styled-components";
+import { setSelectedChannel } from "@src/store/slices/chatSlice";
 
 const Channel = ({ navigation, channel }) => {
   const { _id: channelId, memberIds } = channel;
   const { t } = useTranslation();
   const theme = useTheme();
+  const dispatch = useDispatch();
   const { user } = useSelector(userSelector);
   const [chatFriend, setChatFriend] = useState(null);
   const [chatFriendId, setChatFriendId] = useState(null);
@@ -80,10 +82,8 @@ const Channel = ({ navigation, channel }) => {
   return (
     <Container
       onPress={() => {
-        navigation.navigate("ChatRoom", {
-          channelId,
-          memberIds,
-        });
+        dispatch(setSelectedChannel({ ...channel, chatFriend }));
+        navigation.navigate("ChatRoom");
         if (lastMessage) {
           setLastMessage((prev) => ({ ...prev, isSeen: true }));
         }
@@ -120,7 +120,11 @@ const Channel = ({ navigation, channel }) => {
 
         {lastMessage ? (
           <LastMessage userId={user._id} lastMessage={lastMessage}>
-            {lastMessage.message || t("sentImage")}
+            {lastMessage.message || lastMessage.imageUrls?.length > 0
+              ? t("sentImage")
+              : lastMessage.callHistory?.duration
+              ? t("calledYou")
+              : t("missCall")}
           </LastMessage>
         ) : (
           <EmptyMessage>{t("emptyMessage")}</EmptyMessage>

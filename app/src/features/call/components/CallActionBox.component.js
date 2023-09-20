@@ -1,22 +1,67 @@
+import { useNavigation } from "@react-navigation/native";
+import { callSelector, chatSelector, userSelector } from "@src/store/selector";
+import { sendMessage } from "@src/store/slices/chatSlice";
 import React, { useState } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Voximplant } from "react-native-voximplant";
+import { useDispatch, useSelector } from "react-redux";
 
-const CallActionBox = ({ onHangupPress }) => {
+const CallActionBox = ({ call, callingUserId, channelId }) => {
+  // const { call } = useSelector(callSelector);
+  const { selectedChannel } = useSelector(chatSelector);
+  const { user } = useSelector(userSelector);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
-
-  const onReverseCamera = () => {
-    console.warn("onReverseCamera");
-  };
-
+  console.log("user", user);
   const onToggleCamera = () => {
-    setIsCameraOn((currentValue) => !currentValue);
+    setIsCameraOn((currentValue) => {
+      if (call) {
+        const newValue = !currentValue;
+        call.sendVideo(newValue);
+        return newValue;
+      }
+    });
   };
+  const onHangupPress = async () => {
+    console.log("call", call);
+    if (call) {
+      try {
+        const duration = await call.getDuration();
+        //handle 2 case: hangup from the caller (callingUserId) and hangup from the receiver
+        const id = callingUserId ? callingUserId : user._id;
 
+        dispatch(
+          sendMessage({
+            type: "callHistory",
+            channelId: channelId || selectedChannel?._id,
+            senderId: id,
+            duration,
+          })
+        );
+      } catch (err) {
+        console.log("get duration failed", err);
+      }
+      call.hangup();
+    } else {
+      navigation.goBack();
+    }
+  };
+  const onReverseCamera = () => {
+    const cameraInstance = Voximplant.Hardware.CameraManager.getInstance();
+    if (isCameraOn)
+      cameraInstance.switchCamera(Voximplant.Hardware.CameraType.BACK);
+    else cameraInstance.switchCamera(Voximplant.Hardware.CameraType.FRONT);
+  };
   const onToggleMicrophone = () => {
-    setIsMicOn((currentValue) => !currentValue);
+    setIsMicOn((currentValue) => {
+      const newValue = !currentValue;
+      call.sendAudio(newValue);
+      return newValue;
+    });
   };
 
   return (
@@ -27,7 +72,7 @@ const CallActionBox = ({ onHangupPress }) => {
 
       <Pressable onPress={onToggleCamera} style={styles.iconButton}>
         <MaterialIcons
-          name={isCameraOn ? "camera-off" : "camera"}
+          name={isCameraOn ? "camera" : "camera-off"}
           size={30}
           color={"white"}
         />

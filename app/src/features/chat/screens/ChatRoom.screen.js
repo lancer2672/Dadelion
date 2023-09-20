@@ -7,7 +7,7 @@ import ListUserMessages from "../components/ListMessage.component";
 import ChatRoomHeader from "../components/ChatRoomHeader.component";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
+import { chatSelector, userSelector } from "@src/store/selector";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { useTranslation } from "react-i18next";
 import { joinRoom, typing } from "@src/store/slices/chatSlice";
@@ -20,7 +20,9 @@ const ChatRoom = ({ navigation, route }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const socket = getSocket();
-  const { channelId, memberIds } = route.params;
+  const { selectedChannel } = useSelector(chatSelector);
+  const { channelId, memberIds } = selectedChannel;
+  // const { channelId, memberIds } = route.params;
   const [chatFriendId, setChatFriendId] = useState(null);
   const [chatFriend, setChatFriend] = useState({});
   const [isTyping, setIsTyping] = useState(false);
@@ -46,14 +48,8 @@ const ChatRoom = ({ navigation, route }) => {
 
   return (
     <Container>
-      <ChatRoomHeader
-        chatFriend={chatFriend}
-        navigation={navigation}
-      ></ChatRoomHeader>
-      <ListUserMessages
-        chatFriend={chatFriend}
-        channelId={channelId}
-      ></ListUserMessages>
+      <ChatRoomHeader chatFriend={chatFriend}></ChatRoomHeader>
+      <ListUserMessages chatFriend={chatFriend}></ListUserMessages>
       {isTyping && (
         <TypingWrapper>
           <Text
@@ -73,7 +69,7 @@ const ChatRoom = ({ navigation, route }) => {
           ></AnimatedEllipsis>
         </TypingWrapper>
       )}
-      <InputBar chatFriendId={chatFriendId} channelId={channelId}></InputBar>
+      <InputBar chatFriendId={chatFriendId}></InputBar>
     </Container>
   );
 };

@@ -16,14 +16,15 @@ import React, {
 } from "react";
 import UserMessage from "./Message.component";
 import { useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
+import { chatSelector, userSelector } from "@src/store/selector";
 import { useLoadChatRoomMessagesQuery } from "@src/store/slices/api/chatApiSlice";
 import ImageDialog from "@src/components/dialogs/ImageDialog.component";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
-const ListUserMessages = ({ channelId, chatFriend }) => {
+const ListUserMessages = ({ chatFriend }) => {
   const { user } = useSelector(userSelector);
-
+  const { selectedChannel } = useSelector(chatSelector);
+  console.log("selectedChannel", selectedChannel);
   // const [visibleMessages, setVisibleMessages] = useState(20);
   const [listMessage, setListMessage] = useState([]);
   const bottomSheetModalRef = useRef(null);
@@ -37,8 +38,9 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
   const handleHideModal = useCallback(() => {
     bottomSheetModalRef.current?.dismiss();
   }, []);
-  const { isLoading, error, isSuccess, data } =
-    useLoadChatRoomMessagesQuery(channelId);
+  const { isLoading, error, isSuccess, data } = useLoadChatRoomMessagesQuery(
+    selectedChannel._id
+  );
   useEffect(() => {
     if (isSuccess) {
       const createMessage = (msg) => ({
@@ -46,6 +48,7 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
         message: msg.message,
         imageUrls: msg.imageUrls,
         createdAt: msg.createdAt,
+        callHistory: msg.callHistory,
       });
 
       const groupedByUserId = data.reduce((acc, msg) => {
@@ -77,7 +80,7 @@ const ListUserMessages = ({ channelId, chatFriend }) => {
       console.log("error", error);
     }
   }, [isLoading, data]);
-  console.log("listMsg", listMessage);
+  console.log("grouped msg", listMessage);
   return (
     <>
       <Pressable style={{ flex: 1 }} onPress={handleHideModal}>

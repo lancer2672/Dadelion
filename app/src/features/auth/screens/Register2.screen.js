@@ -20,10 +20,15 @@ import { ActivityIndicator } from "react-native-paper";
 import { useCreateUserMutation } from "@src/store/slices/api/userApiSlice";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { useSendVerificationEmailMutation } from "@src/store/slices/api/authApi";
 
 const RegisterScreen2 = ({ navigation, route }) => {
-  const [createUser, { error, isSuccess, isLoading, ...createUserResult }] =
+  const [createUser, { error, isSuccess, isLoading, data }] =
     useCreateUserMutation();
+  const [
+    sendEmailVerification,
+    { error: sendEmailEr, isLoading: isSending, isSuccess: sentSuccess },
+  ] = useSendVerificationEmailMutation();
   const { firstname, lastname, dateOfBirth } = route.params;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -36,18 +41,26 @@ const RegisterScreen2 = ({ navigation, route }) => {
   };
   useEffect(() => {
     //register succeeded
-    if (isSuccess) {
-      setUsername("");
-      setPassword("");
-      setEmail("");
+    if (!isLoading && isSuccess) {
+      console.log("data", data);
+      sendEmailVerification({ email });
+      // setUsername("");
+      // setPassword("");
+      // setEmail("");
       // setFirstname("");
       // setLastname("");
       // setDateOfBirth(null);
       setConfirmPassword("");
-      navigation.navigate("Login");
     }
     dispatch(setIsLoading(isLoading));
-  }, [isLoading]);
+  }, [isLoading, isSuccess]);
+
+  useEffect(() => {
+    if (!isSending && sentSuccess) {
+      navigation.navigate("Verification", { email, password });
+    }
+  }, [isSending, sentSuccess]);
+  console.log(isSending, sentSuccess);
   const handleRegistration = async () => {
     if (Object.keys(validationErrors) == 0) {
       try {
@@ -65,9 +78,7 @@ const RegisterScreen2 = ({ navigation, route }) => {
       }
     }
   };
-  if (isLoading) {
-    return <ActivityIndicator></ActivityIndicator>;
-  }
+
   return (
     <AuthContainer>
       <InputText
@@ -88,7 +99,7 @@ const RegisterScreen2 = ({ navigation, route }) => {
       {validationErrors.email && (
         <Error variant="error">{validationErrors.email}</Error>
       )}
-      <InputText
+      {/* <InputText
         iconLeft={"account"}
         setText={setUsername}
         hasValidationError={validationErrors.username}
@@ -105,7 +116,7 @@ const RegisterScreen2 = ({ navigation, route }) => {
       ></InputText>
       {validationErrors.username && (
         <Error variant="error">{validationErrors.username}</Error>
-      )}
+      )} */}
       <InputText
         iconLeft={"lock"}
         setText={setPassword}
@@ -125,7 +136,7 @@ const RegisterScreen2 = ({ navigation, route }) => {
       {validationErrors.password && (
         <Error variant="error">{validationErrors.password}</Error>
       )}
-      <InputText
+      {/* <InputText
         iconLeft={"lock"}
         setText={setConfirmPassword}
         passwordType
@@ -146,7 +157,7 @@ const RegisterScreen2 = ({ navigation, route }) => {
       ></InputText>
       {validationErrors.confirmPassword && (
         <Error variant="error">{validationErrors.confirmPassword}</Error>
-      )}
+      )} */}
 
       {error && (
         <View>

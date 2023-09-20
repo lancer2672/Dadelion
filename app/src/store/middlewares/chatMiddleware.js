@@ -25,20 +25,7 @@ const chatMiddleware = () => (store) => {
         break;
       }
       case "chat/sendMessage": {
-        const { channelId, senderId, newMessage } = action.payload;
-        socket.emit("send-message", {
-          channelId,
-          senderId,
-          newMessage,
-        });
-        break;
-      }
-      case "chat/sendImage": {
-        const { channelId, imagesData } = action.payload;
-        socket.emit("send-image", {
-          channelId,
-          imagesData,
-        });
+        socket.emit("send-message", action.payload);
         break;
       }
       case "chat/sendFriendRequest": {

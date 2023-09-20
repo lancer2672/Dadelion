@@ -1,6 +1,7 @@
 import { Image, View, Text, Pressable, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "styled-components";
 
 export const Seperator = styled(View)`
   border-width: 1px;
@@ -9,6 +10,7 @@ export const Seperator = styled(View)`
 export const UserName = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: ${(props) => props.theme.fontWeights.medium};
+  color: ${(props) => props.theme.colors.chat.text};
 `;
 export const Header = ({
   onBackButtonPress,
@@ -17,6 +19,7 @@ export const Header = ({
   isDisabled,
   onButtonPress,
 }) => {
+  const theme = useTheme();
   return (
     <View
       style={{
@@ -27,7 +30,7 @@ export const Header = ({
       }}
     >
       <TouchableOpacity onPress={onBackButtonPress}>
-        <Ionicons name="arrow-back" size={32} color="black" />
+        <Ionicons name="arrow-back" size={32} color={theme.colors.chat.text} />
       </TouchableOpacity>
 
       <Heading>{heading}</Heading>
@@ -42,6 +45,7 @@ export const Header = ({
 const Heading = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.title};
   font-weight: ${(props) => props.theme.fontWeights.medium};
+  color: ${(props) => props.theme.colors.chat.text};
   flex: 1;
   margin-left: 12px;
 `;
@@ -49,10 +53,11 @@ const Button = styled(Pressable).attrs((props) => ({
   opacity: props.isDisabled ? 0.6 : 1,
   disabled: props.isDisabled,
 }))`
-  background-color: ${(props) => props.theme.colors.ui.primary}
+  background-color: ${(props) => props.theme.colors.chat.text}
   border-radius: 4px;
   justify-content: center;
-  padding: 8px;
+  padding-vertical: 8px;
+  padding-horizontal:16px;
   align-items: center;
   shadow-color: #000;
   shadow-offset: 4px;

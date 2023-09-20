@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // messages stored in cache of chatService
+  selectedChannel: null,
 };
 export const chatSlice = createSlice({
   name: "chat",
@@ -13,9 +13,17 @@ export const chatSlice = createSlice({
     typing: (state, action) => {},
     joinRoom: (state, action) => {},
     sendMessage: (state, action) => {},
-    sendImage: (state, action) => {},
+
     sendFriendRequest: (state, action) => {},
     responseFriendRequest: (state, action) => {},
+
+    //
+    setSelectedChannel: (state, action) => {
+      state.selectedChannel = action.payload;
+    },
+    removeSelectedChannel: (state, action) => {
+      state.selectedChannel = null;
+    },
   },
 });
 
@@ -25,7 +33,10 @@ export const {
   joinRoom,
   typing,
   sendMessage,
-  sendImage,
+
   sendFriendRequest,
   responseFriendRequest,
+
+  setSelectedChannel,
+  removeSelectedChannel,
 } = chatSlice.actions;

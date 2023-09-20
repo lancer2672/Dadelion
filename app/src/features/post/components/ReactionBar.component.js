@@ -15,16 +15,23 @@ import { colors } from "@src/infrastructure/theme/colors";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { useTheme } from "styled-components";
 import { reactPost } from "@src/store/slices/postSlice";
+import { useNavigation } from "@react-navigation/native";
 const ReactionBar = ({ post }) => {
   const { likes } = post;
   const theme = useTheme();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [heart, setHeart] = useState(false);
   const userState = useSelector(userSelector);
   const [reactionNumber, setReactionNumber] = useState(0);
   // const [reactPost, {}] = useReactPostMutation();
   const handleReact = () => {
     dispatch(reactPost({ postId: post._id, postCreatorId: post.user }));
+  };
+  const navigateToDetailPost = () => {
+    navigation.navigate("DetailPost", {
+      autoFocus: true,
+    });
   };
   useEffect(() => {
     //check if user reacted this post
@@ -48,7 +55,7 @@ const ReactionBar = ({ post }) => {
         )}
       </ButtonWrapper>
       <Number>{reactionNumber}</Number>
-      <ButtonWrapper onPress={null}>
+      <ButtonWrapper onPress={navigateToDetailPost}>
         <FontAwesome5 name="comment-dots" size={24} color={"white"} />
       </ButtonWrapper>
 

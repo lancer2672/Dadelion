@@ -62,8 +62,12 @@ const FriendList = ({ navigation }) => {
       <Body>
         <FlatList
           data={user.friends}
-          renderItem={({ item }) => (
-            <Friend navigation={navigation} friend={item} />
+          renderItem={({ item, index }) => (
+            <Friend
+              key={`friend-item ${index}`}
+              navigation={navigation}
+              friend={item}
+            />
           )}
           keyExtractor={(item) => item.id}
         />

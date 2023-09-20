@@ -26,10 +26,10 @@ export const friendRequestApi = createApi({
             "response-friendRequest",
             ({ requestId, responseValue }) => {
               updateCachedData((draft) => {
-                console.log("datadraft", current(draft));
                 const index = draft.findIndex(
                   (request) => request._id == requestId
                 );
+
                 if (index != -1) {
                   draft.splice(index, 1);
                 }

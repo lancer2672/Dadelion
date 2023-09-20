@@ -28,6 +28,8 @@ import { StyleSheet } from "react-native";
 import { Voximplant } from "react-native-voximplant";
 import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
 import CallingScreen from "@src/features/call/screens/CallingScreen.screen";
+import { useDispatch } from "react-redux";
+import { setCall } from "@src/store/slices/callSlice";
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
 
@@ -148,6 +150,7 @@ const Tabs = () => {
 export const AppNavigator = () => {
   const [saveFCMtoken, { error }] = useSaveFCMtokenMutation();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const voximplant = Voximplant.getInstance();
   //messsaging
   useEffect(() => {
@@ -198,9 +201,16 @@ export const AppNavigator = () => {
   //calling
   useEffect(() => {
     voximplant.on(Voximplant.ClientEvents.IncomingCall, (incomingCallEvent) => {
+      const callingUserAvatar = incomingCallEvent.headers["X-avatarUrl"];
+      const callingUserId = incomingCallEvent.headers["X-userId"];
+      const channelId = incomingCallEvent.headers["X-channelId"];
       navigation.navigate("IncomingCall", {
-        call: incomingCallEvent.call,
+        incomingCall: incomingCallEvent.call,
+        callingUserAvatar,
+        callingUserId,
+        channelId,
       });
+      // dispatch(setCall(incomingCallEvent.call));
     });
     return () => {
       voximplant.off(Voximplant.ClientEvents.IncomingCall);

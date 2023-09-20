@@ -1,52 +1,58 @@
-import React, { useEffect, useState, useRef } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  PermissionsAndroid,
-  Alert,
-  Platform,
-} from "react-native";
-import CallActionBox from "../components/CallActionBox.component";
-
+import React, { useEffect, useState, useRef, useReducer } from "react";
+import { View, Text, StyleSheet, Pressable, Platform } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Voximplant } from "react-native-voximplant";
 import { Ionicons } from "@expo/vector-icons";
 import { requestCallingPermission } from "@src/permissions";
+import { useDispatch, useSelector } from "react-redux";
+import { callSelector, chatSelector, userSelector } from "@src/store/selector";
+
+import CallActionBox from "../components/CallActionBox.component";
+import { setCall } from "@src/store/slices/callSlice";
+import { sendMessage } from "@src/store/slices/chatSlice";
 const CallingScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const dispatch = useDispatch();
+  const { user } = useSelector(userSelector);
+  const { selectedChannel } = useSelector(chatSelector);
+  const voximplant = Voximplant.getInstance();
+  const endpoint = useRef(null);
+
+  // const { currentCall} = useSelector(callSelector);
+  console.log("selectedChannel", selectedChannel);
+  const { incomingCall, isIncomingCall, callingUserId, channelId } =
+    route?.params;
   const [callStatus, setCallStatus] = useState("Initializing...");
-  const { call: incomingCall, isIncomingCall, user } = route?.params;
   const [localVideoStreamId, setLocalVideoStreamId] = useState("");
   const [remoteVideoStreamId, setRemoteVideoStreamId] = useState("");
-  const voximplant = Voximplant.getInstance();
-  const callRef = useRef(incomingCall);
-  const endpoint = useRef(null);
   const callSettings = {
     video: {
       sendVideo: true,
       receiveVideo: true,
     },
+    extraHeaders: {
+      "X-avatarUrl": user.avatar,
+      "X-userId": user._id,
+      "X-channelId": selectedChannel?._id,
+    },
   };
-  console.log("remoteVideoStreamId", remoteVideoStreamId);
-  console.log("localVideoStreamId", localVideoStreamId);
+  const callRef = useRef(incomingCall);
+
   const makeCall = async () => {
     if (Platform.OS == "android") {
       if ((await requestCallingPermission()) == false) {
         return;
       }
     }
-    callRef.current = await voximplant.call(user.username, callSettings);
+    callRef.current = await voximplant.call(
+      selectedChannel.chatFriend.username,
+      callSettings
+    );
     subscribeToCallEvents();
   };
   const answerCall = async () => {
     subscribeToCallEvents();
-    console.log(
-      "callRef.current.getEndpoints()[0]",
-      callRef.current.getEndpoints()[0]
-    );
     endpoint.current = callRef.current.getEndpoints()[0];
     subscribeToEndpointEvent();
     callRef.current.answer(callSettings);
@@ -55,17 +61,20 @@ const CallingScreen = () => {
     endpoint.current.on(
       Voximplant.EndpointEvents.RemoteVideoStreamAdded,
       (endpointEvent) => {
-        console.log(
-          "endpointEvent.videoStream.id",
-          endpointEvent.videoStream.id
-        );
         setRemoteVideoStreamId(endpointEvent.videoStream.id);
       }
     );
   };
   const subscribeToCallEvents = () => {
     callRef.current.on(Voximplant.CallEvents.Failed, (callEvent) => {
-      console.log("callEvent", callEvent);
+      dispatch(
+        sendMessage({
+          type: "callHistory",
+          channelId: selectedChannel._id,
+          senderId: user._id,
+          duration: 0,
+        })
+      );
       navigation.goBack();
     });
     callRef.current.on(Voximplant.CallEvents.ProgressToneStart, (callEvent) => {
@@ -74,10 +83,14 @@ const CallingScreen = () => {
     callRef.current.on(Voximplant.CallEvents.Connected, (callEvent) => {
       setCallStatus("Connected");
     });
-    callRef.current.on(Voximplant.CallEvents.Disconnected, (callEvent) => {
-      console.log("disconnected");
-      navigation.navigate("Home");
-    });
+    callRef.current.on(
+      Voximplant.CallEvents.Disconnected,
+      async (callEvent) => {
+        //Call.getDuration(): call is no more unavailable, already ended or failed
+        console.log("disconnected", callRef.current);
+        navigation.navigate("Home");
+      }
+    );
     callRef.current.on(
       Voximplant.CallEvents.LocalVideoStreamAdded,
       (callEvent) => {
@@ -86,7 +99,6 @@ const CallingScreen = () => {
     );
     callRef.current.on(Voximplant.CallEvents.EndpointAdded, (callEvent) => {
       endpoint.current = callEvent.endpoint;
-      console.log("callEvent.endpoint;", callEvent.endpoint);
       subscribeToEndpointEvent();
     });
   };
@@ -106,9 +118,6 @@ const CallingScreen = () => {
       }
     };
   }, []);
-  const onHangupPress = () => {
-    callRef.current.hangup();
-  };
   return (
     <View style={styles.page}>
       <Pressable onPress={null} style={styles.backButton}>
@@ -127,13 +136,18 @@ const CallingScreen = () => {
 
       <View style={styles.cameraPreview}>
         <Text style={styles.name}>
-          {/* {user.nickname} */}
-          Unknown
+          {incomingCall
+            ? incomingCall?.getEndpoints()[0].displayName
+            : selectedChannel.chatFriend.nickname}
         </Text>
         <Text style={styles.phoneNumber}>{callStatus}</Text>
       </View>
 
-      <CallActionBox onHangupPress={onHangupPress} />
+      <CallActionBox
+        channelId={channelId}
+        callingUserId={callingUserId}
+        call={callRef.current}
+      />
     </View>
   );
 };
@@ -143,7 +157,7 @@ export default CallingScreen;
 const styles = StyleSheet.create({
   page: {
     height: "100%",
-    backgroundColor: "#7b4e80",
+    backgroundColor: "black",
   },
   cameraPreview: {
     flex: 1,
@@ -155,15 +169,13 @@ const styles = StyleSheet.create({
     width: 100,
     height: 150,
     backgroundColor: "#ffff6e",
-
     borderRadius: 10,
-
     position: "absolute",
     right: 10,
     top: 100,
   },
   remoteVideo: {
-    backgroundColor: "#7b4e80",
+    backgroundColor: "black",
     borderRadius: 10,
     position: "absolute",
     left: 0,

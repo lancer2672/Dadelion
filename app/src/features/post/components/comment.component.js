@@ -12,6 +12,7 @@ import { userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 import { useTheme } from "styled-components";
+import { useTranslation } from "react-i18next";
 
 const dayjs = require("dayjs");
 const Comment = ({ comment, postId }) => {
@@ -20,6 +21,7 @@ const Comment = ({ comment, postId }) => {
     return <></>;
   }
   const theme = useTheme();
+  const { t } = useTranslation();
   const { user } = useSelector(userSelector);
   const { data, isLoading, isSuccess } = useGetUserByIdQuery(comment.userId);
   const [creator, setCreator] = useState({});

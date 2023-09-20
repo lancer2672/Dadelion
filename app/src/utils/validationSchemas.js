@@ -4,7 +4,6 @@ export const accountSchema = object({
     .trim("Tên đăng nhập không được chứa khoảng trắng")
     .required("Tên đăng nhập không được để trống")
     .min(8, "Tên đăng nhập phải có ít nhất 8 ký tự")
-    .matches(/^[a-zA-Z0-9]+$/, "Tên đăng nhập không được chứa ký tự đặc biệt")
     .max(24, "Tên đăng nhập chỉ được tối đa 24 ký tự"),
   password: string()
     .required("Mật khẩu không được để trống")

@@ -45,8 +45,8 @@ const PostItem = ({ navigation, post }) => {
     }
   }, [isSuccess, user]);
   const navigatePostDetail = () => {
-    dispatch(setSelectedPost(post));
-    navigation.navigate("DetailPost", { postCreator, selectedPost: post });
+    dispatch(setSelectedPost({ ...post, postCreator }));
+    navigation.navigate("DetailPost", {});
   };
   // useEffect(() => {
   //   //if  (post) is changed then we update selectedPost state to newest value

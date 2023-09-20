@@ -12,8 +12,11 @@ import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { setToken, setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { initSocket } from "@src/utils/socket";
-import { loginVoximplant } from "@src/voximplant/services/Client";
-
+import {
+  loginVoximplant,
+  loginWithTokenVoximplant,
+} from "@src/voximplant/services/Client";
+StatusBar.setBackgroundColor("black");
 const Navigator = () => {
   const userState = useSelector(userSelector);
   const appState = useSelector(appSelector);
@@ -51,13 +54,13 @@ const Navigator = () => {
           "token",
           "refreshToken",
           "username",
-          "password",
+          "tokenVoximplant",
         ];
-        const [userId, token, refreshToken, username, password] =
+        const [userId, token, refreshToken, username, tokenVoximplant] =
           await Promise.all(keys.map((key) => AsyncStorage.getItem(key)));
         console.log("userId", userId);
         console.log("token", token);
-        console.log("refreshToken", refreshToken);
+        console.log("tokenVoximplant", tokenVoximplant);
         dispatch(
           setToken({
             token: JSON.parse(token),
@@ -72,7 +75,7 @@ const Navigator = () => {
           });
         }
 
-        // await loginVoximplant(username, password);
+        await loginWithTokenVoximplant(username, tokenVoximplant);
       } catch (er) {
         console.log("er", er);
       }
@@ -85,8 +88,10 @@ const Navigator = () => {
         <SafeAreaView
           style={{
             flex: 1,
+            backgroundColor: "red",
           }}
         >
+          <StatusBar></StatusBar>
           <AppNavigator></AppNavigator>
         </SafeAreaView>
       ) : (
