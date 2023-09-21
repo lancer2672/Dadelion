@@ -7,7 +7,6 @@ import { useNavigation } from "@react-navigation/native";
 import { callingTimeFormatter } from "@src/utils/timeFormatter";
 
 const CallMessageItem = ({ message }) => {
-  console.log("c");
   const { t } = useTranslation();
   const navigation = useNavigation();
   const theme = useTheme();

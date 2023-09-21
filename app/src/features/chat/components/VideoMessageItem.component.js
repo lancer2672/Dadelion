@@ -58,12 +58,14 @@ const VideoMessageItem = ({ message }) => {
           showMessage({
             message: t("success"),
             type: "success",
+            duration: 2000,
           });
         })
         .catch((error) => {
           showMessage({
             message: t("failed"),
             type: "alert",
+            duration: 2000,
           });
           console.error(error);
         });

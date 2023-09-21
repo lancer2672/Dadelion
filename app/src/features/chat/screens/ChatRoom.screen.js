@@ -21,7 +21,7 @@ const ChatRoom = () => {
   const dispatch = useDispatch();
   const socket = getSocket();
   const { selectedChannel } = useSelector(chatSelector);
-  const { channelId, memberIds } = selectedChannel;
+  const { _id: channelId, memberIds } = selectedChannel;
   // const { channelId, memberIds } = route.params;
   const [chatFriendId, setChatFriendId] = useState(null);
   const [chatFriend, setChatFriend] = useState({});
@@ -39,7 +39,7 @@ const ChatRoom = () => {
     socket.on("typing", (channelId, chatFriendId, isTyping) => {
       setIsTyping(() => isTyping);
     });
-  }, []);
+  }, [selectedChannel]);
   useEffect(() => {
     if (isSuccess) {
       setChatFriend(() => data.user);
