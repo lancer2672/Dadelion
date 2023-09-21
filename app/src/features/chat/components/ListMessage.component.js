@@ -47,6 +47,7 @@ const ListUserMessages = ({ chatFriend }) => {
         _id: msg._id,
         message: msg.message,
         imageUrls: msg.imageUrls,
+        videoUrls: msg.videoUrls,
         createdAt: msg.createdAt,
         callHistory: msg.callHistory,
       });

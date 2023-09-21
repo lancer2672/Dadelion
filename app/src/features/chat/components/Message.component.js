@@ -14,12 +14,13 @@ import styled from "styled-components/native";
 import { Modal } from "react-native";
 import RNFetchBlob from "rn-fetch-blob";
 import { Entypo, Feather } from "@expo/vector-icons";
-import { imageStoragePermission } from "@src/permissions";
+import { mediaFileStoragePermission } from "@src/permissions";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { showMessage } from "react-native-flash-message";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import { useTheme } from "styled-components";
-import ChatMessageItem from "./ChatMessageItem.component";
+import CallMessageItem from "./CallMessageItem.component";
+import VideoMessageItem from "./VideoMessageItem.component";
 const UserMessage = ({
   chatFriend = {},
   isMyMessage,
@@ -51,7 +52,7 @@ const UserMessage = ({
     }
   };
   const handleDownloadImage = async (imageUrl) => {
-    if (Platform.OS === "android" && (await imageStoragePermission())) {
+    if (Platform.OS === "android" && (await mediaFileStoragePermission())) {
       RNFetchBlob.config({
         fileCache: true,
         appendExt: "png",
@@ -109,7 +110,7 @@ const UserMessage = ({
                     <Message isMyMessage={isMyMessage}>{item.message}</Message>
                   </>
                 )}
-                {item.imageUrls?.length > 0 && (
+                {item.imageUrls && item.imageUrls?.length > 0 && (
                   <View style={{ flexDirection: "row" }}>
                     {item.imageUrls.map((imageUrl, index) => {
                       if (
@@ -170,8 +171,11 @@ const UserMessage = ({
                     })}
                   </View>
                 )}
-                {item.callHistory && (
-                  <ChatMessageItem message={item}></ChatMessageItem>
+                {item.videoUrls && item.videoUrls?.length > 0 && (
+                  <VideoMessageItem message={item}></VideoMessageItem>
+                )}
+                {item.callHistory && item.callHistory.duration !== -1 && (
+                  <CallMessageItem message={item}></CallMessageItem>
                 )}
               </View>
             </View>

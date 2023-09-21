@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import {
   joinChannel,
   sendFriendRequest,
+  setSelectedChannel,
   unfriend,
 } from "@src/store/slices/chatSlice";
 import { useCheckFriendStatusQuery } from "@src/store/slices/api/friendRequestApiSlice";
@@ -78,15 +79,12 @@ const Guest = ({ props, navigation, route }) => {
     }
   }, [isLoadingUser, userData]);
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && userData) {
       const channel = channelData.channel;
-
+      console.log("Guest - channel", channel);
       dispatch(joinChannel({ userBId: guest._id, channelId: channel._id }));
-
-      navigation.navigate("ChatRoom", {
-        channelId: channel._id,
-        memberIds: channel.memberIds,
-      });
+      dispatch(setSelectedChannel({ ...channel, chatFriend: userData.user }));
+      navigation.navigate("ChatRoom");
     }
   }, [isFindOrCreating, channelData]);
 

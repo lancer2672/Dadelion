@@ -36,6 +36,7 @@ export const chatApi = createApi({
           await cacheDataLoaded;
           const socket = getSocket();
           socket.on("receive-message", ({ newMess, channelId, type }) => {
+            console.log("receive message data", { newMess, channelId, type });
             updateCachedData((draft) => {
               switch (type) {
                 case "message":
@@ -49,6 +50,7 @@ export const chatApi = createApi({
                 }
               }
               draft.unshift(newMess);
+              console.log("new draft data", current(draft));
             });
           });
         } catch (err) {

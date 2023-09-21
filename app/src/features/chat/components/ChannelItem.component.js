@@ -31,7 +31,9 @@ const Channel = ({ navigation, channel }) => {
   const { user } = useSelector(userSelector);
   const [chatFriend, setChatFriend] = useState(null);
   const [chatFriendId, setChatFriendId] = useState(null);
+
   const [lastMessage, setLastMessage] = useState({});
+
   const [unseenMessageIds, setUnseenMessageIds] = useState([]);
   const { data: lastMsgData, isLoading: isLoadLastMsg } =
     useGetLastMessageQuery(channelId, {
@@ -68,10 +70,25 @@ const Channel = ({ navigation, channel }) => {
     const friendId = memberIds.filter((id) => id != user._id);
     setChatFriendId(() => friendId[0]);
   }, []);
-
   useEffect(() => {
     if (lastMsgData) {
-      setLastMessage(lastMsgData.lastMessage);
+      let note;
+      //TODO: replace by using lastMessage.type property
+      if (lastMsgData.lastMessage?.message) {
+        note = t("sentImage");
+      } else if (lastMsgData.lastMessage?.imageUrls?.length > 0) {
+        note = t("sentImage");
+      } else if (lastMsgData.lastMessage?.videoUrls?.length > 0) {
+        note = t("sentVideo");
+      } else if (lastMsgData.lastMessage?.callHistory?.duration) {
+        // Xử lý trường hợp khi có cuộc gọi
+        note = t("calledYou");
+      } else {
+        // Xử lý trường hợp cuộc gọi bị nhỡ
+        note = t("missCall");
+      }
+
+      setLastMessage({ ...lastMsgData.lastMessage, note });
     }
   }, [isLoadLastMsg, lastMsgData]);
   useEffect(() => {
@@ -120,11 +137,7 @@ const Channel = ({ navigation, channel }) => {
 
         {lastMessage ? (
           <LastMessage userId={user._id} lastMessage={lastMessage}>
-            {lastMessage.message || lastMessage.imageUrls?.length > 0
-              ? t("sentImage")
-              : lastMessage.callHistory?.duration
-              ? t("calledYou")
-              : t("missCall")}
+            {lastMessage.note}
           </LastMessage>
         ) : (
           <EmptyMessage>{t("emptyMessage")}</EmptyMessage>

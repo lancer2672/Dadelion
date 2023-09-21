@@ -6,12 +6,11 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { callingTimeFormatter } from "@src/utils/timeFormatter";
 
-const ChatMessageItem = ({ message }) => {
+const CallMessageItem = ({ message }) => {
+  console.log("c");
   const { t } = useTranslation();
   const navigation = useNavigation();
   const theme = useTheme();
-  console.log("message", message);
-
   const handleRecall = () => {
     navigation.navigate("CallingScreen", {});
   };
@@ -62,7 +61,7 @@ const ChatMessageItem = ({ message }) => {
   );
 };
 
-export default ChatMessageItem;
+export default CallMessageItem;
 
 const styles = StyleSheet.create({
   container: {

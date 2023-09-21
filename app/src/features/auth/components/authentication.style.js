@@ -1,12 +1,4 @@
-import {
-  Image,
-  Pressable,
-  ImageBackground,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Animated,
-} from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 
 export const BackgroundImage = styled.ImageBackground.attrs((props) => ({
@@ -49,19 +41,6 @@ export const Slogan = styled(Text)`
   color: ${(props) => props.theme.colors.text.primary};
   font-weight: 500;
   margin-bottom: 40px;
-`;
-
-export const Animation = styled(Animated.Image).attrs((props) => ({
-  source: require("@assets/imgs/LoginAnimation.gif"),
-}))`
-  width: 100%;
-  height: 200px;
-`;
-export const Animation1 = styled(Animated.Image).attrs((props) => ({
-  source: require("@assets/imgs/DandelionSpreadAnimation.gif"),
-}))`
-  width: 100%;
-  height: 200px;
 `;
 export const Error = styled(Text)`
   margin-top: 8px;

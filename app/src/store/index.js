@@ -8,6 +8,7 @@ import { notification } from "./slices/notificationSlice";
 import { chatSlice } from "./slices/chatSlice";
 
 import { userApi } from "./slices/api/userApiSlice";
+import { uploadApi } from "./slices/api/uploadApi";
 import { postApi } from "./slices/api/postApiSlice";
 import { chatApi } from "./slices/api/chatApiSlice";
 import { notificationApi } from "./slices/api/notificationApiSlice";
@@ -30,6 +31,7 @@ export default configureStore({
     [postApi.reducerPath]: postApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
+    [uploadApi.reducerPath]: uploadApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
     [friendRequestApi.reducerPath]: friendRequestApi.reducer,
   },
@@ -39,6 +41,7 @@ export default configureStore({
       .concat(postApi.middleware)
       .concat(chatApi.middleware)
       .concat(authApi.middleware)
+      .concat(uploadApi.middleware)
       .concat(friendRequestApi.middleware)
       .concat(notificationApi.middleware)
       .concat(chatMiddleware())

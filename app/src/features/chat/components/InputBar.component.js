@@ -6,6 +6,8 @@ import {
   Animated,
   TextInput,
   TouchableWithoutFeedback,
+  Pressable,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/native";
@@ -23,14 +25,20 @@ import { sendMessage, typing } from "@src/store/slices/chatSlice";
 import { readBase64 } from "@src/utils/imageHelper";
 import { useTheme } from "styled-components";
 import ImagePicker from "react-native-image-crop-picker";
+import { useTranslation } from "react-i18next";
+import { useUploadFileMutation } from "@src/store/slices/api/uploadApi";
+
 const InputBar = ({ chatFriendId }) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const { user } = useSelector(userSelector);
   const { selectedChannel } = useSelector(chatSelector);
-  const { channelId } = selectedChannel;
+  const [uploadFile, { data, isLoading, error }] = useUploadFileMutation();
+  const { _id: channelId } = selectedChannel;
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputVisible, setTextInputVisible] = useState(true);
   const [trashIconVisible, setTrashIconVisible] = useState(false);
+  const [bottomMenuVisible, setBottomMenuVisible] = useState(false);
   const [textInputWidth, setTextInputWidth] = useState(0);
   const [photoUri, setPhotoUri] = useState(null);
   const [text, setText] = useState("");
@@ -39,7 +47,6 @@ const InputBar = ({ chatFriendId }) => {
   const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
   const inputWidth = textInputWidth + iconContainerWidth;
   const animation = new Animated.Value(inputWidth);
-
   useEffect(() => {
     if (text.trim() != "") {
       dispatch(typing({ channelId, chatFriendId, isTyping: true }));
@@ -89,13 +96,29 @@ const InputBar = ({ chatFriendId }) => {
       })
     );
   };
+  useEffect(() => {
+    if (data) {
+      console.log("video data", data);
+    }
+    if ((!isLoading, data)) {
+      dispatch(
+        sendMessage({ channelId, videoUrls: [data.fileUrl], type: "video" })
+      );
+    }
+  }, [isLoading, data]);
+  const openMediaFilePicker = (selectedType) => {
+    if (selectedType == "video") {
+      openVideoPicker();
+    } else {
+      openImagePicker();
+    }
+  };
   const openImagePicker = () => {
     ImagePicker.openPicker({
       multiple: true,
       mediaType: "photo",
     })
       .then((images) => {
-        console.log("images", images);
         return Promise.all(
           images.map(async (image, index) => {
             return await readBase64(image.path);
@@ -105,7 +128,26 @@ const InputBar = ({ chatFriendId }) => {
       .then((data) => {
         dispatch(sendMessage({ channelId, imagesData: data, type: "image" }));
       })
-      .catch((er) => console.log("er", er));
+      .catch((er) => console.log("er", er))
+      .finally(() => setBottomMenuVisible(false));
+  };
+  const openVideoPicker = () => {
+    ImagePicker.openPicker({
+      mediaType: "video",
+    })
+      .then((video) => {
+        const videoMessage = new FormData();
+
+        videoMessage.append("video", {
+          uri: video.path,
+          name: new Date() + "_profile",
+          type: "video/mp4",
+        });
+        videoMessage.append("duration", video.duration);
+        uploadFile(videoMessage);
+      })
+      .catch((er) => console.log("er", er))
+      .finally(() => setBottomMenuVisible(false));
   };
   const recordVoice = () => {};
   return (
@@ -132,7 +174,7 @@ const InputBar = ({ chatFriendId }) => {
               />
             </Icon>
 
-            <Icon onPress={openImagePicker}>
+            <Icon onPress={() => setBottomMenuVisible((prev) => !prev)}>
               <EvilIcons
                 name="image"
                 size={iconSize}
@@ -183,6 +225,59 @@ const InputBar = ({ chatFriendId }) => {
       >
         <Ionicons name="send" size={20} color="black" />
       </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={bottomMenuVisible}
+        onRequestClose={() => {
+          setBottomMenuVisible(false);
+        }}
+      >
+        <TouchableWithoutFeedback onPress={() => setBottomMenuVisible(false)}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "flex-end",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "red",
+                alignItems: "center",
+                borderRadius: 12,
+                backgroundColor: theme.colors.chat.text,
+              }}
+            >
+              <View
+                style={{
+                  height: 12,
+                  width: 100,
+                  borderBottomWidth: 2,
+                  marginBottom: 12,
+
+                  borderColor: theme.colors.chat.bg.primary,
+                }}
+              ></View>
+
+              <Option
+                onPress={() => {
+                  openMediaFilePicker("video");
+                }}
+              >
+                <OptionName>Video</OptionName>
+              </Option>
+              <Option
+                lastItem={true}
+                onPress={() => {
+                  openMediaFilePicker("image");
+                }}
+              >
+                <OptionName>{t("image")}</OptionName>
+              </Option>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </Container>
   );
 };
@@ -200,6 +295,23 @@ const Icon = styled(TouchableOpacity)`
   align-self: flex-start;
   margin-top: 8px;
   margin-right: ${(props) => props.theme.space[2]};
+`;
+
+const Option = styled(Pressable).attrs((props) => ({
+  borderTopWidth: props.lastItem ? 0 : 1,
+}))`
+  background-color: ${(props) => props.theme.colors.chat.text};
+  border-color: gray;
+  border-top-width: 1px;
+  justify-content: center;
+  padding-vertical: 8px;
+  width: 100%;
+`;
+
+const OptionName = styled(Text)`
+  font-weight: 500;
+  text-align: center;
+  font-size: 18px;
 `;
 
 const LeftIconContainer = styled(View)`

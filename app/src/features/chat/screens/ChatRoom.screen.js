@@ -14,7 +14,7 @@ import { joinRoom, typing } from "@src/store/slices/chatSlice";
 import { getSocket } from "@src/utils/socket";
 import { useTheme } from "styled-components";
 
-const ChatRoom = ({ navigation, route }) => {
+const ChatRoom = () => {
   const { user } = useSelector(userSelector);
   const { t } = useTranslation();
   const theme = useTheme();

@@ -64,7 +64,7 @@ const User = ({ props, navigation }) => {
 
       if (!result.cancelled) {
         setSelectedImageUri(result.uri);
-
+        console.log("result.uri", result.uri);
         const newUserData = new FormData();
         newUserData.append("userImage", {
           uri: result.uri,
