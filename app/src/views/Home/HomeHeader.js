@@ -56,7 +56,7 @@ const HomeHeader = ({}) => {
   useEffect(() => {
     if (socket) {
       socket.on("new-notification", () => {
-        console.log("socket.set");
+        console.log("socket new-notification");
         setHasNewNotification(() => true);
       });
     }

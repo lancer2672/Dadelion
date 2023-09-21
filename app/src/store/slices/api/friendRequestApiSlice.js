@@ -53,24 +53,24 @@ export const friendRequestApi = createApi({
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
           const socket = getSocket();
-          socket.on(
-            "response-friendRequest",
-            ({ requestId, responseValue }) => {
-              updateCachedData((draft) => {
-                //draft = {"data": {"result": "sendFriendRequest"}, "message": "success"}
-                if (responseValue == "accept") {
-                  draft.data.result = "friend";
-                } else if (responseValue == "decline") {
-                  draft.data.result = "sendFriendRequest";
-                }
-              });
-            }
-          );
-          socket.on("send-friendRequest", (state) => {
-            updateCachedData((draft) => {
-              draft.data.result = state;
-            });
-          });
+          // socket.on(
+          //   "response-friendRequest",
+          //   ({ requestId, responseValue }) => {
+          //     updateCachedData((draft) => {
+          //       //draft = {"data": {"result": "sendFriendRequest"}, "message": "success"}
+          //       if (responseValue == "accept") {
+          //         draft.data.result = "friend";
+          //       } else if (responseValue == "decline") {
+          //         draft.data.result = "sendFriendRequest";
+          //       }
+          //     });
+          //   }
+          // );
+          // socket.on("send-friendRequest", (state) => {
+          //   updateCachedData((draft) => {
+          //     draft.data.result = state;
+          //   });
+          // });
         } catch (err) {
           console.log("err", err);
         }

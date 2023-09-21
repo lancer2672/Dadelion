@@ -37,6 +37,7 @@ import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 const Guest = ({ props, navigation, route }) => {
   const theme = useTheme();
   const { guestId } = route.params;
+  const socket = getSocket();
   const { t } = useTranslation();
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
@@ -56,13 +57,28 @@ const Guest = ({ props, navigation, route }) => {
     refetch,
   } = useCheckFriendStatusQuery(userData?.user?._id, {
     skip: status !== "fulfilled" || !userData,
+    refetchOnMountOrArgChange: true,
   });
   useEffect(() => {
-    const socket = getSocket();
-    socket.on("unfriend", () => {
-      refetch();
-    });
-  }, []);
+    if (socket) {
+      socket.on("unfriend", () => {
+        console.log("call refetch 1 ");
+        refetch();
+      });
+
+      socket.on(
+        "response-friendRequest",
+        ({ requestId, responseValue, userIds }) => {
+          console.log("call refetch 2 ");
+          refetch();
+        }
+      );
+      socket.on("send-friendRequest", (status) => {
+        console.log("call refetch 3");
+        refetch();
+      });
+    }
+  }, [socket]);
   const [
     findOrCreateChannel,
     { data: channelData, isSuccess, isLoading: isFindOrCreating },

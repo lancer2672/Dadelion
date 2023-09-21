@@ -15,7 +15,6 @@ import { useTheme } from "styled-components";
 const TAB_ITEM_WIDTH = Dimensions.get("window").width / 2;
 const Tab = createMaterialTopTabNavigator();
 const FeatureTabs = ({ userId }) => {
-  console.log(userId);
   const theme = useTheme();
   return (
     <Tab.Navigator
