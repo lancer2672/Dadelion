@@ -19,6 +19,7 @@ import SearchChannel from "./SearchChannel.component";
 import { useGetListUserMutation } from "@src/store/slices/api/userApiSlice";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "styled-components";
+import { getSocket } from "@src/utils/socket";
 
 const TAB_ITEM_WIDTH = Dimensions.get("window").width / 2 - 16;
 const Tab = createMaterialTopTabNavigator();
@@ -26,6 +27,7 @@ const Tab = createMaterialTopTabNavigator();
 const ChatTabs = ({ navigation }) => {
   const { user } = useSelector(userSelector);
   const { t } = useTranslation();
+  const socket = getSocket();
   const theme = useTheme();
   const dispatch = useDispatch();
   const [friendChannels, setFriendChannels] = useState([]);
@@ -39,9 +41,12 @@ const ChatTabs = ({ navigation }) => {
   const [hasUnreadMsgPendingChannel, setHasUnreadMsgPendingChannel] =
     useState(false);
 
-  const { isLoading, isSuccess, data } = useGetChannelsQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+  const { isLoading, isSuccess, data, refetch } = useGetChannelsQuery(
+    undefined,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const [
     getListUser,
@@ -100,7 +105,21 @@ const ChatTabs = ({ navigation }) => {
       setHasUnreadMsgPendingChannel(check2);
     }
   }, [isLoading, data]);
-
+  useEffect(() => {
+    if (socket) {
+      socket.on("unfriend", () => {
+        console.log("call refetch 1 ");
+        refetch();
+      });
+      socket.on(
+        "response-friendRequest",
+        ({ requestId, responseValue, userIds }) => {
+          console.log("call refetch 2 ");
+          refetch();
+        }
+      );
+    }
+  }, [socket]);
   useEffect(() => {
     if (getListUserSuccess) {
       setListUser(listUserData);

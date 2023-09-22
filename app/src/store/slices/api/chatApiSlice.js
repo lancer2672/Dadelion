@@ -89,18 +89,13 @@ export const chatApi = createApi({
 
           socket.on("join-chatRoom", (channelId) => {
             updateCachedData((draft) => {
-              console.log("channelIdchannelId", channelId);
-              console.log("draft join-chatRoom 0", current(draft));
-
               draft.forEach((channel) => {
                 if (channel._id == channelId) {
                   channel.channelMessages = channel.channelMessages.map(
                     (message) => ({ ...message, isSeen: true })
                   );
-                  console.log("channelMessages", channel.channelMessages);
                 }
               });
-              console.log("draft join-chatRoom 1", current(draft));
             });
           });
         } catch (err) {

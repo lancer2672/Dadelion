@@ -5,6 +5,7 @@ import styled from "styled-components/native";
 
 import { useTranslation } from "react-i18next";
 import {
+  useGetSearchHistoryQuery,
   useSearchUserQuery,
   userApi,
 } from "@src/store/slices/api/userApiSlice";
@@ -17,17 +18,18 @@ const Search = ({ navigation }) => {
   const theme = useTheme();
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [searchResult, setSearchResult] = useState(false);
   const [isTyping, setIstyping] = useState(true);
-  const { t } = useTranslation();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const { data: searchHistoryList } = useGetSearchHistoryQuery();
   const searchTimeout = useRef();
   const { data, isLoading } = useSearchUserQuery(searchKeyword, {
     skip: isTyping,
   });
-  console.log("searchResult", searchResult);
+  console.log("searchHistoryList", searchHistoryList);
   useEffect(() => {
     setIsSearching(isLoading);
     setSearchResult(data);
@@ -83,6 +85,29 @@ const Search = ({ navigation }) => {
           size="small"
           color={theme.colors.chat.text}
         />
+      )}
+
+      {searchKeyword === "" && searchHistoryList && (
+        <>
+          <Text style={{ fontSize: 16 }}>{t("searchHistory")}</Text>
+          <FlatList
+            style
+            data={searchHistoryList}
+            renderItem={({ item }) => {
+              const isFriend = user.friends.some(
+                (friend) => friend.userId == item._id
+              );
+              return (
+                <SearchResultItem
+                  isFriend={isFriend}
+                  navigation={navigation}
+                  user={item}
+                />
+              );
+            }}
+            keyExtractor={(item) => `search-history${item._id}`}
+          />
+        </>
       )}
 
       <FlatList

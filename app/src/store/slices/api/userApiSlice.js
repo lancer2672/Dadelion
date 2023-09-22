@@ -8,7 +8,7 @@ const userRoute = "/user";
 
 export const userApi = createApi({
   reducerPath: "userApi",
-  tagTypes: ["User"],
+  tagTypes: ["User", "SearchHistory"],
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getUserById: builder.query({
@@ -114,15 +114,42 @@ export const userApi = createApi({
         return response.data.map((user) => transformUserData(user));
       },
     }),
+    getSearchHistory: builder.query({
+      query: () => `${userRoute}/search-history/recent`,
+      transformResponse: (response, meta, arg) => {
+        return response.data.map((user) => transformUserData(user));
+      },
+      providesTags: ["SearchHistory"],
+    }),
+    addUserToSearchHistory: builder.mutation({
+      query: (userId) => ({
+        url: `${userRoute}/search-history/add`,
+        method: "POST",
+        body: { userId },
+      }),
+      invalidatesTags: ["SearchHistory"],
+    }),
+    removeUserFromSearchHistory: builder.mutation({
+      query: (userId) => ({
+        url: `${userRoute}/search-history/remove/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["SearchHistory"],
+    }),
   }),
 });
 
 export const {
+  useLoginMutation,
+  useCreateUserMutation,
+
   useGetUserByIdQuery,
   useGetListUserMutation,
-  useLoginMutation,
   useUpdateUserMutation,
-  useCreateUserMutation,
   useSaveFCMtokenMutation,
   useSearchUserQuery,
+
+  useGetSearchHistoryQuery,
+  useAddUserToSearchHistoryMutation,
+  useRemoveUserFromSearchHistoryMutation,
 } = userApi;

@@ -3,10 +3,25 @@ import React from "react";
 import styled from "styled-components/native";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { theme } from "@src/infrastructure/theme";
+import { AntDesign } from "@expo/vector-icons";
+import { useTheme } from "styled-components";
+import {
+  useAddUserToSearchHistoryMutation,
+  useRemoveUserFromSearchHistoryMutation,
+} from "@src/store/slices/api/userApiSlice";
+
 const SearchResultItem = ({ navigation, user, isFriend }) => {
+  const theme = useTheme();
+  const [addUserToSearchHistory] = useAddUserToSearchHistoryMutation();
+  const [removeUserFromSearchHistory] =
+    useRemoveUserFromSearchHistoryMutation();
+
   const onSearchResultClick = () => {
+    addUserToSearchHistory(user._id);
     navigation.navigate("Guest", { guestId: user._id });
+  };
+  const deleteSearchHistory = () => {
+    removeUserFromSearchHistory(user._id);
   };
   return (
     <Container onPress={onSearchResultClick}>
@@ -18,14 +33,22 @@ const SearchResultItem = ({ navigation, user, isFriend }) => {
       <Spacer position={"left"} size={"medium"}></Spacer>
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Name>{user.nickname}</Name>
-          {isFriend && (
-            <FontAwesome5
-              name="user-friends"
-              size={16}
-              color={theme.colors.chat.text}
-            />
-          )}
+          <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
+            <Name>{user.nickname}</Name>
+            {isFriend && (
+              <FontAwesome5
+                name="user-friends"
+                size={16}
+                color={theme.colors.chat.text}
+              />
+            )}
+          </View>
+          <TouchableOpacity
+            style={{ padding: 4 }}
+            onPress={deleteSearchHistory}
+          >
+            <AntDesign name="close" size={24} color={theme.colors.chat.text} />
+          </TouchableOpacity>
         </View>
         <Email>{user.email}</Email>
       </View>
