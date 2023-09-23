@@ -50,20 +50,6 @@ export const userApi = createApi({
         await cacheEntryRemoved;
       },
     }),
-    login: builder.mutation({
-      query: (authData) => ({
-        url: `/api/auth/login`,
-        method: "POST",
-        body: authData,
-      }),
-      transformResponse: (response, meta, arg) => {
-        const transformedUser = transformUserData(response.data.user);
-        return { ...response.data, user: transformedUser };
-      },
-      transformErrorResponse: (response, meta, arg) => {
-        response.data.message;
-      },
-    }),
     getListUser: builder.mutation({
       query: (listIds) => ({
         url: `${userRoute}/list`,
@@ -140,7 +126,6 @@ export const userApi = createApi({
 });
 
 export const {
-  useLoginMutation,
   useCreateUserMutation,
 
   useGetUserByIdQuery,

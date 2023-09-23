@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Voximplant } from "react-native-voximplant";
 
@@ -10,14 +11,23 @@ const initialState = {
   registrationForm: null,
 };
 export const logoutUser = createAsyncThunk("user/logout", async () => {
-  await AsyncStorage.multiRemove([
-    "userId",
-    "token",
-    "refreshToken",
-    "username",
-    "tokenVoximplant",
-  ]);
-  await Voximplant.getInstance().disconnect();
+  try {
+    await AsyncStorage.multiRemove([
+      "userId",
+      "token",
+      "refreshToken",
+      "username",
+      "tokenVoximplant",
+    ]);
+    await Voximplant.getInstance().disconnect();
+    const isSignedIn = await GoogleSignin.isSignedIn();
+    if (isSignedIn) {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+    }
+  } catch (er) {
+    console.log("Logout error", er);
+  }
 });
 
 export const userSlice = createSlice({

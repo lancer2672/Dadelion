@@ -1,59 +1,66 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, forwardRef } from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 
-const InputText = ({
-  iconLeft,
-  iconRight,
-  onIconPress,
-  placeholder,
-  text,
-  setText,
-  onBlur,
-  disabled,
-  passwordType,
-  hasValidationError,
-}) => {
-  const [showPassword, setShowPassword] = useState(false);
-  return (
-    <TextInput
-      mode="outlined"
-      outlineStyle={{
-        borderRadius: 25,
-      }}
-      outlineColor={hasValidationError && "red"}
-      style={styles.textInput}
-      secureTextEntry={passwordType && !showPassword}
-      disabled={disabled}
-      value={text}
-      left={
-        <TextInput.Icon
-          size={20}
-          style={{
-            marginRight: 0,
-            fontSize: 12,
-          }}
-          disabled={true}
-          icon={iconLeft}
-        />
-      }
-      onBlur={onBlur}
-      right={
-        passwordType && (
+const InputText = forwardRef(
+  (
+    {
+      iconLeft,
+      iconRight,
+      onIconPress,
+      placeholder,
+      text,
+      setText,
+      onBlur,
+      disabled,
+      passwordType,
+      hasValidationError,
+    },
+    ref
+  ) => {
+    const [showPassword, setShowPassword] = useState(false);
+    return (
+      <TextInput
+        mode="outlined"
+        outlineStyle={{
+          borderRadius: 25,
+        }}
+        editable={!disabled}
+        outlineColor={hasValidationError && "red"}
+        style={styles.textInput}
+        secureTextEntry={passwordType && !showPassword}
+        // disabled={disabled}
+        ref={ref}
+        value={text}
+        left={
           <TextInput.Icon
             size={20}
-            onPress={() => {
-              setShowPassword(!showPassword);
+            style={{
+              marginRight: 0,
+              fontSize: 12,
             }}
-            icon={showPassword ? "eye" : "eye-off"}
+            disabled={true}
+            icon={iconLeft}
           />
-        )
-      }
-      onChangeText={(newText) => setText(newText)}
-      placeholder={placeholder}
-    ></TextInput>
-  );
-};
+        }
+        onBlur={onBlur}
+        right={
+          passwordType && (
+            <TextInput.Icon
+              size={20}
+              onPress={() => {
+                setShowPassword(!showPassword);
+              }}
+              icon={showPassword ? "eye" : "eye-off"}
+            />
+          )
+        }
+        onChangeText={(newText) => setText(newText)}
+        placeholder={placeholder}
+      ></TextInput>
+    );
+  }
+);
 
 export default memo(InputText);
 

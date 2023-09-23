@@ -14,9 +14,10 @@ import { Avatar } from "@src/components/Avatar";
 import { logoutUser } from "@src/store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import { ThemeContext } from "../../../../App";
+
 import LanguageSelection from "../components/LanguageSelection.component";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeContext } from "@src/infrastructure/theme/context";
 
 const Settings = ({ navigation }) => {
   const { user } = useSelector(userSelector);

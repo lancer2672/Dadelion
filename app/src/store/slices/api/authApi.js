@@ -3,6 +3,7 @@ import { baseQueryWithReauth } from "./baseQuery";
 import { getSocket } from "@src/utils/socket";
 import { current } from "@reduxjs/toolkit";
 import { UrlAPI } from "@src/constants";
+import { transformUserData } from "@src/utils/transformHelper";
 const authRoute = "/api/auth";
 
 export const authApi = createApi({
@@ -36,6 +37,31 @@ export const authApi = createApi({
         return response.data;
       },
     }),
+    login: builder.mutation({
+      query: (authData) => ({
+        url: `${authRoute}/login`,
+        method: "POST",
+        body: authData,
+      }),
+      transformResponse: (response, meta, arg) => {
+        const transformedUser = transformUserData(response.data.user);
+        return { ...response.data, user: transformedUser };
+      },
+      transformErrorResponse: (response, meta, arg) => {
+        response.data.message;
+      },
+    }),
+    loginWithGoogle: builder.mutation({
+      query: (idToken) => ({
+        url: `${authRoute}/google`,
+        method: "POST",
+        body: { idToken },
+      }),
+      transformResponse: (response, meta, arg) => {
+        const transformedUser = transformUserData(response.data.user);
+        return { ...response.data, user: transformedUser };
+      },
+    }),
   }),
 });
 
@@ -43,4 +69,6 @@ export const {
   useResetPasswordMutation,
   useVerifyEmailQuery,
   useSendVerificationEmailMutation,
+  useLoginMutation,
+  useLoginWithGoogleMutation,
 } = authApi;

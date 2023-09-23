@@ -11,7 +11,7 @@ export const handleValidateField = (
     .then((result) => {
       const newValidationErros = { ...validationErrors };
       delete newValidationErros[key];
-      setValidationErrors(newValidationErros);
+      setValidationErrors(() => newValidationErros);
     })
     .catch((err) => {
       setValidationErrors((pre) => ({ ...pre, [err.path]: err.errors[0] }));
@@ -32,7 +32,7 @@ export const handleValidateObject = (
       for (let i = 0; i < keys.length; i++) {
         delete newValidationErros[keys[i]];
       }
-      setValidationErrors(newValidationErros);
+      setValidationErrors(() => newValidationErros);
     })
     .catch((err) => {
       setValidationErrors((pre) => ({ ...pre, [err.path]: err.errors[0] }));

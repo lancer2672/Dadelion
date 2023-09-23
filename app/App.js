@@ -11,28 +11,12 @@ import FlashMessage from "react-native-flash-message";
 import { theme, darkTheme } from "./src/infrastructure/theme";
 import Navigator from "./src/infrastructure/navigation";
 import store from "./src/store";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext } from "react";
 import { connectVoximplant } from "@src/voximplant/services/Client";
 import { requestNotificationPermission } from "@src/permissions";
-
-export const ThemeContext = createContext();
+import ThemeProviderComponent from "@src/infrastructure/theme/context";
 
 export default function App() {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-
   useEffect(() => {
-    (async () => {
-      const isUseDarkTheme = await AsyncStorage.getItem("AppTheme");
-
-      if (isUseDarkTheme == "dark") {
-        setIsDarkTheme(true);
-      }
-      const language = await AsyncStorage.getItem("Language");
-      if (language) {
-        i18next.changeLanguage(language);
-      }
-    })();
     connectVoximplant();
     requestNotificationPermission();
   }, []);
@@ -41,16 +25,12 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
           <MenuProvider>
-            <ThemeProvider theme={isDarkTheme ? darkTheme : theme}>
-              <ThemeContext.Provider
-                value={{ isDarkTheme: isDarkTheme, setIsDarkTheme }}
-              >
-                <Provider store={store}>
-                  <Navigator />
-                  <FlashMessage position="top" />
-                </Provider>
-              </ThemeContext.Provider>
-            </ThemeProvider>
+            <ThemeProviderComponent>
+              <Provider store={store}>
+                <Navigator />
+                <FlashMessage position="top" />
+              </Provider>
+            </ThemeProviderComponent>
           </MenuProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>

@@ -100,13 +100,13 @@ const DetailPost = ({ route }) => {
         style={{ paddingHorizontal: 24, flex: 1, marginTop: 12 }}
       >
         <View>
-          <PostDescriptionContainer numberOfLines={6}>
-            <PostDescription>
-              {
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lorem non tristique convallis. Integer nec neque ipsum. Fusce consectetur, odio ut venenatis malesuada, velit nunc mattis lectus, nec facilisis risus ligula quis turpis. Cras finibus dolor vel ex iaculis hendrerit. In non metus quis est dignissim porttitor. Suspendisse scelerisque tincidunt ligula, nec finibus mi ultricies sit amet. Duis tincidunt metus quis nisl eleifend luctus. Nulla consequat a neque nec elementum. Curabitur sed eros enim. Proin tincidunt facilisis malesuada. Sed eleifend velit sed volutpat egestas. Fusce tincidunt mauris eu ipsum posuere scelerisque."
-              }
-            </PostDescription>
-          </PostDescriptionContainer>
+          {/* <PostDescriptionContainer numberOfLines={6}> */}
+          <PostDescription>
+            {
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lorem non tristique convallis. Integer nec neque ipsum. Fusce consectetur, odio ut venenatis malesuada, velit nunc mattis lectus, nec facilisis risus ligula quis turpis. Cras finibus dolor vel ex iaculis hendrerit. In non metus quis est dignissim porttitor. Suspendisse scelerisque tincidunt ligula, nec finibus mi ultricies sit amet. Duis tincidunt metus quis nisl eleifend luctus. Nulla consequat a neque nec elementum. Curabitur sed eros enim. Proin tincidunt facilisis malesuada. Sed eleifend velit sed volutpat egestas. Fusce tincidunt mauris eu ipsum posuere scelerisque."
+            }
+          </PostDescription>
+          {/* </PostDescriptionContainer> */}
           <CommentContainer>
             {selectedPost.comments.map((comment) => {
               return (
@@ -137,7 +137,6 @@ const CreatorName = styled(Text)`
 
 const PostDescriptionContainer = styled(ReadMore)`
   margin-left: 8px;
-  margin-bottom: 4px;
   margin-bottom: 20px;
   line-height: 22px;
   font-size: ${(props) => props.theme.fontSizes.body};
@@ -148,6 +147,11 @@ const PostDescriptionContainer = styled(ReadMore)`
 `;
 
 const PostDescription = styled(Text)`
+  margin-bottom: 20px;
+  line-height: 22px;
+  font-size: ${(props) => props.theme.fontSizes.body};
+  color: ${(props) => props.theme.colors.chat.text};
+  padding-bottom: 12px;
   font-size: ${(props) => props.theme.fontSizes.body};
   color: ${(props) => props.theme.colors.black};
 `;

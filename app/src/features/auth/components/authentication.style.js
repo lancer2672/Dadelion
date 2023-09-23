@@ -25,7 +25,7 @@ export const AuthButton = styled(TouchableOpacity).attrs((props) => ({
   padding-top: ${(props) => props.theme.space[2]};
   padding-bottom: ${(props) => props.theme.space[2]};
   background-color: ${(props) => props.theme.colors.text.primary};
-  border-radius: 25px;
+  border-radius: 4px;
   elevation: 2;
 `;
 

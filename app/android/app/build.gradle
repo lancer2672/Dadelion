@@ -115,6 +115,7 @@ android {
     compileSdkVersion 33
  
     defaultConfig {
+        
         applicationId 'com.khanha.Dandelion'   
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

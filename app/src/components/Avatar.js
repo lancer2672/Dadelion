@@ -16,5 +16,6 @@ export const Avatar = styled(Image).attrs((props) => {
 `;
 
 Avatar.defaultProps = {
-  source: require("@assets/imgs/DefaultAvatar.png"),
+  // source: require("@assets/imgs/DefaultAvatar.png"),
+  source: require("../../assets/imgs/DefaultAvatar.png"),
 };

@@ -26,7 +26,6 @@ const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 const PostItem = ({ navigation, post }) => {
   const { image: postImage = null, createdAt } = post;
   const theme = useTheme();
-  const postState = useSelector(postSelector);
   const userState = useSelector(userSelector);
   const dispatch = useDispatch();
   const { user } = userState;
@@ -71,11 +70,7 @@ const PostItem = ({ navigation, post }) => {
         >
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity onPress={handleNavigateToGuest}>
-              {postCreator?.avatar ? (
-                <Avatar source={{ uri: postCreator?.avatar }} />
-              ) : (
-                <Avatar source={undefined} />
-              )}
+              <Avatar uri={postCreator?.avatar}></Avatar>
             </TouchableOpacity>
             <PostInfoContainer>
               <CreatorName>{postCreator?.nickname}</CreatorName>
@@ -100,7 +95,7 @@ const PostItem = ({ navigation, post }) => {
   );
 };
 const Container = styled(BackgroundImage).attrs((props) => ({
-  source: { uri: props.postImage },
+  source: { uri: props.postImage && props.postImage },
   resizeMode: "cover",
 }))`
   margin-horizontal: 24px;

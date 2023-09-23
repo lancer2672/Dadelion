@@ -7,83 +7,202 @@ import {
   Error,
   AuthButtonContent,
 } from "../components/authentication.style";
-// import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSignin,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
 import InputText from "@src/features/auth/components/TextInput.component";
-import RememberPassword from "../components/RememberCheckBox.component";
 import { useTheme } from "styled-components";
 import AuthContainer from "../components/AuthContainer.component";
 import { Text } from "@src/components/typography/text.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { accountSchema } from "@src/utils/validationSchemas";
 import { handleValidateField } from "@src/utils/validator";
-import { useLoginMutation } from "@src/store/slices/api/userApiSlice";
 import { setUser, update } from "@src/store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { initSocket } from "@src/utils/socket";
 import { Avatar } from "@src/components/Avatar";
-import { ActivityIndicator } from "react-native-paper";
+import { WEB_API_KEY } from "@env";
 import { loginVoximplant } from "@src/voximplant/services/Client";
-import { useSendVerificationEmailMutation } from "@src/store/slices/api/authApi";
-import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
+import { useRef } from "react";
+import {
+  useLoginMutation,
+  useLoginWithGoogleMutation,
+} from "@src/store/slices/api/authApi";
+
+GoogleSignin.configure({
+  webClientId: WEB_API_KEY,
+  offlineAccess: true,
+  scopes: [
+    "profile",
+    "email",
+    "https://www.googleapis.com/auth/user.birthday.read",
+    "https://www.googleapis.com/auth/user.phonenumbers.read",
+    "https://www.googleapis.com/auth/user.gender.read",
+  ],
+});
 
 const Login = ({ navigation }) => {
+  const [login, { error, isSuccess, isLoading: isLoginLoading, data }] =
+    useLoginMutation();
   const [
-    login,
-    { error, isSuccess, isLoading: isLoginLoading, ...loginResult },
-  ] = useLoginMutation();
+    loginWithGoogle,
+    {
+      isSuccess: isLoginGGSuccess,
+      isLoading: isLoginGGLoading,
+      data: loginGGData,
+    },
+  ] = useLoginWithGoogleMutation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [savePassword, setSavePassword] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
-
+  const refInputName = useRef();
+  const refInputPassword = useRef();
   const toggleSavePasswordCheck = () => {
     setSavePassword(!savePassword);
   };
-  const handleLogin = () => {
-    login({ username, password });
+  const handleLoginSuccess = async (loginData, isLoading, isSuccess) => {
+    try {
+      if (isSuccess) {
+        const payload = { savePassword, ...loginData };
+        dispatch(setUser(payload));
+        //auto enable save password
+        if (true) {
+          ["token", "refreshToken", "username"].forEach(async (key) => {
+            await AsyncStorage.setItem(
+              key,
+              JSON.stringify(loginData[key]) || eval(key)
+            );
+          });
+          await AsyncStorage.setItem(
+            "userId",
+            JSON.stringify(loginData.user._id)
+          );
+        }
+        initSocket(loginData.user._id);
+        const tokenVoximplant = await loginVoximplant(
+          loginData.user.username,
+          loginData.user.voximplantPassword
+        );
+        if (tokenVoximplant) {
+          await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
+        }
+      }
+    } catch (er) {
+      console.log("err", er);
+    }
+    dispatch(setIsLoading(isLoading));
   };
-  const handleSignInGoogle = () => {};
+
+  useEffect(() => {
+    handleLoginSuccess(loginGGData, isLoginGGLoading, isLoginGGSuccess);
+  }, [isLoginGGLoading]);
+
+  useEffect(() => {
+    handleLoginSuccess(data, isLoginLoading, isSuccess);
+  }, [isLoginLoading]);
+
+  const handleLogin = () => {
+    refInputName.current.blur();
+    refInputPassword.current.blur();
+    console.log(Object.keys(validationErrors).length);
+    if (Object.keys(validationErrors).length == 0) {
+      login({ username, password });
+    }
+  };
+  const handleSignInGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      loginWithGoogle(userInfo.idToken);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log("Sign in SIGN_IN_CANCELLED");
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log("Sign in IN_PROGRESS");
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log("Sign in PLAY_SERVICES_NOT_AVAILABLE");
+      } else {
+        console.error("Sign in ERROR");
+      }
+    }
+  };
   const handleSendEmailResetPassword = () => {
     navigation.navigate("ForgotPassword", {});
   };
-  useEffect(() => {
-    // handle resulcat when login succeeded
-    (async () => {
-      try {
-        if (isSuccess) {
-          const payload = { savePassword, ...loginResult.data };
-          dispatch(setUser(payload));
-          //auto enable save password
-          if (true) {
-            ["token", "refreshToken", "username"].forEach(async (key) => {
-              await AsyncStorage.setItem(
-                key,
-                JSON.stringify(loginResult.data[key]) || eval(key)
-              );
-            });
-            await AsyncStorage.setItem(
-              "userId",
-              JSON.stringify(loginResult.data.user._id)
-            );
-          }
-          initSocket(loginResult.data.user._id);
-          const tokenVoximplant = await loginVoximplant(username, password);
-          if (tokenVoximplant) {
-            await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
-          }
-        }
-      } catch (er) {
-        console.log("err", er);
-      }
-      dispatch(setIsLoading(isLoginLoading));
-    })();
-  }, [isLoginLoading]);
+  // useEffect(() => {
+  //   // handle resulcat when login succeeded
+  //   (async () => {
+  //     try {
+  //       if (isLoginGGSuccess) {
+  //         const payload = { savePassword, ...loginGGData };
+  //         dispatch(setUser(payload));
+  //         //auto enable save password
+  //         if (true) {
+  //           ["token", "refreshToken", "username"].forEach(async (key) => {
+  //             await AsyncStorage.setItem(
+  //               key,
+  //               JSON.stringify(loginGGData[key]) || eval(key)
+  //             );
+  //           });
+  //           await AsyncStorage.setItem(
+  //             "userId",
+  //             JSON.stringify(loginGGData.user._id)
+  //           );
+  //         }
+  //         initSocket(loginGGData.user._id);
+  //         const tokenVoximplant = await loginVoximplant(
+  //           loginGGData.user,
+  //           loginGGData.user.voximplantPassword
+  //         );
+  //         if (tokenVoximplant) {
+  //           await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
+  //         }
+  //       }
+  //     } catch (er) {
+  //       console.log("err", er);
+  //     }
+  //     dispatch(setIsLoading(isLoginGGLoading));
+  //   })();
+  // }, [isLoginGGLoading]);
+
+  // useEffect(() => {
+  //   // handle resulcat when login succeeded
+  //   (async () => {
+  //     try {
+  //       if (isSuccess) {
+  //         const payload = { savePassword, ...data };
+  //         dispatch(setUser(payload));
+  //         //auto enable save password
+  //         if (true) {
+  //           ["token", "refreshToken", "username"].forEach(async (key) => {
+  //             await AsyncStorage.setItem(
+  //               key,
+  //               JSON.stringify(data[key]) || eval(key)
+  //             );
+  //           });
+  //           await AsyncStorage.setItem("userId", JSON.stringify(data.user._id));
+  //         }
+  //         initSocket(data.user._id);
+  //         const tokenVoximplant = await loginVoximplant(username, password);
+  //         if (tokenVoximplant) {
+  //           await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
+  //         }
+  //       }
+  //     } catch (er) {
+  //       console.log("err", er);
+  //     }
+  //     dispatch(setIsLoading(isLoginLoading));
+  //   })();
+  // }, [isLoginLoading]);
+
   const navigateToRegister1Screen = () => {
     // setError(null);
     navigation.navigate("Register1", {});
@@ -100,6 +219,7 @@ const Login = ({ navigation }) => {
       ) : (
         <View>
           <InputText
+            ref={refInputName}
             iconLeft={"account"}
             setText={setUsername}
             hasValidationError={validationErrors.username}
@@ -119,36 +239,54 @@ const Login = ({ navigation }) => {
           )}
 
           <InputText
+            ref={refInputPassword}
             iconLeft={"lock"}
             passwordType
             setText={setPassword}
-            onBlur={() =>
-              handleValidateField(
-                accountSchema,
-                "password",
-                password,
-                validationErrors,
-                setValidationErrors
-              )
-            }
-            hasValidationError={validationErrors.password}
+            // onBlur={() =>
+            //   handleValidateField(
+            //     accountSchema,
+            //     "password",
+            //     password,
+            //     validationErrors,
+            //     setValidationErrors
+            //   )
+            // }
+            // hasValidationError={validationErrors.password}
             placeholder={"Mật khẩu"}
           ></InputText>
-          {validationErrors.password && (
+          {/* {validationErrors.password && (
             <Error variant="error">{validationErrors.password}</Error>
-          )}
+          )} */}
         </View>
       )}
       {/* <RememberPassword
         savePassword={savePassword}
         onIconPress={toggleSavePasswordCheck}
       ></RememberPassword> */}
-      <TouchableOpacity
-        style={{ marginTop: 12 }}
-        onPress={handleSendEmailResetPassword}
+      <View
+        style={{
+          marginTop: 12,
+          flexDirection: "row",
+        }}
       >
-        <Text style={{ fontSize: 16, color: "white" }}>Quên mật khẩu ?</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={handleSendEmailResetPassword}>
+          <Text style={{ fontSize: 16, color: "white" }}>Quên mật khẩu ?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={navigateToRegister1Screen}>
+          <Text
+            style={{
+              marginLeft: 48,
+              fontWeight: "500",
+              fontSize: 16,
+              textDecorationLine: "underline",
+              color: "white",
+            }}
+          >
+            Đăng ký
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       {error && (
         <Error variant="error">Tên đăng nhập hoặc mật khẩu không hợp lệ</Error>
@@ -162,9 +300,9 @@ const Login = ({ navigation }) => {
           <AuthButtonContent>Đăng nhập</AuthButtonContent>
         </AuthButton>
         <Spacer variant="top" size="large"></Spacer>
-        <AuthButton onPress={navigateToRegister1Screen}>
+        {/* <AuthButton onPress={navigateToRegister1Screen}>
           <AuthButtonContent>Đăng ký</AuthButtonContent>
-        </AuthButton>
+        </AuthButton> */}
       </View>
       <View
         style={{
@@ -174,22 +312,35 @@ const Login = ({ navigation }) => {
           alignItems: "center",
         }}
       >
-        <Pressable style={styles.fb}>
+        {/* <Pressable style={styles.fb}>
           <Image
             style={styles.logo}
             resizeMode="center"
-            source={require("../../../../assets/icons/facebook_icon.png")}
+            source={require("@assets/icons/facebook_icon.png")}
           ></Image>
-        </Pressable>
+        </Pressable> */}
         <Pressable
           onPress={handleSignInGoogle}
           style={[styles.google, { backgroundColor: "white" }]}
         >
-          <Image
-            resizeMode="contain"
-            style={styles.logo}
-            source={require("../../../../assets/icons/google_icon.png")}
-          ></Image>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <Image
+              resizeMode="contain"
+              style={styles.logo}
+              source={require("@assets/icons/google_icon.png")}
+            ></Image>
+            <Text
+              style={{
+                flex: 1,
+                color: "black",
+                fontSize: 16,
+                textAlign: "center",
+                paddingRight: 40,
+              }}
+            >
+              Tiếp tục với Google
+            </Text>
+          </View>
         </Pressable>
       </View>
     </AuthContainer>
@@ -197,14 +348,14 @@ const Login = ({ navigation }) => {
 };
 const styles = StyleSheet.create({
   logo: {
-    width: "100%",
-    height: "100%",
+    width: 32,
+    height: 32,
+    marginLeft: 8,
   },
   google: {
-    width: 46,
-    height: 46,
-    borderRadius: 22,
-    marginLeft: 12,
+    width: 300,
+    height: 42,
+    borderRadius: 4,
     elevation: 2,
   },
   fb: {
