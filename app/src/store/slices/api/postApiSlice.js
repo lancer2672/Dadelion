@@ -81,7 +81,7 @@ export const postApi = createApi({
       providesTags: ["Post"],
     }),
     getPostById: builder.query({
-      query: (postId) => `${postRoute}/${postId}`,
+      query: (postId) => `${postRoute}/?postId=${postId}`,
       transformResponse: (response, meta, arg) => {
         if (response.data.post.image) {
           response.data.post.image = `${UrlAPI}/${response.data.post.image}`;

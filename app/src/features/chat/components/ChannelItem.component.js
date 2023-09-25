@@ -83,11 +83,10 @@ const Channel = ({ navigation, channel }) => {
       } else if (lastMsgData.lastMessage?.callHistory?.duration) {
         // Xử lý trường hợp khi có cuộc gọi
         note = t("calledYou");
-      } else {
+      } else if (lastMsgData.lastMessage?.callHistory?.duration == 0) {
         // Xử lý trường hợp cuộc gọi bị nhỡ
         note = t("missCall");
-      }
-
+      } else note = t("emptyMessage");
       setLastMessage({ ...lastMsgData.lastMessage, note });
     }
   }, [isLoadLastMsg, lastMsgData]);

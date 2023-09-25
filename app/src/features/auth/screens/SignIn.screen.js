@@ -88,7 +88,7 @@ const Login = ({ navigation }) => {
         }
         initSocket(loginData.user._id);
         const tokenVoximplant = await loginVoximplant(
-          loginData.user.username,
+          loginData.user.email,
           loginData.user.voximplantPassword
         );
         if (tokenVoximplant) {
@@ -130,78 +130,13 @@ const Login = ({ navigation }) => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log("Sign in PLAY_SERVICES_NOT_AVAILABLE");
       } else {
-        console.error("Sign in ERROR");
+        console.error("Sign in ERROR", error);
       }
     }
   };
   const handleSendEmailResetPassword = () => {
     navigation.navigate("ForgotPassword", {});
   };
-  // useEffect(() => {
-  //   // handle resulcat when login succeeded
-  //   (async () => {
-  //     try {
-  //       if (isLoginGGSuccess) {
-  //         const payload = { savePassword, ...loginGGData };
-  //         dispatch(setUser(payload));
-  //         //auto enable save password
-  //         if (true) {
-  //           ["token", "refreshToken", "username"].forEach(async (key) => {
-  //             await AsyncStorage.setItem(
-  //               key,
-  //               JSON.stringify(loginGGData[key]) || eval(key)
-  //             );
-  //           });
-  //           await AsyncStorage.setItem(
-  //             "userId",
-  //             JSON.stringify(loginGGData.user._id)
-  //           );
-  //         }
-  //         initSocket(loginGGData.user._id);
-  //         const tokenVoximplant = await loginVoximplant(
-  //           loginGGData.user,
-  //           loginGGData.user.voximplantPassword
-  //         );
-  //         if (tokenVoximplant) {
-  //           await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
-  //         }
-  //       }
-  //     } catch (er) {
-  //       console.log("err", er);
-  //     }
-  //     dispatch(setIsLoading(isLoginGGLoading));
-  //   })();
-  // }, [isLoginGGLoading]);
-
-  // useEffect(() => {
-  //   // handle resulcat when login succeeded
-  //   (async () => {
-  //     try {
-  //       if (isSuccess) {
-  //         const payload = { savePassword, ...data };
-  //         dispatch(setUser(payload));
-  //         //auto enable save password
-  //         if (true) {
-  //           ["token", "refreshToken", "username"].forEach(async (key) => {
-  //             await AsyncStorage.setItem(
-  //               key,
-  //               JSON.stringify(data[key]) || eval(key)
-  //             );
-  //           });
-  //           await AsyncStorage.setItem("userId", JSON.stringify(data.user._id));
-  //         }
-  //         initSocket(data.user._id);
-  //         const tokenVoximplant = await loginVoximplant(username, password);
-  //         if (tokenVoximplant) {
-  //           await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
-  //         }
-  //       }
-  //     } catch (er) {
-  //       console.log("err", er);
-  //     }
-  //     dispatch(setIsLoading(isLoginLoading));
-  //   })();
-  // }, [isLoginLoading]);
 
   const navigateToRegister1Screen = () => {
     // setError(null);

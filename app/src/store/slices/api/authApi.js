@@ -30,7 +30,17 @@ export const authApi = createApi({
     resetPassword: builder.mutation({
       query: (data) => ({
         url: `${authRoute}/reset-password`,
-        method: "POST",
+        method: "PUT",
+        body: data,
+      }),
+      transformResponse: (response, meta, arg) => {
+        return response.data;
+      },
+    }),
+    changePassword: builder.mutation({
+      query: (data) => ({
+        url: `${authRoute}/change-password`,
+        method: "PUT",
         body: data,
       }),
       transformResponse: (response, meta, arg) => {
@@ -71,4 +81,5 @@ export const {
   useSendVerificationEmailMutation,
   useLoginMutation,
   useLoginWithGoogleMutation,
+  useChangePasswordMutation,
 } = authApi;

@@ -6,15 +6,22 @@ export const accountSchema = object({
     .min(8, "Tên đăng nhập phải có ít nhất 8 ký tự")
     .max(24, "Tên đăng nhập chỉ được tối đa 24 ký tự"),
   password: string()
-    .required("Mật khẩu không được để trống")
     .min(8, "Mật khẩu phải dài hơn 8 ký tự ")
+    .required("Mật khẩu không được để trống")
     .matches(
       /^(?=.*[A-Z])(?=.*\d).+$/,
       "Mật khẩu phải chứa ít nhất 1 ký tự viết hoa và 1 chữ số"
     ),
-  confirmPassword: string()
+  newPassword: string()
+    .min(8, "Mật khẩu phải dài hơn 8 ký tự ")
     .required("Mật khẩu không được để trống")
-    .oneOf([ref("password")], "Mật khẩu không trùng khớp"),
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d).+$/,
+      "Mật khẩu phải chứa ít nhất 1 ký tự viết hoa và 1 chữ số"
+    ),
+  confirmNewPassword: string()
+    .required("Mật khẩu không được để trống")
+    .oneOf([ref("newPassword")], "Mật khẩu không trùng khớp"),
   email: string()
     .email("Email không hợp lệ")
     .required("Email không được để trống"),

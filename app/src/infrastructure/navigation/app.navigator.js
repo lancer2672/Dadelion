@@ -30,6 +30,7 @@ import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
 import CallingScreen from "@src/features/call/screens/CallingScreen.screen";
 import { useDispatch } from "react-redux";
 import { setCall } from "@src/store/slices/callSlice";
+import ResetPassword from "@src/features/user/screens/ResetPassword.screen";
 const Stack = createNativeStackNavigator();
 // const Tab = createBottomTabNavigator();
 
@@ -158,8 +159,11 @@ export const AppNavigator = () => {
     messaging()
       .getToken()
       .then((token) => {
-        console.log("Token", token);
+        console.log("Messaging Token", token);
         saveFCMtoken(token);
+      })
+      .catch((er) => {
+        console.log("get messaging token failed", er);
       });
     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log("Message handled in the background!", remoteMessage);
@@ -230,6 +234,7 @@ export const AppNavigator = () => {
 
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} />
 
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="FriendList" component={FriendList} />

@@ -50,5 +50,9 @@
   "unfriend": "Huỷ bạn bè",
   "image": "Ảnh",
   "searchHistory": "Lịch sử tìm kiếm",
+  "resetPassword": "Đổi mật khẩu",
+  "currentPassword": "Mật khẩu hiện tại",
+  "newPassword": "Mật khẩu mới",
+  "confirmNewPassword": "Nhập lại mật khẩu mới",
   "failed": "Thất bại"
 }

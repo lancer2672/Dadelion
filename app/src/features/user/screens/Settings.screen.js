@@ -18,8 +18,10 @@ import { userSelector } from "@src/store/selector";
 import LanguageSelection from "../components/LanguageSelection.component";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeContext } from "@src/infrastructure/theme/context";
+import { useNavigation } from "@react-navigation/native";
 
-const Settings = ({ navigation }) => {
+const Settings = () => {
+  const navigation = useNavigation();
   const { user } = useSelector(userSelector);
   const theme = useTheme();
   const { t } = useTranslation();
@@ -34,7 +36,7 @@ const Settings = ({ navigation }) => {
   };
 
   const viewRef = React.useRef(null);
-  const data = [
+  const settingOptions = [
     {
       name: t("language"),
       icon: "globe",
@@ -49,10 +51,17 @@ const Settings = ({ navigation }) => {
       name: t("notifications"),
       icon: "bell",
       iconColor: "#3da9fc",
-
       backgroundIconColor: "#a3d3f7",
-
       onClick: openDeviceSetting,
+    },
+    {
+      name: t("resetPassword"),
+      icon: "lock",
+      iconColor: "#356e2a",
+      backgroundIconColor: "#60bf4d",
+      onClick: () => {
+        navigation.navigate("ResetPassword");
+      },
     },
     {
       name: t("darkmode"),
@@ -119,7 +128,7 @@ const Settings = ({ navigation }) => {
 
           <SettingCategory>{t("settings")}</SettingCategory>
           <FlatList
-            data={data}
+            data={settingOptions}
             renderItem={({ item }) => <SettingItem {...item} />}
             keyExtractor={(item) => item.name}
           />

@@ -16,7 +16,7 @@ export const connectVoximplant = async () => {
 };
 
 export const loginVoximplant = async (username, password) => {
-  console.log("username", username);
+  console.log("username", username, password);
   try {
     if (voximplant.getClientState() === Voximplant.ClientState.DISCONNECTED) {
       await voximplant.connect();

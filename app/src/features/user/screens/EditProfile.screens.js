@@ -65,7 +65,7 @@ const EditProfile = ({ navigation }) => {
         type: "success",
       });
     }
-  }, [error, data]);
+  }, [isLoading, data]);
 
   useEffect(() => {
     dispatch(setIsLoading(isLoading));
