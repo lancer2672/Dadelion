@@ -5,7 +5,10 @@ A social media app built with React, Redux, ExpressJs, SocketIO, MongoDB
 This project is currently in development. Functionality to display position of users on Google Maps and track it in real-time is in progress
 
 ## Features
-
+- CRUD Post, react/ comment post.
+- Friend: add friend, unfriend.
+- Chat: call video, send images/videos.
+- Notification: receive new notifications when users react to posts or send messages.
 ## Project Screen Shot(s)
 <img src="https://github.com/lancer2672/Dandelion/assets/90507570/234f3cfa-7069-47e3-81b5-0de9c1f4c2fb"  width="300">
 <img src="https://github.com/lancer2672/Dandelion/assets/90507570/24c02733-7f18-44a0-af23-1701a8baff59"  width="300">
