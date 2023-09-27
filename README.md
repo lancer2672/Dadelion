@@ -1,7 +1,12 @@
 ## Dandelion
 A social media app 
+
+
 Front-end: React-native, Redux
+
 Back-end: ExpressJs, SocketIO, MongoDB
+
+
 Service: Voximplant, Firebase messaging
 ## Project Status
 This project is currently in development. Functionality to display position of users on Google Maps and track it in real-time is in progress
