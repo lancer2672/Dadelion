@@ -17,36 +17,39 @@ import MapView, {
 } from "react-native-maps";
 import { requestLocationPermission } from "@src/permissions";
 import * as Location from "expo-location";
-// ERROR: undefined -  import Geolocation from "react-native-geolocation-service";
+import configureBackgroundGeolocation from "@src/config/location";
+import BackgroundGeolocation from "react-native-background-geolocation";
 import { getSocket } from "@src/utils/socket";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import AvatarMarker from "../components/AvatarMarker.component";
-import { userSelector } from "@src/store/selector";
+import { locationSelector, userSelector } from "@src/store/selector";
+import {
+  sendLocation,
+  startTracking,
+  stopTracking,
+} from "@src/store/slices/location.Slice";
+import BottomModal from "../components/BottomModal.component";
 
 const Map = () => {
   const dispatch = useDispatch();
-  const [location, setLocation] = useState(null);
+  const { location } = useSelector(locationSelector);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [friendLocation, setFriendLocation] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const { user } = useSelector(userSelector);
   const socket = getSocket();
   console.log("location", location);
-  const trackUserPosition = () => {};
   useEffect(() => {
-    (async () => {
-      if (await requestLocationPermission()) {
-        try {
-          dispatch(setIsLoading(true));
-          let location = await Location.getCurrentPositionAsync({});
-          setLocation(location);
-          dispatch(setIsLoading(false));
-        } catch (er) {
-          console.log("er", er);
-        }
-      }
-    })();
-  }, []);
+    if (socket) {
+      socket.on("start-tracking", (listFriendLocation) => {
+        console.log("start-tracking", listFriendLocation);
+      });
+      socket.on("send-location", (friendLocation) => {
+        console.log("send-location", friendLocation);
+      });
+    }
+  }, [socket]);
 
   if (location) {
     return (
@@ -84,41 +87,15 @@ const Map = () => {
               setModalVisible(false);
             }}
             location={location}
-            user={user}
+            avtar={user.avatar}
           ></AvatarMarker>
         </MapView>
-        <Modal
-          animationType="slide"
-          transparent
+        <BottomModal
           visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
+          onClose={() => {
+            setModalVisible(false);
           }}
-        >
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setModalVisible(false);
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "flex-end",
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "white",
-                  width: "100%",
-                  padding: 20,
-                }}
-              >
-                <Text>{user.name}</Text>
-                <Button title="Close" onPress={() => setModalVisible(false)} />
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+        ></BottomModal>
       </View>
     );
   }

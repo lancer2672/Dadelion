@@ -17,7 +17,6 @@ const Notification = ({ navigation }) => {
     //always make new request
     refetchOnMountOrArgChange: true,
   });
-  console.log("notification show");
 
   const {
     data: notifications,
@@ -26,6 +25,7 @@ const Notification = ({ navigation }) => {
   } = useGetNotificationsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+  console.log("notification show", notifications);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.chat.bg.primary }}>

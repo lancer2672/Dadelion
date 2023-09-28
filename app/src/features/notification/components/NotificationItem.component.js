@@ -19,9 +19,13 @@ const NotificationItem = ({ notification }) => {
   const theme = useTheme();
   const navigation = useNavigation();
   //get data of user created notification
-  const { data, isLoading } = useGetPostByIdQuery(notification?.postId, {
+  const { data, isLoading, error } = useGetPostByIdQuery(notification?.postId, {
     skip: !notification?.postId,
   });
+  console.log("das", data);
+  console.log("error", error);
+  console.log("  notification?.postId", notification?.postId);
+
   const navigateToGuest = () => {
     navigation.navigate("Guest", {
       guestId: notification.userIds.at(-1).userId,

@@ -3,3 +3,4 @@ export const appSelector = (state) => state.app;
 export const postSelector = (state) => state.post;
 export const chatSelector = (state) => state.chat;
 export const callSelector = (state) => state.call;
+export const locationSelector = (state) => state.location;

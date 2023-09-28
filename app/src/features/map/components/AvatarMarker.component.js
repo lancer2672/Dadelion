@@ -3,8 +3,8 @@ import { Marker } from "react-native-maps";
 import { Modal, View, Text, Button, Image } from "react-native";
 import { Avatar } from "@src/components/Avatar";
 
-const AvatarMarker = ({ user, location, openModal }) => {
-  console.log(user, location);
+const AvatarMarker = ({ avatar, location, openModal }) => {
+  console.log(avatar, location);
   return (
     <Marker
       coordinate={{
@@ -14,7 +14,11 @@ const AvatarMarker = ({ user, location, openModal }) => {
       onPress={openModal}
     >
       <Image
-        source={{ uri: user.avatar }}
+        source={
+          avatar
+            ? { uri: avatar }
+            : require("../../../../assets/imgs/DefaultAvatar.png")
+        }
         style={{
           width: 50,
           height: 50,

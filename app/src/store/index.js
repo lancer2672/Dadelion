@@ -6,6 +6,7 @@ import { postSlice } from "./slices/postSlice";
 import { callSlice } from "./slices/callSlice";
 import { notification } from "./slices/notificationSlice";
 import { chatSlice } from "./slices/chatSlice";
+import { locationSlice } from "./slices/location.Slice";
 
 import { userApi } from "./slices/api/userApiSlice";
 import { uploadApi } from "./slices/api/uploadApi";
@@ -18,6 +19,7 @@ import { authApi } from "./slices/api/authApi";
 import chatMiddleware from "./middlewares/chatMiddleware";
 import postMiddleware from "./middlewares/postMiddleware";
 import notificationMiddleware from "./middlewares/notificationMiddleware";
+import locationMiddleware from "./middlewares/locationMiddleware";
 
 export default configureStore({
   reducer: {
@@ -26,6 +28,7 @@ export default configureStore({
     call: callSlice.reducer,
     post: postSlice.reducer,
     chat: chatSlice.reducer,
+    location: locationSlice.reducer,
     notification: notification.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
@@ -46,5 +49,6 @@ export default configureStore({
       .concat(notificationApi.middleware)
       .concat(chatMiddleware())
       .concat(notificationMiddleware())
+      .concat(locationMiddleware())
       .concat(postMiddleware()),
 });
