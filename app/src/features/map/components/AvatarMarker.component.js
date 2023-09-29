@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Marker } from "react-native-maps";
 import { Modal, View, Text, Button, Image } from "react-native";
 import { Avatar } from "@src/components/Avatar";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 
-const AvatarMarker = ({ avatar, location, openModal }) => {
-  console.log(avatar, location);
+const AvatarMarker = ({ location, userId, openModal }) => {
+  const { data } = useGetUserByIdQuery(userId);
+  console.log("user data ", data);
+  console.log(userId, location);
   return (
     <Marker
       coordinate={{
@@ -15,8 +18,8 @@ const AvatarMarker = ({ avatar, location, openModal }) => {
     >
       <Image
         source={
-          avatar
-            ? { uri: avatar }
+          data?.user.avatar
+            ? { uri: data?.user.avatar }
             : require("../../../../assets/imgs/DefaultAvatar.png")
         }
         style={{

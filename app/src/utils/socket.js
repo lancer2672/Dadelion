@@ -9,6 +9,7 @@ export const initSocket = (userId) => {
     console.log("Socket connected");
   });
   socket.on("disconnect", () => {
+    socket.emit("stop-watching");
     console.log("Socket disconnected");
   });
 };

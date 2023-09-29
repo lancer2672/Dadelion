@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getSocket } from "@src/utils/socket";
 import { Voximplant } from "react-native-voximplant";
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
 };
 export const logoutUser = createAsyncThunk("user/logout", async () => {
   try {
+    const socket = getSocket();
     await AsyncStorage.multiRemove([
       "userId",
       "token",
@@ -25,6 +27,7 @@ export const logoutUser = createAsyncThunk("user/logout", async () => {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
     }
+    socket.emit("stop-tracking");
   } catch (er) {
     console.log("Logout error", er);
   }

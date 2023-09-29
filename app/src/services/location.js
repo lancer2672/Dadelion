@@ -7,18 +7,33 @@ const {
   setLocation,
   stopTracking,
   startTracking,
+  setFriendLocation,
+  removeFriendLocation,
+  addOrUpdateFriendLocation,
 } = require("@src/store/slices/location.Slice");
 import BackgroundGeolocation from "react-native-background-geolocation";
 
 export const enableTrackingLocation = async (dispatch) => {
   if (await requestLocationPermission()) {
+    BackgroundGeolocation.getCurrentPosition(
+      {
+        samples: 1,
+        persist: true,
+      },
+      (location) => {
+        console.log("getCurrentPosition - location", location);
+
+        dispatch(sendLocation({ location }));
+        dispatch(setLocation({ location }));
+      },
+      (error) => {
+        console.log("Location error", error);
+      }
+    );
     BackgroundGeolocation.onLocation((location) => {
       dispatch(sendLocation({ location }));
       dispatch(setLocation({ location }));
     });
-    // BackgroundGeolocation.onMotionChange((event) => {
-    //   console.log("[motionchange] -", event.isMoving, event.location);
-    // });
     const state = await configureBackgroundGeolocation();
     if (!state.enabled) {
       BackgroundGeolocation.start(function () {
@@ -29,4 +44,19 @@ export const enableTrackingLocation = async (dispatch) => {
     dispatch(stopTracking());
   }
   dispatch(startTracking());
+};
+
+export const receiveListLocationListener = (socket, dispatch) => {
+  socket.on("start-tracking", (listFriendLocation) => {
+    console.log("start-tracking", listFriendLocation);
+    dispatch(setFriendLocation(listFriendLocation));
+  });
+  socket.on("send-location", (friendLocation) => {
+    console.log("send-location", friendLocation);
+    dispatch(addOrUpdateFriendLocation(friendLocation));
+  });
+  socket.on("stop-tracking", (userId) => {
+    console.log("stop-tracking", userId);
+    dispatch(removeFriendLocation(userId));
+  });
 };
