@@ -8,6 +8,7 @@ const notificationRoute = "/notification";
 export const notificationApi = createApi({
   reducerPath: "notificationApi",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ["Notification"],
   endpoints: (builder) => ({
     getNotifications: builder.query({
       query: () => ({ url: `${notificationRoute}/` }),
@@ -38,8 +39,17 @@ export const notificationApi = createApi({
         // cacheEntryRemoved will resolve when the cache subscription is no longer active
         await cacheEntryRemoved;
       },
+      providesTags: ["Notification"],
+    }),
+    deleteNotification: builder.mutation({
+      query: (notificationId) => ({
+        url: `${notificationRoute}/${notificationId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Notification"],
     }),
   }),
 });
 
-export const { useGetNotificationsQuery } = notificationApi;
+export const { useGetNotificationsQuery, useDeleteNotificationMutation } =
+  notificationApi;

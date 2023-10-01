@@ -1,39 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import styled from "styled-components/native";
+import { Feather } from "@expo/vector-icons";
 
-import { Avatar } from "@src/components/Avatar";
-import { formatNamesWithAnd } from "@src/utils/textFormatter";
 import { useTranslation } from "react-i18next";
-import { colors } from "@src/infrastructure/theme/colors";
-import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { Spacer } from "@src/components/spacer/spacer.component";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 import { useGetPostByIdQuery } from "@src/store/slices/api/postApiSlice";
 import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
+import { useDeleteNotificationMutation } from "@src/store/slices/api/notificationApiSlice";
+import BottomMenu from "./BottomMenu.component";
 
 const NotificationItem = ({ notification }) => {
   //   const formattedNames = formatNamesWithAnd(names);
+
   const { t } = useTranslation();
   const theme = useTheme();
+  const [bottomMenuVisible, setBottomMenuVisible] = useState(false);
+  const [deleteNotification] = useDeleteNotificationMutation();
   const navigation = useNavigation();
   //get data of user created notification
   const { data, isLoading, error } = useGetPostByIdQuery(notification?.postId, {
     skip: !notification?.postId,
   });
-  console.log("das", data);
-  console.log("error", error);
-  console.log("  notification?.postId", notification?.postId);
 
   const navigateToGuest = () => {
     navigation.navigate("Guest", {
       guestId: notification.userIds.at(-1).userId,
     });
   };
+
   return (
     <TouchableOpacity
       onPress={navigateToGuest}
+      onLongPress={() => {
+        setBottomMenuVisible(true);
+      }}
       style={{
         backgroundColor: notification.isSeen
           ? theme.colors.chat.bg.primary
@@ -59,6 +61,27 @@ const NotificationItem = ({ notification }) => {
           {commentCreatedTimeFormater(notification.createdAt)}
         </CreatedAt>
       </ContentContainer>
+      <TouchableOpacity
+        onPress={() => {
+          setBottomMenuVisible(true);
+        }}
+        style={{
+          paddingHorizontal: 4,
+        }}
+      >
+        <Feather
+          name="more-horizontal"
+          size={24}
+          color={theme.colors.chat.text}
+        />
+      </TouchableOpacity>
+      <BottomMenu
+        visible={bottomMenuVisible}
+        onClose={() => {
+          setBottomMenuVisible(false);
+        }}
+        notificationId={notification._id}
+      ></BottomMenu>
     </TouchableOpacity>
   );
 };
