@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import {
   Fontisto,
   AntDesign,
@@ -11,8 +11,6 @@ import styled from "styled-components/native";
 // import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import { colors } from "@src/infrastructure/theme/colors";
-import { Spacer } from "@src/components/spacer/spacer.component";
 import { useTheme } from "styled-components";
 import { reactPost } from "@src/store/slices/postSlice";
 import { useNavigation } from "@react-navigation/native";
@@ -85,6 +83,6 @@ const ButtonWrapper = styled(TouchableOpacity)`
   border-radius: 25px;
   background-color: rgba(255, 255, 255, 0.3);
 `;
-export default ReactionBar;
+export default memo(ReactionBar);
 
 const styles = StyleSheet.create({});

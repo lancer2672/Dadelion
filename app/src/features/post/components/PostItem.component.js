@@ -20,12 +20,15 @@ import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { colors } from "@src/infrastructure/theme/colors";
 import { setSelectedPost } from "@src/store/slices/postSlice";
 import { useTheme } from "styled-components";
+import { useNavigation } from "@react-navigation/native";
+import { FastImageBackground } from "@src/components/image";
+import { memo } from "react";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 const PostItem = ({ navigation, post }) => {
   const { image: postImage = null, createdAt } = post;
-  const theme = useTheme();
+
   const userState = useSelector(userSelector);
   const dispatch = useDispatch();
   const { user } = userState;
@@ -60,7 +63,21 @@ const PostItem = ({ navigation, post }) => {
   };
   return (
     <Pressable onPress={navigatePostDetail}>
-      <Container postImage={postImage}>
+      <FastImageBackground
+        style={{
+          marginHorizontal: 24,
+          marginVertical: 12,
+          overflow: "hidden",
+          minHeight: 480,
+          backgroundColor: "gray",
+          alignItems: "flex-start",
+          justifyContent: "flex-end",
+          paddingBottom: 12,
+          paddingLeft: 12,
+          elevation: 1,
+        }}
+        source={postImage}
+      >
         <View
           style={{
             minHeight: 200,
@@ -90,7 +107,7 @@ const PostItem = ({ navigation, post }) => {
         </View>
 
         <ReactionBar post={post}> </ReactionBar>
-      </Container>
+      </FastImageBackground>
     </Pressable>
   );
 };
@@ -132,4 +149,4 @@ const PostDescription = styled(Text)`
   color: white;
 `;
 
-export default PostItem;
+export default memo(PostItem);

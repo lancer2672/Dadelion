@@ -23,11 +23,13 @@ import { useTheme } from "styled-components";
 import { reactPost, updateSelectedPost } from "@src/store/slices/postSlice";
 import { getSocket } from "@src/utils/socket";
 import { Avatar } from "@src/components/Avatar";
+import FastImage from "react-native-fast-image";
 
 const DetailPost = ({ route }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const socket = getSocket();
+  const { token } = useSelector(userSelector);
   const userState = useSelector(userSelector);
   const postState = useSelector(postSelector);
   const { selectedPost } = postState;
@@ -46,10 +48,12 @@ const DetailPost = ({ route }) => {
     }
   }, [selectedPost.likes]);
   useEffect(() => {
-    socket.on("new-comment", (postId, newComment) => {
+    socket.on("new-comment", ({ postId, newComment }) => {
+      console.log("new-comment", postId);
       dispatch(updateSelectedPost({ type: "comment", postId, newComment }));
     });
     socket.on("react-post", (postId, reactUserId, isAddedToList) => {
+      console.log("react-post", postId);
       dispatch(
         updateSelectedPost({
           type: "react",
@@ -60,21 +64,26 @@ const DetailPost = ({ route }) => {
       );
     });
   }, [socket]);
-  console.log("selectedPost  - postDetail", selectedPost);
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     setHeart(!heart);
-  //   }
-  // }, [isSuccess])
+
   const handleReact = () => {
     dispatch(
       reactPost({ postId: selectedPost._id, postCreatorId: selectedPost.user })
     );
     setHeart(!heart);
   };
+  console.log("selectedPost,image", selectedPost.image);
   return (
     <Container>
-      <PostImage source={{ uri: selectedPost.image }} />
+      <FastImage
+        fallback={true}
+        source={{
+          uri: "https://res.cloudinary.com/dk-find-out/image/upload/q_80,w_1920,f_auto/A-Alamy-BXWK5E_vvmkuf.jpg",
+          uri: selectedPost.image,
+          priority: FastImage.priority.high,
+        }}
+        style={{ height: 300, width: "100%", backgroundColor: "gray" }}
+        resizeMode={FastImage.resizeMode.cover}
+      />
       <UserInfoContainer>
         <Avatar width={70} height={70} uri={selectedPost.postCreator.avatar} />
         <View style={{ marginLeft: 12, justifyContent: "flex-end", flex: 1 }}>
@@ -152,6 +161,8 @@ const PostDescription = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.body};
   color: ${(props) => props.theme.colors.chat.text};
   padding-bottom: 12px;
+  border-bottom-width: 1px;
+  border-color: ${(props) => props.theme.colors.chat.text};
   font-size: ${(props) => props.theme.fontSizes.body};
   color: ${(props) => props.theme.colors.black};
 `;
