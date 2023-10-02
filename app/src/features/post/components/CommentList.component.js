@@ -1,8 +1,9 @@
 import { StyleSheet, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 
-import Comment from "./Comment.component";
+import Comment from "./CommentItem.component";
 import { Spacer } from "@src/components/spacer/spacer.component";
+import { FlashList } from "@shopify/flash-list";
 
 const CommentList = ({ postId, comments }) => {
   const [commentList, setCommentList] = useState();
@@ -17,22 +18,23 @@ const CommentList = ({ postId, comments }) => {
     );
   }, [comments]);
   return (
-    <FlatList
-      data={commentList}
-      showsVerticalScrollIndicator={false}
-      ListEmptyComponent={() => null}
-      renderItem={({ item }) => {
-        const { postId, comment } = item;
-        return (
-          <Spacer position={"bottom"} size="small">
-            <Comment postId={postId} comment={comment} />
-          </Spacer>
-        );
-      }}
-      keyExtractor={(item) => {
-        return item.comment._id;
-      }}
-    ></FlatList>
+    <View style={{ flex: 1 }}>
+      <FlashList
+        data={commentList}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => {
+          const { postId, comment } = item;
+          return (
+            <Spacer position={"bottom"} size="small">
+              <Comment postId={postId} comment={comment} />
+            </Spacer>
+          );
+        }}
+        keyExtractor={(item) => {
+          return item.comment._id;
+        }}
+      ></FlashList>
+    </View>
   );
 };
 

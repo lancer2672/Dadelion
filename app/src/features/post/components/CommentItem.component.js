@@ -15,11 +15,8 @@ import { useTheme } from "styled-components";
 import { useTranslation } from "react-i18next";
 
 const dayjs = require("dayjs");
-const Comment = ({ comment, postId }) => {
-  // comment == {} then we return <></>
-  if (comment == false) {
-    return <></>;
-  }
+const Comment = ({ comment }) => {
+  console.log("comment.userId", comment);
   const theme = useTheme();
   const { t } = useTranslation();
   const { user } = useSelector(userSelector);

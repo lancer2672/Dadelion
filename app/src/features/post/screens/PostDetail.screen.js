@@ -17,13 +17,15 @@ import ReadMore from "@fawazahmed/react-native-read-more";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import InputBar from "../components/PostInputbar.component";
 
-import Comment from "../components/comment.component";
 // import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
 import { useTheme } from "styled-components";
 import { reactPost, updateSelectedPost } from "@src/store/slices/postSlice";
 import { getSocket } from "@src/utils/socket";
 import { Avatar } from "@src/components/Avatar";
 import FastImage from "react-native-fast-image";
+import { FlashList } from "@shopify/flash-list";
+import { Spacer } from "@src/components/spacer/spacer.component";
+import CommentItemComponent from "../components/CommentItem.component";
 
 const DetailPost = ({ route }) => {
   const theme = useTheme();
@@ -71,7 +73,7 @@ const DetailPost = ({ route }) => {
     );
     setHeart(!heart);
   };
-  console.log("selectedPost,image", selectedPost.image);
+  console.log("selectedPost,selectedPost.comments", selectedPost.comments);
   return (
     <Container>
       <FastImage
@@ -117,7 +119,23 @@ const DetailPost = ({ route }) => {
           </PostDescription>
           {/* </PostDescriptionContainer> */}
           <CommentContainer>
-            {selectedPost.comments.map((comment) => {
+            <FlashList
+              data={selectedPost.comments}
+              estimatedItemSize={180}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => {
+                return (
+                  <Spacer position={"bottom"} size="small">
+                    <CommentItemComponent comment={item} />
+                  </Spacer>
+                );
+              }}
+              keyExtractor={(item) => {
+                return item._id;
+              }}
+            ></FlashList>
+
+            {/* {selectedPost.comments.map((comment) => {
               return (
                 <Comment
                   key={`${selectedPost._id + comment._id}`}
@@ -125,7 +143,7 @@ const DetailPost = ({ route }) => {
                   comment={comment}
                 ></Comment>
               );
-            })}
+            })} */}
           </CommentContainer>
         </View>
       </ScrollView>

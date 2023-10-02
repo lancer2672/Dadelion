@@ -118,7 +118,7 @@ const Container = styled(BackgroundImage).attrs((props) => ({
   margin-horizontal: 24px;
   margin-vertical: 12px;
   overflow: hidden;
-  min-height: 480px;
+  height: 480px;
   background-color: gray;
   align-items: flex-start;
   justify-content: flex-end;
