@@ -15,8 +15,9 @@ This project is currently in development. Functionality to display position of u
 - CRUD Post, react/ comment post.
 - Friend: add friend, unfriend.
 - Chat: call video, send images/videos.
+- Map: display user and friend location
 - Notification: receive new notifications when users react to posts or send messages.
-## Project Screen Shot(s)
+## Project Screen Shots
 <img src="https://github.com/lancer2672/Dandelion/assets/90507570/234f3cfa-7069-47e3-81b5-0de9c1f4c2fb"  width="300">
 <img src="https://github.com/lancer2672/Dandelion/assets/90507570/24c02733-7f18-44a0-af23-1701a8baff59"  width="300">
 <img src="https://github.com/lancer2672/Dandelion/assets/90507570/909ffdab-a2b3-4967-aa3c-95a64404a145" width="300">
