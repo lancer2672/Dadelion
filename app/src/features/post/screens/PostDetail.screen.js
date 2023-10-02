@@ -50,9 +50,9 @@ const DetailPost = ({ route }) => {
     }
   }, [selectedPost.likes]);
   useEffect(() => {
-    socket.on("new-comment", ({ postId, newComment }) => {
-      console.log("new-comment", postId);
-      dispatch(updateSelectedPost({ type: "comment", postId, newComment }));
+    socket.on("new-comment", (data) => {
+      console.log("Update comment", data);
+      dispatch(updateSelectedPost({ type: "comment", ...data }));
     });
     socket.on("react-post", (postId, reactUserId, isAddedToList) => {
       console.log("react-post", postId);
@@ -119,31 +119,25 @@ const DetailPost = ({ route }) => {
           </PostDescription>
           {/* </PostDescriptionContainer> */}
           <CommentContainer>
-            <FlashList
+            {/* <FlashList
               data={selectedPost.comments}
               estimatedItemSize={180}
               showsVerticalScrollIndicator={false}
               renderItem={({ item }) => {
-                return (
-                  <Spacer position={"bottom"} size="small">
-                    <CommentItemComponent comment={item} />
-                  </Spacer>
-                );
+                return <CommentItemComponent comment={item} />;
               }}
               keyExtractor={(item) => {
                 return item._id;
               }}
-            ></FlashList>
-
-            {/* {selectedPost.comments.map((comment) => {
+            ></FlashList> */}
+            {selectedPost.comments.map((comment) => {
               return (
-                <Comment
+                <CommentItemComponent
                   key={`${selectedPost._id + comment._id}`}
-                  postId={selectedPost._id}
                   comment={comment}
-                ></Comment>
+                ></CommentItemComponent>
               );
-            })} */}
+            })}
           </CommentContainer>
         </View>
       </ScrollView>

@@ -6,22 +6,11 @@ const postMiddleware = () => (store) => {
     const socket = getSocket();
     switch (action.type) {
       case "post/reactPost": {
-        const { postCreatorId, postId } = action.payload;
-        socket.emit("react-post", { postCreatorId, postId });
-
+        socket.emit("react-post", action.payload);
         break;
       }
       case "post/commentPost": {
-        const { commentUserId, postCreatorId, postId, content } =
-          action.payload;
-
-        socket.emit("upload-comment", {
-          commentUserId,
-          postCreatorId,
-          postId,
-          content,
-        });
-
+        socket.emit("upload-comment", action.payload);
         break;
       }
     }

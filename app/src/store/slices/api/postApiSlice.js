@@ -17,7 +17,7 @@ export const postApi = createApi({
       transformResponse: (response, meta, arg) => {
         const posts = response.data.posts.map((post) => {
           if (post.image != null) {
-            post.image = `${UrlAPI}/${post.image}`;
+            post.image = `${UrlAPI}\\${post.image}`;
           }
           return post;
         });
@@ -32,12 +32,19 @@ export const postApi = createApi({
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
           const socket = getSocket();
-          socket.on("new-comment", (postId, newComment) => {
+          socket.on("new-comment", ({ postId, newComment, parentId }) => {
             updateCachedData((draft) => {
               const i = draft.posts.findIndex((post) => post._id == postId);
               if (i >= 0) {
-                draft.posts[i].comments.unshift(newComment);
+                // if reply comment
+                if (parentId) {
+                  const j = draft.posts[i].comments.findIndex(
+                    (cmt) => cmt._id === parentId
+                  );
+                  draft.posts[i].comments[j].replies.unshift(newComment);
+                } else draft.posts[i].comments.unshift(newComment);
               }
+              console.log("current Draft", current(draft), i);
             });
           });
           socket.on("react-post", (postId, reactUserId, isAddedToList) => {
@@ -71,7 +78,7 @@ export const postApi = createApi({
         }
         const tranformedPosts = response.data.posts.map((post) => {
           if (post.image != null) {
-            post.image = `${UrlAPI}/${post.image}`;
+            post.image = `${UrlAPI}\\${post.image}`;
           }
           return post;
         });
@@ -84,7 +91,7 @@ export const postApi = createApi({
       query: (postId) => `${postRoute}/?postId=${postId}`,
       transformResponse: (response, meta, arg) => {
         if (response.data.post.image) {
-          response.data.post.image = `${UrlAPI}/${response.data.post.image}`;
+          response.data.post.image = `${UrlAPI}\\${response.data.post.image}`;
         }
         return response.data.post;
       },

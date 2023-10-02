@@ -7,26 +7,19 @@ import { FlashList } from "@shopify/flash-list";
 
 const CommentList = ({ postId, comments }) => {
   const [commentList, setCommentList] = useState();
-  useEffect(() => {
-    setCommentList(
-      comments.map((comment, index) => {
-        return {
-          comment,
-          postId,
-        };
-      })
-    );
-  }, [comments]);
+  console.log("comments", comments);
   return (
     <View style={{ flex: 1 }}>
       <FlashList
-        data={commentList}
+        nestedScrollEnabled={true}
+        data={comments}
+        estimatedItemSize={100}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => {
-          const { postId, comment } = item;
+          const { comment } = item;
           return (
             <Spacer position={"bottom"} size="small">
-              <Comment postId={postId} comment={comment} />
+              <Comment comment={comment} />
             </Spacer>
           );
         }}

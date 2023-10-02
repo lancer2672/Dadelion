@@ -13,8 +13,66 @@ import styled from "styled-components/native";
 
 // import { useCommentPostMutation } from "@src/store/slices/api/postApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { commentPost } from "@src/store/slices/postSlice";
+import { commentPost, setRepliedComment } from "@src/store/slices/postSlice";
 import { postSelector, userSelector } from "@src/store/selector";
+import { useRef } from "react";
+import { useEffect } from "react";
+
+const InputBar = ({ autoFocus }) => {
+  const dispatch = useDispatch();
+  const [content, setContent] = useState("");
+  const [replyName, setReplyName] = useState("");
+  const { repliedComment } = useSelector(postSelector);
+  const { user } = useSelector(userSelector);
+  const { selectedPost } = useSelector(postSelector);
+  console.log("repliedComment", repliedComment);
+  useEffect(() => {
+    if (repliedComment) {
+      setReplyName(repliedComment.nickname + " ");
+    } else {
+      setReplyName("");
+    }
+  }, [repliedComment]);
+  const handlePostComment = async () => {
+    Keyboard.dismiss();
+    if (content != "") {
+      console.log("Dispatch upload comment", {
+        commentUserId: user._id,
+        postCreatorId: selectedPost.user,
+        postId: selectedPost._id,
+        content,
+        parentId: repliedComment?._id,
+        // repliedUserId: repliedComment?.repliedUserId,
+      });
+      dispatch(
+        commentPost({
+          commentUserId: user._id,
+          postCreatorId: selectedPost.user,
+          postId: selectedPost._id,
+          content,
+          parentId: repliedComment?._id,
+          // repliedUserId: repliedComment?.repliedUserId,
+        })
+      );
+      setContent(() => "");
+      dispatch(setRepliedComment(null));
+    }
+  };
+
+  return (
+    <InputContainer>
+      <InputContent
+        autoFocus={autoFocus}
+        placeholder="Viết bình luận..."
+        value={`${replyName}${content}`}
+        onChangeText={(newText) => setContent(newText.replace(replyName, ""))}
+      ></InputContent>
+      <SubmitButton onPress={handlePostComment}>
+        <Ionicons name="send" size={24} color="white" />
+      </SubmitButton>
+    </InputContainer>
+  );
+};
 
 const InputContainer = styled(View)`
   flex-direction: row;
@@ -40,41 +98,4 @@ const SubmitButton = styled(TouchableOpacity)`
   padding-top: 5px;
   padding-bottom: 5px;
 `;
-
-const InputBar = ({ autoFocus }) => {
-  const [content, setContent] = useState("");
-  const { user } = useSelector(userSelector);
-  const { selectedPost } = useSelector(postSelector);
-
-  const dispatch = useDispatch();
-  const handlePostComment = async () => {
-    Keyboard.dismiss();
-    if (content != "") {
-      setContent(() => "");
-      dispatch(
-        commentPost({
-          commentUserId: user._id,
-          postCreatorId: selectedPost.user,
-          postId: selectedPost._id,
-          content,
-        })
-      );
-    }
-  };
-
-  return (
-    <InputContainer>
-      <InputContent
-        autoFocus={autoFocus}
-        placeholder="Viết bình luận..."
-        value={content}
-        onChangeText={(newText) => setContent(newText)}
-      ></InputContent>
-      <SubmitButton onPress={handlePostComment}>
-        <Ionicons name="send" size={24} color="white" />
-      </SubmitButton>
-    </InputContainer>
-  );
-};
-
 export default InputBar;

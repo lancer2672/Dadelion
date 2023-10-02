@@ -3,16 +3,20 @@ import { getSocket } from "@src/utils/socket";
 
 const initialState = {
   selectedPost: null,
+  repliedComment: null,
 };
 export const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
+    //handled in middleware
+    reactPost: (state, action) => {},
+    commentPost: (state, action) => {},
     setSelectedPost: (state, action) => {
       state.selectedPost = action.payload;
     },
+
     updateSelectedPost: (state, action) => {
-      console.log("action.type", action.type);
       switch (action.payload.type) {
         case "react": {
           const { postId, reactUserId, isAddedToList } = action.payload;
@@ -30,42 +34,38 @@ export const postSlice = createSlice({
           break;
         }
         case "comment": {
-          const { postId, newComment } = action.payload;
-          console.log("newComment", newComment);
+          const { postId, newComment, parentId } = action.payload;
+          console.log("action.payload;", action.payload);
           if (state.selectedPost?._id === postId) {
-            state.selectedPost.comments.push(newComment);
+            //if reply comment
+            if (parentId) {
+              const i = state.selectedPost.comments.findIndex(
+                (cmt) => cmt._id === parentId
+              );
+              state.selectedPost.comments[i].replies.unshift(newComment);
+            } else {
+              state.selectedPost.comments.unshift(newComment);
+            }
           }
           break;
         }
       }
     },
-    reactPost: (state, action) => {
-      // const socket = getSocket();
-      // socket.on("react-post", (postId, reactUserId, isAddedToList) => {
-      //   if (state.selectedPost?._id === postId) {
-      //     if (isAddedToList) {
-      //       state.selectedPost.likes.unshift({ userId: reactUserId });
-      //     } else {
-      //       const index = state.selectedPost.likes.findIndex(
-      //         (userId) => userId == reactUserId
-      //       );
-      //       state.selectedPost.likes.splice(index, 1);
-      //     }
-      //   }
-      // });
-    },
-    commentPost: (state, action) => {
-      // const socket = getSocket();
-      // console.log("socket", socket);
-      // socket.on("new-comment", (postId, newComment) => {
-      //   console.log("new comment", newComment);
-      //   if (state.selectedPost?._id === postId) {
-      //     state.selectedPost.comments.unshift(newComment);
-      //   }
-      // });
+
+    setRepliedComment: (state, action) => {
+      if (!action.payload || state.repliedComment?._id === action.payload._id) {
+        state.repliedComment = null;
+      } else {
+        state.repliedComment = action.payload;
+      }
     },
   },
 });
 
-export const { setSelectedPost, reactPost, commentPost, updateSelectedPost } =
-  postSlice.actions;
+export const {
+  setSelectedPost,
+  reactPost,
+  commentPost,
+  updateSelectedPost,
+  setRepliedComment,
+} = postSlice.actions;
