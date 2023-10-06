@@ -63,6 +63,8 @@ const InputBar = ({ autoFocus }) => {
     <InputContainer>
       <InputContent
         autoFocus={autoFocus}
+        multiline={true}
+        numberOfLines={3}
         placeholder="Viết bình luận..."
         value={`${replyName}${content}`}
         onChangeText={(newText) => setContent(newText.replace(replyName, ""))}

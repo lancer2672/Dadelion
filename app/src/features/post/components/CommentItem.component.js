@@ -1,12 +1,20 @@
 import {
-  StyleSheet,
+  LayoutAnimation,
+  UIManager,
   Text,
   View,
   TouchableOpacity,
   Image,
   FlatList,
+  Animated,
 } from "react-native";
-import React, { useEffect, useState, memo, useContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  memo,
+  useContext,
+  useCallback,
+} from "react";
 import axios from "axios";
 import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
@@ -21,19 +29,59 @@ import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 import { useTheme } from "styled-components";
 import { useTranslation } from "react-i18next";
 import { setRepliedComment } from "@src/store/slices/postSlice";
-import { FlashList } from "@shopify/flash-list";
-
+import { useRef } from "react";
+import { Avatar } from "@src/components/Avatar";
 const dayjs = require("dayjs");
-const Comment = ({ comment, parentId }) => {
+const VIEW_MORE_HEIGHT = 24;
+
+// TODO: Tại sao không hiển viewMore, lưu tổng height
+const Comment = ({ comment, parentId, totalChildHeightRef }) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { user } = useSelector(userSelector);
   const { data, isLoading, isSuccess } = useGetUserByIdQuery(comment.userId);
   const [creator, setCreator] = useState({});
-  const [content, setContent] = useState("");
+
+  const heightAnim = useRef(new Animated.Value(0)).current;
   const [showAllReply, setShowAllReply] = useState(false);
-  console.count("rerender");
+
+  // to apply animation for children's height
+  const [parentFirstMount, setParentFirstMount] = useState(true);
+  // all children heights
+  const parentTotalChildHeightRef = useRef(0);
+  //get height from layout of children only at first time render
+  const firstMountRef = useRef(true);
+
+  const onLayout = useCallback(
+    (event) => {
+      const { height } = event.nativeEvent.layout;
+      if (firstMountRef.current) {
+        console.log(
+          "onlayout height ",
+          firstMountRef.current,
+          parentId == null,
+          height
+        );
+
+        if (firstMountRef.current) {
+          if (!parentId) {
+            // apply animated property(height) to list comment
+            setParentFirstMount(false);
+          } else {
+            totalChildHeightRef.current += height;
+            console.log(
+              "totalChildHeightRef.current",
+              totalChildHeightRef.current
+            );
+          }
+          firstMountRef.current = false;
+        }
+      }
+    },
+    [parentId]
+  );
+
   useEffect(() => {
     if (isSuccess) {
       if (comment.userId == user._id) {
@@ -43,9 +91,6 @@ const Comment = ({ comment, parentId }) => {
       }
     }
   }, [isLoading]);
-  useEffect(() => {
-    setContent(comment.content);
-  }, []);
 
   const toggleSetRepliedComment = () => {
     const newRepliedComment = {
@@ -54,22 +99,49 @@ const Comment = ({ comment, parentId }) => {
       // repliedUserId: comment.userId,
       _id: parentId || comment._id,
     };
-
     dispatch(setRepliedComment(newRepliedComment));
   };
 
   const showAllReplyComments = () => {
-    setShowAllReply(true);
+    setShowAllReply(() => true);
   };
+  useEffect(() => {
+    if (showAllReply) {
+      console.log(
+        "useEffect before",
+        parentTotalChildHeightRef.current,
+        heightAnim._value
+      );
+      Animated.timing(heightAnim, {
+        toValue: parentTotalChildHeightRef.current,
+        duration: 1000,
+        useNativeDriver: false,
+      }).start(({ finished }) => {
+        if (finished) {
+          console.log("Animation completed");
+        } else {
+          console.log("Animation interrupted");
+        }
+      });
+    }
+  }, [showAllReply]);
   return (
-    <View style={{ marginTop: 4, marginBottom: 10 }}>
+    <View
+      style={{
+        paddingTop: 4,
+        marginTop: 8,
+        paddingBottom: 10,
+        // flexGrow: 1,
+        height: "auto",
+        width: "100%",
+        overflow: "hidden",
+        backgroundColor: "red",
+      }}
+      onLayout={onLayout}
+    >
       <CommentContainer isReplyComment={parentId ? true : false}>
         <TouchableOpacity>
-          {creator.avatar ? (
-            <Avatar source={{ uri: creator.avatar }}></Avatar>
-          ) : (
-            <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
-          )}
+          <Avatar uri={creator.avatar}></Avatar>
         </TouchableOpacity>
         <CommentContentWrapper>
           <CommentInfo>
@@ -81,12 +153,12 @@ const Comment = ({ comment, parentId }) => {
             >
               <UserName>{creator.nickname}</UserName>
             </View>
-            <ReadMore numberOfLines={2}>
-              <CommentContent>{content}</CommentContent>
-            </ReadMore>
+
+            <CommentContent>{comment.content}</CommentContent>
+
             <TouchableOpacity
               onPress={toggleSetRepliedComment}
-              style={{ marginTop: 4, padding: 2 }}
+              style={{ marginTop: 4, padding: 2, marginBottom: 4 }}
             >
               <Text
                 style={{
@@ -101,11 +173,11 @@ const Comment = ({ comment, parentId }) => {
             {!showAllReply && !parentId && comment.replies.length > 1 && (
               <TouchableOpacity
                 onPress={showAllReplyComments}
-                style={{ marginTop: 4, padding: 2 }}
+                style={{ height: VIEW_MORE_HEIGHT }}
               >
-                <Text>{`${t("viewMore")} ${comment.replies.length - 1} ${t(
-                  "comment"
-                )}`}</Text>
+                <Text style={{ color: theme.colors.chat.text }}>{`${t(
+                  "viewMore"
+                )} ${comment.replies.length - 1} ${t("comment")}`}</Text>
               </TouchableOpacity>
             )}
           </CommentInfo>
@@ -115,26 +187,29 @@ const Comment = ({ comment, parentId }) => {
         </CommentContentWrapper>
       </CommentContainer>
 
-      {/* show the latest comment  */}
-      {!showAllReply && comment.replies && comment.replies.length > 0 && (
-        <Comment comment={comment.replies[0]} parentId={comment._id} />
+      {!parentId && (
+        <Animated.View
+          style={{ height: parentFirstMount ? "auto" : heightAnim }}
+        >
+          {comment.replies.map((cmt) => {
+            return (
+              <Comment
+                totalChildHeightRef={parentTotalChildHeightRef}
+                key={`rep${cmt._id}`}
+                comment={cmt}
+                parentId={comment._id}
+              />
+            );
+          })}
+        </Animated.View>
       )}
-      {!parentId &&
-        showAllReply &&
-        comment.replies.map((cmt) => {
-          return (
-            <Comment
-              key={`rep${cmt._id}`}
-              comment={cmt}
-              parentId={comment._id}
-            />
-          );
-        })}
     </View>
   );
 };
 const CommentContainer = styled(View).attrs((props) => ({
   marginLeft: props.isReplyComment ? 16 : 0,
+  // backgroundColor: "red",
+  flex: 1,
 }))`
   flex-direction: row;
 `;
@@ -146,14 +221,7 @@ const CommentContentWrapper = styled(View)`
   align-items: flex-start;
   border-radius: 10px;
 `;
-const Avatar = styled(Image)`
-  width: 40px;
-  height: 40px;
-  margin-top: 4px;
-  resize-mode: stretch;
-  border-radius: 50px;
-  margin-right: 8px;
-`;
+
 const CommentInfo = styled(View)`
   flex: 1;
 `;
@@ -171,10 +239,5 @@ const CommentContent = styled(Text)`
   color: ${(props) => props.theme.colors.chat.text};
   line-height: 22px;
 `;
-const OptionsButton = styled(TouchableOpacity)`
-  margin-left: 6px;
-  position: absolute;
-  top: 2px;
-  right: 8px;
-`;
-export default memo(Comment);
+
+export default Comment;

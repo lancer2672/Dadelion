@@ -9,25 +9,20 @@ const CommentList = ({ postId, comments }) => {
   const [commentList, setCommentList] = useState();
   console.log("comments", comments);
   return (
-    <View style={{ flex: 1 }}>
-      <FlashList
-        nestedScrollEnabled={true}
-        data={comments}
-        estimatedItemSize={100}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => {
-          const { comment } = item;
-          return (
-            <Spacer position={"bottom"} size="small">
-              <Comment comment={comment} />
-            </Spacer>
-          );
-        }}
-        keyExtractor={(item) => {
-          return item.comment._id;
-        }}
-      ></FlashList>
-    </View>
+    <FlatList
+      style={{ flex: 1, backgroundColor: "gray" }}
+      nestedScrollEnabled={true}
+      data={comments}
+      estimatedItemSize={100}
+      showsVerticalScrollIndicator={false}
+      renderItem={({ item }) => {
+        const { comment } = item;
+        return <Comment comment={comment} />;
+      }}
+      keyExtractor={(item) => {
+        return item.comment._id;
+      }}
+    ></FlatList>
   );
 };
 
