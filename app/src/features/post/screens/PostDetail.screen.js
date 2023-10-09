@@ -55,7 +55,6 @@ const DetailPost = ({ route }) => {
       dispatch(updateSelectedPost({ type: "comment", ...data }));
     });
     socket.on("react-post", (postId, reactUserId, isAddedToList) => {
-      console.log("react-post", postId);
       dispatch(
         updateSelectedPost({
           type: "react",

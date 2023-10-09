@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, memo, useRef } from "react";
 import {
   Fontisto,
   AntDesign,
@@ -14,6 +14,8 @@ import { userSelector } from "@src/store/selector";
 import { useTheme } from "styled-components";
 import { reactPost } from "@src/store/slices/postSlice";
 import { useNavigation } from "@react-navigation/native";
+import { Animated } from "react-native";
+
 const ReactionBar = ({ post }) => {
   const { likes } = post;
   const theme = useTheme();
@@ -22,6 +24,10 @@ const ReactionBar = ({ post }) => {
   const [heart, setHeart] = useState(false);
   const userState = useSelector(userSelector);
   const [reactionNumber, setReactionNumber] = useState(0);
+  const [isFirstMount, setIsFirstMount] = useState(true);
+  const scaleValue = useRef(new Animated.Value(0)).current;
+  const heartScale = useRef(new Animated.Value(1)).current;
+
   // const [reactPost, {}] = useReactPostMutation();
   const handleReact = () => {
     dispatch(reactPost({ postId: post._id, postCreatorId: post.user }));
@@ -42,24 +48,86 @@ const ReactionBar = ({ post }) => {
       setHeart(false);
     }
     setReactionNumber(post.likes.length);
-  }, [post.likes]);
+  }, [post.likes.length]);
+  const animateHeartScaleToZero = () => {
+    return Animated.timing(heartScale, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true,
+    });
+  };
+
+  const animateHeartScaleToOne = () => {
+    return Animated.spring(heartScale, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: true,
+    });
+  };
+
+  const animateScaleAndOpacity = () => {
+    return Animated.parallel([
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]);
+  };
+
+  useEffect(() => {
+    if (!isFirstMount) {
+      if (heart) {
+        animateHeartScaleToZero().start(() => {
+          scaleValue.setValue(0);
+          Animated.parallel([animateHeartScaleToOne()]).start();
+        });
+      } else {
+        animateHeartScaleToZero().start(() => {
+          animateHeartScaleToOne().start();
+        });
+      }
+    } else setIsFirstMount(() => false);
+  }, [heart]);
+
   return (
     <ReactSectionContainer>
-      <ButtonWrapper style={{ flexDirection: "row" }} onPress={handleReact}>
-        {heart == true ? (
-          <Ionicons name="heart" size={24} color="red" />
-        ) : (
-          <Ionicons name="heart-outline" size={24} color={"white"} />
-        )}
-      </ButtonWrapper>
+      <View>
+        <ButtonWrapper style={{ flexDirection: "row" }} onPress={handleReact}>
+          <Animated.View style={{ transform: [{ scale: heartScale }] }}>
+            <Ionicons
+              name={"heart"}
+              size={32}
+              color={heart ? "red" : "white"}
+            />
+          </Animated.View>
+        </ButtonWrapper>
+        <Animated.View
+          style={[
+            {
+              borderRadius: 50,
+              zIndex: -1,
+              position: "absolute",
+              borderColor: "red",
+              borderWidth: 5,
+              width: 53,
+
+              height: 53,
+              ...StyleSheet.absoluteFillObject,
+              transform: [{ scale: scaleValue }],
+            },
+          ]}
+        ></Animated.View>
+      </View>
+
       <Number>{reactionNumber}</Number>
       <ButtonWrapper onPress={navigateToDetailPost}>
-        <FontAwesome5 name="comment-dots" size={24} color={"white"} />
+        <FontAwesome5 name="comment-dots" size={28} color={"white"} />
       </ButtonWrapper>
 
       <Number>{post.comments.length}</Number>
       <ButtonWrapper onPress={null}>
-        <Entypo name="dots-three-horizontal" size={24} color={"white"} />
+        <Entypo name="dots-three-horizontal" size={28} color={"white"} />
       </ButtonWrapper>
     </ReactSectionContainer>
   );
@@ -79,8 +147,10 @@ const Number = styled(Text)`
 `;
 const ButtonWrapper = styled(TouchableOpacity)`
   flex-direction: row;
-  padding: 12px;
+  padding: 10px;
   border-radius: 25px;
+  justify-content: center;
+  align-items: center;
   background-color: rgba(255, 255, 255, 0.3);
 `;
 export default memo(ReactionBar);

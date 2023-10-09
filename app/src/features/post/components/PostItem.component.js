@@ -5,8 +5,16 @@ import {
   Pressable,
   Dimensions,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Animated,
 } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
@@ -18,16 +26,21 @@ import { Avatar } from "@src/components/Avatar";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { colors } from "@src/infrastructure/theme/colors";
-import { setSelectedPost } from "@src/store/slices/postSlice";
+import { reactPost, setSelectedPost } from "@src/store/slices/postSlice";
 import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import { FastImageBackground } from "@src/components/image";
 import { memo } from "react";
+import { AntDesign } from "@expo/vector-icons";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
 const PostItem = ({ navigation, post }) => {
   const { image: postImage = null, createdAt } = post;
+
+  const scaleAnim = useRef(new Animated.Value(1.6)).current;
+  const translateYAnim = useRef(new Animated.Value(0)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
 
   const userState = useSelector(userSelector);
   const dispatch = useDispatch();
@@ -35,10 +48,63 @@ const PostItem = ({ navigation, post }) => {
   //post.user is id of owner
   const { isSuccess, data } = useGetUserByIdQuery(post.user);
   const [postCreator, setPostCreator] = useState(null);
+  const [isFirstMount, setIsFirstMount] = useState(true);
+  const [heartPosition, setHeartPosition] = useState({ x: 0, y: 0 });
+  const handleReact = () => {
+    dispatch(
+      reactPost({ postId: post._id, postCreatorId: post.user, addToList: true })
+    );
+  };
+  useEffect(() => {
+    console.log("translateYAnim", translateYAnim);
+    if (!isFirstMount) {
+      const endAnim = Animated.parallel([
+        Animated.spring(scaleAnim, {
+          toValue: 1.6,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateYAnim, {
+          toValue: -32,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]);
+      const startAnim = Animated.parallel([
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]);
+      startAnim.start(() => {
+        handleReact();
+        endAnim.start(() => {
+          translateYAnim.setValue(0);
+        });
+      });
+
+      // Animated.sequence([start, end]).start(() => {
+      //   translateYAnim.setValue(0);
+      // });
+    } else {
+      setIsFirstMount(() => false);
+    }
+  }, [heartPosition]);
   useEffect(() => {
     if (isSuccess) {
       if (post.user == user._id) {
-        //self
+        //user
         setPostCreator(user);
       } else {
         //other user created post
@@ -50,19 +116,19 @@ const PostItem = ({ navigation, post }) => {
     dispatch(setSelectedPost({ ...post, postCreator }));
     navigation.navigate("DetailPost", {});
   };
-  // useEffect(() => {
-  //   //if  (post) is changed then we update selectedPost state to newest value
-  //   if (postState.selectedPost) {
-  //     dispatch(setSelectedPost(post));
-  //   }
-  // }, [post]);
   const handleNavigateToGuest = () => {
     if (postCreator) {
       navigation.navigate("Guest", { guestId: postCreator._id });
     }
   };
+
+  const onLongPress = (event) => {
+    const { locationX, locationY } = event.nativeEvent;
+    console.log("position", locationX, locationY);
+    setHeartPosition(() => ({ x: locationX - 25, y: locationY - 25 }));
+  };
   return (
-    <Pressable onPress={navigatePostDetail}>
+    <Pressable onLongPress={onLongPress} onPress={navigatePostDetail}>
       <FastImageBackground
         style={{
           marginHorizontal: 24,
@@ -106,6 +172,20 @@ const PostItem = ({ navigation, post }) => {
           </PostDescriptionContainer>
         </View>
 
+        <Animated.View
+          style={{
+            width: 50,
+            height: 50,
+            position: "absolute",
+            top: heartPosition.y,
+            left: heartPosition.x,
+            opacity: opacityAnim,
+
+            transform: [{ scale: scaleAnim }, { translateY: translateYAnim }],
+          }}
+        >
+          <AntDesign name="heart" size={48} color="red" />
+        </Animated.View>
         <ReactionBar post={post}> </ReactionBar>
       </FastImageBackground>
     </Pressable>

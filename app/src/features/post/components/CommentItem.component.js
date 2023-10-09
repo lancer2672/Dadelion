@@ -125,6 +125,7 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
       });
     }
   }, [showAllReply]);
+  console.log("parentId", parentId ? "gray" : "red");
   return (
     <View
       style={{
