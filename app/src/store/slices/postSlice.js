@@ -20,7 +20,8 @@ export const postSlice = createSlice({
       switch (action.payload.type) {
         case "react": {
           const { postId, reactUserId, isAddedToList } = action.payload;
-          if (state.selectedPost?._id === postId) {
+          console.log("isAddedToList", isAddedToList);
+          if (state.selectedPost?._id === postId && isAddedToList !== null) {
             if (isAddedToList) {
               state.selectedPost.likes.push({ userId: reactUserId });
             } else {

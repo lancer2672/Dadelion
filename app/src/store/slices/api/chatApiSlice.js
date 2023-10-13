@@ -39,7 +39,7 @@ export const chatApi = createApi({
             console.log("receive message data", { newMess, channelId, type });
             updateCachedData((draft) => {
               switch (type) {
-                case "message":
+                case "text":
                   break;
                 case "image": {
                   newMess.imageUrls = newMess.imageUrls.map((imageUrl) => {

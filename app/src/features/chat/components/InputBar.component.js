@@ -30,6 +30,8 @@ import { useUploadFileMutation } from "@src/store/slices/api/uploadApi";
 
 const InputBar = ({ chatFriendId }) => {
   const theme = useTheme();
+  console.count("input bar");
+
   const { t } = useTranslation();
   const { user } = useSelector(userSelector);
   const { selectedChannel } = useSelector(chatSelector);
@@ -90,9 +92,8 @@ const InputBar = ({ chatFriendId }) => {
     dispatch(
       sendMessage({
         channelId,
-        senderId: user._id,
         newMessage: text,
-        type: "message",
+        type: "text",
       })
     );
   };
@@ -310,6 +311,7 @@ const Option = styled(Pressable).attrs((props) => ({
 
 const OptionName = styled(Text)`
   font-weight: 500;
+  color: ${(props) => props.theme.colors.chat.bg.primary};
   text-align: center;
   font-size: 18px;
 `;

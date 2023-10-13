@@ -11,9 +11,6 @@ const locationMiddleware = () => (store) => {
         }
         case "location/sendLocation": {
           const { location } = action.payload;
-          console.log("location/sendLocation", {
-            location: { coords: { ...location.coords } },
-          });
           socket.emit("send-location", {
             location: { coords: { ...location.coords } },
           });

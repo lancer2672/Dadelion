@@ -15,21 +15,15 @@ export const locationSlice = createSlice({
 
     setLocation: (state, action) => {
       state.location = action.payload.location;
-      console.log("set location", state.location);
     },
     setFriendLocation: (state, action) => {
       state.friendLocation = action.payload;
-      console.log(
-        "setFriendLocation - state.friendLocation",
-        state.friendLocation
-      );
     },
     removeFriendLocation: (state, action) => {
       const friendId = action.payload;
       state.friendLocation = state.friendLocation.filter((f) => {
         f.userId != friendId;
       });
-      console.log("set friend location", state.friendLocation);
     },
     addOrUpdateFriendLocation: (state, action) => {
       const newItem = action.payload;

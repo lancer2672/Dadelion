@@ -5,7 +5,6 @@ module.exports = function (api) {
     plugins: [
       [
         "babel-plugin-module-resolver",
-
         {
           alias: {
             "@assets": "./assets",

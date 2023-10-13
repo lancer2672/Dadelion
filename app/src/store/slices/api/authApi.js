@@ -58,7 +58,7 @@ export const authApi = createApi({
         return { ...response.data, user: transformedUser };
       },
       transformErrorResponse: (response, meta, arg) => {
-        response.data.message;
+        return response.data.message || response.data;
       },
     }),
     loginWithGoogle: builder.mutation({

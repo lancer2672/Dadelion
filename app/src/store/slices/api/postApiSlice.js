@@ -48,12 +48,13 @@ export const postApi = createApi({
             });
           });
           socket.on("react-post", (postId, reactUserId, isAddedToList) => {
+            console.log("isAddedToList", isAddedToList);
             updateCachedData((draft) => {
               const i = draft.posts.findIndex((post) => post._id == postId);
               if (i >= 0) {
-                if (isAddedToList) {
+                if (isAddedToList === true) {
                   draft.posts[i].likes.unshift({ userId: reactUserId });
-                } else {
+                } else if (isAddedToList === false) {
                   const index = draft.posts[i].likes.findIndex(
                     (userId) => userId == reactUserId
                   );

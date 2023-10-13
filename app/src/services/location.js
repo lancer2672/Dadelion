@@ -1,6 +1,3 @@
-const {
-  default: configureBackgroundGeolocation,
-} = require("@src/config/location");
 const { requestLocationPermission } = require("@src/permissions");
 const {
   sendLocation,
@@ -11,6 +8,7 @@ const {
   removeFriendLocation,
   addOrUpdateFriendLocation,
 } = require("@src/store/slices/location.Slice");
+import configureBackgroundGeolocation from "@src/config/location";
 import BackgroundGeolocation from "react-native-background-geolocation";
 
 export const enableTrackingLocation = async (dispatch) => {
@@ -21,8 +19,6 @@ export const enableTrackingLocation = async (dispatch) => {
         persist: true,
       },
       (location) => {
-        console.log("getCurrentPosition - location", location);
-
         dispatch(sendLocation({ location }));
         dispatch(setLocation({ location }));
       },
@@ -48,15 +44,12 @@ export const enableTrackingLocation = async (dispatch) => {
 
 export const receiveListLocationListener = (socket, dispatch) => {
   socket.on("start-tracking", (listFriendLocation) => {
-    console.log("start-tracking", listFriendLocation);
     dispatch(setFriendLocation(listFriendLocation));
   });
   socket.on("send-location", (friendLocation) => {
-    console.log("send-location", friendLocation);
     dispatch(addOrUpdateFriendLocation(friendLocation));
   });
   socket.on("stop-tracking", (userId) => {
-    console.log("stop-tracking", userId);
     dispatch(removeFriendLocation(userId));
   });
 };

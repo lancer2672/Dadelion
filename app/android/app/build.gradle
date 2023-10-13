@@ -127,7 +127,9 @@ android {
         buildConfigField "boolean", "IS_HERMES_ENABLED", "false"
         versionCode 1
         versionName "1.0.0"
-
+        manifestPlaceholders = [
+                    API_KEY: "\"${System.getenv('API_KEY')}\""
+                ]
     }
 
     splits {

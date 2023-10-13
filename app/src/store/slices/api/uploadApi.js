@@ -17,7 +17,7 @@ export const uploadApi = createApi({
       }),
       transformResponse: (response, meta, arg) => {
         if (response.data.fileUrl) {
-          response.data.fileUrl = `${UrlAPI}/${response.data.fileUrl}`;
+          response.data.fileUrl = `${UrlAPI}\\${response.data.fileUrl}`;
         }
         return response.data;
       },

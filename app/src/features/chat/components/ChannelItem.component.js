@@ -75,7 +75,7 @@ const Channel = ({ navigation, channel }) => {
       let note;
       //TODO: replace by using lastMessage.type property
       if (lastMsgData.lastMessage?.message) {
-        note = t("sentImage");
+        note = lastMsgData.lastMessage?.message;
       } else if (lastMsgData.lastMessage?.imageUrls?.length > 0) {
         note = t("sentImage");
       } else if (lastMsgData.lastMessage?.videoUrls?.length > 0) {

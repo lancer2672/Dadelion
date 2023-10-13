@@ -68,6 +68,7 @@ const Login = ({ navigation }) => {
   const toggleSavePasswordCheck = () => {
     setSavePassword(!savePassword);
   };
+  console.log("login er", error);
   const handleLoginSuccess = async (loginData, isLoading, isSuccess) => {
     try {
       if (isSuccess) {

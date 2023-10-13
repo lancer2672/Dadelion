@@ -37,7 +37,6 @@ const Navigator = () => {
       socket.on("unfriend", () => {
         refetch();
       });
-
       socket.on(
         "response-friendRequest",
         ({ requestId, responseValue, userIds }) => {
@@ -115,7 +114,6 @@ const Navigator = () => {
       {appState.isLoading && (
         <View
           style={{
-            flex: 1,
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",

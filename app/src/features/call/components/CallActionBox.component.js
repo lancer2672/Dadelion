@@ -38,7 +38,6 @@ const CallActionBox = ({ call, callingUserId, channelId }) => {
           sendMessage({
             type: "callHistory",
             channelId: channelId || selectedChannel?._id,
-            senderId: id,
             duration,
           })
         );

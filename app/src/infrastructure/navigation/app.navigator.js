@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
-import { Feather, Ionicons } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import messaging from "@react-native-firebase/messaging";
 import { useNavigation } from "@react-navigation/native";
-import { useTheme } from "styled-components";
 import { useDispatch } from "react-redux";
 
 import DetailPost from "@src/features/post/screens/PostDetail.screen";
@@ -16,31 +13,44 @@ import Settings from "@src/features/user/screens/Settings.screen";
 import EditProfile from "@src/features/user/screens/EditProfile.screens";
 import Search from "@src/features/search/screens";
 import FriendList from "@src/features/user/screens/FriendList.screen";
-import { Image, Pressable, View, StyleSheet } from "react-native";
 import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
 import CallingScreen from "@src/features/call/screens/CallingScreen.screen";
 import ResetPassword from "@src/features/user/screens/ResetPassword.screen";
 import { enableCallingService } from "@src/services/calling";
 import { getMessagingToken } from "@src/services/messaging";
-import { enableTrackingLocation } from "@src/services/location";
+import {
+  enableTrackingLocation,
+  receiveListLocationListener,
+} from "@src/services/location";
 import { Tabs } from "./tabs";
+import { getSocket } from "@src/utils/socket";
 const Stack = createNativeStackNavigator();
 
 export const AppNavigator = () => {
   const [saveFCMtoken, { error }] = useSaveFCMtokenMutation();
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const socket = getSocket();
 
   useEffect(() => {
-    enableTrackingLocation(dispatch);
-    onTokenRefresh = getMessagingToken(saveFCMtoken);
-    unsubscribeVoximplant = enableCallingService(navigation);
+    if (socket) {
+      receiveListLocationListener(socket, dispatch);
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await enableTrackingLocation(dispatch);
+      } catch (er) {
+        console.log("enableTrackingLocation er", er);
+      }
+    })();
+    const onTokenRefresh = getMessagingToken(saveFCMtoken);
+    const unsubscribeVoximplant = enableCallingService(navigation);
     const unsubscribeRemoteMessaging = messaging().onMessage(
       async (remoteMessage) => {
-        console.log(
-          "A new FCM message arrived!",
-          JSON.stringify(remoteMessage)
-        );
+        console.log("A new FCM message arrived!", remoteMessage);
       }
     );
     return () => {
