@@ -14,7 +14,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import UserMessage from "./Message.component";
+import MessageContainer from "./message/MessageContainer.component";
 import { useSelector } from "react-redux";
 import { chatSelector, userSelector } from "@src/store/selector";
 import { useLoadChatRoomMessagesQuery } from "@src/store/slices/api/chatApiSlice";
@@ -100,7 +100,7 @@ const ListUserMessages = ({ chatFriend }) => {
             const { userId: memberId, messages } = item;
             let isMyMessage = memberId == user._id ? true : false;
             return (
-              <UserMessage
+              <MessageContainer
                 isMyMessage={isMyMessage}
                 chatFriend={chatFriend}
                 messages={messages}

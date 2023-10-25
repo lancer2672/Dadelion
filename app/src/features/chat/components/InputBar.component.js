@@ -22,20 +22,19 @@ import { chatSelector, userSelector } from "@src/store/selector";
 import { useDispatch, useSelector } from "react-redux";
 import { colors } from "@src/infrastructure/theme/colors";
 import { sendMessage, typing } from "@src/store/slices/chatSlice";
-import { readBase64 } from "@src/utils/imageHelper";
+import { readBase64 } from "@src/utils/imageHandler";
 import { useTheme } from "styled-components";
 import ImagePicker from "react-native-image-crop-picker";
 import { useTranslation } from "react-i18next";
-import { useUploadFileMutation } from "@src/store/slices/api/uploadApi";
+import { uploadFile } from "@src/api/upload";
 
 const InputBar = ({ chatFriendId }) => {
   const theme = useTheme();
-  console.count("input bar");
 
   const { t } = useTranslation();
   const { user } = useSelector(userSelector);
   const { selectedChannel } = useSelector(chatSelector);
-  const [uploadFile, { data, isLoading, error }] = useUploadFileMutation();
+
   const { _id: channelId } = selectedChannel;
   const [leftIconsVisible, setLeftIconVisible] = useState(true);
   const [textInputVisible, setTextInputVisible] = useState(true);
@@ -97,16 +96,6 @@ const InputBar = ({ chatFriendId }) => {
       })
     );
   };
-  useEffect(() => {
-    if (data) {
-      console.log("video data", data);
-    }
-    if ((!isLoading, data)) {
-      dispatch(
-        sendMessage({ channelId, videoUrls: [data.fileUrl], type: "video" })
-      );
-    }
-  }, [isLoading, data]);
   const openMediaFilePicker = (selectedType) => {
     if (selectedType == "video") {
       openVideoPicker();
@@ -145,9 +134,15 @@ const InputBar = ({ chatFriendId }) => {
           type: "video/mp4",
         });
         videoMessage.append("duration", video.duration);
-        uploadFile(videoMessage);
+        return uploadFile({ data: videoMessage, type: "video" });
       })
-      .catch((er) => console.log("er", er))
+      .then((data) => {
+        console.log("data", data);
+        dispatch(
+          sendMessage({ channelId, videoUrls: [data.fileUrl], type: "video" })
+        );
+      })
+      .catch((er) => console.log("send message error", er))
       .finally(() => setBottomMenuVisible(false));
   };
   const recordVoice = () => {};

@@ -11,8 +11,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 
 const ChatRoomHeader = () => {
-  console.count("ChatRoomHeader");
-
   const { user } = useSelector(userSelector);
   const navigation = useNavigation();
   const { selectedChannel } = useSelector(chatSelector);
