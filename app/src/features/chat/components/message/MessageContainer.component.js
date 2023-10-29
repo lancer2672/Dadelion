@@ -6,7 +6,7 @@ import {
   FlatList,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import styled from "styled-components/native";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import { useTheme } from "styled-components";
@@ -17,18 +17,6 @@ import ImageMessageItem from "./ImageMessageItem.component";
 
 const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
   const theme = useTheme();
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const [selectedImageList, setSelectedImageList] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-
-  const handleOpenImageFullScreen = (imageListUrl, imageUrl) => {
-    setSelectedImageList(() => imageListUrl);
-    setSelectedIndex(() => imageListUrl.findIndex((item) => item === imageUrl));
-    if (selectedIndex != -1) {
-      setModalVisible(true);
-    }
-  };
   console.log("messages", messages);
   return (
     <Container isMyMessage={isMyMessage}>
@@ -67,7 +55,6 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
                 )}
                 {item.imageUrls && (
                   <ImageMessageItem
-                    handleOpenImageFullScreen={handleOpenImageFullScreen}
                     imageUrls={item.imageUrls}
                   ></ImageMessageItem>
                 )}
@@ -83,18 +70,6 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
         )}
         keyExtractor={(item) => item._id}
       />
-
-      {selectedIndex > -1 && (
-        <OpenImageModal
-          visible={modalVisible}
-          onClose={() => {
-            setModalVisible(false);
-          }}
-          selectedImageList={selectedImageList}
-          selectedIndex={selectedIndex}
-          setSelectedIndex={setSelectedIndex}
-        ></OpenImageModal>
-      )}
     </Container>
   );
 };
@@ -139,4 +114,4 @@ const Message = styled(Text).attrs((props) => {
   font-size: 15px;
 `;
 
-export default MessageContainer;
+export default memo(MessageContainer);

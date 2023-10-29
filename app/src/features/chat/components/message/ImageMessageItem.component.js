@@ -1,11 +1,27 @@
 import { StyleSheet, Image, Pressable, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import styled from "styled-components/native";
+import FastImage from "react-native-fast-image";
+import { readBase64 } from "@src/utils/imageHelper";
+import OpenImageModal from "./OpenImageModal.component";
 
-const ImageMessageItem = ({ imageUrls, handleOpenImageFullScreen }) => {
-  console.log("IMage urls", imageUrls);
+const ImageMessageItem = ({ imageUrls }) => {
+  console.count("ImageMessage");
+
+  const [selectedImageList, setSelectedImageList] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleOpenImageFullScreen = (imageListUrl, imageUrl) => {
+    setSelectedImageList(() => imageListUrl);
+    setSelectedIndex(() => imageListUrl.findIndex((item) => item === imageUrl));
+    if (selectedIndex != -1) {
+      setModalVisible(true);
+    }
+  };
+
   return (
-    <>
+    <View>
       {imageUrls && imageUrls?.length > 0 && (
         <View style={{ flexDirection: "row" }}>
           {imageUrls.map((imageUrl, index) => {
@@ -15,13 +31,25 @@ const ImageMessageItem = ({ imageUrls, handleOpenImageFullScreen }) => {
                   key={`chat-image` + index}
                   onPress={() => handleOpenImageFullScreen(imageUrls, imageUrl)}
                 >
-                  <Image
+                  <FastImage
+                    onError={() => {
+                      console.log("Error when loading image");
+                    }}
+                    fallback={true}
+                    onProgress={(e) =>
+                      console.log(
+                        "Loading image",
+                        e.nativeEvent.loaded / e.nativeEvent.total
+                      )
+                    }
                     style={{
                       flex: 1,
+                      backgroundColor: "gray",
                     }}
-                    resizeMode="cover"
+                    resizeMode={FastImage.resizeMode.contain}
+                    // source={{ uri: imageUrl }}
                     source={{ uri: imageUrl }}
-                  ></Image>
+                  ></FastImage>
                 </ImageContainer>
               );
             } else if (index == 1 && imageUrls.length > 2) {
@@ -30,13 +58,25 @@ const ImageMessageItem = ({ imageUrls, handleOpenImageFullScreen }) => {
                   key={`chat-image` + index}
                   onPress={() => handleOpenImageFullScreen(imageUrls, imageUrl)}
                 >
-                  <Image
+                  <FastImage
+                    onError={() => {
+                      console.log("Error when loading image");
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                    fallback={true}
+                    onProgress={(e) =>
+                      console.log(
+                        "Loading image",
+                        e.nativeEvent.loaded / e.nativeEvent.total
+                      )
+                    }
                     style={{
                       flex: 1,
+                      backgroundColor: "gray",
                     }}
-                    resizeMode="cover"
+                    // resizeMode="cover"
                     source={{ uri: imageUrl }}
-                  ></Image>
+                  ></FastImage>
                   <ImageOverlay>
                     <Text
                       style={{
@@ -54,7 +94,18 @@ const ImageMessageItem = ({ imageUrls, handleOpenImageFullScreen }) => {
           })}
         </View>
       )}
-    </>
+      {selectedIndex > -1 && (
+        <OpenImageModal
+          visible={modalVisible}
+          onClose={() => {
+            setModalVisible(false);
+          }}
+          selectedImageList={selectedImageList}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={setSelectedIndex}
+        ></OpenImageModal>
+      )}
+    </View>
   );
 };
 

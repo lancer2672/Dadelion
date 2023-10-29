@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components/native";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";

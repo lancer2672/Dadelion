@@ -10,6 +10,8 @@ const CallMessageItem = ({ message }) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const theme = useTheme();
+  console.count("CallMessage");
+
   const handleRecall = () => {
     navigation.navigate("CallingScreen", {});
   };

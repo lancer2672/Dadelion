@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import React, {
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -24,7 +23,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 const ListUserMessages = ({ chatFriend }) => {
   const { user } = useSelector(userSelector);
   const { selectedChannel } = useSelector(chatSelector);
-  console.log("selectedChannel", selectedChannel);
+  console.count("ListUserMessages");
   // const [visibleMessages, setVisibleMessages] = useState(20);
   const [listMessage, setListMessage] = useState([]);
   const bottomSheetModalRef = useRef(null);
@@ -42,7 +41,7 @@ const ListUserMessages = ({ chatFriend }) => {
     selectedChannel._id
   );
   useEffect(() => {
-    if (isSuccess) {
+    if (data && !isLoading) {
       const createMessage = (msg) => ({
         _id: msg._id,
         message: msg.message,

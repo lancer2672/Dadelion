@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 
 import InputBar from "../components/InputBar.component";
@@ -20,6 +20,7 @@ const ChatRoom = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const socket = getSocket();
+  console.count("ChatRoom");
   const { selectedChannel } = useSelector(chatSelector);
   const { _id: channelId, memberIds } = selectedChannel;
   // const { channelId, memberIds } = route.params;

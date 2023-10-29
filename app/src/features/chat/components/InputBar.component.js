@@ -9,7 +9,7 @@ import {
   Pressable,
   Modal,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components/native";
 import {
   EvilIcons,
@@ -22,12 +22,17 @@ import { chatSelector, userSelector } from "@src/store/selector";
 import { useDispatch, useSelector } from "react-redux";
 import { colors } from "@src/infrastructure/theme/colors";
 import { sendMessage, typing } from "@src/store/slices/chatSlice";
-import { readBase64 } from "@src/utils/imageHandler";
+import { readBase64 } from "@src/utils/imageHelper";
 import { useTheme } from "styled-components";
 import ImagePicker from "react-native-image-crop-picker";
 import { useTranslation } from "react-i18next";
 import { uploadFile } from "@src/api/upload";
+import {
+  createFormDataImages,
+  createFormDataVideo,
+} from "@src/utils/formDataHelper";
 
+const ICON_SIZE = 28;
 const InputBar = ({ chatFriendId }) => {
   const theme = useTheme();
 
@@ -41,13 +46,13 @@ const InputBar = ({ chatFriendId }) => {
   const [trashIconVisible, setTrashIconVisible] = useState(false);
   const [bottomMenuVisible, setBottomMenuVisible] = useState(false);
   const [textInputWidth, setTextInputWidth] = useState(0);
-  const [photoUri, setPhotoUri] = useState(null);
   const [text, setText] = useState("");
-  const iconSize = 28;
   const dispatch = useDispatch();
-  const iconContainerWidth = leftIconsVisible ? 3 * iconSize + 2 * 8 : 0;
+  const iconContainerWidth = leftIconsVisible ? 3 * ICON_SIZE + 2 * 8 : 0;
   const inputWidth = textInputWidth + iconContainerWidth;
-  const animation = new Animated.Value(inputWidth);
+
+  const animation = useRef(new Animated.Value(inputWidth)).current;
+
   useEffect(() => {
     if (text.trim() != "") {
       dispatch(typing({ channelId, chatFriendId, isTyping: true }));
@@ -75,17 +80,20 @@ const InputBar = ({ chatFriendId }) => {
   const handleOpenCamera = async () => {
     try {
       const result = await launchCameraAsync();
-      if (!result.canceled) {
-        console.log("handleOpenCamera", result.assets[0]);
-        const base64String = await readBase64(result.assets[0].uri);
-        dispatch(
-          sendMessage({ channelId, imagesData: [base64String], type: "image" })
-        );
-      }
+      if (result.canceled) return;
+
+      console.log("handleOpenCamera", result.assets[0]);
+
+      const imageData = createFormDataImages([result.assets[0]]);
+      const data = await uploadFile({ data: imageData, type: "image" });
+      dispatch(
+        sendMessage({ channelId, imageUrls: data.fileUrls, type: "image" })
+      );
     } catch (err) {
       console.log(err);
     }
   };
+
   const handleSendMessage = () => {
     setText("");
     dispatch(
@@ -103,47 +111,44 @@ const InputBar = ({ chatFriendId }) => {
       openImagePicker();
     }
   };
-  const openImagePicker = () => {
-    ImagePicker.openPicker({
-      multiple: true,
-      mediaType: "photo",
-    })
-      .then((images) => {
-        return Promise.all(
-          images.map(async (image, index) => {
-            return await readBase64(image.path);
-          })
-        );
-      })
-      .then((data) => {
-        dispatch(sendMessage({ channelId, imagesData: data, type: "image" }));
-      })
-      .catch((er) => console.log("er", er))
-      .finally(() => setBottomMenuVisible(false));
-  };
-  const openVideoPicker = () => {
-    ImagePicker.openPicker({
-      mediaType: "video",
-    })
-      .then((video) => {
-        const videoMessage = new FormData();
+  const openImagePicker = async () => {
+    try {
+      const images = await ImagePicker.openPicker({
+        multiple: true,
+        mediaType: "photo",
+      });
+      const imagesData = createFormDataImages(images);
+      const data = await uploadFile({ data: imagesData, type: "image" });
 
-        videoMessage.append("video", {
-          uri: video.path,
-          name: new Date() + "_profile",
-          type: "video/mp4",
-        });
-        videoMessage.append("duration", video.duration);
-        return uploadFile({ data: videoMessage, type: "video" });
-      })
-      .then((data) => {
-        console.log("data", data);
-        dispatch(
-          sendMessage({ channelId, videoUrls: [data.fileUrl], type: "video" })
-        );
-      })
-      .catch((er) => console.log("send message error", er))
-      .finally(() => setBottomMenuVisible(false));
+      dispatch(
+        sendMessage({ channelId, imageUrls: data.fileUrls, type: "image" })
+      );
+    } catch (er) {
+      console.log("error", er);
+    } finally {
+      setBottomMenuVisible(false);
+    }
+  };
+  const openVideoPicker = async () => {
+    try {
+      const video = await ImagePicker.openPicker({
+        mediaType: "video",
+      });
+
+      const videoMessage = createFormDataVideo(video);
+      const data = await uploadFile({ data: videoMessage, type: "video" });
+      dispatch(
+        sendMessage({
+          channelId,
+          videoUrls: [data.fileUrl],
+          type: "video",
+        })
+      );
+    } catch (er) {
+      console.log("error when select video", er);
+    } finally {
+      setBottomMenuVisible(false);
+    }
   };
   const recordVoice = () => {};
   return (
@@ -157,15 +162,12 @@ const InputBar = ({ chatFriendId }) => {
           flex: 1,
         }}
       >
-        {/* <TouchableOpacity style={{ marginLeft: 4 }}>
-          <Feather name="trash" size={24} color={theme.colors.chat.text} />
-        </TouchableOpacity> */}
         {leftIconsVisible && (
           <LeftIconContainer>
             <Icon onPress={handleOpenCamera}>
               <EvilIcons
                 name="camera"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={theme.colors.chat.text}
               />
             </Icon>
@@ -173,7 +175,7 @@ const InputBar = ({ chatFriendId }) => {
             <Icon onPress={() => setBottomMenuVisible((prev) => !prev)}>
               <EvilIcons
                 name="image"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={theme.colors.chat.text}
               />
             </Icon>
@@ -181,7 +183,7 @@ const InputBar = ({ chatFriendId }) => {
             <Icon>
               <MaterialCommunityIcons
                 name="microphone"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={theme.colors.chat.text}
               />
             </Icon>

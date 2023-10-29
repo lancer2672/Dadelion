@@ -20,6 +20,7 @@ import { mediaFileStoragePermission } from "@src/permissions";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 
 const VideoMessageItem = ({ message }) => {
+  console.count("VideoMessage");
   const theme = useTheme();
   const { t } = useTranslation();
   const [clicked, setClicked] = useState(true);

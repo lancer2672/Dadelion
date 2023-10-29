@@ -21,7 +21,8 @@ const OpenImageModal = ({
   setSelectedIndex,
   selectedImageList = [],
 }) => {
-  console.log("selected", selectedImageList, selectedIndex);
+  console.count("OpenImageModal");
+
   const { t } = useTranslation();
   const handlePressLeft = () => {
     setSelectedIndex(
