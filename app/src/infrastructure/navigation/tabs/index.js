@@ -37,7 +37,7 @@ export const Tabs = () => {
           tabBarStyle: {
             height: 50,
             borderTopWidth: 0,
-            backgroundColor: theme.colors.chat.bg.secondary,
+            backgroundColor: theme.colors.bg.secondary,
           },
           tabBarItemStyle: {
             marginLeft: route.name === "Chat" ? 24 : 0,
@@ -76,7 +76,7 @@ export const Tabs = () => {
               />
             );
           },
-          tabBarActiveTintColor: theme.colors.text.primary,
+          tabBarActiveTintColor: theme.colors.text,
           tabBarInactiveTintColor: "gray",
         };
       }}
@@ -95,7 +95,7 @@ export const Tabs = () => {
                 style={{
                   width: 30,
                   height: 30,
-                  tintColor: theme.colors.text.primary,
+                  tintColor: theme.colors.text,
                 }}
               ></Image>
             );
@@ -109,7 +109,7 @@ export const Tabs = () => {
                 <View
                   style={[
                     styles.pseudo,
-                    { backgroundColor: theme.colors.chat.bg.primary },
+                    { backgroundColor: theme.colors.bg.primary },
                   ]}
                 ></View>
               </>

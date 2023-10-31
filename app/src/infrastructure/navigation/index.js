@@ -9,7 +9,7 @@ import { AuthNavigator } from "./auth.navigator";
 import { AppNavigator } from "./app.navigator";
 import { appSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { setToken, setUser } from "@src/store/slices/userSlice";
+import { setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { getSocket, initSocket } from "@src/utils/socket";
 import {
@@ -51,7 +51,6 @@ const Navigator = () => {
         setUser({
           user: data.user,
           token: userCredentials.token,
-          refreshToken: userCredentials.refreshToken,
         })
       );
       console.log("user", data.user);
@@ -63,29 +62,17 @@ const Navigator = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const keys = [
-          "userId",
-          "token",
-          "refreshToken",
-          "username",
-          "tokenVoximplant",
-        ];
-        const [userId, token, refreshToken, username, tokenVoximplant] =
-          await Promise.all(keys.map((key) => AsyncStorage.getItem(key)));
+        const keys = ["userId", "token", "username", "tokenVoximplant"];
+        const [userId, token, username, tokenVoximplant] = await Promise.all(
+          keys.map((key) => AsyncStorage.getItem(key))
+        );
         console.log("userId", userId);
         console.log("token", token);
         console.log("tokenVoximplant", tokenVoximplant);
-        dispatch(
-          setToken({
-            token: JSON.parse(token),
-            refreshToken: JSON.parse(refreshToken),
-          })
-        );
         if (userId) {
           setCredentials({
             userId: JSON.parse(userId),
             token: JSON.parse(token),
-            refreshToken: JSON.parse(refreshToken),
           });
         }
 

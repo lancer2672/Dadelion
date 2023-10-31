@@ -14,6 +14,22 @@ export const theme = {
   fontWeights,
 };
 
+<<<<<<< HEAD
+=======
+export const colors = {
+  bg: {
+    primary: "#f6f9ff",
+    secondary: "#b3afab",
+  },
+  text: {
+    primary: "#000000",
+    secondary: "#e3c3de",
+    error: "#e35d5d",
+    success: "#138000",
+  },
+};
+
+>>>>>>> a0b30e2253fca356bef665177947d43357763df0
 export const darkTheme = {
   colors: darkColors,
   space,
