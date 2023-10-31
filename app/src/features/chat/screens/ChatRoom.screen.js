@@ -57,14 +57,14 @@ const ChatRoom = () => {
             style={{
               fontWeight: 500,
               fontSize: 16,
-              color: theme.colors.chat.text,
+              color: theme.colors.text.primary,
             }}
           >
             {t("typing")}
           </Text>
           <AnimatedEllipsis
             style={{
-              color: theme.colors.chat.text,
+              color: theme.colors.text.primary,
               fontSize: 20,
             }}
           ></AnimatedEllipsis>
@@ -76,7 +76,7 @@ const ChatRoom = () => {
 };
 const Container = styled(View)`
   flex: 1;
-  background-color: ${(props) => props.theme.colors.chat.bg.primary};
+  background-color: ${(props) => props.theme.colors.bg.primary};
 `;
 const TypingWrapper = styled(View)`
   flex-direction: row;
@@ -89,6 +89,6 @@ const TypingWrapper = styled(View)`
   padding-vertical: 4px;
   padding-left: 8px;
   padding-right: 8px;
-  background-color: ${(props) => props.theme.colors.chat.bg.primary};
+  background-color: ${(props) => props.theme.colors.bg.primary};
 `;
 export default ChatRoom;

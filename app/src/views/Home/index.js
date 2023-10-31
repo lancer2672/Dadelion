@@ -12,7 +12,7 @@ const Home = ({}) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: theme.colors.chat.bg.primary,
+        backgroundColor: theme.colors.bg.primary,
       }}
     >
       <HomeHeader></HomeHeader>

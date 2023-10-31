@@ -36,7 +36,7 @@ const FriendRequestItem = ({ friendRequest = {} }) => {
   return (
     <Container>
       <TouchableOpacity onPress={viewProfile}>
-        <Avatar width={50} height={50} uri={sender.avatar || null} />
+        <Avatar source={{ uri: sender.avatar }} />
       </TouchableOpacity>
       <ContentContainer>
         <NotificationContent>{`${sender.nickname} ${t(

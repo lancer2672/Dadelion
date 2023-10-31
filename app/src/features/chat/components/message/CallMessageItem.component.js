@@ -17,10 +17,7 @@ const CallMessageItem = ({ message }) => {
   };
   return (
     <View
-      style={[
-        styles.container,
-        { backgroundColor: theme.colors.chat.bg.secondary },
-      ]}
+      style={[styles.container, { backgroundColor: theme.colors.bg.secondary }]}
     >
       <View style={{ flexDirection: "row", marginBottom: 12 }}>
         <View
@@ -43,10 +40,10 @@ const CallMessageItem = ({ message }) => {
           />
         </View>
         <View>
-          <Text style={{ color: theme.colors.chat.text }}>
+          <Text style={{ color: theme.colors.text.primary }}>
             {message.callHistory.duration === 0 ? t("missCall") : t("call")}
           </Text>
-          <Text style={{ color: theme.colors.chat.text }}>
+          <Text style={{ color: theme.colors.text.primary }}>
             {message.callHistory.duration !== 0 &&
               callingTimeFormatter(message.callHistory.duration)}
           </Text>

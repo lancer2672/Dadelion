@@ -31,14 +31,14 @@ const SettingItem = ({
         <Entypo name={icon} size={20} color={iconColor} />
       </View>
       <View style={{ flex: 1 }}>
-        <Text style={{ color: theme.colors.chat.text }}>{name}</Text>
+        <Text style={{ color: theme.colors.text.primary }}>{name}</Text>
       </View>
-      <Text style={{ color: theme.colors.chat.text }}>{selectionName}</Text>
+      <Text style={{ color: theme.colors.text.primary }}>{selectionName}</Text>
 
       {isToggleMode ? (
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={theme.colors.chat.text == "white" ? "white" : "black"}
+          thumbColor={theme.colors.text.primary == "white" ? "white" : "black"}
           onValueChange={() => {
             setIsEnabled((prev) => !prev);
             onClick();

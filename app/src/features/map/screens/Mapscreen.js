@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import MapView, { Callout, PROVIDER_GOOGLE } from "react-native-maps";
 import { getSocket } from "@src/utils/socket";
 import { useDispatch, useSelector } from "react-redux";

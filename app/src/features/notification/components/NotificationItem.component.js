@@ -38,8 +38,8 @@ const NotificationItem = ({ notification }) => {
       }}
       style={{
         backgroundColor: notification.isSeen
-          ? theme.colors.chat.bg.primary
-          : theme.colors.chat.bg.secondary,
+          ? theme.colors.bg.primary
+          : theme.colors.bg.secondary,
         padding: 12,
         flexDirection: "row",
         justifyContent: "flex-start",
@@ -72,7 +72,7 @@ const NotificationItem = ({ notification }) => {
         <Feather
           name="more-horizontal"
           size={24}
-          color={theme.colors.chat.text}
+          color={theme.colors.text.primary}
         />
       </TouchableOpacity>
       <BottomMenu

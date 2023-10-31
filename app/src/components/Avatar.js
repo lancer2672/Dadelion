@@ -1,21 +1,26 @@
+import { useState } from "react";
 import { Image } from "react-native";
 import styled from "styled-components/native";
 
-export const Avatar = styled(Image).attrs((props) => {
-  if (props.uri) {
-    return {
-      source: {
-        uri: props.uri,
-      },
-    };
-  }
-})`
-  border-radius: 1000px;
-  width: ${({ width }) => width || "50px"};
-  height: ${({ height }) => height || "50px"};
-`;
+export const Avatar = (props) => {
+  const [avatarSrc, setAvatarSrc] = useState(props.source);
 
-Avatar.defaultProps = {
-  // source: require("@assets/imgs/DefaultAvatar.png"),
-  source: require("../../assets/imgs/DefaultAvatar.png"),
+  const handleError = (e) => {
+    console.log("Load image error: ", e.nativeEvent.error);
+    setAvatarSrc(() => {
+      require("../../assets/imgs/DefaultAvatar.png");
+    });
+  };
+
+  return (
+    <Image
+      defaultSource={require("../../assets/imgs/DefaultAvatar.png")}
+      {...props}
+      style={[{ borderRadius: 1000, width: 50, height: 50 }, props.style]}
+      source={avatarSrc}
+      onError={handleError}
+    />
+  );
 };
+
+export default Avatar;

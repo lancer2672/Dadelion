@@ -94,7 +94,7 @@ const Settings = () => {
             <AntDesign
               name="arrowleft"
               size={24}
-              color={theme.colors.chat.text}
+              color={theme.colors.text.primary}
             />
           </BackButton>
           <Heading>{t("settings")}</Heading>
@@ -112,12 +112,12 @@ const Settings = () => {
               alignItems: "center",
             }}
           >
-            <Avatar uri={user.avatar} width={50} height={50}></Avatar>
+            <Avatar source={{ uri: user.avatar }}></Avatar>
             <View style={{ marginLeft: 12, flex: 1 }}>
-              <Text style={{ color: theme.colors.chat.text, fontSize: 18 }}>
+              <Text style={{ color: theme.colors.text.primary, fontSize: 18 }}>
                 {user.nickname}
               </Text>
-              <Text style={{ color: theme.colors.chat.text }}>
+              <Text style={{ color: theme.colors.text.primary }}>
                 {t("personalInfo")}
               </Text>
             </View>
@@ -155,7 +155,7 @@ const Settings = () => {
 
 const Container = styled.View`
   padding: 20px;
-  background-color: ${(props) => props.theme.colors.chat.bg.primary};
+  background-color: ${(props) => props.theme.colors.bg.primary};
   flex: 1;
 `;
 const Body = styled.View`
@@ -165,7 +165,7 @@ const SettingCategory = styled.Text`
   margin-top: 20px;
 
   font-size: ${(props) => props.theme.fontSizes.large};
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const LogoutButton = styled.TouchableOpacity`
   border-radius: 4px;
@@ -182,7 +182,7 @@ const LogoutText = styled.Text`
   text-align: center;
   padding-vertical: 4px;
   font-weight: 500;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
   font-size: ${(props) => props.theme.fontSizes.large};
 `;
 const Header = styled.View`

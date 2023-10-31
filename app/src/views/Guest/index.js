@@ -33,6 +33,7 @@ import { useFindOrCreateChannelMutation } from "@src/store/slices/api/chatApiSli
 import { useTheme } from "styled-components";
 import { getSocket } from "@src/utils/socket";
 import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
+import { Avatar } from "@src/components/Avatar";
 
 const Guest = ({ props, navigation, route }) => {
   const theme = useTheme();
@@ -138,7 +139,10 @@ const Guest = ({ props, navigation, route }) => {
           </HeaderContent>
 
           <TouchableOpacity onPress={showAvatar}>
-            <Avatar avatarUri={guest.avatar}></Avatar>
+            <Avatar
+              style={{ width: 110, height: 110 }}
+              source={{ uri: guest.avatar }}
+            ></Avatar>
           </TouchableOpacity>
 
           <UserDescription>
@@ -214,7 +218,7 @@ const Guest = ({ props, navigation, route }) => {
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
+  background-color: ${(props) => props.theme.colors.bg.secondary};
 `;
 
 const Header = styled.View`
@@ -225,26 +229,10 @@ const Header = styled.View`
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   overflow: hidden;
-  background-color: ${(props) => props.theme.colors.chat.bg.primary};
+  background-color: ${(props) => props.theme.colors.bg.primary};
   elevation: 5;
   padding-bottom: 24px;
   padding-top: 12px;
-`;
-const Avatar = styled.ImageBackground.attrs((props) => {
-  return {
-    source:
-      props.avatarUri == null
-        ? require("@assets/imgs/DefaultAvatar.png")
-        : { uri: props.avatarUri },
-  };
-})`
-  border-width: 0px;
-  border-radius: 60px;
-  border-color: #555;
-  width: 110px;
-  height: 110px;
-  overflow: hidden;
-  justify-content: flex-end;
 `;
 
 const CameraIcon = styled.View`
@@ -307,12 +295,12 @@ const BottomHeader = styled.View`
 const ItemValue = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.title};
   font-weight: bold;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 const ItemLabel = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.large};
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const ItemContainer = styled.Pressable`
   align-items: center;

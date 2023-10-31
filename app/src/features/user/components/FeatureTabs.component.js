@@ -39,10 +39,7 @@ const CustomTabBar = ({ state, descriptors, theme, navigation, position }) => {
   const inputRange = state.routes.map((_, i) => i);
   return (
     <View
-      style={[
-        styles.tabBar,
-        { backgroundColor: theme.colors.chat.bg.secondary },
-      ]}
+      style={[styles.tabBar, { backgroundColor: theme.colors.bg.secondary }]}
     >
       {state.routes.map((route, index) => {
         const opacity = position.interpolate({

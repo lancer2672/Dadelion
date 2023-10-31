@@ -1,14 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import styled from "styled-components/native";
-import { AppSlogan } from "@src/utils/slogan";
+
 import { BackgroundImage, Logo, Slogan } from "./authentication.style";
 
 const AuthContainer = ({ children, isLoading }) => {
   return (
     <BackgroundImage isLoading={isLoading}>
       <Logo></Logo>
-      <Slogan>{AppSlogan}</Slogan>
+      <Slogan>First, you love, then you live.</Slogan>
       {children}
     </BackgroundImage>
   );

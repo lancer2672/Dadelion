@@ -29,6 +29,7 @@ import {
 import Settings from "@src/features/user/screens/Settings.screen";
 import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 import { useTheme } from "styled-components";
+import { uploadFile } from "@src/api/upload";
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);
@@ -66,13 +67,15 @@ const User = ({ props, navigation }) => {
         setSelectedImageUri(result.uri);
         console.log("result.uri", result.uri);
         const newUserData = new FormData();
-        newUserData.append("userImage", {
+        newUserData.append("image", {
           uri: result.uri,
           name: new Date() + "_profile",
           type: "image/jpg",
         });
-        newUserData.append("isWallpaper", isWallpaper);
-        updateUser({ newUserData });
+
+        const data = await uploadFile({ type: "image", data: newUserData });
+        console.log("Dataaaaaaa", data);
+        updateUser({ avatar: data.fileUrls[0] });
       }
     } catch (err) {
       console.log("Error selecting image", err);
@@ -95,7 +98,7 @@ const User = ({ props, navigation }) => {
               <AntDesign
                 name="setting"
                 size={32}
-                color={theme.colors.chat.text}
+                color={theme.colors.text.primary}
               />
             </TouchableOpacity>
           </HeaderContent>
@@ -106,7 +109,7 @@ const User = ({ props, navigation }) => {
                   style={{ opacity: 1 }}
                   name="camera"
                   size={24}
-                  color={theme.colors.chat.text}
+                  color={theme.colors.text.primary}
                 />
               </CameraIcon>
             </TouchableOpacity>
@@ -135,7 +138,7 @@ const User = ({ props, navigation }) => {
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
+  background-color: ${(props) => props.theme.colors.bg.secondary};
 `;
 const HeaderContainer = styled.View`
   height: 300px;
@@ -153,7 +156,7 @@ const Header = styled.View`
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   overflow: hidden;
-  background-color: ${(props) => props.theme.colors.chat.bg.primary};
+  background-color: ${(props) => props.theme.colors.bg.primary};
   elevation: 5;
   padding-bottom: 24px;
   padding-top: 12px;

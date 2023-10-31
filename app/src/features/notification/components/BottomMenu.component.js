@@ -32,7 +32,7 @@ const BottomMenu = ({ visible, onClose, notificationId }) => {
 
               borderTopLeftRadius: 12,
               borderTopRightRadius: 12,
-              backgroundColor: theme.colors.chat.text,
+              backgroundColor: theme.colors.text.primary,
             }}
           >
             <View
@@ -42,14 +42,14 @@ const BottomMenu = ({ visible, onClose, notificationId }) => {
                 alignSelf: "center",
                 borderBottomWidth: 2,
                 marginBottom: 12,
-                borderColor: theme.colors.chat.bg.primary,
+                borderColor: theme.colors.bg.primary,
               }}
             ></View>
             <TouchableOpacity
               style={[
                 styles.optionContainer,
                 {
-                  backgroundColor: theme.colors.chat.text,
+                  backgroundColor: theme.colors.text.primary,
                   width: "100%",
                 },
               ]}
@@ -81,6 +81,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
     fontSize: 18,
-    color: theme.colors.chat.bg.primary,
+    color: theme.colors.bg.primary,
   }),
 });

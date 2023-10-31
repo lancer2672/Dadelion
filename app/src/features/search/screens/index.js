@@ -83,7 +83,7 @@ const Search = ({ navigation }) => {
         <ActivityIndicator
           style={{ marginTop: 12 }}
           size="small"
-          color={theme.colors.chat.text}
+          color={theme.colors.text.primary}
         />
       )}
 
@@ -135,6 +135,6 @@ const Search = ({ navigation }) => {
 const SearchContainer = styled(View)`
   padding: ${(props) => props.theme.space[2]};
   flex: 1;
-  background-color: ${(props) => props.theme.colors.chat.bg.primary};
+  background-color: ${(props) => props.theme.colors.bg.primary};
 `;
 export default Search;

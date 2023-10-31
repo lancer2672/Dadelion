@@ -108,14 +108,13 @@ const Channel = ({ navigation, channel }) => {
     >
       <TouchableOpacity onPress={handleNavigateToGuest}>
         <Avatar
-          width={60}
-          height={60}
+          style={{ width: 60, height: 60 }}
           source={
             chatFriend
               ? chatFriend.avatar
                 ? { uri: chatFriend.avatar }
-                : undefined //use default source
-              : undefined
+                : require("../../../../assets/imgs/DefaultAvatar.png")
+              : require("../../../../assets/imgs/DefaultAvatar.png")
           }
         ></Avatar>
         {chatFriend?.isOnline == 1 && (
@@ -197,19 +196,19 @@ const LastMessage = styled(Text).attrs((props) => ({
       : "bold",
 }))`
   font-size: 16px;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const EmptyMessage = styled(Text).attrs((props) => ({}))`
   font-size: 16px;
   opacity: 0.5;
   font-weight: 400;
   font-style: italic;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const Name = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.large};
   flex: 1;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
   font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
 

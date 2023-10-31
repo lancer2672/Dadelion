@@ -39,7 +39,7 @@ const ChatRoomHeader = () => {
         <Ionicons
           name="chevron-back"
           size={32}
-          color={theme.colors.chat.text}
+          color={theme.colors.text.primary}
         />
       </BackIcon>
 
@@ -73,7 +73,7 @@ const ChatRoomHeader = () => {
         <FontAwesome
           name="video-camera"
           size={24}
-          color={theme.colors.chat.text}
+          color={theme.colors.text.primary}
         />
       </TouchableOpacity>
 
@@ -81,7 +81,7 @@ const ChatRoomHeader = () => {
         <Feather
           name="more-vertical"
           size={24}
-          color={theme.colors.chat.text}
+          color={theme.colors.text.primary}
         />
       </TouchableOpacity>
     </Container>
@@ -92,7 +92,7 @@ const Container = styled.View`
   flex-direction: row;
   align-items: center;
   padding-top: 12px;
-  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
+  background-color: ${(props) => props.theme.colors.bg.secondary};
   padding-bottom: 12px;
   elevation: 4;
 `;
@@ -109,13 +109,13 @@ const HeaderInfo = styled.View`
 
 const HeaderText = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.large};
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
   font-weight: bold;
 `;
 
 const StatusText = styled.Text`
   font-size: 14px;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 export default memo(ChatRoomHeader);

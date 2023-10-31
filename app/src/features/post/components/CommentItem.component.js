@@ -20,7 +20,7 @@ import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
 import { UrlAPI } from "@src/constants";
-import readImageData from "@src/utils/imageHandler";
+
 import { CommentMenu } from "./CommentMenuOptionscomponent";
 import { useDispatch, useSelector } from "react-redux";
 import { postSelector, userSelector } from "@src/store/selector";
@@ -34,7 +34,6 @@ import { Avatar } from "@src/components/Avatar";
 const dayjs = require("dayjs");
 const VIEW_MORE_HEIGHT = 24;
 
-// TODO: Tại sao không hiển viewMore, lưu tổng height
 const Comment = ({ comment, parentId, totalChildHeightRef }) => {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -57,23 +56,12 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
     (event) => {
       const { height } = event.nativeEvent.layout;
       if (firstMountRef.current) {
-        console.log(
-          "onlayout height ",
-          firstMountRef.current,
-          parentId == null,
-          height
-        );
-
         if (firstMountRef.current) {
           if (!parentId) {
             // apply animated property(height) to list comment
             setParentFirstMount(false);
           } else {
             totalChildHeightRef.current += height;
-            console.log(
-              "totalChildHeightRef.current",
-              totalChildHeightRef.current
-            );
           }
           firstMountRef.current = false;
         }
@@ -96,7 +84,6 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
     const newRepliedComment = {
       ...comment,
       nickname: creator.nickname,
-      // repliedUserId: comment.userId,
       _id: parentId || comment._id,
     };
     dispatch(setRepliedComment(newRepliedComment));
@@ -107,25 +94,13 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
   };
   useEffect(() => {
     if (showAllReply) {
-      console.log(
-        "useEffect before",
-        parentTotalChildHeightRef.current,
-        heightAnim._value
-      );
       Animated.timing(heightAnim, {
         toValue: parentTotalChildHeightRef.current,
         duration: 1000,
         useNativeDriver: false,
-      }).start(({ finished }) => {
-        if (finished) {
-          console.log("Animation completed");
-        } else {
-          console.log("Animation interrupted");
-        }
-      });
+      }).start();
     }
   }, [showAllReply]);
-  console.log("parentId", parentId ? "gray" : "red");
   return (
     <View
       style={{
@@ -136,13 +111,12 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
         height: "auto",
         width: "100%",
         overflow: "hidden",
-        backgroundColor: "red",
       }}
       onLayout={onLayout}
     >
       <CommentContainer isReplyComment={parentId ? true : false}>
         <TouchableOpacity>
-          <Avatar uri={creator.avatar}></Avatar>
+          <Avatar source={{ uri: creator.avatar }}></Avatar>
         </TouchableOpacity>
         <CommentContentWrapper>
           <CommentInfo>
@@ -165,7 +139,7 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
                 style={{
                   opacity: 0.8,
                   fontWeight: "bold",
-                  color: theme.colors.chat.text,
+                  color: theme.colors.text.primary,
                 }}
               >
                 {t("reply")}
@@ -176,7 +150,7 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
                 onPress={showAllReplyComments}
                 style={{ height: VIEW_MORE_HEIGHT }}
               >
-                <Text style={{ color: theme.colors.chat.text }}>{`${t(
+                <Text style={{ color: theme.colors.text.primary }}>{`${t(
                   "viewMore"
                 )} ${comment.replies.length - 1} ${t("comment")}`}</Text>
               </TouchableOpacity>
@@ -231,13 +205,13 @@ const UserName = styled(Text)`
   font-weight: ${(props) => props.theme.fontWeights.medium};
   margin-right: 8px;
   margin-bottom: 4px;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const CreateTime = styled(Text)`
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const CommentContent = styled(Text)`
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
   line-height: 22px;
 `;
 

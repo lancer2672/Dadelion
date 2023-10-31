@@ -24,9 +24,9 @@ export const AuthButton = styled(TouchableOpacity).attrs((props) => ({
   min-width: 300px;
   padding-top: ${(props) => props.theme.space[2]};
   padding-bottom: ${(props) => props.theme.space[2]};
-  background-color: ${(props) => props.theme.colors.text.primary};
   border-radius: 4px;
   elevation: 2;
+  background-color: ${(props) => props.theme.colors.bg.secondary};
 `;
 
 export const AuthButtonContent = styled(Text)`
@@ -38,7 +38,6 @@ export const AuthButtonContent = styled(Text)`
 `;
 export const Slogan = styled(Text)`
   font-style: italic;
-  color: ${(props) => props.theme.colors.text.primary};
   font-weight: 500;
   margin-bottom: 40px;
 `;

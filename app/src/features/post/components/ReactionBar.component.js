@@ -12,27 +12,27 @@ import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { useTheme } from "styled-components";
-import { reactPost } from "@src/store/slices/postSlice";
+import { reactPost, setSelectedPost } from "@src/store/slices/postSlice";
 import { useNavigation } from "@react-navigation/native";
 import { Animated } from "react-native";
 
-const ReactionBar = ({ post }) => {
-  const { likes } = post;
+const ReactionBar = ({ post, postCreator }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [heart, setHeart] = useState(false);
   const userState = useSelector(userSelector);
   const [reactionNumber, setReactionNumber] = useState(0);
+  const [totalCommentNumber, setTotalCommentNumber] = useState(0);
   const [isFirstMount, setIsFirstMount] = useState(true);
   const scaleValue = useRef(new Animated.Value(0)).current;
   const heartScale = useRef(new Animated.Value(1)).current;
 
-  // const [reactPost, {}] = useReactPostMutation();
   const handleReact = () => {
     dispatch(reactPost({ postId: post._id, postCreatorId: post.user }));
   };
   const navigateToDetailPost = () => {
+    dispatch(setSelectedPost({ ...post, postCreator }));
     navigation.navigate("DetailPost", {
       autoFocus: true,
     });
@@ -49,6 +49,7 @@ const ReactionBar = ({ post }) => {
     }
     setReactionNumber(post.likes.length);
   }, [post.likes.length]);
+
   const animateHeartScaleToZero = () => {
     return Animated.timing(heartScale, {
       toValue: 0,
@@ -74,6 +75,13 @@ const ReactionBar = ({ post }) => {
       }),
     ]);
   };
+
+  useEffect(() => {
+    let commentCount = post.comments.reduce((acc, item, i) => {
+      return acc + item.replies.length + 1; //child comments +  1  //parent comment
+    }, 0);
+    setTotalCommentNumber(commentCount);
+  }, [post.comments]);
 
   useEffect(() => {
     if (!isFirstMount) {
@@ -125,7 +133,7 @@ const ReactionBar = ({ post }) => {
         <FontAwesome5 name="comment-dots" size={28} color={"white"} />
       </ButtonWrapper>
 
-      <Number>{post.comments.length}</Number>
+      <Number>{totalCommentNumber}</Number>
       <ButtonWrapper onPress={null}>
         <Entypo name="dots-three-horizontal" size={28} color={"white"} />
       </ButtonWrapper>

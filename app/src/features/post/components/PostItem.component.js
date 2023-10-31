@@ -8,13 +8,7 @@ import {
   TouchableWithoutFeedback,
   Animated,
 } from "react-native";
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useEffect, useRef, memo } from "react";
 import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
 
@@ -25,12 +19,8 @@ import ReactionBar from "./ReactionBar.component";
 import { Avatar } from "@src/components/Avatar";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { colors } from "@src/infrastructure/theme/colors";
 import { reactPost, setSelectedPost } from "@src/store/slices/postSlice";
-import { useTheme } from "styled-components";
-import { useNavigation } from "@react-navigation/native";
 import { FastImageBackground } from "@src/components/image";
-import { memo } from "react";
 import { AntDesign } from "@expo/vector-icons";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -56,7 +46,6 @@ const PostItem = ({ navigation, post }) => {
     );
   };
   useEffect(() => {
-    console.log("translateYAnim", translateYAnim);
     if (!isFirstMount) {
       const endAnim = Animated.parallel([
         Animated.spring(scaleAnim, {
@@ -93,10 +82,6 @@ const PostItem = ({ navigation, post }) => {
           translateYAnim.setValue(0);
         });
       });
-
-      // Animated.sequence([start, end]).start(() => {
-      //   translateYAnim.setValue(0);
-      // });
     } else {
       setIsFirstMount(() => false);
     }
@@ -153,7 +138,7 @@ const PostItem = ({ navigation, post }) => {
         >
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity onPress={handleNavigateToGuest}>
-              <Avatar uri={postCreator?.avatar}></Avatar>
+              <Avatar source={{ uri: postCreator?.avatar }}></Avatar>
             </TouchableOpacity>
             <PostInfoContainer>
               <CreatorName>{postCreator?.nickname}</CreatorName>
@@ -186,7 +171,7 @@ const PostItem = ({ navigation, post }) => {
         >
           <AntDesign name="heart" size={48} color="red" />
         </Animated.View>
-        <ReactionBar post={post}> </ReactionBar>
+        <ReactionBar postCreator={postCreator} post={post}></ReactionBar>
       </FastImageBackground>
     </Pressable>
   );

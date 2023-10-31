@@ -45,7 +45,7 @@ const EditProfile = ({ navigation }) => {
 
   const handleUpdateUserInfo = () => {
     const newUserData = { nickname, gender, dateOfBirth, email, phoneNumber };
-    updateUser({ newUserData });
+    updateUser(newUserData);
   };
   const onGenderFieldClick = () => {
     setShowGenderSelection(true);
@@ -74,7 +74,7 @@ const EditProfile = ({ navigation }) => {
     <ScrollView
       style={{
         padding: 20,
-        backgroundColor: theme.colors.chat.bg.primary,
+        backgroundColor: theme.colors.bg.primary,
         flex: 1,
         opacity: showGenderSelection || isLoading ? 0.6 : 1,
       }}
@@ -88,19 +88,22 @@ const EditProfile = ({ navigation }) => {
           <AntDesign
             name="arrowleft"
             size={24}
-            color={theme.colors.chat.text}
+            color={theme.colors.text.primary}
           />
         </BackButton>
         <Heading>{t("editProfile")}</Heading>
       </Header>
 
       <Body>
-        <Avatar uri={user.avatar} width={80} height={80}></Avatar>
+        <Avatar
+          style={{ width: 80, height: 80 }}
+          source={{ uri: user.avatar }}
+        ></Avatar>
         <Text
           style={{
             fontSize: 18,
             fontWeight: 500,
-            color: theme.colors.chat.text,
+            color: theme.colors.text.primary,
           }}
         >
           {user.nickname}
@@ -209,7 +212,7 @@ const SaveBtnText = styled.Text`
   color: ${(props) => props.theme.colors.white};
   font-size: 20px;
   font-weight: 500;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const Heading = styled.Text`
   font-weight: bold;

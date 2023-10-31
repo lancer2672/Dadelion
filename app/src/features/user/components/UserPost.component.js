@@ -36,7 +36,7 @@ const UserPost = ({ route }) => {
       style={{
         flex: 1,
         paddingHorizontal: 8,
-        backgroundColor: theme.colors.chat.bg.primary,
+        backgroundColor: theme.colors.bg.primary,
       }}
     >
       <FlatList

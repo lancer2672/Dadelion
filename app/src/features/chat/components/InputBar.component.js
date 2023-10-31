@@ -168,7 +168,7 @@ const InputBar = ({ chatFriendId }) => {
               <EvilIcons
                 name="camera"
                 size={ICON_SIZE}
-                color={theme.colors.chat.text}
+                color={theme.colors.text.primary}
               />
             </Icon>
 
@@ -176,7 +176,7 @@ const InputBar = ({ chatFriendId }) => {
               <EvilIcons
                 name="image"
                 size={ICON_SIZE}
-                color={theme.colors.chat.text}
+                color={theme.colors.text.primary}
               />
             </Icon>
 
@@ -184,7 +184,7 @@ const InputBar = ({ chatFriendId }) => {
               <MaterialCommunityIcons
                 name="microphone"
                 size={ICON_SIZE}
-                color={theme.colors.chat.text}
+                color={theme.colors.text.primary}
               />
             </Icon>
           </LeftIconContainer>
@@ -196,12 +196,12 @@ const InputBar = ({ chatFriendId }) => {
             onFocus={handleFocus}
             onBlur={handleBlur}
             placeholder={"Nhắn tin"}
-            placeholderTextColor={theme.colors.chat.text}
+            placeholderTextColor={theme.colors.text.primary}
             style={{
               flex: 1,
               minHeight: 32,
               padding: 6,
-              color: theme.colors.chat.text,
+              color: theme.colors.text.primary,
               marginHorizontal: 12,
             }}
             multiline
@@ -243,7 +243,7 @@ const InputBar = ({ chatFriendId }) => {
                 backgroundColor: "red",
                 alignItems: "center",
                 borderRadius: 12,
-                backgroundColor: theme.colors.chat.text,
+                backgroundColor: theme.colors.text.primary,
               }}
             >
               <View
@@ -253,7 +253,7 @@ const InputBar = ({ chatFriendId }) => {
                   borderBottomWidth: 2,
                   marginBottom: 12,
 
-                  borderColor: theme.colors.chat.bg.primary,
+                  borderColor: theme.colors.bg.primary,
                 }}
               ></View>
 
@@ -286,7 +286,7 @@ const Container = styled(View)`
   border-radius: 40px;
   margin-horizontal: 12px;
   margin-vertical: 16px;
-  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
+  background-color: ${(props) => props.theme.colors.bg.secondary};
 `;
 
 const Icon = styled(TouchableOpacity)`
@@ -298,7 +298,7 @@ const Icon = styled(TouchableOpacity)`
 const Option = styled(Pressable).attrs((props) => ({
   borderTopWidth: props.lastItem ? 0 : 1,
 }))`
-  background-color: ${(props) => props.theme.colors.chat.text};
+  background-color: ${(props) => props.theme.colors.text.primary};
   border-color: gray;
   border-top-width: 1px;
   justify-content: center;
@@ -308,7 +308,7 @@ const Option = styled(Pressable).attrs((props) => ({
 
 const OptionName = styled(Text)`
   font-weight: 500;
-  color: ${(props) => props.theme.colors.chat.bg.primary};
+  color: ${(props) => props.theme.colors.bg.primary};
   text-align: center;
   font-size: 18px;
 `;

@@ -36,6 +36,7 @@ import {
 
 GoogleSignin.configure({
   webClientId: WEB_API_KEY,
+
   offlineAccess: true,
   scopes: [
     "profile",
@@ -76,18 +77,15 @@ const Login = ({ navigation }) => {
         dispatch(setUser(payload));
         //auto enable save password
         if (true) {
-          ["token", "refreshToken", "username"].forEach(async (key) => {
-            await AsyncStorage.setItem(
-              key,
-              JSON.stringify(loginData[key]) || eval(key)
-            );
-          });
+          await AsyncStorage.setItem("token", JSON.stringify(loginData.token));
+          await AsyncStorage.setItem("username", username);
           await AsyncStorage.setItem(
             "userId",
             JSON.stringify(loginData.user._id)
           );
         }
         initSocket(loginData.user._id);
+
         const tokenVoximplant = await loginVoximplant(
           loginData.user.email,
           loginData.user.voximplantPassword
@@ -147,7 +145,7 @@ const Login = ({ navigation }) => {
     <AuthContainer isLoading={isLoginLoading}>
       {false ? (
         <View>
-          <Avatar width={80} height={80}></Avatar>
+          <Avatar style={{ width: 80, height: 80 }}></Avatar>
           <Text style={{ fontSize: 16, color: "white", marginTop: 8 }}>
             Xoá tài khoản
           </Text>

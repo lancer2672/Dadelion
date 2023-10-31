@@ -4,13 +4,15 @@ import React from "react";
 import Channel from "./ChannelItem.component";
 import { colors } from "@src/infrastructure/theme/colors";
 import { useTheme } from "styled-components";
-const ListChannel = ({ navigation, route, channels }) => {
+import { useNavigation } from "@react-navigation/native";
+const ListChannel = ({ channels }) => {
   const theme = useTheme();
+  const navigation = useNavigation();
   return (
     <FlatList
       style={{
         padding: 12,
-        backgroundColor: theme.colors.chat.bg.primary,
+        backgroundColor: theme.colors.bg.primary,
       }}
       data={channels}
       ListEmptyComponent={() => null}

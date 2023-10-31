@@ -28,14 +28,14 @@ const Notification = ({ navigation }) => {
   console.log("notification show", notifications);
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.chat.bg.primary }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.bg.primary }}>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
           padding: 12,
           borderBottomWidth: 2,
-          borderBottomColor: theme.colors.chat.text,
+          borderBottomColor: theme.colors.text.primary,
         }}
       >
         <TouchableOpacity
@@ -50,7 +50,7 @@ const Notification = ({ navigation }) => {
           <AntDesign
             name="arrowleft"
             size={24}
-            color={theme.colors.chat.text}
+            color={theme.colors.text.primary}
           />
         </TouchableOpacity>
         <Heading>{t("notification")}</Heading>
@@ -75,7 +75,7 @@ const Notification = ({ navigation }) => {
 const Heading = styled(Text)`
   font-weight: bold;
   font-size: ${(props) => props.theme.fontSizes.h5};
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 export default Notification;

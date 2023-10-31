@@ -79,7 +79,7 @@ const InputBar = ({ autoFocus }) => {
 const InputContainer = styled(View)`
   flex-direction: row;
   height: 40px;
-  border-top-width-color: ${(props) => props.theme.colors.chat.text};
+  border-top-width-color: ${(props) => props.theme.colors.text.primary};
   align-items: center;
   overflow: hidden;
 `;

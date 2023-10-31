@@ -76,7 +76,7 @@ const VideoMessageItem = ({ message }) => {
     <View
       style={[
         styles.container,
-        { backgroundColor: theme.colors.chat.bg.secondary },
+        { marginTop: 12, backgroundColor: theme.colors.bg.secondary },
       ]}
     >
       <Pressable
@@ -126,16 +126,6 @@ const VideoMessageItem = ({ message }) => {
                 flexDirection: "row",
               }}
             >
-              {/* <TouchableOpacity
-                onPress={() => {
-                  videoRef.current.seek(parseInt(progress.currentTime) - 10);
-                }}
-              >
-                <Image
-                  source={require("../../../../assets/icons/video/backward.png")}
-                  style={{ width: 30, height: 30, tintColor: "white" }}
-                />
-              </TouchableOpacity> */}
               <TouchableOpacity
                 onPress={() => {
                   setPaused(() => !paused);
@@ -151,7 +141,7 @@ const VideoMessageItem = ({ message }) => {
                 <FontAwesome
                   name={!paused ? "pause" : "play"}
                   size={24}
-                  color={theme.colors.chat.text}
+                  color={theme.colors.text.primary}
                 />
               </TouchableOpacity>
               {/* <TouchableOpacity
@@ -193,7 +183,7 @@ const VideoMessageItem = ({ message }) => {
                 alignItems: "center",
               }}
             >
-              <Text style={{ color: theme.colors.chat.text }}>
+              <Text style={{ color: theme.colors.text.primary }}>
                 {format(sliderValue)}
               </Text>
               <Slider
@@ -210,7 +200,7 @@ const VideoMessageItem = ({ message }) => {
                   onSliderValueChange(value);
                 }}
               />
-              <Text style={{ color: theme.colors.chat.text }}>
+              <Text style={{ color: theme.colors.text.primary }}>
                 {format(duration)}
               </Text>
             </View>

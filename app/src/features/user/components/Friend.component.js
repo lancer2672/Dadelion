@@ -21,7 +21,7 @@ const Friend = ({ navigation, friend }) => {
   };
   return (
     <Container onPress={navigateToFriendProfile}>
-      <Avatar uri={data?.user.avatar}></Avatar>
+      <Avatar source={{ uri: data?.user.avatar }}></Avatar>
       <Spacer position={"left"} size={"medium"}></Spacer>
 
       <View>
@@ -37,18 +37,18 @@ const Container = styled(TouchableOpacity)`
   margin-vertical: 4px;
   padding-vertical: 12px;
   elevation: 3;
-  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
+  background-color: ${(props) => props.theme.colors.bg.secondary};
 `;
 const Name = styled(Text)`
   margin-right: 12px;
   font-size: ${(props) => props.theme.fontSizes.large};
   font-weight: ${(props) => props.theme.fontWeights.medium};
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const Email = styled(Text)`
   flex: 1;
   font-size: ${(props) => props.theme.fontSizes.medium};
   opacity: 0.7;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 export default Friend;

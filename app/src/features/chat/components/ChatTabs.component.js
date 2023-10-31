@@ -158,7 +158,7 @@ const ChatTabs = ({ navigation }) => {
           style={{
             fontSize: 32,
             fontWeight: 500,
-            color: theme.colors.chat.text,
+            color: theme.colors.text.primary,
           }}
         >
           {t("chat")}
@@ -209,7 +209,7 @@ const CustomTabBar = ({
     <View
       style={{
         paddingVertical: 4,
-        backgroundColor: colors.chat.bg.secondary,
+        backgroundColor: colors.bg.secondary,
         justifyContent: "center",
         alignItems: "center",
         marginBottom: 12,
@@ -303,7 +303,7 @@ const TabBarIndicator = ({ state }) => {
         borderRadius: 25,
         height: "100%",
 
-        backgroundColor: colors.chat.bg.primary,
+        backgroundColor: colors.bg.primary,
         transform: [{ translateX: translateValue }],
       }}
     ></Animated.View>
@@ -312,7 +312,7 @@ const TabBarIndicator = ({ state }) => {
 const styles = StyleSheet.create({
   tabBar: {
     flexDirection: "row",
-    backgroundColor: colors.chat.bg.secondary,
+    backgroundColor: colors.bg.secondary,
     marginHorizontal: 4,
   },
   tabItem: {

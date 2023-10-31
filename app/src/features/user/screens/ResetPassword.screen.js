@@ -74,7 +74,7 @@ const ResetPassword = () => {
           <AntDesign
             name="arrowleft"
             size={24}
-            color={theme.colors.chat.text}
+            color={theme.colors.text.primary}
           />
         </TouchableOpacity>
         <Text style={styles.headerText(theme)}>{t("resetPassword")}</Text>
@@ -155,14 +155,14 @@ export default ResetPassword;
 const styles = StyleSheet.create({
   container: (theme) => ({
     flex: 1,
-    backgroundColor: theme.colors.chat.bg.primary,
+    backgroundColor: theme.colors.bg.primary,
   }),
   header: (theme) => ({
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
     borderBottomWidth: 2,
-    borderBottomColor: theme.colors.chat.text,
+    borderBottomColor: theme.colors.text.primary,
   }),
   touchable: {
     paddingHorizontal: 8,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   headerText: (theme) => ({
     fontWeight: "bold",
     fontSize: 20,
-    color: theme.colors.chat.text,
+    color: theme.colors.text.primary,
   }),
   content: {
     flex: 1,
@@ -179,25 +179,25 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   label: (theme) => ({
-    color: theme.colors.chat.text,
+    color: theme.colors.text.primary,
     fontSize: 18,
     opacity: 0.8,
     marginTop: 8,
     marginBottom: 12,
   }),
   input: (theme) => ({
-    color: theme.colors.chat.text,
+    color: theme.colors.text.primary,
     borderBottomWidth: 1,
     paddingVertical: 2,
     fontSize: 18,
-    borderBottomColor: theme.colors.chat.text,
+    borderBottomColor: theme.colors.text.primary,
   }),
   saveBtnContent: (theme) => ({
     textAlign: "center",
     color: theme.colors.white,
     fontSize: 20,
     fontWeight: 500,
-    color: theme.colors.chat.text,
+    color: theme.colors.text.primary,
   }),
   saveBtn: {
     backgroundColor: "gray",

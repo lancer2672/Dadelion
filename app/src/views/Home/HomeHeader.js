@@ -88,7 +88,10 @@ const HomeHeader = ({}) => {
         }}
       >
         <Pressable onPress={handleNavigationUser}>
-          <Avatar width={40} height={40} uri={user.avatar}></Avatar>
+          <Avatar
+            style={{ width: 40, height: 40 }}
+            source={{ uri: user.avatar }}
+          ></Avatar>
         </Pressable>
         <Text
           style={{
@@ -96,7 +99,7 @@ const HomeHeader = ({}) => {
             fontSize: 22,
             marginLeft: 12,
             fontWeight: 500,
-            color: theme.colors.chat.text,
+            color: theme.colors.text.primary,
           }}
         >
           Dandelions

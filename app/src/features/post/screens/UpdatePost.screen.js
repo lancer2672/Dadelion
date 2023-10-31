@@ -14,7 +14,7 @@ import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
 
 import { Spacer } from "@src/components/spacer/spacer.component";
-import { openImagePicker } from "@src/utils/openImagePicker";
+
 import { Header, Seperator, Avatar, UserName } from "../shared-components";
 import { useUpdatePostMutation } from "@src/store/slices/api/postApiSlice";
 import { useDispatch } from "react-redux";
@@ -45,11 +45,11 @@ const UpdatePost = ({ ...props }) => {
     }
   }, [isLoading]);
   const HandlePickImage = () => {
-    openImagePicker()
-      .then((result) => {
-        if (!result.cancelled) setSelectedImageUri(result.uri);
-      })
-      .catch((err) => {});
+    // openImagePicker()
+    // .then((result) => {
+    //   if (!result.cancelled) setSelectedImageUri(result.uri);
+    // })
+    // .catch((err) => {});
   };
   const handleCloseModal = () => {
     setIsvisible(false);
@@ -125,12 +125,6 @@ const UpdateBtn = styled(TouchableOpacity)`
   padding-bottom: ${(props) => props.theme.space[2]};
   background-color: ${(props) => props.theme.colors.ui.quaternary};
   border-radius: 25px;
-`;
-const UpdateBtnContent = styled(Text)`
-  align-self: center;
-  font-weight: bold;
-  font-size: 16px;
-  color: ${(props) => props.theme.colors.text.primary};
 `;
 const PostInfo = styled(View)`
   margin-top: 24px;

@@ -14,6 +14,7 @@ import CallMessageItem from "./CallMessageItem.component";
 import VideoMessageItem from "./VideoMessageItem.component";
 import OpenImageModal from "./OpenImageModal.component";
 import ImageMessageItem from "./ImageMessageItem.component";
+import Avatar from "@src/components/Avatar";
 
 const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
   const theme = useTheme();
@@ -21,13 +22,10 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
   return (
     <Container isMyMessage={isMyMessage}>
       {!isMyMessage && (
-        <>
-          {chatFriend.avatar ? (
-            <Avatar source={{ uri: chatFriend.avatar }}></Avatar>
-          ) : (
-            <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
-          )}
-        </>
+        <Avatar
+          style={{ width: 60, height: 60, alignSelf: "flex-end" }}
+          source={{ uri: chatFriend.avatar }}
+        />
       )}
       <FlatList
         data={messages}
@@ -37,7 +35,7 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
               <Text
                 style={{
                   flex: 1,
-                  color: theme.colors.chat.text,
+                  color: theme.colors.text.primary,
                   textAlign: "center",
                 }}
               >
@@ -84,13 +82,6 @@ const Container = styled(View).attrs((props) => ({
   margin-bottom: 0px;
 `;
 
-const Avatar = styled(Image)`
-  border-radius: 25px;
-  width: 32px;
-  height: 32px;
-  align-self: flex-end;
-`;
-
 const MessageWrapper = styled(View).attrs((props) => {
   return {
     marginLeft: props.isMyMessage ? 32 : 6,
@@ -103,8 +94,8 @@ const MessageWrapper = styled(View).attrs((props) => {
 const Message = styled(Text).attrs((props) => {
   return { textAlign: props.isMyMessage ? "right" : "left" };
 })`
-  background-color: ${(props) => props.theme.colors.chat.bg.secondary};
-  color: ${(props) => props.theme.colors.chat.text};
+  background-color: ${(props) => props.theme.colors.text.secondary};
+  color: ${(props) => props.theme.colors.text.primary};
   margin-top: 6px;
   border-radius: 15px;
   line-height: 24px;

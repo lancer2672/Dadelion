@@ -9,6 +9,7 @@ import {
   useAddUserToSearchHistoryMutation,
   useRemoveUserFromSearchHistoryMutation,
 } from "@src/store/slices/api/userApiSlice";
+import { Avatar } from "@src/components/Avatar";
 
 const SearchResultItem = ({ navigation, user, isFriend }) => {
   const theme = useTheme();
@@ -25,11 +26,11 @@ const SearchResultItem = ({ navigation, user, isFriend }) => {
   };
   return (
     <Container onPress={onSearchResultClick}>
-      {user.avatar == null ? (
-        <Avatar source={require("@assets/imgs/DefaultAvatar.png")}></Avatar>
-      ) : (
-        <Avatar source={{ uri: user.avatar }}></Avatar>
-      )}
+      <Avatar
+        style={{ width: 40, height: 40 }}
+        source={{ uri: user.avatar }}
+      ></Avatar>
+
       <Spacer position={"left"} size={"medium"}></Spacer>
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -39,7 +40,7 @@ const SearchResultItem = ({ navigation, user, isFriend }) => {
               <FontAwesome5
                 name="user-friends"
                 size={16}
-                color={theme.colors.chat.text}
+                color={theme.colors.text.primary}
               />
             )}
           </View>
@@ -47,7 +48,11 @@ const SearchResultItem = ({ navigation, user, isFriend }) => {
             style={{ padding: 4 }}
             onPress={deleteSearchHistory}
           >
-            <AntDesign name="close" size={24} color={theme.colors.chat.text} />
+            <AntDesign
+              name="close"
+              size={24}
+              color={theme.colors.text.primary}
+            />
           </TouchableOpacity>
         </View>
         <Email>{user.email}</Email>
@@ -55,11 +60,6 @@ const SearchResultItem = ({ navigation, user, isFriend }) => {
     </Container>
   );
 };
-const Avatar = styled(Image)`
-  width: 40px;
-  height: 40px;
-  border-radius: 25px;
-`;
 const Container = styled(TouchableOpacity)`
   flex-direction: row;
   padding-left: 12px;
@@ -73,12 +73,12 @@ const Name = styled(Text)`
   margin-right: 12px;
   font-size: ${(props) => props.theme.fontSizes.large};
   font-weight: ${(props) => props.theme.fontWeights.medium};
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const Email = styled(Text)`
   flex: 1;
   font-size: ${(props) => props.theme.fontSizes.medium};
   opacity: 0.7;
-  color: ${(props) => props.theme.colors.chat.text};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 export default SearchResultItem;
