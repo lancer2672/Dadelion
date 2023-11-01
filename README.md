@@ -20,11 +20,11 @@ This project is currently in development. Functionality to display position of u
 ## What I've Learned
 ### Front End
 - Utilizing Components and Hooks
-- Implementing Animations with useNativeDriver to avoid animation on JS thread
 - State Management with useContext hook and Redux Toolkit (RTK)
 - Optimization Techniques:
   + Using Flashlist + FastImage to improve performance
   + Using Memo Hook to avoid unnecessary re-renders
+  + Implementing Animations with useNativeDriver to avoid animation on JS thread
   + Not using Arrow Functions in renderItem Prop of FlatList
 ### Back End
 - Experiences when working with socketIO and Web Server
