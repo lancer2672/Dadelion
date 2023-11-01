@@ -18,15 +18,15 @@ This project is currently in development. Functionality to display position of u
 - Map: display user and friend location
 - Notification: receive new notifications when users react to posts or send messages.
 ## What I've Learned
-Front End
+### Front End
 - Utilizing Components and Hooks
 - Implementing Animations with useNativeDriver to avoid animation on JS thread
 - State Management with useContext hook and Redux Toolkit (RTK)
 - Optimization Techniques:
-  + Using Flashlist + FastImage
+  + Using Flashlist + FastImage to improve performance
   + Using Memo Hook to avoid unnecessary re-renders
   + Not using Arrow Functions in renderItem Prop of FlatList
-Back End
+### Back End
 - Experiences when working with socketIO and Web Server
 - How to use middleware (request validation, handle errors, upload)
 - How to integration SDKs (Voximlant, Firebase)
