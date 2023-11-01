@@ -46,7 +46,7 @@ const ImageMessageItem = ({ imageUrls }) => {
                       flex: 1,
                       backgroundColor: "gray",
                     }}
-                    resizeMode={FastImage.resizeMode.contain}
+                    resizeMode={FastImage.resizeMode.cover}
                     // source={{ uri: imageUrl }}
                     source={{ uri: imageUrl }}
                   ></FastImage>

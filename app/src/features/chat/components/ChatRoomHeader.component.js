@@ -45,9 +45,8 @@ const ChatRoomHeader = () => {
 
       <TouchableOpacity onPress={handleNavigateToGuest}>
         <Avatar
-          width={40}
-          height={40}
-          uri={selectedChannel.chatFriend?.avatar}
+          style={{ width: 40, height: 40 }}
+          source={{ uri: selectedChannel.chatFriend?.avatar }}
         />
       </TouchableOpacity>
 

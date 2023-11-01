@@ -8,12 +8,16 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Modal } from "react-native";
-import { Entypo, Feather } from "@expo/vector-icons";
-import { showMessage } from "react-native-flash-message";
-import { downloadMediaFile } from "@src/utils/downloads";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import Swiper from "react-native-swiper";
+import { showMessage } from "react-native-flash-message";
+
+import { downloadMediaFile } from "@src/utils/downloads";
+import { useEffect } from "react";
+
 const OpenImageModal = ({
   visible,
   onClose,
@@ -21,9 +25,10 @@ const OpenImageModal = ({
   setSelectedIndex,
   selectedImageList = [],
 }) => {
-  console.count("OpenImageModal");
-
   const { t } = useTranslation();
+  const swiperRef = useRef(null);
+  const flatlistRef = useRef(null);
+
   const handlePressLeft = () => {
     setSelectedIndex(
       selectedIndex - 1 < 0 ? selectedImageList.length - 1 : selectedIndex - 1
@@ -54,67 +59,147 @@ const OpenImageModal = ({
         });
       });
   };
+  const onImageIndexChange = (i) => {
+    setSelectedIndex(() => i);
+  };
+  // useEffect(() => {
+  //   flatlistRef.current?.scrollToIndex({
+  //     index: selectedIndex,
+  //     animated: false,
+  //     viewPosition: 0.5,
+  //   });
+  // }, [selectedIndex]);
+  console.log(selectedIndex);
   return (
     <Modal animationType="fade" onRequestClose={onClose} visible={visible}>
-      <ImageBackground
-        source={{ uri: selectedImageList[selectedIndex] }}
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-        resizeMode="cover"
-      >
-        <TouchableOpacity
-          onPress={() => handleDownloadImage(selectedImageList[selectedIndex])}
-          style={{ position: "absolute", top: 16, right: 16, padding: 12 }}
-        >
-          <Feather name="download" size={40} color="gray" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handlePressLeft} style={{ padding: 24 }}>
-          <Entypo name="chevron-left" size={40} color="gray" />
-        </TouchableOpacity>
-        <View
-          style={{
-            height: 80,
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            left: 0,
-            backgroundColor: "rgba(52, 52, 52, 0.5)",
-            paddingVertical: 8,
-          }}
-        >
-          <FlatList
-            data={selectedImageList}
-            horizontal
-            renderItem={({ item, index }) => {
-              return (
-                <Pressable
-                  onPress={() => {
-                    setSelectedIndex(() => index);
-                  }}
-                >
-                  <Image
-                    key={`list-image-item` + index}
-                    style={{ width: 80, height: 72, marginHorizontal: 8 }}
-                    resizeMode="cover"
-                    source={{ uri: item }}
-                    title={item.title}
-                  />
-                </Pressable>
-              );
-            }}
-            keyExtractor={(item) => item}
-          />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={onClose}
+            style={{ padding: 12, alignSelf: "flex-end" }}
+          >
+            <AntDesign name="close" size={28} color="gray" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() =>
+              handleDownloadImage(selectedImageList[selectedIndex])
+            }
+            style={{ padding: 12, alignSelf: "flex-end" }}
+          >
+            <Feather name="download" size={28} color="gray" />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handlePressRight} style={{ padding: 24 }}>
+        {/* <TouchableOpacity onPress={handlePressLeft} style={{ padding: 24 }}>
+          <Entypo name="chevron-left" size={40} color="gray" />
+        </TouchableOpacity> */}
+
+        <Swiper
+          loop={false}
+          index={selectedIndex}
+          ref={swiperRef}
+          onIndexChanged={onImageIndexChange}
+          showsPagination={false}
+          showsButtons={false}
+        >
+          {selectedImageList.map((image, index) => (
+            <View key={index} style={{ flex: 1 }}>
+              <Image style={{ flex: 1 }} source={{ uri: image }} />
+            </View>
+          ))}
+        </Swiper>
+
+        {selectedImageList.length > 1 && (
+          <View style={styles.images}>
+            <FlatList
+              data={selectedImageList}
+              horizontal
+              // ref={flatlistRef}
+              // onScrollToIndexFailed={(info) => {
+              //   const wait = new Promise((resolve) => setTimeout(resolve, 500));
+              //   wait.then(() => {
+              //     flatlistRef.current?.scrollToIndex({
+              //       index: info.index,
+              //       animated: true,
+              //     });
+              //   });
+              // }}
+              renderItem={({ item, index }) => {
+                return (
+                  <Pressable
+                    style={{ opacity: selectedIndex === index ? 1 : 0.5 }}
+                    onPress={() => {
+                      setSelectedIndex(() => index);
+                      console.log("click", swiperRef.current);
+                      swiperRef.current.scrollBy(index, true);
+                    }}
+                  >
+                    <View
+                      style={[
+                        styles.subImageWraper,
+                        {
+                          backgroundColor:
+                            selectedIndex === index ? "gray" : null,
+                        },
+                      ]}
+                    >
+                      <Image
+                        key={`list-image-item` + index}
+                        style={styles.subImage}
+                        resizeMode="cover"
+                        source={{ uri: item }}
+                        title={item.title}
+                      />
+                    </View>
+                  </Pressable>
+                );
+              }}
+              keyExtractor={(item) => item}
+            />
+          </View>
+        )}
+        {/* <TouchableOpacity onPress={handlePressRight} style={{ padding: 24 }}>
           <Entypo name="chevron-right" size={40} color="gray" />
-        </TouchableOpacity>
-      </ImageBackground>
+        </TouchableOpacity> */}
+      </View>
     </Modal>
   );
 };
 
+const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    width: "90%",
+    borderRadius: 4,
+    margin: 12,
+    backgroundColor: "gray",
+  },
+  subImage: {
+    width: 80,
+    height: 72,
+    marginHorizontal: 8,
+    borderRadius: 4,
+  },
+  subImageWraper: {
+    borderRadius: 4,
+
+    paddingVertical: 8,
+  },
+  images: {
+    width: "100%",
+
+    backgroundColor: "black",
+  },
+  header: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+});
 export default OpenImageModal;

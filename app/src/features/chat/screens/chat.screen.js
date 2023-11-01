@@ -8,7 +8,7 @@ import {
 import React, { useEffect } from "react";
 import styled from "styled-components/native";
 
-import ListAvtWithName from "../components/ListAvatarUsername.componet";
+import ListAvatarName from "../components/ListAvatarName.component";
 import ListChannel from "../components/ListChannel.component";
 import { colors } from "@src/infrastructure/theme/colors";
 import { useSelector } from "react-redux";
@@ -18,9 +18,11 @@ import { useTheme } from "styled-components";
 import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
 import SearchChannel from "../components/SearchChannel.component";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const ChatScreen = ({ navigation }) => {
   const { user } = useSelector(userSelector);
+  const { t } = useTranslation();
   const theme = useTheme();
   const [channels, setChannels] = useState();
   const {
@@ -45,26 +47,26 @@ const ChatScreen = ({ navigation }) => {
       style={{
         backgroundColor: theme.colors.bg.primary,
         flex: 1,
+        padding: 12,
         justifyContent: "flex-start",
       }}
     >
-      {/* <ListAvtWithName></ListAvtWithName> */}
+      <Heading>{t("chat")}</Heading>
       <SearchChannel
         channels={channels}
         resetSearch={resetSearch}
         setChannels={setChannels}
       ></SearchChannel>
+      <ListAvatarName channels={data}></ListAvatarName>
       <ListChannel channels={channels}></ListChannel>
       {/* <ChatTabs navigation={navigation}></ChatTabs> */}
     </View>
   );
 };
 const Heading = styled(Text)`
-  font-size: ${(props) => props.theme.fontSizes.h5};
-  font-weight: ${(props) => props.theme.fontWeights.medium};
-  flex: 1;
-  margin-bottom: 24px;
-  text-align: center;
+  font-size: 32px;
+  font-weight: 500;
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 export default ChatScreen;

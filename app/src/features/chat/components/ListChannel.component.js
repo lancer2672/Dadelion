@@ -11,7 +11,6 @@ const ListChannel = ({ channels }) => {
   return (
     <FlatList
       style={{
-        padding: 12,
         backgroundColor: theme.colors.bg.primary,
       }}
       data={channels}

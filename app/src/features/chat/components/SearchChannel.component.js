@@ -103,6 +103,5 @@ const SearchContainer = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  margin-horizontal: 12px;
 `;
 export default SearchChannel;
