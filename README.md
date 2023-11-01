@@ -24,7 +24,7 @@ This project is currently in development. Functionality to display position of u
 - Optimization Techniques:
   + Using Flashlist + FastImage to improve performance
   + Using Memo Hook to avoid unnecessary re-renders
-  + Implementing Animations with useNativeDriver to avoid animation on JS thread
+  + Implementing Animations with useNativeDriver to avoid running animations on JS thread
   + Not using Arrow Functions in renderItem Prop of FlatList
 ### Back End
 - Experiences when working with socketIO and Web Server
