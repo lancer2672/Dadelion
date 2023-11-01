@@ -22,6 +22,7 @@ import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { reactPost, setSelectedPost } from "@src/store/slices/postSlice";
 import { FastImageBackground } from "@src/components/image";
 import { AntDesign } from "@expo/vector-icons";
+import PostItemDescription from "./PostItemDescription.component";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;
@@ -129,14 +130,22 @@ const PostItem = ({ navigation, post }) => {
         }}
         source={postImage}
       >
-        <View
+        <Pressable
+          onLongPress={() => {
+            //disable longpress parent
+          }}
           style={{
             minHeight: 200,
             width: "100%",
             justifyContent: "flex-end",
           }}
         >
-          <View style={{ flexDirection: "row" }}>
+          <View
+            onLongPress={() => {
+              console.log("longPress called");
+            }}
+            style={{ flexDirection: "row" }}
+          >
             <TouchableOpacity onPress={handleNavigateToGuest}>
               <Avatar source={{ uri: postCreator?.avatar }}></Avatar>
             </TouchableOpacity>
@@ -148,14 +157,8 @@ const PostItem = ({ navigation, post }) => {
             </PostInfoContainer>
           </View>
 
-          <PostDescriptionContainer numberOfLines={3}>
-            <PostDescription>
-              {
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lorem non tristique convallis. Integer nec neque ipsum. Fusce consectetur, odio ut venenatis malesuada, velit nunc mattis lectus, nec facilisis risus ligula quis turpis. Cras finibus dolor vel ex iaculis hendrerit. In non metus quis est dignissim porttitor. Suspendisse scelerisque tincidunt ligula, nec finibus mi ultricies sit amet. Duis tincidunt metus quis nisl eleifend luctus. Nulla consequat a neque nec elementum. Curabitur sed eros enim. Proin tincidunt facilisis malesuada. Sed eleifend velit sed volutpat egestas. Fusce tincidunt mauris eu ipsum posuere scelerisque."
-              }
-            </PostDescription>
-          </PostDescriptionContainer>
-        </View>
+          <PostItemDescription></PostItemDescription>
+        </Pressable>
 
         <Animated.View
           style={{

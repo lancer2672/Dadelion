@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 import React, { useState, useEffect, memo, useRef } from "react";
 import {
   Fontisto,
@@ -99,7 +105,8 @@ const ReactionBar = ({ post, postCreator }) => {
   }, [heart]);
 
   return (
-    <ReactSectionContainer>
+    // disable parent long press
+    <ReactSectionContainer onLongPress={null}>
       <View>
         <ButtonWrapper style={{ flexDirection: "row" }} onPress={handleReact}>
           <Animated.View style={{ transform: [{ scale: heartScale }] }}>
@@ -140,7 +147,7 @@ const ReactionBar = ({ post, postCreator }) => {
     </ReactSectionContainer>
   );
 };
-const ReactSectionContainer = styled(View)`
+const ReactSectionContainer = styled(Pressable)`
   position: absolute;
   top: 12%;
   right: 20px;

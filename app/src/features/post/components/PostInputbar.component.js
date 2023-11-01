@@ -1,5 +1,6 @@
 import {
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -84,7 +85,7 @@ const InputContainer = styled(View)`
   overflow: hidden;
 `;
 const InputContent = styled(TextInput)`
-  background-color: ${(props) => props.theme.colors.bg.primary};
+  background-color: ${(props) => props.theme.colors.text.primary};
   height: 100%;
   flex: 1;
   padding-left: 10px;
