@@ -2,7 +2,7 @@
 A social media app 
 
 
-Front-end: React-native, Redux
+Front-end: React-native, Redux-toolkit, SocketIO
 
 Back-end: ExpressJs, SocketIO, MongoDB
 
@@ -17,6 +17,19 @@ This project is currently in development. Functionality to display position of u
 - Chat: call video, send images/videos.
 - Map: display user and friend location
 - Notification: receive new notifications when users react to posts or send messages.
+## What I've Learned
+### Front End
+- Utilizing Components and Hooks
+- State Management with useContext hook and Redux Toolkit (RTK)
+- Optimization Techniques:
+  + Using Flashlist + FastImage to improve performance
+  + Using Memo Hook to avoid unnecessary re-renders
+  + Implementing Animations with useNativeDriver to avoid running animations on JS thread
+  + Not using Arrow Functions in renderItem Prop of FlatList
+### Back End
+- Experiences when working with socketIO and Web Server
+- How to use middleware (request validation, handle errors, upload)
+- How to integration SDKs (Voximlant, Firebase)
 ## Project Screen Shots
 <img src="https://github.com/lancer2672/Dandelion/assets/90507570/234f3cfa-7069-47e3-81b5-0de9c1f4c2fb"  width="300">
 <img src="https://github.com/lancer2672/Dandelion/assets/90507570/24c02733-7f18-44a0-af23-1701a8baff59"  width="300">
