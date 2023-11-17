@@ -4,18 +4,20 @@ import messaging from "@react-native-firebase/messaging";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 
-import DetailPost from "@src/features/post/screens/PostDetail.screen";
-import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
-import Guest from "@src/views/Guest";
 import { useSaveFCMtokenMutation } from "@src/store/slices/api/userApiSlice";
-import Notification from "@src/features/notification/screens/Notification.screen";
-import Settings from "@src/features/user/screens/Settings.screen";
-import EditProfile from "@src/features/user/screens/EditProfile.screens";
-import Search from "@src/features/search/screens";
-import FriendList from "@src/features/user/screens/FriendList.screen";
-import IncomingCallScreen from "@src/features/call/screens/IncomingCall.screen";
-import CallingScreen from "@src/features/call/screens/CallingScreen.screen";
-import ResetPassword from "@src/features/user/screens/ResetPassword.screen";
+import {
+  Notification,
+  Settings,
+  EditProfile,
+  Search,
+  FriendList,
+  IncomingCallScreen,
+  CallingScreen,
+  ResetPassword,
+  DetailPost,
+  ChatRoom,
+  Guest,
+} from "./index";
 import { enableCallingService } from "@src/services/calling";
 import { getMessagingToken } from "@src/services/messaging";
 import {
@@ -24,6 +26,16 @@ import {
 } from "@src/services/location";
 import { Tabs } from "./tabs";
 import { getSocket } from "@src/utils/socket";
+import { connectVoximplant } from "@src/voximplant/services/Client";
+import { requestNotificationPermission } from "@src/permissions";
+import {
+  enableForegroundNotification,
+  registerForegroundService,
+} from "@src/services/notifee";
+import messagingNotificationIns from "@src/services/notifee/MessagingNotification";
+import useNotification from "@src/hooks/useNotification";
+import { AppState } from "react-native";
+
 const Stack = createNativeStackNavigator();
 
 export const AppNavigator = () => {
@@ -31,7 +43,7 @@ export const AppNavigator = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const socket = getSocket();
-
+  const { setIsBgNotificationEnable } = useNotification();
   useEffect(() => {
     if (socket) {
       receiveListLocationListener(socket, dispatch);
@@ -39,13 +51,21 @@ export const AppNavigator = () => {
   }, [socket]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        await enableTrackingLocation(dispatch);
-      } catch (er) {
-        console.log("enableTrackingLocation er", er);
-      }
-    })();
+    // (async () => {
+    //   try {
+    //     await enableTrackingLocation(dispatch);
+    //   } catch (er) {
+    //     console.log("enableTrackingLocation er", er);
+    //   }
+    // })();
+
+    enableTrackingLocation(dispatch);
+    //notifee
+    requestNotificationPermission();
+    enableForegroundNotification();
+    registerForegroundService();
+    connectVoximplant();
+
     const onTokenRefresh = getMessagingToken(saveFCMtoken);
     const unsubscribeVoximplant = enableCallingService(navigation);
     const unsubscribeRemoteMessaging = messaging().onMessage(
@@ -59,6 +79,22 @@ export const AppNavigator = () => {
       unsubscribeRemoteMessaging();
     };
   }, []);
+
+  useEffect(() => {
+    AppState.addEventListener("change", handleAppStateChange);
+  }, []);
+
+  const handleAppStateChange = async (nextAppState) => {
+    console.log("StateChanged", nextAppState);
+    if (nextAppState === "active") {
+      setIsBgNotificationEnable(false);
+    } else {
+      setIsBgNotificationEnable(true);
+
+      messagingNotificationIns.displayNotification();
+    }
+  };
+
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}

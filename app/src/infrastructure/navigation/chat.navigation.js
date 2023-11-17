@@ -11,8 +11,6 @@ export const ChatNavigator = ({ navigation, route }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabPress", (e) => {
       const routeName = getFocusedRouteNameFromRoute(route);
-      console.log("RouteName", routeName);
-      console.log(routeName === "ChatRoom");
       if (routeName === "ChatRoom") {
         console.log("True");
         navigation.setOptions({ tabBarStyle: { display: "none" } });
