@@ -15,6 +15,9 @@ class MessagingNotification extends Notification {
     });
   }
 
+  addUserInfor({ username, avatar }) {
+    this.user = { username, avatar };
+  }
   async updateNotification({}) {
     await this.displayNotification();
   }
@@ -22,8 +25,8 @@ class MessagingNotification extends Notification {
   async displayNotification() {
     const notification = {
       id: this.notificationId,
-      title: "Theo dõi hoạt động",
-      body: `💧 ml 🚶  m &#128099 step`,
+      title: "Tin nhắn mới",
+      body: ``,
       android: {
         channelId: this.channelId,
         style: {

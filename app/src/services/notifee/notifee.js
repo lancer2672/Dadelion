@@ -92,5 +92,4 @@ export const registerForegroundService = () => {
       });
     });
   });
-  console.log("notificationregister1");
 };
