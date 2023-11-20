@@ -20,7 +20,6 @@ const ChatRoom = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const socket = getSocket();
-  console.count("ChatRoom");
   const { selectedChannel } = useSelector(chatSelector);
   const { _id: channelId, memberIds } = selectedChannel;
   // const { channelId, memberIds } = route.params;
@@ -33,6 +32,7 @@ const ChatRoom = () => {
       skip: !chatFriendId,
     }
   );
+
   useEffect(() => {
     const friendId = memberIds.filter((id) => id != user._id);
     setChatFriendId(friendId[0]);
@@ -41,6 +41,7 @@ const ChatRoom = () => {
       setIsTyping(() => isTyping);
     });
   }, [selectedChannel]);
+
   useEffect(() => {
     if (isSuccess) {
       setChatFriend(() => data.user);
@@ -55,7 +56,7 @@ const ChatRoom = () => {
         <TypingWrapper>
           <Text
             style={{
-              fontWeight: 500,
+              fontWeight: "500",
               fontSize: 16,
               color: theme.colors.text.primary,
             }}

@@ -22,6 +22,7 @@ import {
 } from "@src/store/slices/api/chatApiSlice";
 import { useTheme } from "styled-components";
 import { setSelectedChannel } from "@src/store/slices/chatSlice";
+import { MessageType } from "@src/constants";
 
 const Channel = ({ navigation, channel }) => {
   const { _id: channelId, memberIds } = channel;
@@ -46,46 +47,72 @@ const Channel = ({ navigation, channel }) => {
       skip: !chatFriendId,
     }
   );
-  const handleNavigateToGuest = () => {
+  const naviagteToGuest = () => {
     if (chatFriendId) {
       navigation.navigate("Guest", { guestId: chatFriendId });
     }
   };
+  const navigateToChatRoom = () => {
+    dispatch(setSelectedChannel({ ...channel, chatFriend }));
+    navigation.navigate("ChatRoom");
+    if (lastMessage) {
+      setLastMessage((prev) => ({ ...prev, isSeen: true }));
+    }
+    setUnseenMessageIds([]);
+  };
   useEffect(() => {
     if (dataChannelMsg && chatFriend) {
-      let countUnseenMsg = [];
+      let unseenMsgId = [];
       let index = 0;
       while (
         index < dataChannelMsg.length &&
         dataChannelMsg[index].userId == chatFriend._id &&
         dataChannelMsg[index].isSeen == false
       ) {
-        countUnseenMsg.push(dataChannelMsg[index]._id);
+        unseenMsgId.push(dataChannelMsg[index]._id);
         index++;
       }
-      setUnseenMessageIds(countUnseenMsg);
+
+      setUnseenMessageIds(unseenMsgId);
     }
   }, [dataChannelMsg, chatFriend]);
+
   useEffect(() => {
     const friendId = memberIds.filter((id) => id != user._id);
     setChatFriendId(() => friendId[0]);
   }, []);
+
   useEffect(() => {
     if (lastMsgData) {
       let note;
-      //TODO: replace by using lastMessage.type property
-      if (lastMsgData.lastMessage?.message) {
-        note = lastMsgData.lastMessage?.message;
-      } else if (lastMsgData.lastMessage?.imageUrls?.length > 0) {
-        note = t("sentImage");
-      } else if (lastMsgData.lastMessage?.videoUrls?.length > 0) {
-        note = t("sentVideo");
-      } else if (lastMsgData.lastMessage?.callHistory?.duration) {
-        // Xử lý trường hợp khi có cuộc gọi
-        note = t("calledYou");
-      } else if (lastMsgData.lastMessage?.callHistory?.duration == 0) {
-        // Xử lý trường hợp cuộc gọi bị nhỡ
-        note = t("missCall");
+      const msgType = lastMsgData.lastMessage?.type;
+      if (msgType) {
+        switch (msgType) {
+          case MessageType.TEXT: {
+            note = lastMsgData.lastMessage.attrs.message;
+            break;
+          }
+          case MessageType.IMAGE: {
+            note = t("sentImage");
+            break;
+          }
+
+          case MessageType.VIDEO: {
+            note = t("sentVideo");
+
+            break;
+          }
+          case MessageType.CALL: {
+            let callDuration =
+              lastMsgData.lastMessage.attrs.callHistory.duration;
+            if (callDuration == 0) {
+              note = t("missCall");
+            } else {
+              note = t("calledYou");
+            }
+            break;
+          }
+        }
       } else note = t("emptyMessage");
       setLastMessage({ ...lastMsgData.lastMessage, note });
     }
@@ -96,39 +123,12 @@ const Channel = ({ navigation, channel }) => {
     } else console.log("error", error);
   }, [isLoading, data]);
   return (
-    <Container
-      onPress={() => {
-        dispatch(setSelectedChannel({ ...channel, chatFriend }));
-        navigation.navigate("ChatRoom");
-        if (lastMessage) {
-          setLastMessage((prev) => ({ ...prev, isSeen: true }));
-        }
-        setUnseenMessageIds([]);
-      }}
-    >
-      <TouchableOpacity onPress={handleNavigateToGuest}>
+    <Container onPress={navigateToChatRoom}>
+      <TouchableOpacity onPress={naviagteToGuest}>
         <Avatar
           style={{ width: 60, height: 60 }}
-          source={
-            chatFriend
-              ? chatFriend.avatar
-                ? { uri: chatFriend.avatar }
-                : require("../../../../assets/imgs/DefaultAvatar.png")
-              : require("../../../../assets/imgs/DefaultAvatar.png")
-          }
+          source={{ uri: chatFriend?.avatar }}
         ></Avatar>
-        {chatFriend?.isOnline == 1 && (
-          <Entypo
-            style={{
-              position: "absolute",
-              right: "-24%",
-              bottom: "-24%",
-            }}
-            name="dot-single"
-            size={52}
-            color="green"
-          />
-        )}
       </TouchableOpacity>
       <View style={{ flex: 1, marginVertical: 8, marginHorizontal: 8 }}>
         <Name>{chatFriend ? chatFriend.nickname : ""}</Name>

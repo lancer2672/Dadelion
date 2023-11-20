@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Spacer } from "@src/components/spacer/spacer.component";
 import Avatar from "@src/components/Avatar";
 import { useGetAllFriendsQuery } from "@src/store/slices/api/userApiSlice";
@@ -16,6 +16,8 @@ import { userSelector } from "@src/store/selector";
 import { setSelectedChannel } from "@src/store/slices/chatSlice";
 import { useNavigation } from "@react-navigation/native";
 const ListAvatarName = ({ channels }) => {
+  const [isOnline, setIsOnline] = useState(1);
+
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -32,6 +34,15 @@ const ListAvatarName = ({ channels }) => {
       navigation.navigate("ChatRoom");
     }
   };
+
+  useEffect(() => {
+    // const t = setTimeout(() => {
+    //   setIsOnline(0);
+    // }, 4000);
+    // return () => {
+    //   if (t) clearTimeout(t);
+    // };
+  }, []);
   if (!data) return <></>;
   return (
     <FlatList
@@ -51,7 +62,7 @@ const ListAvatarName = ({ channels }) => {
                 navigateToChatRoom(_id);
               }}
             >
-              <Avatar source={{ uri: avatar }}></Avatar>
+              <Avatar isOnline={isOnline} source={{ uri: avatar }}></Avatar>
             </TouchableOpacity>
             <Text numberOfLines={1} style={styles.name(theme)}>
               {firstname}
@@ -60,7 +71,7 @@ const ListAvatarName = ({ channels }) => {
         );
       }}
       keyExtractor={(item) => {
-        return item.name;
+        return `${item._id} item.name`;
       }}
     ></FlatList>
   );

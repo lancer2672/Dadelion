@@ -6,11 +6,10 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { callingTimeFormatter } from "@src/utils/timeFormatter";
 
-const CallMessageItem = ({ message }) => {
+const CallMessageItem = ({ callHistory }) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const theme = useTheme();
-  console.count("CallMessage");
 
   const handleRecall = () => {
     navigation.navigate("CallingScreen", {});
@@ -24,16 +23,13 @@ const CallMessageItem = ({ message }) => {
           style={[
             styles.iconContainer,
             {
-              backgroundColor:
-                message.callHistory.duration === 0 ? "tomato" : "gray",
+              backgroundColor: callHistory.duration === 0 ? "tomato" : "gray",
             },
           ]}
         >
           <Feather
             name={
-              message.callHistory.duration === 0
-                ? "phone-missed"
-                : "phone-incoming"
+              callHistory.duration === 0 ? "phone-missed" : "phone-incoming"
             }
             size={16}
             color={"white"}
@@ -41,11 +37,11 @@ const CallMessageItem = ({ message }) => {
         </View>
         <View>
           <Text style={{ color: theme.colors.text.primary }}>
-            {message.callHistory.duration === 0 ? t("missCall") : t("call")}
+            {callHistory.duration === 0 ? t("missCall") : t("call")}
           </Text>
           <Text style={{ color: theme.colors.text.primary }}>
-            {message.callHistory.duration !== 0 &&
-              callingTimeFormatter(message.callHistory.duration)}
+            {callHistory.duration !== 0 &&
+              callingTimeFormatter(callHistory.duration)}
           </Text>
         </View>
       </View>

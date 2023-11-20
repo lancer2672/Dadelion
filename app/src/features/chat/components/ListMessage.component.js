@@ -23,7 +23,6 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 const ListUserMessages = ({ chatFriend }) => {
   const { user } = useSelector(userSelector);
   const { selectedChannel } = useSelector(chatSelector);
-  console.count("ListUserMessages");
   // const [visibleMessages, setVisibleMessages] = useState(20);
   const [listMessage, setListMessage] = useState([]);
   const bottomSheetModalRef = useRef(null);
@@ -51,14 +50,14 @@ const ListUserMessages = ({ chatFriend }) => {
         callHistory: msg.callHistory,
       });
 
+      //group message chunk by user Id
       const groupedByUserId = data.reduce((acc, msg) => {
         const lastGroup = acc[acc.length - 1];
-        const newMessage = createMessage(msg);
+        const newMessage = { ...msg };
         if (lastGroup) {
           const lastMessage = lastGroup.messages[0];
           const timeDifference =
             new Date(lastMessage.createdAt) - new Date(newMessage.createdAt);
-
           if (timeDifference > 30 * 60 * 1000) {
             newMessage.timeMarker = true;
             lastMessage.timeMarker = true;
@@ -72,7 +71,7 @@ const ListUserMessages = ({ chatFriend }) => {
 
         return acc;
       }, []);
-
+      console.log("groupedByUserId", groupedByUserId);
       setListMessage(groupedByUserId);
     }
 

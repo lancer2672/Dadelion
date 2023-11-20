@@ -31,6 +31,7 @@ import {
   createFormDataImages,
   createFormDataVideo,
 } from "@src/utils/formDataHelper";
+import { MessageType } from "@src/constants";
 
 const ICON_SIZE = 28;
 const InputBar = ({ chatFriendId }) => {
@@ -87,7 +88,11 @@ const InputBar = ({ chatFriendId }) => {
       const imageData = createFormDataImages([result.assets[0]]);
       const data = await uploadFile({ data: imageData, type: "image" });
       dispatch(
-        sendMessage({ channelId, imageUrls: data.fileUrls, type: "image" })
+        sendMessage({
+          channelId,
+          imageUrls: data.fileUrls,
+          type: MessageType.IMAGE,
+        })
       );
     } catch (err) {
       console.log(err);
@@ -100,7 +105,7 @@ const InputBar = ({ chatFriendId }) => {
       sendMessage({
         channelId,
         newMessage: text,
-        type: "text",
+        type: MessageType.TEXT,
       })
     );
   };
@@ -121,7 +126,11 @@ const InputBar = ({ chatFriendId }) => {
       const data = await uploadFile({ data: imagesData, type: "image" });
 
       dispatch(
-        sendMessage({ channelId, imageUrls: data.fileUrls, type: "image" })
+        sendMessage({
+          channelId,
+          imageUrls: data.fileUrls,
+          type: MessageType.IMAGE,
+        })
       );
     } catch (er) {
       console.log("error", er);
@@ -141,7 +150,7 @@ const InputBar = ({ chatFriendId }) => {
         sendMessage({
           channelId,
           videoUrls: [data.fileUrl],
-          type: "video",
+          type: MessageType.VIDEO,
         })
       );
     } catch (er) {

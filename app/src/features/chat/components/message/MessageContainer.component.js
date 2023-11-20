@@ -1,20 +1,13 @@
-import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  FlatList,
-  Pressable,
-} from "react-native";
+import { Text, View, FlatList } from "react-native";
 import React, { useState, memo } from "react";
 import styled from "styled-components/native";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import { useTheme } from "styled-components";
 import CallMessageItem from "./CallMessageItem.component";
 import VideoMessageItem from "./VideoMessageItem.component";
-import OpenImageModal from "./OpenImageModal.component";
 import ImageMessageItem from "./ImageMessageItem.component";
 import Avatar from "@src/components/Avatar";
+import { MessageType } from "@src/constants";
 
 const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
   const theme = useTheme();
@@ -23,7 +16,10 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
     <Container isMyMessage={isMyMessage}>
       {!isMyMessage && (
         <Avatar
-          style={{ width: 60, height: 60, alignSelf: "flex-end" }}
+          style={{
+            width: 32,
+            height: 32,
+          }}
           source={{ uri: chatFriend.avatar }}
         />
       )}
@@ -45,22 +41,25 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
             <View style={{ flexDirection: "row" }}>
               {isMyMessage && <View style={{ flex: 1 }}></View>}
               <View>
-                {item.message && (
-                  <>
-                    {/* styled component */}
-                    <Message isMyMessage={isMyMessage}>{item.message}</Message>
-                  </>
+                {item.type === MessageType.TEXT && (
+                  <Message isMyMessage={isMyMessage}>
+                    {item.attrs.message}
+                  </Message>
                 )}
-                {item.imageUrls && (
+                {item.type === MessageType.IMAGE && (
                   <ImageMessageItem
-                    imageUrls={item.imageUrls}
+                    imageUrls={item.attrs.imageUrls}
                   ></ImageMessageItem>
                 )}
-                {item.videoUrls && item.videoUrls?.length > 0 && (
-                  <VideoMessageItem message={item}></VideoMessageItem>
+                {item.type === MessageType.VIDEO && (
+                  <VideoMessageItem
+                    videoUrls={item.attrs.videoUrls}
+                  ></VideoMessageItem>
                 )}
-                {item.callHistory && item.callHistory.duration !== -1 && (
-                  <CallMessageItem message={item}></CallMessageItem>
+                {item.type === MessageType.CALL && (
+                  <CallMessageItem
+                    callHistory={item.attrs.callHistory}
+                  ></CallMessageItem>
                 )}
               </View>
             </View>
@@ -75,9 +74,8 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
 const Container = styled(View).attrs((props) => ({
   flexDirection: props.isMyMessage ? "row-reverse" : "row",
   flex: 1,
-  // backgroundColor: "tomato",
 }))`
-  align-content: center;
+  align-items: flex-end;
   margin: 8px;
   margin-bottom: 0px;
 `;

@@ -19,8 +19,7 @@ import { showMessage } from "react-native-flash-message";
 import { mediaFileStoragePermission } from "@src/permissions";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 
-const VideoMessageItem = ({ message }) => {
-  console.count("VideoMessage");
+const VideoMessageItem = ({ videoUrls }) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const [clicked, setClicked] = useState(true);
@@ -50,7 +49,7 @@ const VideoMessageItem = ({ message }) => {
         fileCache: true,
         appendExt: "mp4",
       })
-        .fetch("GET", message.videoUrls[0])
+        .fetch("GET", videoUrls[0])
         .then((res) => {
           return CameraRoll.save(res.path(), "video");
         })
@@ -94,7 +93,7 @@ const VideoMessageItem = ({ message }) => {
           }}
           paused={paused}
           source={{
-            uri: message.videoUrls[0],
+            uri: videoUrls[0],
           }}
           ref={videoRef}
           onLoad={({ duration }) => {

@@ -6,8 +6,6 @@ import { readBase64 } from "@src/utils/imageHelper";
 import OpenImageModal from "./OpenImageModal.component";
 
 const ImageMessageItem = ({ imageUrls }) => {
-  console.count("ImageMessage");
-
   const [selectedImageList, setSelectedImageList] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [modalVisible, setModalVisible] = useState(false);
@@ -81,7 +79,7 @@ const ImageMessageItem = ({ imageUrls }) => {
                     <Text
                       style={{
                         fontSize: 28,
-                        fontWeight: 500,
+                        fontWeight: "500",
                         color: "white",
                       }}
                     >

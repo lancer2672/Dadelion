@@ -13,17 +13,19 @@ import ListChannel from "../components/ListChannel.component";
 import { colors } from "@src/infrastructure/theme/colors";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import ChatTabs from "../components/ChatTabs.component";
 import { useTheme } from "styled-components";
 import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
 import SearchChannel from "../components/SearchChannel.component";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useFocusEffect } from "@react-navigation/native";
+import useNotification from "@src/hooks/useNotification";
 
 const ChatScreen = ({ navigation }) => {
   const { user } = useSelector(userSelector);
   const { t } = useTranslation();
   const theme = useTheme();
+  const { setIsBgNotificationEnable } = useNotification();
   const [channels, setChannels] = useState();
   const {
     isLoading,
@@ -38,6 +40,16 @@ const ChatScreen = ({ navigation }) => {
       setChannels(() => data.filter((c) => c.isInWaitingList == false));
     }
   }, [isLoading, data]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsBgNotificationEnable(false);
+      return () => {
+        setIsBgNotificationEnable(true);
+      };
+    }, [])
+  );
+
   const resetSearch = () => {
     setChannels(() => data.filter((c) => c.isInWaitingList == false));
   };
