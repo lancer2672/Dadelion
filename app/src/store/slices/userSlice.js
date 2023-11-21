@@ -1,14 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import authApi from "@src/api/auth";
 import { getSocket } from "@src/utils/socket";
 import { Voximplant } from "react-native-voximplant";
 
 const initialState = {
   user: null,
-  token: null,
-  refreshToken: null,
-
   registrationForm: null,
 };
 export const logoutUser = createAsyncThunk("user/logout", async () => {
@@ -17,7 +15,6 @@ export const logoutUser = createAsyncThunk("user/logout", async () => {
     await AsyncStorage.multiRemove([
       "userId",
       "token",
-      "refreshToken",
       "username",
       "tokenVoximplant",
     ]);
@@ -28,6 +25,7 @@ export const logoutUser = createAsyncThunk("user/logout", async () => {
       await GoogleSignin.signOut();
     }
     socket.emit("stop-tracking");
+    await authApi.logout();
   } catch (er) {
     console.log("Logout error", er);
   }
@@ -40,15 +38,6 @@ export const userSlice = createSlice({
     //set credentials
     setUser: (state, action) => {
       state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.refreshToken = action.payload.refreshToken;
-    },
-    setToken: (state, action) => {
-      state.token = action.payload.token;
-      const refToken = action.payload.refreshToken;
-      if (refToken) {
-        state.refreshToken = refToken;
-      }
     },
     updateUserState: (state, action) => {
       state.user = action.payload;
@@ -57,10 +46,8 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.user = null;
-      state.token = null;
-      state.refreshToken = null;
     });
   },
 });
 
-export const { updateUserState, setToken, setUser } = userSlice.actions;
+export const { updateUserState, setUser } = userSlice.actions;

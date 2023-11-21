@@ -29,10 +29,9 @@ import { WEB_API_KEY } from "@env";
 import { loginVoximplant } from "@src/voximplant/services/Client";
 import { TouchableOpacity } from "react-native";
 import { useRef } from "react";
-import {
-  useLoginMutation,
-  useLoginWithGoogleMutation,
-} from "@src/store/slices/api/authApi";
+
+import authApi from "@src/api/auth";
+import withLoading from "@src/utils/withLoading";
 
 GoogleSignin.configure({
   webClientId: WEB_API_KEY,
@@ -48,101 +47,81 @@ GoogleSignin.configure({
 });
 
 const Login = ({ navigation }) => {
-  const [login, { error, isSuccess, isLoading: isLoginLoading, data }] =
-    useLoginMutation();
-  const [
-    loginWithGoogle,
-    {
-      isSuccess: isLoginGGSuccess,
-      isLoading: isLoginGGLoading,
-      data: loginGGData,
-    },
-  ] = useLoginWithGoogleMutation();
-  const theme = useTheme();
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
   const [savePassword, setSavePassword] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const refInputName = useRef();
   const refInputPassword = useRef();
-  const toggleSavePasswordCheck = () => {
-    setSavePassword(!savePassword);
-  };
-  console.log("login er", error);
-  const handleLoginSuccess = async (loginData, isLoading, isSuccess) => {
-    try {
-      if (isSuccess) {
-        const payload = { savePassword, ...loginData };
-        dispatch(setUser(payload));
-        //auto enable save password
-        if (true) {
-          await AsyncStorage.setItem("token", JSON.stringify(loginData.token));
-          await AsyncStorage.setItem("username", username);
-          await AsyncStorage.setItem(
-            "userId",
-            JSON.stringify(loginData.user._id)
-          );
-        }
-        initSocket(loginData.user._id);
 
-        const tokenVoximplant = await loginVoximplant(
-          loginData.user.email,
-          loginData.user.voximplantPassword
-        );
-        if (tokenVoximplant) {
-          await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
-        }
-      }
-    } catch (er) {
-      console.log("err", er);
+  const handleLoginSuccess = async (data) => {
+    dispatch(setIsLoading(true));
+    dispatch(setUser(payload));
+    //auto enable save password
+    if (true) {
+      await AsyncStorage.setItem("token", JSON.stringify(data.token));
+      await AsyncStorage.setItem("username", username);
+      await AsyncStorage.setItem("userId", JSON.stringify(data.user._id));
     }
-    dispatch(setIsLoading(isLoading));
+    initSocket(data.user._id);
+    await handleLoginVoximplant();
   };
 
-  useEffect(() => {
-    handleLoginSuccess(loginGGData, isLoginGGLoading, isLoginGGSuccess);
-  }, [isLoginGGLoading]);
-
-  useEffect(() => {
-    handleLoginSuccess(data, isLoginLoading, isSuccess);
-  }, [isLoginLoading]);
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     refInputName.current.blur();
     refInputPassword.current.blur();
     console.log(Object.keys(validationErrors).length);
-    if (Object.keys(validationErrors).length == 0) {
-      login({ username, password });
-    }
+    if (Object.keys(validationErrors).length !== 0) return;
+
+    withLoading(
+      dispatch,
+      async () => {
+        data = await authApi.login({ email: username, password });
+        await handleLoginSuccess(data);
+      },
+      (error) => {
+        setError(error);
+      }
+    );
   };
   const handleSignInGoogle = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      loginWithGoogle(userInfo.idToken);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log("Sign in SIGN_IN_CANCELLED");
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log("Sign in IN_PROGRESS");
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log("Sign in PLAY_SERVICES_NOT_AVAILABLE");
-      } else {
-        console.error("Sign in ERROR", error);
+    withLoading(
+      dispatch,
+      async () => {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
+        data = await authApi.loginWithGoogle(userInfo.idToken);
+        await handleLoginSuccess(data);
+      },
+      (error) => {
+        setError(error);
       }
-    }
+    );
   };
   const handleSendEmailResetPassword = () => {
     navigation.navigate("ForgotPassword", {});
   };
-
+  const handleLoginVoximplant = async () => {
+    try {
+      const tokenVoximplant = await loginVoximplant(
+        data.user.email,
+        data.user.voximplantPassword
+      );
+      if (tokenVoximplant) {
+        await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
+      }
+    } catch (er) {
+      console.log("Voximplant login error", er);
+    }
+  };
   const navigateToRegister1Screen = () => {
     // setError(null);
     navigation.navigate("Register1", {});
   };
   return (
-    <AuthContainer isLoading={isLoginLoading}>
+    <AuthContainer>
       {false ? (
         <View>
           <Avatar style={{ width: 80, height: 80 }}></Avatar>

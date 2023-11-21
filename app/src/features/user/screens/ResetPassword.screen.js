@@ -18,30 +18,42 @@ import {
 import { accountSchema } from "@src/utils/validationSchemas";
 import { Error } from "@src/features/auth/components/authentication.style";
 import { useNavigation } from "@react-navigation/native";
-import { useChangePasswordMutation } from "@src/store/slices/api/authApi";
-import { setIsLoading } from "@src/store/slices/appSlice";
 import { useDispatch } from "react-redux";
 import { showMessage } from "react-native-flash-message";
-import { useLayoutEffect } from "react";
+import authApi from "@src/api/auth";
+import withLoading from "@src/utils/withLoading";
 
 const ResetPassword = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const [changePassword, { isSuccess, isLoading, error }] =
-    useChangePasswordMutation();
+
   const [currentPassword, setCurrentPassword] = useState("");
-  const [firstMount, setFirstMount] = useState(true);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
 
   console.log("validationErrors", validationErrors);
-  const resetUserPassword = () => {
+  const resetUserPassword = async () => {
     if (Object.keys(validationErrors).length == 0) {
-      changePassword({ newPassword, currentPassword });
-      resetFormInput();
+      withLoading(
+        dispatch,
+        async () => {
+          await authApi.changePassword({ newPassword, currentPassword });
+          resetFormInput();
+          showMessage({
+            message: t("updateSucceeded"),
+            type: "success",
+          });
+        },
+        (error) => {
+          showMessage({
+            message: t("updateFailed"),
+            type: "danger",
+          });
+        }
+      );
     }
   };
   const resetFormInput = () => {
@@ -49,18 +61,6 @@ const ResetPassword = () => {
     setNewPassword("");
     setConfirmNewPassword("");
   };
-  useEffect(() => {
-    dispatch(setIsLoading(isLoading));
-  }, [isLoading]);
-  useEffect(() => {
-    if (!firstMount && !isLoading) {
-      showMessage({
-        message: t(isSuccess ? "updateSucceeded" : "updateFailed"),
-        type: isSuccess ? "success" : "danger",
-      });
-    }
-    setFirstMount(false);
-  }, [isLoading, isSuccess]);
 
   return (
     <View style={styles.container(theme)}>
@@ -194,9 +194,8 @@ const styles = StyleSheet.create({
   }),
   saveBtnContent: (theme) => ({
     textAlign: "center",
-    color: theme.colors.white,
     fontSize: 20,
-    fontWeight: 500,
+    fontWeight: "500",
     color: theme.colors.text.primary,
   }),
   saveBtn: {

@@ -38,7 +38,7 @@ const SettingItem = ({
       {isToggleMode ? (
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={theme.colors.text.primary == "white" ? "white" : "black"}
+          thumbColor={isEnabled ? "white" : "black"}
           onValueChange={() => {
             setIsEnabled((prev) => !prev);
             onClick();

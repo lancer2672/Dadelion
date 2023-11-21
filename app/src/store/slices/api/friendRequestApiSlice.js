@@ -22,10 +22,17 @@ export const friendRequestApi = createApi({
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
           const socket = getSocket();
+          console.log("response, socket", socket);
+          //remove request out of list
           socket.on(
             "response-friendRequest",
             ({ requestId, responseValue }) => {
               updateCachedData((draft) => {
+                console.log(
+                  "response friend request updte",
+                  requestId,
+                  current(draft)
+                );
                 const index = draft.findIndex(
                   (request) => request._id == requestId
                 );

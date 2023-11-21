@@ -14,6 +14,7 @@ export const postSlice = createSlice({
     commentPost: (state, action) => {},
     setSelectedPost: (state, action) => {
       state.selectedPost = action.payload;
+      console.log("SET SELECTED POST CALLED", action.payload);
     },
 
     updateSelectedPost: (state, action) => {

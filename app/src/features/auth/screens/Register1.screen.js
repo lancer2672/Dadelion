@@ -12,6 +12,7 @@ import {
 import { Spacer } from "@src/components/spacer/spacer.component";
 import { handleValidateField } from "@src/utils/validator";
 import { nameSchema, ageLimit } from "@src/utils/validationSchemas";
+
 const dayjs = require("dayjs");
 const RegisterScreen1 = ({ navigation }) => {
   const [firstname, setFirstname] = useState("");
@@ -20,6 +21,7 @@ const RegisterScreen1 = ({ navigation }) => {
   const [formatedDateOfBirth, setFormatedDateOfBirth] = useState();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
+
   const navigateToRegister2 = () => {
     handleValidateField(
       nameSchema,

@@ -23,6 +23,7 @@ import { useState, useEffect } from "react";
 
 import GenderSelection from "../components/GenderSelection.component";
 import {
+  useGetAllFriendsQuery,
   useGetUserByIdQuery,
   useUpdateUserMutation,
 } from "@src/store/slices/api/userApiSlice";
@@ -36,7 +37,7 @@ const dayjs = require("dayjs");
 const FriendList = ({ navigation }) => {
   const { t } = useTranslation();
   const { userId } = useRoute().params;
-  const { data } = useGetUserByIdQuery(userId);
+  const { isLoading, data } = useGetAllFriendsQuery();
   const theme = useTheme();
   const dispatch = useDispatch();
 
@@ -66,7 +67,7 @@ const FriendList = ({ navigation }) => {
       </Header>
       <Body>
         <FlatList
-          data={data ? data.user.friends : []}
+          data={data || []}
           renderItem={({ item, index }) => (
             <Friend
               key={`friend-item ${index}`}
@@ -113,6 +114,6 @@ const Heading = styled.Text`
   font-weight: bold;
   flex: 1;
   font-size: ${(props) => props.theme.fontSizes.h5};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 export default FriendList;

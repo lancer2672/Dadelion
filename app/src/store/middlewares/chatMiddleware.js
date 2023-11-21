@@ -6,7 +6,7 @@ const chatMiddleware = () => (store) => {
     if (socket) {
       switch (action.type) {
         case "chat/joinChannels": {
-          const channelIds = action.payload;
+          const { channelIds } = action.payload;
           socket.emit("join-channels", channelIds);
           break;
         }

@@ -198,7 +198,7 @@ const BackButton = styled.TouchableOpacity`
 const Heading = styled.Text`
   font-weight: bold;
   font-size: ${(props) => props.theme.fontSizes.h5};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 export default Settings;

@@ -17,7 +17,9 @@ export const postApi = createApi({
       transformResponse: (response, meta, arg) => {
         const posts = response.data.posts.map((post) => {
           if (post.image != null) {
+            console.log("post.image", post.image);
             post.image = `${UrlAPI}\\${post.image}`;
+            console.log("post.image", post.image);
           }
           return post;
         });
@@ -37,12 +39,20 @@ export const postApi = createApi({
               const i = draft.posts.findIndex((post) => post._id == postId);
               if (i >= 0) {
                 // if reply comment
+                let newCommentList;
                 if (parentId) {
                   const j = draft.posts[i].comments.findIndex(
                     (cmt) => cmt._id === parentId
                   );
-                  draft.posts[i].comments[j].replies.unshift(newComment);
-                } else draft.posts[i].comments.unshift(newComment);
+                  // assign new object comment to post -> trigger useEffect
+                  newCommentList = [...draft.posts[i].comments];
+                  comments[j].replies.unshift(newComment);
+                  draft.posts[i].comments = newCommentList;
+                } else {
+                  newCommentList = [...draft.posts[i].comments];
+                  newCommentList.unshift(newComment);
+                  draft.posts[i].comments = newCommentList;
+                }
               }
               console.log("current Draft", current(draft), i);
             });
@@ -99,13 +109,10 @@ export const postApi = createApi({
       providesTags: ["Post"],
     }),
     createPost: builder.mutation({
-      query: (newPostFormData) => ({
+      query: (data) => ({
         url: `${postRoute}/create`,
         method: "POST",
-        body: newPostFormData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        body: data,
       }),
       invalidatesTags: ["Post"],
     }),
@@ -117,13 +124,10 @@ export const postApi = createApi({
       invalidatesTags: ["Post"],
     }),
     updatePost: builder.mutation({
-      query: ({ postId, newPostData }) => ({
+      query: ({ postId, data }) => ({
         url: `${postRoute}/${postId}`,
         method: "PUT",
-        body: newPostData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        body: data,
       }),
       invalidatesTags: ["Post"],
     }),

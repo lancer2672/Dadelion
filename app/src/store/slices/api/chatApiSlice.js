@@ -15,7 +15,7 @@ export const chatApi = createApi({
         response.data.messages = response.data.messages.map((mes) => {
           const imageUrls = mes.imageUrls
             ? mes.imageUrls.map((imageUrl) => {
-                return `${UrlAPI}${imageUrl}`;
+                return `${UrlAPI}/${imageUrl}`;
               })
             : [];
           return {
@@ -39,18 +39,24 @@ export const chatApi = createApi({
             console.log("receive message data", { newMess, channelId, type });
             updateCachedData((draft) => {
               switch (type) {
-                case "text":
-                  break;
                 case "image": {
-                  newMess.imageUrls = newMess.imageUrls.map((imageUrl) => {
-                    return `${UrlAPI}${imageUrl}`;
+                  const imagesFullUrl = newMess.imageUrls.map((imageUrl) => {
+                    return `${UrlAPI}/${imageUrl}`;
                   });
-                  console.log("newMessage", newMess.imageUrls);
+
+                  newMess = { ...newMess, imageUrls: imagesFullUrl };
+
+                  console.log(
+                    "newMessage imagesFullUrl",
+                    imagesFullUrl,
+                    newMess.imageUrls
+                  );
                   break;
                 }
+                //other type
               }
+              console.log("new Mess", newMess);
               draft.unshift(newMess);
-              console.log("new draft data", current(draft));
             });
           });
         } catch (err) {

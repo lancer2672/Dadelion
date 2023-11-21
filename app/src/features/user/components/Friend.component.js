@@ -9,9 +9,7 @@ import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 const Friend = ({ navigation, friend }) => {
-  const { data, isLoading, error } = useGetUserByIdQuery(friend.userId);
   const { user } = useSelector(userSelector);
-  console.log("friend Data", friend, data?.user, error);
   const navigateToFriendProfile = () => {
     if (user._id !== friend.userId) {
       navigation.navigate("Guest", { guestId: friend.userId });
@@ -21,12 +19,12 @@ const Friend = ({ navigation, friend }) => {
   };
   return (
     <Container onPress={navigateToFriendProfile}>
-      <Avatar source={{ uri: data?.user.avatar }}></Avatar>
+      <Avatar source={{ uri: friend.avatar }}></Avatar>
       <Spacer position={"left"} size={"medium"}></Spacer>
 
       <View>
-        <Name>{data?.user.nickname}</Name>
-        <Email>{data?.user.email}</Email>
+        <Name>{friend.nickname}</Name>
+        <Email>{friend.email}</Email>
       </View>
     </Container>
   );

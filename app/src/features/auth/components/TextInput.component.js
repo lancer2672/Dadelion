@@ -1,7 +1,8 @@
 import React, { memo, useState, forwardRef } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { TextInput } from "react-native-paper";
 
+const SCREEN_WIDTH = Dimensions.get("window").width;
 const InputText = forwardRef(
   (
     {
@@ -23,8 +24,17 @@ const InputText = forwardRef(
       <TextInput
         mode="outlined"
         outlineStyle={{
-          borderRadius: 25,
+          borderRadius: 0,
+          borderTopWidth: 0,
+          borderLeftWidth: 0,
+          borderRightWidth: 0,
+          marginHorizontal: 20,
         }}
+        contentStyle={{
+          margin: 0,
+        }}
+        placeholderTextColor={"white"}
+        textColor={"white"}
         editable={!disabled}
         outlineColor={hasValidationError && "red"}
         style={styles.textInput}
@@ -40,6 +50,7 @@ const InputText = forwardRef(
               fontSize: 12,
             }}
             disabled={true}
+            color={"white"}
             icon={iconLeft}
           />
         }
@@ -51,6 +62,7 @@ const InputText = forwardRef(
               onPress={() => {
                 setShowPassword(!showPassword);
               }}
+              color={"white"}
               icon={showPassword ? "eye" : "eye-off"}
             />
           )
@@ -66,9 +78,11 @@ export default memo(InputText);
 
 const styles = StyleSheet.create({
   textInput: {
-    backgroundColor: "white",
-    width: 250,
+    backgroundColor: "rgba(0,0,0,0)",
     marginTop: 8,
+    width: SCREEN_WIDTH - 32,
     fontSize: 14,
+    padding: 0,
+    color: "white",
   },
 });

@@ -39,6 +39,7 @@ export const AuthButtonContent = styled(Text)`
 export const Slogan = styled(Text)`
   font-style: italic;
   font-weight: 500;
+  color: white;
   margin-bottom: 40px;
 `;
 export const Error = styled(Text)`

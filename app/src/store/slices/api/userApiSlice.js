@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
-import { transformUserData } from "@src/utils/transformHelper";
+import { transformUserData } from "@src/utils/transformData";
 import { getSocket } from "@src/utils/socket";
 import { current } from "@reduxjs/toolkit";
 
@@ -63,8 +63,18 @@ export const userApi = createApi({
         return response.data.users;
       },
     }),
+    getAllFriends: builder.query({
+      query: () => `${userRoute}/friend/get-all`,
+      transformResponse: (response, meta, arg) => {
+        const listFriend = response.data.friends.map((friend) =>
+          transformUserData(friend)
+        );
+        return listFriend;
+      },
+    }),
+
     updateUser: builder.mutation({
-      query: ({ newUserData }) => ({
+      query: (newUserData) => ({
         url: `${userRoute}/update`,
         method: "PUT",
         body: newUserData,
@@ -85,7 +95,10 @@ export const userApi = createApi({
         body: userData,
       }),
       transformResponse: (response, meta, arg) => response.data,
-      transformErrorResponse: (response, meta, arg) => response.data.message,
+      transformErrorResponse: (response, meta, arg) => {
+        console.log("response error", response.data);
+        return response.data.message;
+      },
     }),
     saveFCMtoken: builder.mutation({
       query: (token) => ({
@@ -133,6 +146,8 @@ export const {
   useUpdateUserMutation,
   useSaveFCMtokenMutation,
   useSearchUserQuery,
+
+  useGetAllFriendsQuery,
 
   useGetSearchHistoryQuery,
   useAddUserToSearchHistoryMutation,

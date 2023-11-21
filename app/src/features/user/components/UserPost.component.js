@@ -54,7 +54,7 @@ const UserPost = ({ route }) => {
                 paddingVertical: 8,
               }}
             >
-              <TouchableOpacity
+              <Pressable
                 onPress={() => navigateToDetailPost(item)}
                 style={{ flex: 1 }}
               >
@@ -62,7 +62,7 @@ const UserPost = ({ route }) => {
                   style={{ resizeMode: "cover", flex: 1 }}
                   source={{ uri: item.image }}
                 ></Image>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           );
         }}

@@ -3,15 +3,37 @@ import React, { useEffect, useRef, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native";
 import AuthContainer from "../components/AuthContainer.component";
-import {
-  useSendVerificationEmailMutation,
-  useVerifyEmailQuery,
-} from "@src/store/slices/api/authApi";
+
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "react-i18next";
+import authApi from "@src/api/auth";
+import withLoading from "@src/utils/withLoading";
+
+const PinItem = React.forwardRef(
+  ({ value, setValue, nextItem, prevItem }, ref) => (
+    <TextInput
+      ref={ref}
+      style={styles.input}
+      maxLength={1}
+      textContentType="oneTimeCode"
+      onChangeText={(value) => {
+        setValue(value);
+        if (value && nextItem) nextItem.current.focus();
+      }}
+      onKeyPress={({ nativeEvent }) => {
+        if (nativeEvent.key === "Backspace" && value === "" && prevItem) {
+          prevItem.current.focus();
+        }
+      }}
+      keyboardType="numeric"
+      value={value}
+      clearTextOnFocus={true}
+    />
+  )
+);
 
 const Verification = () => {
   const { email, password, isResetPassword = false } = useRoute().params;
@@ -34,49 +56,36 @@ const Verification = () => {
   const [seconds, setSeconds] = useState(60);
   const code = useRef("");
 
-  const [sendVerificationEmail, { isLoading: isSending, isSuccess }] =
-    useSendVerificationEmailMutation();
-  const {
-    isLoading: isVerifying,
-    data,
-    isSuccess: isEmailVerified,
-  } = useVerifyEmailQuery(
-    { code: code.current, password, isResetPassword },
-    {
-      skip: code.current.length !== 6,
-    }
-  );
-  console.log("isVerifying", isVerifying, isEmailVerified, isResetPassword);
   useEffect(() => {
     code.current = `${pin1}${pin2}${pin3}${pin4}${pin5}${pin6}`;
+    if (code.current.length === 6) {
+      handleVerifyEmail();
+    }
   }, [pin1, pin2, pin3, pin4, pin5, pin6]);
 
-  useEffect(() => {
-    if (isFirstMount) {
-      setIsFirstMount(() => false);
-    } else {
-      if (!isVerifying && isEmailVerified) {
+  const handleVerifyEmail = async () => {
+    dispatch(setIsLoading(true));
+    withLoading(
+      dispatch,
+      async () => {
+        const data = { code: code.current, password, isResetPassword };
+        await authApi.verifyEmail(data);
+
+        //navigate back
         if (isResetPassword) {
           navigation.navigate("ForgotPassword", { isVerified: true });
         } else {
           navigation.navigate("Login");
         }
-      } else if (!isVerifying && !isEmailVerified) {
+      },
+      (error) => {
         showMessage({
           message: t("failed"),
           type: "danger",
         });
       }
-      dispatch(setIsLoading(isVerifying));
-    }
-    dispatch(setIsLoading(isVerifying));
-  }, [isVerifying, isEmailVerified]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      //notify user
-    }
-  }, [isSuccess]);
+    );
+  };
   useEffect(() => {
     if (seconds > 0) {
       const timer = setTimeout(() => {
@@ -85,89 +94,53 @@ const Verification = () => {
       return () => clearTimeout(timer);
     }
   }, [seconds]);
-  const handleResendOTP = () => {
-    sendVerificationEmail({ email, isResetPassword: true });
+  const handleResendOTP = async () => {
+    await authApi.sendVerificationEmail({ email, isResetPassword: true });
   };
-  const handleVerification = () => {};
 
   return (
     <AuthContainer>
       <View style={styles.containerInput}>
-        <TextInput
-          ref={refPin1}
-          style={styles.input}
-          maxLength={1}
-          textContentType="oneTimeCode"
-          onChangeText={(value) => {
-            setPin1(value);
-            if (value) refPin2.current.focus();
-          }}
-          keyboardType="numeric"
-          autoFocus={true}
+        <PinItem
           value={pin1}
-          clearTextOnFocus={true}
+          setValue={setPin1}
+          nextItem={refPin2}
+          ref={refPin1}
         />
-        <TextInput
-          ref={refPin2}
-          style={styles.input}
-          maxLength={1}
-          textContentType="oneTimeCode"
-          onChangeText={(value) => {
-            setPin2(value);
-            if (value) refPin3.current.focus();
-          }}
-          keyboardType="numeric"
+        <PinItem
           value={pin2}
-          clearTextOnFocus={true}
+          setValue={setPin2}
+          nextItem={refPin3}
+          prevItem={refPin1}
+          ref={refPin2}
         />
-        <TextInput
-          ref={refPin3}
-          style={styles.input}
-          textContentType="oneTimeCode"
-          maxLength={1}
-          onChangeText={(value) => {
-            setPin3(value);
-            if (value) refPin4.current.focus();
-          }}
-          keyboardType="numeric"
+        <PinItem
           value={pin3}
-          clearTextOnFocus={true}
+          setValue={setPin3}
+          nextItem={refPin4}
+          prevItem={refPin2}
+          ref={refPin3}
         />
-        <TextInput
-          ref={refPin4}
-          style={styles.input}
-          textContentType="oneTimeCode"
-          maxLength={1}
-          onChangeText={(value) => {
-            setPin4(value);
-            if (value) refPin5.current.focus();
-          }}
-          keyboardType="numeric"
+        <PinItem
           value={pin4}
-          clearTextOnFocus={true}
+          setValue={setPin4}
+          nextItem={refPin5}
+          prevItem={refPin3}
+          ref={refPin4}
         />
-        <TextInput
-          ref={refPin5}
-          style={styles.input}
-          textContentType="oneTimeCode"
-          maxLength={1}
-          onChangeText={(value) => {
-            setPin5(value);
-            if (value) refPin6.current.focus();
-          }}
-          keyboardType="numeric"
+        <PinItem
           value={pin5}
-          clearTextOnFocus={true}
+          setValue={setPin5}
+          nextItem={refPin6}
+          prevItem={refPin4}
+          ref={refPin5}
         />
-        <TextInput
-          ref={refPin6}
-          style={styles.input}
-          maxLength={1}
-          textContentType="oneTimeCode"
-          onChangeText={setPin6}
-          keyboardType="numeric"
+        <PinItem
           value={pin6}
-          clearTextOnFocus={true}
+          setValue={setPin6}
+          nextItem={null}
+          prevItem={refPin5}
+          ref={refPin6}
         />
       </View>
       {/* <Text style={styles.title}>Verification</Text> */}
@@ -176,7 +149,7 @@ const Verification = () => {
       </Text>
       <TouchableOpacity
         style={styles.btnContinue}
-        onPress={() => handleVerification()}
+        onPress={() => handleVerifyEmail()}
       >
         <Text
           style={{
@@ -236,7 +209,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: "black",
+    borderColor: "gray",
     textAlign: "center",
     color: "black",
     fontSize: 22,

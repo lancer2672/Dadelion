@@ -9,18 +9,19 @@ import { chatSlice } from "./slices/chatSlice";
 import { locationSlice } from "./slices/location.Slice";
 
 import { userApi } from "./slices/api/userApiSlice";
-import { uploadApi } from "./slices/api/uploadApi";
 import { postApi } from "./slices/api/postApiSlice";
 import { chatApi } from "./slices/api/chatApiSlice";
 import { notificationApi } from "./slices/api/notificationApiSlice";
 import { friendRequestApi } from "./slices/api/friendRequestApiSlice";
-import { authApi } from "./slices/api/authApi";
 
 import chatMiddleware from "./middlewares/chatMiddleware";
 import postMiddleware from "./middlewares/postMiddleware";
 import notificationMiddleware from "./middlewares/notificationMiddleware";
 import locationMiddleware from "./middlewares/locationMiddleware";
 
+import { createLogger } from "redux-logger";
+
+const logger = createLogger();
 export default configureStore({
   reducer: {
     app: appSlice.reducer,
@@ -32,9 +33,8 @@ export default configureStore({
     notification: notification.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
-    [authApi.reducerPath]: authApi.reducer,
+
     [chatApi.reducerPath]: chatApi.reducer,
-    [uploadApi.reducerPath]: uploadApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
     [friendRequestApi.reducerPath]: friendRequestApi.reducer,
   },
@@ -43,12 +43,12 @@ export default configureStore({
       .concat(userApi.middleware)
       .concat(postApi.middleware)
       .concat(chatApi.middleware)
-      .concat(authApi.middleware)
-      .concat(uploadApi.middleware)
+
       .concat(friendRequestApi.middleware)
       .concat(notificationApi.middleware)
       .concat(chatMiddleware())
       .concat(notificationMiddleware())
       .concat(locationMiddleware())
       .concat(postMiddleware()),
+  // .concat(logger),
 });

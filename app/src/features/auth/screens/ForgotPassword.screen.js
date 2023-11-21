@@ -3,16 +3,13 @@ import React from "react";
 import AuthContainer from "../components/AuthContainer.component";
 import InputText from "../components/TextInput.component";
 import { useState } from "react";
-import { useEffect } from "react";
-import {
-  useResetPasswordMutation,
-  useSendVerificationEmailMutation,
-} from "@src/store/slices/api/authApi";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "react-i18next";
 import { useRoute } from "@react-navigation/native";
+import authApi from "@src/api/auth";
+import withLoading from "@src/utils/withLoading";
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState();
@@ -21,36 +18,38 @@ const ForgotPassword = ({ navigation }) => {
   const { isVerified } = useRoute().params;
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [
-    sendVerificationEmail,
-    { isLoading: isSending, isSuccess: sentSuccess },
-  ] = useSendVerificationEmailMutation();
-  const [resetPassword, { isSuccess }] = useResetPasswordMutation();
-  const sendEmailResetPassword = () => {
-    sendVerificationEmail({ email, isResetPassword: true });
-  };
-  console.log("Email", "password", email, newPassword);
-  const resetAccountPassword = () => {
-    resetPassword({ email, newPassword });
-  };
-  useEffect(() => {
-    if (isSuccess) {
-      navigation.navigate("Login");
-    }
-  }, [isSuccess]);
-  useEffect(() => {
-    if (!isSending) {
-      if (sentSuccess) {
+
+  const sendEmailResetPassword = async () => {
+    await withLoading(
+      dispatch,
+      async () => {
+        await authApi.sendVerificationEmail({ email, isResetPassword: true });
         navigation.navigate("Verification", { email, isResetPassword: true });
-      } else {
-        // showMessage({
-        //   message: t("failed"),
-        //   type: "danger",
-        // });
+      },
+      () => {
+        showMessage({
+          message: t("failed"),
+          type: "danger",
+        });
       }
-    }
-    dispatch(setIsLoading(isSending));
-  }, [isSending, sentSuccess]);
+    );
+  };
+  const resetAccountPassword = async () => {
+    await withLoading(
+      dispatch,
+      async () => {
+        await authApi.resetPassword({ email, newPassword });
+        navigation.navigate("Login");
+      },
+      () => {
+        showMessage({
+          message: t("failed"),
+          type: "danger",
+        });
+      }
+    );
+  };
+
   return (
     <AuthContainer>
       {isVerified ? (

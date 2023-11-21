@@ -1,46 +1,47 @@
 import { object, string, ref } from "yup";
+
 export const accountSchema = object({
   username: string()
-    .trim("Tên đăng nhập không được chứa khoảng trắng")
-    .required("Tên đăng nhập không được để trống")
-    .min(8, "Tên đăng nhập phải có ít nhất 8 ký tự")
-    .max(24, "Tên đăng nhập chỉ được tối đa 24 ký tự"),
+    .trim("Username cannot contain spaces")
+    .required("Username cannot be empty")
+    .min(8, "Username must be at least 8 characters long")
+    .max(24, "Username can be at most 24 characters long"),
   password: string()
-    .min(8, "Mật khẩu phải dài hơn 8 ký tự ")
-    .required("Mật khẩu không được để trống")
+    .min(8, "Password must be at least 8 characters long")
+    .required("Password cannot be empty")
     .matches(
       /^(?=.*[A-Z])(?=.*\d).+$/,
-      "Mật khẩu phải chứa ít nhất 1 ký tự viết hoa và 1 chữ số"
+      "Password must contain at least one uppercase letter and one digit"
     ),
   newPassword: string()
-    .min(8, "Mật khẩu phải dài hơn 8 ký tự ")
-    .required("Mật khẩu không được để trống")
+    .min(8, "New password must be at least 8 characters long")
+    .required("New password cannot be empty")
     .matches(
       /^(?=.*[A-Z])(?=.*\d).+$/,
-      "Mật khẩu phải chứa ít nhất 1 ký tự viết hoa và 1 chữ số"
+      "New password must contain at least one uppercase letter and one digit"
     ),
   confirmNewPassword: string()
-    .required("Mật khẩu không được để trống")
-    .oneOf([ref("newPassword")], "Mật khẩu không trùng khớp"),
+    .required("Confirm password cannot be empty")
+    .oneOf([ref("newPassword")], "Passwords do not match"),
   email: string()
-    .email("Email không hợp lệ")
-    .required("Email không được để trống"),
+    .email("Invalid email address")
+    .required("Email cannot be empty"),
 });
 
 export const nameSchema = object({
   firstname: string()
-    .required("Không được để trống")
-    .trim("Tên không được chứa khoảng trắng")
+    .required("First name cannot be empty")
+    .trim("First name cannot contain spaces")
     .matches(
       /^[^\d!@#$%^&*()_+=[\]{};':"\\|,.<>/?]*$/,
-      "Tên không được chứa ký tự đặc biệt"
+      "First name cannot contain special characters"
     ),
   lastname: string()
-    .required("Không được để trống")
-    .trim("Tên không được chứa khoảng trắng")
+    .required("Last name cannot be empty")
+    .trim("Last name cannot contain spaces")
     .matches(
       /^[^\d!@#$%^&*()_+=[\]{};':"\\|,.<>/?]*$/,
-      "Tên không được chứa ký tự đặc biệt"
+      "Last name cannot contain special characters"
     ),
 });
 

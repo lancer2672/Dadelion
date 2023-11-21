@@ -25,6 +25,8 @@ import GenderSelection from "../components/GenderSelection.component";
 import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { useTheme } from "styled-components";
+import withLoading from "@src/utils/withLoading";
+import userApi from "@src/api/user";
 
 const dayjs = require("dayjs");
 
@@ -40,12 +42,31 @@ const EditProfile = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showGenderSelection, setShowGenderSelection] = useState(false);
-  const [updateUser, { error, data, isLoading, isSuccess }] =
-    useUpdateUserMutation();
 
-  const handleUpdateUserInfo = () => {
-    const newUserData = { nickname, gender, dateOfBirth, email, phoneNumber };
-    updateUser(newUserData);
+  const handleUpdateUserInfo = async () => {
+    withLoading(
+      dispatch,
+      async () => {
+        const newUserData = {
+          nickname,
+          gender,
+          dateOfBirth,
+          email,
+          phoneNumber,
+        };
+        await userApi.updateUser(newUserData);
+        showMessage({
+          message: t("updateSucceeded"),
+          type: "success",
+        });
+      },
+      (error) => {
+        showMessage({
+          message: t("updateFailed"),
+          type: "danger",
+        });
+      }
+    );
   };
   const onGenderFieldClick = () => {
     setShowGenderSelection(true);
@@ -53,30 +74,14 @@ const EditProfile = ({ navigation }) => {
   const onDateOfBirthFieldClick = () => {
     setShowDatePicker(true);
   };
-  useEffect(() => {
-    if (error) {
-      showMessage({
-        message: t("updateFailed"),
-        type: "danger",
-      });
-    } else if (data) {
-      showMessage({
-        message: t("updateSucceeded"),
-        type: "success",
-      });
-    }
-  }, [isLoading, data]);
 
-  useEffect(() => {
-    dispatch(setIsLoading(isLoading));
-  }, [isLoading]);
   return (
     <ScrollView
       style={{
         padding: 20,
         backgroundColor: theme.colors.bg.primary,
         flex: 1,
-        opacity: showGenderSelection || isLoading ? 0.6 : 1,
+        // opacity: showGenderSelection || isLoading ? 0.6 : 1,
       }}
     >
       <Header>
@@ -102,7 +107,7 @@ const EditProfile = ({ navigation }) => {
         <Text
           style={{
             fontSize: 18,
-            fontWeight: 500,
+            fontWeight: "500",
             color: theme.colors.text.primary,
           }}
         >
@@ -209,7 +214,6 @@ const SaveBtn = styled.TouchableOpacity`
 `;
 const SaveBtnText = styled.Text`
   text-align: center;
-  color: ${(props) => props.theme.colors.white};
   font-size: 20px;
   font-weight: 500;
   color: ${(props) => props.theme.colors.text.primary};
@@ -217,6 +221,6 @@ const SaveBtnText = styled.Text`
 const Heading = styled.Text`
   font-weight: bold;
   font-size: ${(props) => props.theme.fontSizes.h5};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.bg.primary};
 `;
 export default EditProfile;
