@@ -1,5 +1,5 @@
 import messaging from "@react-native-firebase/messaging";
-export const getMessagingToken = (saveFCMtoken) => {
+const getMessagingToken = (saveFCMtoken) => {
   // Get the device token
   messaging()
     .getToken()
@@ -11,6 +11,12 @@ export const getMessagingToken = (saveFCMtoken) => {
       console.log("get messaging token failed", er);
     });
 
+  return messaging().onTokenRefresh((token) => {
+    saveFCMtoken(token);
+  });
+};
+
+const handleOnNotificationOpenedApp = () => {
   messaging().onNotificationOpenedApp((remoteMessage) => {
     console.log(
       "Notification caused app to open from background state:",
@@ -32,7 +38,6 @@ export const getMessagingToken = (saveFCMtoken) => {
       }
     }
   });
-  return messaging().onTokenRefresh((token) => {
-    saveFCMtoken(token);
-  });
 };
+
+export { handleOnNotificationOpenedApp, getMessagingToken };

@@ -1,32 +1,94 @@
 import messaging from "@react-native-firebase/messaging";
-import { getMessagingToken } from "@src/services/messaging";
-import { requestNotificationPermission } from "@src/permissions";
 import {
-  enableForegroundNotification,
-  registerForegroundService,
-} from "@src/services/notifee/notifee";
+  getMessagingToken,
+  handleOnNotificationOpenedApp,
+} from "@src/services/messaging";
+import { requestNotificationPermission } from "@src/permissions";
+import { enableForegroundNotification } from "@src/services/notifee/notifee";
 import messagingNotificationIns from "@src/services/notifee/MessagingNotification";
-import { useSaveFCMtokenMutation } from "@src/store/slices/api/userApiSlice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { userSelector } from "@src/store/selector";
+import { sendMessage } from "@src/store/slices/chatSlice";
+import { AndroidImportance } from "@notifee/react-native";
+import { MessageType } from "@src/constants";
+import userApi from "@src/api/user";
 
 const useNotification = () => {
+  const { user } = useSelector(userSelector);
+  const dispatch = useDispatch();
   const setIsBgNotificationEnable = (isEnabled) => {
     messagingNotificationIns.enable = isEnabled;
   };
-  const [saveFCMtoken, { error }] = useSaveFCMtokenMutation();
+  useEffect(() => {
+    if (user) {
+      (async () => {
+        messagingNotificationIns.addUserInfor(user);
+      })();
+    }
+  }, [user]);
+  const handleIncomingMessage = async (remoteMessage) => {
+    console.log("handleIncomingMessage", remoteMessage);
+    console.log("handle", JSON.parse(remoteMessage.data.data));
+    const messageData = JSON.parse(remoteMessage.data.data);
+    // const { body } = notification;
+    const {
+      avatar,
+      message,
+      channelId: notificationId,
+      nickname,
+      createdAt,
+    } = messageData;
+    if (!messagingNotificationIns.hasNotification(notificationId)) {
+      messagingNotificationIns.addNotificationItem(notificationId);
+    }
+    const newMessage = {
+      user: { avatar, nickname },
+      body: message,
+      createdAt,
+    };
+    messagingNotificationIns.addMessage({
+      notificationId,
+      message: newMessage,
+    });
+    messagingNotificationIns.displayNotification(notificationId);
+  };
+
+  const handleUserReply = (userInput, notificationId) => {
+    const newMessage = {
+      user: { avatar: user.avatar, nickname: user.nickname },
+      body: userInput,
+      createdAt: Date.now(),
+    };
+    // messagingNotificationIns.addMessage({
+    //   notificationId,
+    //   message: newMessage,
+    // });
+    console.log("handleUserReply");
+    dispatch(
+      sendMessage({
+        channelId: notificationId,
+        newMessage: userInput,
+        type: MessageType.TEXT,
+      })
+    );
+  };
+
+  const removeNotificationItem = async (id) => {
+    await messagingNotificationIns.removeNotificationItem(id);
+  };
   const enableNotifications = () => {
+    console.log("enableNotifications");
     //notifee
     requestNotificationPermission();
-    enableForegroundNotification();
-    registerForegroundService();
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-      console.log("Message handled in the background!", remoteMessage);
-      messagingNotificationIns.displayNotification();
-    });
-    const onTokenRefresh = getMessagingToken(saveFCMtoken);
+    enableForegroundNotification({ removeNotificationItem, handleUserReply });
+
+    handleOnNotificationOpenedApp();
+    messaging().setBackgroundMessageHandler(handleIncomingMessage);
+
+    const onTokenRefresh = getMessagingToken(userApi.saveFCMtoken);
     const unsubscribeRemoteMessaging = messaging().onMessage(
-      async (remoteMessage) => {
-        console.log("A new FCM message arrived!", remoteMessage);
-      }
+      handleIncomingMessage
     );
     return () => {
       onTokenRefresh();

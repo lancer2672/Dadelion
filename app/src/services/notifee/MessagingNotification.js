@@ -1,54 +1,109 @@
+import { UrlAPI } from "@src/constants";
 import Notification from "./Notification";
 import notifee, {
   AndroidStyle,
   AndroidImportance,
+  AndroidGroupAlertBehavior,
 } from "@notifee/react-native";
 
-const MESSAGING_NOTIFICATION_ID = "messagingNotificationId";
+const PARENT_NOTIFICATION_ID = "parent_noti_id";
 const MESSAGING_NOTIFICATION_CHANNEL = "messagingNotification";
 class MessagingNotification extends Notification {
   constructor() {
     super({
-      notificationId: MESSAGING_NOTIFICATION_ID,
-      channelId: MESSAGING_NOTIFICATION_CHANNEL,
+      notificationChannelId: MESSAGING_NOTIFICATION_CHANNEL,
       importance: AndroidImportance.HIGH,
     });
+    this.notifications = new Map();
+    this.isParentNotificationDisplayed = false;
+  }
+  addUserInfor(user) {
+    this.user = user;
   }
 
-  addUserInfor({ username, avatar }) {
-    this.user = { username, avatar };
+  addMessage({ notificationId, message }) {
+    const notificationItem = this.notifications.get(notificationId);
+    if (notificationItem) {
+      notificationItem.messages.push(message);
+      this.notifications.set(notificationId, notificationItem);
+      console.log("notificationItem", notificationItem);
+    }
   }
-  async updateNotification({}) {
+
+  addNotificationItem(id) {
+    console.log("addNotificationItem", id);
+    this.notifications.set(id, {
+      messages: [],
+    });
+    console.log("addNotificationItem", this.notifications);
+  }
+  hasNotification(notificationId) {
+    return this.notifications.has(notificationId);
+  }
+  async displayParentNotification() {
+    console.log("Display parent");
+    this.isParentNotificationDisplayed = true;
+    await notifee.displayNotification({
+      id: PARENT_NOTIFICATION_ID,
+      title: "Notification",
+      subtitle: `${this.notifications.size || 0} new messages`,
+      android: {
+        groupId: "123",
+        groupSummary: true,
+        channelId: this.notificationChannelId,
+        groupAlertBehavior: AndroidGroupAlertBehavior.CHILDREN,
+      },
+    });
+  }
+  async removeParentNotification() {
+    this.isParentNotificationDisplayed = false;
+    await notifee.cancelNotification(PARENT_NOTIFICATION_ID);
+  }
+  async removeNotificationItem(id) {
+    this.notifications.delete(id);
+    //if there is no child notification
+    if (this.notifications.size === 0) {
+      await this.removeParentNotification();
+    }
+  }
+  async updateNotification() {
     await this.displayNotification();
   }
-
-  async displayNotification() {
+  async displayNotification(notificationId) {
+    const notificationItem = this.notifications.get(notificationId);
+    console.log("notificationId", notificationId, notificationItem);
+    if (!notificationItem) return;
+    if (!this.isParentNotificationDisplayed) {
+      await this.displayParentNotification();
+    }
     const notification = {
-      id: this.notificationId,
+      id: notificationId,
       title: "Tin nhắn mới",
       body: ``,
       android: {
-        channelId: this.channelId,
+        groupId: "123",
+        groupAlertBehavior: AndroidGroupAlertBehavior.CHILDREN,
+        channelId: this.notificationChannelId,
         style: {
           type: AndroidStyle.MESSAGING,
           person: {
-            name: "John Doe",
-            icon: "https://my-cdn.com/avatars/123.png",
+            name: this.user?.nickname || "unknown user",
+            icon:
+              this.user?.avatar !== ""
+                ? this.user.avatar
+                : "https://my-cdn.com/avatars/123.png",
           },
-          messages: [
-            {
-              text: "Hey, how are you?",
-              timestamp: Date.now() - 600000, // 10 minutes ago
+          messages: notificationItem.messages.map((message, index) => ({
+            text: message.body,
+            timestamp: Number(message.createdAt),
+            person: {
+              name: message.user.nickname,
+              icon:
+                message.user.avatar !== ""
+                  ? this.user.avatar
+                  : "https://my-cdn.com/avatars/123.png",
             },
-            {
-              text: "Great thanks, food later?",
-              timestamp: Date.now(), // Now
-              person: {
-                name: "Sarah Lane",
-                icon: "https://my-cdn.com/avatars/567.png",
-              },
-            },
-          ],
+          })),
         },
         actions: [
           {
@@ -57,12 +112,12 @@ class MessagingNotification extends Notification {
             pressAction: {
               id: "reply",
             },
-            input: true, // enable free text input
+            input: false, // enable free text input
           },
         ],
       },
     };
-    super.displayNotification(notification);
+    await super.displayNotification(notification);
   }
 }
 

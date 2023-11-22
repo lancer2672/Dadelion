@@ -8,20 +8,17 @@ import notifee, {
   AndroidStyle,
 } from "@notifee/react-native";
 class Notification {
-  constructor({
-    notificationId,
-    channelId,
+  constructor({ notificationChannelId, importance }) {
+    this.enable = true;
+    this.createChannel({ notificationChannelId, importance });
+  }
+  async createChannel({
+    notificationChannelId,
     importance = AndroidImportance.DEFAULT,
   }) {
-    this.notificationId = notificationId;
-    this.createChannel({ channelId, importance });
-    this.enable = true;
-  }
-
-  async createChannel({ channelId, importance }) {
-    this.channelId = await notifee.createChannel({
-      id: channelId,
-      name: "channelId",
+    this.notificationChannelId = await notifee.createChannel({
+      id: notificationChannelId,
+      name: notificationChannelId,
       importance,
     });
   }
