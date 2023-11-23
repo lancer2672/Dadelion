@@ -5,8 +5,8 @@ import { Avatar } from "@src/components/Avatar";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 
 const AvatarMarker = ({ location, userId, openModal }) => {
-  const { data } = useGetUserByIdQuery(userId);
-  console.log("user data ", data);
+  const { data: user } = useGetUserByIdQuery(userId);
+  console.log("user data ", user);
   console.log(userId, location);
   return (
     <Marker
@@ -18,8 +18,8 @@ const AvatarMarker = ({ location, userId, openModal }) => {
     >
       <Image
         source={
-          data?.user.avatar
-            ? { uri: data?.user.avatar }
+          user.avatar
+            ? { uri: user.avatar }
             : require("../../../../assets/imgs/DefaultAvatar.png")
         }
         style={{

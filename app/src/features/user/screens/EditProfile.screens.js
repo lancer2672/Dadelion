@@ -22,8 +22,6 @@ import { colors } from "@src/infrastructure/theme/colors";
 import { useState, useEffect } from "react";
 
 import GenderSelection from "../components/GenderSelection.component";
-import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
-import { setIsLoading } from "@src/store/slices/appSlice";
 import { useTheme } from "styled-components";
 import withLoading from "@src/utils/withLoading";
 import userApi from "@src/api/user";

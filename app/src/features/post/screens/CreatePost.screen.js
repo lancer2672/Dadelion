@@ -48,6 +48,7 @@ const CreatePost = ({ navigation }) => {
       type: "image/jpg",
     });
     const data = await uploadFile({ type: "image", data: newPostData });
+    console.log("Create post upload img  data", data, newPostData);
     createPost({ imageUrl: data.fileUrls[0], description: description });
   };
 
@@ -89,15 +90,7 @@ const CreatePost = ({ navigation }) => {
           </View>
         </UserInfo>
       </Body>
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 8 }}>
-        <PostContent
-          multiline={true}
-          onChangeText={(newDescript) => setDescription(newDescript)}
-          placeholder="Bạn đang nghĩ gì..."
-          placeholderTextColor={theme.colors.text.primary}
-        ></PostContent>
-      </View>
-      <TouchableOpacity>
+      <Pressable>
         <SelectedImage
           style={{ width: SCREEN_WIDTH - 16 }}
           resizeMode="contain"
@@ -109,7 +102,15 @@ const CreatePost = ({ navigation }) => {
                 }
           }
         ></SelectedImage>
-      </TouchableOpacity>
+      </Pressable>
+      <View style={{ flexDirection: "row", alignItems: "center", padding: 8 }}>
+        <PostContent
+          multiline={true}
+          onChangeText={(newDescript) => setDescription(newDescript)}
+          placeholder="Bạn đang nghĩ gì..."
+          placeholderTextColor={theme.colors.text.primary}
+        ></PostContent>
+      </View>
     </Container>
   );
 };

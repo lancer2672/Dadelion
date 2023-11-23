@@ -8,8 +8,8 @@ import notifee, {
   AndroidStyle,
 } from "@notifee/react-native";
 class Notification {
+  static enable = true;
   constructor({ notificationChannelId, importance }) {
-    this.enable = true;
     this.createChannel({ notificationChannelId, importance });
   }
   async createChannel({
@@ -50,7 +50,7 @@ class Notification {
   // }
 
   async displayNotification(notification) {
-    if (!this.enable) return;
+    if (!Notification.enable) return;
     await notifee.displayNotification(notification);
   }
 

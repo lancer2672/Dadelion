@@ -7,9 +7,11 @@ import notifee, {
   RepeatFrequency,
   AndroidStyle,
 } from "@notifee/react-native";
+import { NotificationType } from "@src/constants";
 
-export async function checkForInitialNotification() {
+export async function onAppOpened(handleNavigation) {
   const initialNotification = await notifee.getInitialNotification();
+
   if (initialNotification) {
     console.log(
       "Notification caused application to open",
@@ -19,10 +21,12 @@ export async function checkForInitialNotification() {
       "Press action used to open the app",
       initialNotification.pressAction
     );
+    // handleNavigation(initialNotification.notification);
   }
 }
 
-export function enableForegroundNotification({
+export function addActionListener({
+  handleNavigation,
   removeNotificationItem,
   handleUserReply,
 }) {
@@ -32,15 +36,17 @@ export function enableForegroundNotification({
       handleUserReply(detail.input, detail.notification.id);
     }
   });
-  notifee.onForegroundEvent(({ type, detail }) => {
+  notifee.onBackgroundEvent(async ({ type, detail }) => {
+    const notification = detail.notification;
     switch (type) {
       case EventType.DISMISSED:
-        console.log("User dismissed notification", detail.notification);
-        removeNotificationItem(detail.notification.id);
+        console.log("User dismissed notification", notification);
+        await removeNotificationItem(notification.data.type,notification.id);
         break;
       case EventType.PRESS:
-        console.log("User pressed notification", detail.notification);
-        removeNotificationItem(detail.notification.id);
+        console.log("User pressed notification", notification);
+        handleNavigation(notification);
+        await removeNotificationItem(notification.data.type, notification.id);
         break;
       case EventType.APP_BLOCKED: {
         console.log("User toggled app blocked", detail.blocked);

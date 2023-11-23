@@ -72,5 +72,5 @@ const Button = styled(Pressable).attrs((props) => ({
 const ButtonContent = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: ${(props) => props.theme.fontWeights.medium};
-  color: ${(props) => props.theme.colors.white};
+  color: ${(props) => props.theme.colors.bg.primary};
 `;

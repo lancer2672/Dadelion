@@ -30,30 +30,27 @@ const Channel = ({ navigation, channel }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { user } = useSelector(userSelector);
-  const [chatFriend, setChatFriend] = useState(null);
-  const [chatFriendId, setChatFriendId] = useState(null);
 
   const [lastMessage, setLastMessage] = useState({});
-
   const [unseenMessageIds, setUnseenMessageIds] = useState([]);
+
   const { data: lastMsgData, isLoading: isLoadLastMsg } =
     useGetLastMessageQuery(channelId, {
       refetchOnMountOrArgChange: true,
     });
+
   const { data: dataChannelMsg } = useLoadChatRoomMessagesQuery(channelId);
-  const { isLoading, isSuccess, data, error } = useGetUserByIdQuery(
-    chatFriendId,
-    {
-      skip: !chatFriendId,
-    }
-  );
+  const { data: chatFriend } = useGetUserByIdQuery(channel.chatFriendId, {
+    skip: !channel.chatFriendId,
+  });
   const naviagteToGuest = () => {
-    if (chatFriendId) {
-      navigation.navigate("Guest", { guestId: chatFriendId });
+    if (channel.chatFriendId) {
+      navigation.navigate("Guest", { guestId: channel.chatFriendId });
     }
   };
   const navigateToChatRoom = () => {
-    dispatch(setSelectedChannel({ ...channel, chatFriend }));
+    // dispatch(setSelectedChannel({ ...channel, chatFriend }));
+    dispatch(setSelectedChannel(channel));
     navigation.navigate("ChatRoom");
     if (lastMessage) {
       setLastMessage((prev) => ({ ...prev, isSeen: true }));
@@ -76,11 +73,6 @@ const Channel = ({ navigation, channel }) => {
       setUnseenMessageIds(unseenMsgId);
     }
   }, [dataChannelMsg, chatFriend]);
-
-  useEffect(() => {
-    const friendId = memberIds.filter((id) => id != user._id);
-    setChatFriendId(() => friendId[0]);
-  }, []);
 
   useEffect(() => {
     if (lastMsgData) {
@@ -117,11 +109,7 @@ const Channel = ({ navigation, channel }) => {
       setLastMessage({ ...lastMsgData.lastMessage, note });
     }
   }, [isLoadLastMsg, lastMsgData]);
-  useEffect(() => {
-    if (isSuccess) {
-      setChatFriend(() => data.user);
-    } else console.log("error", error);
-  }, [isLoading, data]);
+
   return (
     <Container onPress={navigateToChatRoom}>
       <TouchableOpacity onPress={naviagteToGuest}>

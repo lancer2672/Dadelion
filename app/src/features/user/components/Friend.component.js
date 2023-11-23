@@ -5,7 +5,6 @@ import { Spacer } from "@src/components/spacer/spacer.component";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { theme } from "@src/infrastructure/theme";
 import { Avatar } from "@src/components/Avatar";
-import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 const Friend = ({ navigation, friend }) => {

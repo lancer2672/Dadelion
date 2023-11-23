@@ -8,7 +8,7 @@ import {
   Animated,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -23,19 +23,24 @@ import { Avatar } from "@src/components/Avatar";
 import FastImage from "react-native-fast-image";
 import { FlashList } from "@shopify/flash-list";
 import CommentItemComponent from "../components/CommentItem.component";
+import { FastImageBackground } from "@src/components/image";
+import CommentPostModal from "../components/CommentPostModal.component";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 const DetailPost = ({ route }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const socket = getSocket();
   const imageHeightAnim = useRef(new Animated.Value(300)).current;
   const userState = useSelector(userSelector);
-  const postState = useSelector(postSelector);
-  const { selectedPost } = postState;
+  const { selectedPost } = useSelector(postSelector);
+  const { data: postCreator } = useGetUserByIdQuery(selectedPost.user);
+
   console.log("SELECTED POST", selectedPost);
   const { autoFocus } = route.params;
   const [heart, setHeart] = useState(false);
-  // const [reactPost, { isSuccess }] = useReactPostMutation();
+  const [modalVisible, setModalVisible] = useState(autoFocus);
   useEffect(() => {
     //check if user reacted this selectedPost
     const res = selectedPost.likes.find((object) => {
@@ -70,80 +75,84 @@ const DetailPost = ({ route }) => {
     );
     setHeart(!heart);
   };
-  const handleScroll = (event) => {
-    // Lấy thông tin vị trí cuộn và xử lý
-    const scrollY = event.nativeEvent.contentOffset.y;
-    console.log("Vị trí cuộn: ", scrollY);
+  const openCommentModal = () => {
+    setModalVisible(true);
   };
   console.log("selectedPost,selectedPost.comments", selectedPost.comments);
   return (
     <Container>
-      <FastImage
+      <FastImageBackground
         fallback={true}
         source={{
-          uri: "https://res.cloudinary.com/dk-find-out/image/upload/q_80,w_1920,f_auto/A-Alamy-BXWK5E_vvmkuf.jpg",
           uri: selectedPost.image,
-          priority: FastImage.priority.high,
         }}
         style={{
           height: 300,
+          flex: 1,
           width: "100%",
+          justifyContent: "flex-end",
           backgroundColor: "gray",
         }}
+        imageStyle={{
+          width: 300,
+          height: 300,
+          flex: 1,
+          backgroundColor: "red",
+        }}
         resizeMode={FastImage.resizeMode.cover}
-      />
-      <UserInfoContainer>
-        <Avatar
-          width={70}
-          height={70}
-          source={{ uri: selectedPost.postCreator.avatar }}
-        />
-        <View style={{ marginLeft: 12, justifyContent: "flex-end", flex: 1 }}>
-          <CreatorName>{selectedPost.postCreator.nickname}</CreatorName>
-          <Text style={{ color: theme.colors.text.primary }}>
-            {postCreatedTimeFormatter(selectedPost.createdAt)}
-          </Text>
-        </View>
-        <TouchableOpacity onPress={handleReact}>
-          {heart == true ? (
-            <HeartIcon name="heart" size={24} color="red" />
-          ) : (
-            <HeartIcon
-              name="heart-outline"
-              size={24}
-              color={theme.colors.text.primary}
+      >
+        <View style={{ alignSelf: "flex-end", backgroundColor: "tomato" }}>
+          <UserInfoContainer>
+            <Avatar
+              width={70}
+              height={70}
+              source={{ uri: postCreator?.avatar }}
             />
-          )}
-        </TouchableOpacity>
-      </UserInfoContainer>
-      <ScrollView
-        // onScroll={handleScroll}
-        showsVerticalScrollIndicator={false}
+            <View
+              style={{ marginLeft: 12, justifyContent: "flex-end", flex: 1 }}
+            >
+              <CreatorName>{postCreator?.nickname}</CreatorName>
+              <Text style={{ color: theme.colors.text.primary }}>
+                {postCreatedTimeFormatter(selectedPost.createdAt)}
+              </Text>
+            </View>
+          </UserInfoContainer>
+          <PostDescriptionContainer numberOfLines={2}>
+            <PostDescription>
+              {
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lorem non tristique convallis. Integer nec neque ipsum. Fusce consectetur, odio ut venenatis malesuada, velit nunc mattis lectus, nec facilisis risus ligula quis turpis. Cras finibus dolor vel ex iaculis hendrerit. In non metus quis est dignissim porttitor. Suspendisse scelerisque tincidunt ligula, nec finibus mi ultricies sit amet. Duis tincidunt metus quis nisl eleifend luctus. Nulla consequat a neque nec elementum. Curabitur sed eros enim. Proin tincidunt facilisis malesuada. Sed eleifend velit sed volutpat egestas. Fusce tincidunt mauris eu ipsum posuere scelerisque."
+              }
+            </PostDescription>
+          </PostDescriptionContainer>
+        </View>
+      </FastImageBackground>
+      <View
         style={{
-          paddingHorizontal: 24,
-          backgroundColor: "tomato",
-          flexGrow: 1,
+          position: "absolute",
+          top: "25%",
+          height: 100,
+          justifyContent: "space-between",
+          right: 12,
         }}
       >
-        {/* <PostDescriptionContainer numberOfLines={6}> */}
-        <PostDescription>
-          {
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lorem non tristique convallis. Integer nec neque ipsum. Fusce consectetur, odio ut venenatis malesuada, velit nunc mattis lectus, nec facilisis risus ligula quis turpis. Cras finibus dolor vel ex iaculis hendrerit. In non metus quis est dignissim porttitor. Suspendisse scelerisque tincidunt ligula, nec finibus mi ultricies sit amet. Duis tincidunt metus quis nisl eleifend luctus. Nulla consequat a neque nec elementum. Curabitur sed eros enim. Proin tincidunt facilisis malesuada. Sed eleifend velit sed volutpat egestas. Fusce tincidunt mauris eu ipsum posuere scelerisque."
-          }
-        </PostDescription>
-        {/* </PostDescriptionContainer> */}
-        <CommentContainer>
-          {selectedPost.comments.map((comment) => {
-            return (
-              <CommentItemComponent
-                key={`${selectedPost._id + comment._id}`}
-                comment={comment}
-              ></CommentItemComponent>
-            );
-          })}
-        </CommentContainer>
-      </ScrollView>
-      <InputBar autoFocus={autoFocus} postId={selectedPost._id} />
+        <TouchableOpacity onPress={handleReact}>
+          <HeartIcon
+            name={heart ? "heart" : "heart-outline"}
+            size={40}
+            color={heart ? "red" : theme.colors.text.primary}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={openCommentModal}>
+          <FontAwesome5 name="comment-dots" size={40} color={"white"} />
+        </TouchableOpacity>
+      </View>
+      <CommentPostModal
+        isVisible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        isFocusInput={autoFocus}
+      ></CommentPostModal>
     </Container>
   );
 };
@@ -165,7 +174,7 @@ const PostDescriptionContainer = styled(ReadMore)`
   font-size: ${(props) => props.theme.fontSizes.body};
   color: ${(props) => props.theme.colors.text.primary};
   padding-bottom: 12px;
-  border-bottom-width: 1px;
+
   border-bottom-color: ${(props) => props.theme.colors.text.primary};
 `;
 
@@ -178,7 +187,6 @@ const PostDescription = styled(Text)`
   border-bottom-width: 1px;
   border-color: ${(props) => props.theme.colors.text.primary};
   font-size: ${(props) => props.theme.fontSizes.body};
-  color: ${(props) => props.theme.colors.black};
 `;
 
 const PostImage = styled(Image)`
@@ -188,9 +196,7 @@ const PostImage = styled(Image)`
 
 const UserInfoContainer = styled(View)`
   flex-direction: row;
-  margin-top: -28px;
   align-items: flex-end;
-
   margin-horizontal: 24px;
 `;
 

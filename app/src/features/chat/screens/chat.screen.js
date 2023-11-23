@@ -31,7 +31,7 @@ const ChatScreen = ({ navigation }) => {
     isLoading,
     data = [],
     refetch,
-  } = useGetChannelsQuery(undefined, {
+  } = useGetChannelsQuery(user._id, {
     refetchOnMountOrArgChange: true,
   });
 

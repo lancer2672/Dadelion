@@ -9,23 +9,33 @@ import { useSelector } from "react-redux";
 import { chatSelector, userSelector } from "@src/store/selector";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 
 const ChatRoomHeader = () => {
   const { user } = useSelector(userSelector);
   const navigation = useNavigation();
   const { selectedChannel } = useSelector(chatSelector);
+
+  const { data: chatFriend } = useGetUserByIdQuery(
+    selectedChannel.chatFriendId,
+    {
+      skip: !selectedChannel.chatFriendId,
+    }
+  );
+
+  console.log("SELECTED C", selectedChannel, chatFriend);
   const theme = useTheme();
   const { t } = useTranslation();
   const handleNavigateToGuest = () => {
-    if (selectedChannel.chatFriend) {
-      navigation.navigate("Guest", { guestId: selectedChannel.chatFriend._id });
+    if (selectedChannel.chatFriendId) {
+      navigation.navigate("Guest", { guestId: selectedChannel.chatFriendId });
     }
   };
   const makeCall = () => {
     //just allow to call if they're friend
     if (
       user.friends.some(
-        (friend) => friend.userId == selectedChannel.chatFriend._id
+        (friend) => friend.userId == selectedChannel.chatFriendId
       )
     ) {
       navigation.navigate("CallingScreen", {});
@@ -46,13 +56,13 @@ const ChatRoomHeader = () => {
       <TouchableOpacity onPress={handleNavigateToGuest}>
         <Avatar
           style={{ width: 40, height: 40 }}
-          source={{ uri: selectedChannel.chatFriend?.avatar }}
+          source={{ uri: chatFriend?.avatar }}
         />
       </TouchableOpacity>
 
       <HeaderInfo>
-        <HeaderText>{selectedChannel.chatFriend?.nickname}</HeaderText>
-        {selectedChannel.chatFriend?.isOnline == 1 ? (
+        <HeaderText>{chatFriend?.nickname}</HeaderText>
+        {chatFriend?.isOnline == 1 ? (
           <View style={{ flexDirection: "row" }}>
             <Entypo
               style={{ position: "absolute", left: "-12%", top: "-30%" }}
@@ -64,7 +74,7 @@ const ChatRoomHeader = () => {
           </View>
         ) : (
           <StatusText>{`${commentCreatedTimeFormater(
-            selectedChannel.chatFriend?.lastOnline
+            chatFriend?.lastOnline
           )}`}</StatusText>
         )}
       </HeaderInfo>

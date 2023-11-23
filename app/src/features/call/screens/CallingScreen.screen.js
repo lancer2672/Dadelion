@@ -10,6 +10,8 @@ import { callSelector, chatSelector, userSelector } from "@src/store/selector";
 import CallActionBox from "../components/CallActionBox.component";
 import { setCall } from "@src/store/slices/callSlice";
 import { sendMessage } from "@src/store/slices/chatSlice";
+import { MessageType } from "@src/constants";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 const CallingScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -20,7 +22,14 @@ const CallingScreen = () => {
   const endpoint = useRef(null);
 
   // const { currentCall} = useSelector(callSelector);
-  console.log("selectedChannel", selectedChannel);
+
+  const { data: chatFriend } = useGetUserByIdQuery(
+    selectedChannel.chatFriendId,
+    {
+      skip: !selectedChannel.chatFriendId,
+    }
+  );
+
   const { incomingCall, isIncomingCall, callingUserId, channelId } =
     route?.params;
   const [callStatus, setCallStatus] = useState("Initializing...");
@@ -45,10 +54,7 @@ const CallingScreen = () => {
         return;
       }
     }
-    callRef.current = await voximplant.call(
-      selectedChannel.chatFriend.username,
-      callSettings
-    );
+    callRef.current = await voximplant.call(chatFriend.username, callSettings);
     subscribeToCallEvents();
   };
   const answerCall = async () => {
@@ -69,7 +75,7 @@ const CallingScreen = () => {
     callRef.current.on(Voximplant.CallEvents.Failed, (callEvent) => {
       dispatch(
         sendMessage({
-          type: "callHistory",
+          type: MessageType.CALL,
           channelId: selectedChannel._id,
           senderId: user._id,
           duration: 0,
@@ -138,7 +144,7 @@ const CallingScreen = () => {
         <Text style={styles.name}>
           {incomingCall
             ? incomingCall?.getEndpoints()[0].displayName
-            : selectedChannel.chatFriend.nickname}
+            : chatFriend.nickname}
         </Text>
         <Text style={styles.phoneNumber}>{callStatus}</Text>
       </View>

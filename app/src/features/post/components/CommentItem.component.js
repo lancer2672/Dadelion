@@ -75,7 +75,7 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
       if (comment.userId == user._id) {
         setCreator(user);
       } else {
-        setCreator(data.user);
+        setCreator(data);
       }
     }
   }, [isLoading]);

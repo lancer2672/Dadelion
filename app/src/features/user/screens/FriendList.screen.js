@@ -22,11 +22,7 @@ import { colors } from "@src/infrastructure/theme/colors";
 import { useState, useEffect } from "react";
 
 import GenderSelection from "../components/GenderSelection.component";
-import {
-  useGetAllFriendsQuery,
-  useGetUserByIdQuery,
-  useUpdateUserMutation,
-} from "@src/store/slices/api/userApiSlice";
+import { useGetAllFriendsQuery } from "@src/store/slices/api/userApiSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { useTheme } from "styled-components";
 import Friend from "../components/Friend.component";

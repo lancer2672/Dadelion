@@ -1,4 +1,4 @@
-import { UrlAPI } from "@src/constants";
+import { NotificationType, UrlAPI } from "@src/constants";
 import Notification from "./Notification";
 import notifee, {
   AndroidStyle,
@@ -21,34 +21,32 @@ class MessagingNotification extends Notification {
     this.user = user;
   }
 
-  addMessage({ notificationId, message }) {
-    const notificationItem = this.notifications.get(notificationId);
+  addMessage({ channelId, message }) {
+    const notificationItem = this.notifications.get(channelId);
     if (notificationItem) {
       notificationItem.messages.push(message);
-      this.notifications.set(notificationId, notificationItem);
+      this.notifications.set(channelId, notificationItem);
       console.log("notificationItem", notificationItem);
     }
   }
 
   addNotificationItem(id) {
-    console.log("addNotificationItem", id);
     this.notifications.set(id, {
       messages: [],
     });
     console.log("addNotificationItem", this.notifications);
   }
-  hasNotification(notificationId) {
-    return this.notifications.has(notificationId);
+  hasNoficationItem(channelId) {
+    return this.notifications.has(channelId);
   }
   async displayParentNotification() {
-    console.log("Display parent");
     this.isParentNotificationDisplayed = true;
     await notifee.displayNotification({
       id: PARENT_NOTIFICATION_ID,
       title: "Notification",
       subtitle: `${this.notifications.size || 0} new messages`,
       android: {
-        groupId: "123",
+        groupId: PARENT_NOTIFICATION_ID,
         groupSummary: true,
         channelId: this.notificationChannelId,
         groupAlertBehavior: AndroidGroupAlertBehavior.CHILDREN,
@@ -69,19 +67,24 @@ class MessagingNotification extends Notification {
   async updateNotification() {
     await this.displayNotification();
   }
-  async displayNotification(notificationId) {
-    const notificationItem = this.notifications.get(notificationId);
-    console.log("notificationId", notificationId, notificationItem);
+
+  async displayNotification(channelId) {
+    const notificationItem = this.notifications.get(channelId);
+    console.log("channelId", channelId, notificationItem);
     if (!notificationItem) return;
     if (!this.isParentNotificationDisplayed) {
       await this.displayParentNotification();
     }
     const notification = {
-      id: notificationId,
-      title: "Tin nhắn mới",
+      id: channelId,
+      title: "Notification",
       body: ``,
+      data: {
+        type: NotificationType.CHAT,
+        channelId,
+      },
       android: {
-        groupId: "123",
+        groupId: PARENT_NOTIFICATION_ID,
         groupAlertBehavior: AndroidGroupAlertBehavior.CHILDREN,
         channelId: this.notificationChannelId,
         style: {
@@ -115,6 +118,9 @@ class MessagingNotification extends Notification {
             input: false, // enable free text input
           },
         ],
+        pressAction: {
+          id: "default",
+        },
       },
     };
     await super.displayNotification(notification);

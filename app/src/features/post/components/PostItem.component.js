@@ -37,8 +37,8 @@ const PostItem = ({ navigation, post }) => {
   const dispatch = useDispatch();
   const { user } = userState;
   //post.user is id of owner
-  const { isSuccess, data } = useGetUserByIdQuery(post.user);
-  const [postCreator, setPostCreator] = useState(null);
+  const { data: postCreator } = useGetUserByIdQuery(post.user);
+
   const [isFirstMount, setIsFirstMount] = useState(true);
   const [heartPosition, setHeartPosition] = useState({ x: 0, y: 0 });
   const handleReact = () => {
@@ -87,25 +87,13 @@ const PostItem = ({ navigation, post }) => {
       setIsFirstMount(() => false);
     }
   }, [heartPosition]);
-  useEffect(() => {
-    if (isSuccess) {
-      if (post.user == user._id) {
-        //user
-        setPostCreator(user);
-      } else {
-        //other user created post
-        setPostCreator(data.user);
-      }
-    }
-  }, [isSuccess, user]);
+
   const navigatePostDetail = () => {
-    dispatch(setSelectedPost({ ...post, postCreator }));
+    dispatch(setSelectedPost(post));
     navigation.navigate("DetailPost", {});
   };
   const handleNavigateToGuest = () => {
-    if (postCreator) {
-      navigation.navigate("Guest", { guestId: postCreator._id });
-    }
+    navigation.navigate("Guest", { guestId: post.user });
   };
 
   const onLongPress = (event) => {
@@ -128,7 +116,7 @@ const PostItem = ({ navigation, post }) => {
           paddingLeft: 12,
           elevation: 1,
         }}
-        source={postImage}
+        source={{ uri: postImage }}
       >
         <Pressable
           onLongPress={() => {
@@ -174,6 +162,7 @@ const PostItem = ({ navigation, post }) => {
         >
           <AntDesign name="heart" size={48} color="red" />
         </Animated.View>
+
         <ReactionBar postCreator={postCreator} post={post}></ReactionBar>
       </FastImageBackground>
     </Pressable>

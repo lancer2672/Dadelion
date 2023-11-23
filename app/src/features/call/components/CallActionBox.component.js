@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { MessageType } from "@src/constants";
 import { callSelector, chatSelector, userSelector } from "@src/store/selector";
 import { sendMessage } from "@src/store/slices/chatSlice";
 import React, { useState } from "react";
@@ -36,7 +37,7 @@ const CallActionBox = ({ call, callingUserId, channelId }) => {
 
         dispatch(
           sendMessage({
-            type: "callHistory",
+            type: MessageType.CALL,
             channelId: channelId || selectedChannel?._id,
             duration,
           })

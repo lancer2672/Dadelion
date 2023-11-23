@@ -58,7 +58,8 @@ const Login = ({ navigation }) => {
 
   const handleLoginSuccess = async (data) => {
     dispatch(setIsLoading(true));
-    dispatch(setUser(payload));
+    console.log("handleLoginSuccess", data);
+    dispatch(setUser(data.user));
     //auto enable save password
     if (true) {
       await AsyncStorage.setItem("token", JSON.stringify(data.token));

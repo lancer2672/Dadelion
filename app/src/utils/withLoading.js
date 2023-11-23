@@ -1,9 +1,12 @@
+import { setIsLoading } from "@src/store/slices/appSlice";
+
 async function withLoading(dispatch, action, handleError) {
   try {
     dispatch(setIsLoading(true));
     await action();
   } catch (error) {
     console.error(error);
+
     if (handleError) {
       handleError(error);
     }

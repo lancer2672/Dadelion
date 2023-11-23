@@ -22,7 +22,7 @@ import { reactPost, setSelectedPost } from "@src/store/slices/postSlice";
 import { useNavigation } from "@react-navigation/native";
 import { Animated } from "react-native";
 
-const ReactionBar = ({ post, postCreator }) => {
+const ReactionBar = ({ post }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -38,7 +38,7 @@ const ReactionBar = ({ post, postCreator }) => {
     dispatch(reactPost({ postId: post._id, postCreatorId: post.user }));
   };
   const navigateToDetailPost = () => {
-    dispatch(setSelectedPost({ ...post, postCreator }));
+    dispatch(setSelectedPost(post));
     navigation.navigate("DetailPost", {
       autoFocus: true,
     });

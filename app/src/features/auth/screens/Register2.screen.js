@@ -20,7 +20,6 @@ import { ActivityIndicator } from "react-native-paper";
 import { useCreateUserMutation } from "@src/store/slices/api/userApiSlice";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
-import { useSendVerificationEmailMutation } from "@src/store/slices/api/authApi";
 import userApi from "@src/api/user";
 import authApi from "@src/api/auth";
 import withLoading from "@src/utils/withLoading";

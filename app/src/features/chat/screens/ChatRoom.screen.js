@@ -21,32 +21,23 @@ const ChatRoom = () => {
   const dispatch = useDispatch();
   const socket = getSocket();
   const { selectedChannel } = useSelector(chatSelector);
-  const { _id: channelId, memberIds } = selectedChannel;
-  // const { channelId, memberIds } = route.params;
-  const [chatFriendId, setChatFriendId] = useState(null);
-  const [chatFriend, setChatFriend] = useState({});
+
   const [isTyping, setIsTyping] = useState(false);
-  const { isLoading, isSuccess, data, error } = useGetUserByIdQuery(
-    chatFriendId,
-    {
-      skip: !chatFriendId,
-    }
-  );
+  const {
+    isLoading,
+    isSuccess,
+    data: chatFriend,
+    error,
+  } = useGetUserByIdQuery(selectedChannel.chatFriendId, {
+    skip: !selectedChannel.chatFriendId,
+  });
 
   useEffect(() => {
-    const friendId = memberIds.filter((id) => id != user._id);
-    setChatFriendId(friendId[0]);
-    dispatch(joinRoom({ channelId }));
+    dispatch(joinRoom({ channelId: selectedChannel._id }));
     socket.on("typing", (channelId, chatFriendId, isTyping) => {
       setIsTyping(() => isTyping);
     });
   }, [selectedChannel]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      setChatFriend(() => data.user);
-    } else console.log("error", error);
-  }, [isLoading, data]);
 
   return (
     <Container>
@@ -71,7 +62,7 @@ const ChatRoom = () => {
           ></AnimatedEllipsis>
         </TypingWrapper>
       )}
-      <InputBar chatFriendId={chatFriendId}></InputBar>
+      <InputBar chatFriendId={selectedChannel.chatFriendId}></InputBar>
     </Container>
   );
 };

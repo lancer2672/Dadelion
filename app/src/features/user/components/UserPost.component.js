@@ -26,7 +26,7 @@ const UserPost = ({ route }) => {
   const navigateToDetailPost = (post) => {
     console.log("userData", userData);
     if (userData) {
-      dispatch(setSelectedPost({ ...post, postCreator: userData.user }));
+      dispatch(setSelectedPost(post));
       navigation.navigate("DetailPost", {});
     }
   };

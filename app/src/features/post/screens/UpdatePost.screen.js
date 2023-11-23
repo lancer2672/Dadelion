@@ -123,7 +123,7 @@ const UpdateBtn = styled(TouchableOpacity)`
   min-width: 200px;
   padding-top: ${(props) => props.theme.space[2]};
   padding-bottom: ${(props) => props.theme.space[2]};
-  background-color: ${(props) => props.theme.colors.ui.quaternary};
+  background-color: ${(props) => props.theme.colors.text.primary};
   border-radius: 25px;
 `;
 const PostInfo = styled(View)`

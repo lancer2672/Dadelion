@@ -26,7 +26,7 @@ const NotificationItem = ({ notification }) => {
 
   const navigateToGuest = () => {
     navigation.navigate("Guest", {
-      guestId: notification.userIds.at(-1).userId,
+      guestId: notification.senderIds.at(-1).userId,
     });
   };
 
@@ -88,12 +88,12 @@ const NotificationItem = ({ notification }) => {
 
 const NotificationContent = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.medium};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 const CreatedAt = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.medium};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.text.primary};
   opacity: 0.5;
 `;
 
