@@ -25,28 +25,59 @@ export async function onAppOpened(handleNavigation) {
   }
 }
 
+const onPress = async ({
+  notificationDetail,
+  handleUserReply,
+  sendResponseRequest,
+  removeNotificationItem,
+}) => {
+  const { notification, pressAction } = notificationDetail;
+  await removeNotificationItem(notification.data.type, notification.id);
+  console.log("onACtionPress", pressAction);
+  if (pressAction) {
+    switch (pressAction.id) {
+      case "reply": {
+        handleUserReply(notificationDetail.input, notification.id);
+        return;
+      }
+      case "friendRequest-accept": {
+        sendResponseRequest("accept", notification.id);
+        return;
+      }
+      case "friendRequest-decline": {
+        sendResponseRequest("decline", notification.id);
+        return;
+      }
+    }
+  }
+};
 export function addActionListener({
   handleNavigation,
   removeNotificationItem,
   handleUserReply,
+  sendResponseRequest,
 }) {
-  notifee.onForegroundEvent(({ type, detail }) => {
-    if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
-      console.log("User pressed an action with the id: ", detail.input, detail);
-      handleUserReply(detail.input, detail.notification.id);
-    }
-  });
   notifee.onBackgroundEvent(async ({ type, detail }) => {
+    console.log("ONbackground", type, detail);
     const notification = detail.notification;
     switch (type) {
       case EventType.DISMISSED:
         console.log("User dismissed notification", notification);
-        await removeNotificationItem(notification.data.type,notification.id);
+        await removeNotificationItem(notification.data.type, notification.id);
+        break;
+      case EventType.ACTION_PRESS:
+        await onPress({
+          notificationDetail: detail,
+          handleUserReply,
+          sendResponseRequest,
+          removeNotificationItem,
+        });
         break;
       case EventType.PRESS:
-        console.log("User pressed notification", notification);
+        console.log("DETAIIL", detail);
         handleNavigation(notification);
-        await removeNotificationItem(notification.data.type, notification.id);
+
+        console.log("User pressed notification", notification);
         break;
       case EventType.APP_BLOCKED: {
         console.log("User toggled app blocked", detail.blocked);

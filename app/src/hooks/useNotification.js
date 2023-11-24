@@ -9,7 +9,11 @@ import messagingNotificationIns from "@src/services/notifee/MessagingNotificatio
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import { sendMessage, setSelectedChannel } from "@src/store/slices/chatSlice";
+import {
+  responseFriendRequest,
+  sendMessage,
+  setSelectedChannel,
+} from "@src/store/slices/chatSlice";
 import { useLinkTo, useNavigation } from "@react-navigation/native";
 
 import { MessageType, NotificationType } from "@src/constants";
@@ -22,7 +26,13 @@ import postNotificationIns from "@src/services/notifee/PostNotification";
 import { useGetAllPostsQuery } from "@src/store/slices/api/postApiSlice";
 import { setSelectedPost } from "@src/store/slices/postSlice";
 import Notification from "@src/services/notifee/Notification";
+import friendRequestNotificationIns from "@src/services/notifee/FriendRequestNotification";
 
+const notificationClassIns = {
+  [NotificationType.CHAT]: messagingNotificationIns,
+  [NotificationType.POST]: postNotificationIns,
+  [NotificationType.FRIEND_REQUEST]: friendRequestNotificationIns,
+};
 const useNotification = () => {
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
@@ -44,50 +54,68 @@ const useNotification = () => {
 
   const handleIncomingNotification = async (remoteMessage) => {
     const messageData = JSON.parse(remoteMessage.data.data);
-    const { type, avatar, message, channelId, nickname, createdAt } =
+    const { type, avatar, message, notificationId, nickname, createdAt } =
       messageData;
     console.log("handleIncomingNotification", messageData);
+
+    checIfExistNotificationItem(messageData);
     switch (type) {
       case NotificationType.CHAT: {
-        await handleDisplayChatNotification(messageData);
+        const newMessage = {
+          user: { avatar, nickname },
+          body: message,
+          createdAt,
+        };
+        notificationClassIns[type].addMessage({
+          channelId: notificationId,
+          message: newMessage,
+        });
         break;
       }
       case NotificationType.POST: {
-        await handleDisplayPostNotification(messageData);
+        notificationClassIns[type].addPrefixNickname({
+          postId: notificationId,
+          nickname,
+        });
         break;
       }
     }
+    await notificationClassIns[type].displayNotification(notificationId);
   };
 
-  const handleDisplayChatNotification = async (data) => {
-    const { type, avatar, message, channelId, nickname, createdAt } = data;
-    //create notificationItem to store all notification message
-    if (!messagingNotificationIns.hasNoficationItem(channelId)) {
-      messagingNotificationIns.addNotificationItem(channelId);
-    }
+  const checIfExistNotificationItem = (messageData) => {
+    const { type, avatar, message, notificationId, nickname, createdAt } =
+      messageData;
 
-    const newMessage = {
-      user: { avatar, nickname },
-      body: message,
-      createdAt,
-    };
-    messagingNotificationIns.addMessage({
-      channelId,
-      message: newMessage,
-    });
-    await messagingNotificationIns.displayNotification(channelId);
-  };
-  const handleDisplayPostNotification = async (data) => {
-    const { postId, nickname, message } = data;
-
-    if (!postNotificationIns.hasNoficationItem(postId)) {
-      postNotificationIns.addNotificationItem(postId, message);
+    let newNotificationItem;
+    switch (type) {
+      case NotificationType.CHAT: {
+        newNotificationItem = {
+          messages: [],
+        };
+        break;
+      }
+      case NotificationType.POST: {
+        newNotificationItem = {
+          prefixNicknames: [],
+          message,
+        };
+        break;
+      }
+      case NotificationType.FRIEND_REQUEST: {
+        newNotificationItem = {
+          nickname,
+          avatar,
+        };
+        break;
+      }
     }
-    postNotificationIns.addPrefixNickname({
-      postId,
-      nickname,
-    });
-    await postNotificationIns.displayNotification(postId);
+    if (!notificationClassIns[type].hasNoficationItem(notificationId)) {
+      notificationClassIns[type].addNotificationItem(
+        notificationId,
+        newNotificationItem
+      );
+    }
   };
   const handleUserReply = (userInput, notificationId) => {
     dispatch(
@@ -95,6 +123,14 @@ const useNotification = () => {
         channelId: notificationId,
         newMessage: userInput,
         type: MessageType.TEXT,
+      })
+    );
+  };
+  const sendResponseRequest = (responseValue, requestId) => {
+    dispatch(
+      responseFriendRequest({
+        requestId,
+        responseValue,
       })
     );
   };
@@ -155,6 +191,7 @@ const useNotification = () => {
       handleNavigation,
       removeNotificationItem,
       handleUserReply,
+      sendResponseRequest,
     });
 
     handleOnNotificationOpenedApp();

@@ -7,9 +7,10 @@ import notifee, {
 } from "@notifee/react-native";
 import { formatNamesWithAnd } from "@src/utils/textFormatter";
 
-const PARENT_NOTIFICATION_ID = "parentPostNotification";
-const NOTIFICATION_CHANNEL = "postNotification";
-class PostNotification extends Notification {
+const PARENT_NOTIFICATION_ID = "parentFriendRequestNotification";
+const NOTIFICATION_CHANNEL = "friendRequestNotification";
+
+class FriendRequestNotification extends Notification {
   constructor() {
     super({
       notificationChannelId: NOTIFICATION_CHANNEL,
@@ -17,22 +18,10 @@ class PostNotification extends Notification {
     });
   }
 
-  addPrefixNickname({ postId, nickname }) {
-    const notificationItem = this.notifications.get(postId);
-    if (notificationItem) {
-      const isExist = notificationItem.prefixNicknames.includes(nickname);
-      if (!isExist) {
-        notificationItem.prefixNicknames.push(nickname);
-        this.notifications.set(postId, notificationItem);
-        console.log("notificationItem", notificationItem);
-      }
-    }
-  }
-
   async displayParentNotification() {
     await super.displayParentNotification(
       PARENT_NOTIFICATION_ID,
-      `${this.notifications.size} new notifications`
+      `${this.notifications.size} new friend requests`
     );
   }
 
@@ -47,40 +36,50 @@ class PostNotification extends Notification {
       await this.removeParentNotification();
     }
   }
-  async displayNotification(postId) {
-    const notificationItem = this.notifications.get(postId);
-    console.log("postId", postId, notificationItem);
+  async displayNotification(friendRequestId) {
+    const notificationItem = this.notifications.get(friendRequestId);
+    console.log("friendRequestId", friendRequestId, notificationItem);
     if (!notificationItem) return;
     if (!this.isParentNotificationDisplayed) {
       await this.displayParentNotification();
     }
     const notification = {
-      id: postId,
+      id: friendRequestId,
       title: "Notification",
-      body: `${formatNamesWithAnd(notificationItem.prefixNicknames)} ${
-        notificationItem.message
-      } `,
       data: {
-        type: NotificationType.POST,
-        postId,
+        requestId: friendRequestId,
       },
+      body: `${notificationItem.nickname} sent you a friend request`,
       android: {
-        groupId: PARENT_NOTIFICATION_ID,
-        groupAlertBehavior: AndroidGroupAlertBehavior.CHILDREN,
+        largeIcon: notificationItem.avatar
+          ? `${UrlAPI}/${notificationItem.avatar}`
+          : "https://my-cdn.com/users/123456.png",
         channelId: this.notificationChannelId,
-        style: {
-          type: AndroidStyle.BIGPICTURE,
-          picture: "https://my-cdn.com/user/123/upload/456.png",
-        },
-
         pressAction: {
           id: "default",
         },
+        actions: [
+          {
+            title: "Accept",
+            icon: "https://my-cdn.com/icons/snooze.png",
+            pressAction: {
+              id: "friendRequest-accept",
+            },
+          },
+          {
+            title: "Decline",
+            icon: "https://my-cdn.com/icons/snooze.png",
+            pressAction: {
+              id: "friendRequest-decline",
+            },
+          },
+        ],
       },
     };
+
     await super.displayNotification(notification);
   }
 }
 
-const postNotificationIns = new PostNotification();
-export default postNotificationIns;
+const friendRequestNotificationIns = new FriendRequestNotification();
+export default friendRequestNotificationIns;

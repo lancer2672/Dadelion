@@ -7,15 +7,13 @@ import notifee, {
 } from "@notifee/react-native";
 
 const PARENT_NOTIFICATION_ID = "parent_noti_id";
-const MESSAGING_NOTIFICATION_CHANNEL = "messagingNotification";
+const NOTIFICATION_CHANNEL = "messagingNotification";
 class MessagingNotification extends Notification {
   constructor() {
     super({
-      notificationChannelId: MESSAGING_NOTIFICATION_CHANNEL,
+      notificationChannelId: NOTIFICATION_CHANNEL,
       importance: AndroidImportance.HIGH,
     });
-    this.notifications = new Map();
-    this.isParentNotificationDisplayed = false;
   }
   addUserInfor(user) {
     this.user = user;
@@ -30,28 +28,11 @@ class MessagingNotification extends Notification {
     }
   }
 
-  addNotificationItem(id) {
-    this.notifications.set(id, {
-      messages: [],
-    });
-    console.log("addNotificationItem", this.notifications);
-  }
-  hasNoficationItem(channelId) {
-    return this.notifications.has(channelId);
-  }
   async displayParentNotification() {
-    this.isParentNotificationDisplayed = true;
-    await notifee.displayNotification({
-      id: PARENT_NOTIFICATION_ID,
-      title: "Notification",
-      subtitle: `${this.notifications.size || 0} new messages`,
-      android: {
-        groupId: PARENT_NOTIFICATION_ID,
-        groupSummary: true,
-        channelId: this.notificationChannelId,
-        groupAlertBehavior: AndroidGroupAlertBehavior.CHILDREN,
-      },
-    });
+    await super.displayParentNotification(
+      PARENT_NOTIFICATION_ID,
+      `${this.notifications.size} new messages`
+    );
   }
   async removeParentNotification() {
     this.isParentNotificationDisplayed = false;
@@ -63,9 +44,6 @@ class MessagingNotification extends Notification {
     if (this.notifications.size === 0) {
       await this.removeParentNotification();
     }
-  }
-  async updateNotification() {
-    await this.displayNotification();
   }
 
   async displayNotification(channelId) {

@@ -6,12 +6,16 @@ import notifee, {
   AndroidImportance,
   RepeatFrequency,
   AndroidStyle,
+  AndroidGroupAlertBehavior,
 } from "@notifee/react-native";
 class Notification {
   static enable = true;
   constructor({ notificationChannelId, importance }) {
+    this.notifications = new Map();
+    this.isParentNotificationDisplayed = false;
     this.createChannel({ notificationChannelId, importance });
   }
+
   async createChannel({
     notificationChannelId,
     importance = AndroidImportance.DEFAULT,
@@ -22,7 +26,23 @@ class Notification {
       importance,
     });
   }
-
+  hasNoficationItem(id) {
+    return this.notifications.has(id);
+  }
+  async displayParentNotification(id, subtitle) {
+    this.isParentNotificationDisplayed = true;
+    await notifee.displayNotification({
+      id,
+      title: "Notification",
+      subtitle,
+      android: {
+        groupId: id,
+        groupSummary: true,
+        channelId: this.notificationChannelId,
+        groupAlertBehavior: AndroidGroupAlertBehavior.CHILDREN,
+      },
+    });
+  }
   // async checkingBatterySavingEnabled() {
   //   const batteryOptimizationEnabled =
   //     await notifee.isBatteryOptimizationEnabled();
@@ -48,13 +68,16 @@ class Notification {
   //     );
   //   }
   // }
-
+  addNotificationItem(id, item) {
+    this.notifications.set(id, item);
+    console.log("addNotificationItem", this.notifications);
+  }
   async displayNotification(notification) {
     if (!Notification.enable) return;
     await notifee.displayNotification(notification);
   }
 
-  async stopForegroundService() {
+  static async stopForegroundService() {
     await notifee.stopForegroundService();
   }
 }
