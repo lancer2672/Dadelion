@@ -26,7 +26,7 @@ import { readBase64 } from "@src/utils/imageHelper";
 import { useTheme } from "styled-components";
 import ImagePicker from "react-native-image-crop-picker";
 import { useTranslation } from "react-i18next";
-import { uploadFile } from "@src/api/upload";
+import { getSignedUrl, uploadFile } from "@src/api/upload";
 import {
   createFormDataImages,
   createFormDataVideo,
@@ -70,35 +70,6 @@ const InputBar = ({ chatFriendId }) => {
       useNativeDriver: false,
     }).start();
   };
-  const handleBlur = () => {
-    setLeftIconVisible(true);
-    Animated.timing(animation, {
-      toValue: inputWidth,
-      duration: 1000,
-      useNativeDriver: false,
-    }).start();
-  };
-  const handleOpenCamera = async () => {
-    try {
-      const result = await launchCameraAsync();
-      if (result.canceled) return;
-
-      console.log("handleOpenCamera", result.assets[0]);
-
-      const imageData = createFormDataImages([result.assets[0]]);
-      const data = await uploadFile({ data: imageData, type: "image" });
-      dispatch(
-        sendMessage({
-          channelId,
-          imageUrls: data.fileUrls,
-          type: MessageType.IMAGE,
-        })
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const handleSendMessage = () => {
     setText("");
     dispatch(
@@ -116,50 +87,73 @@ const InputBar = ({ chatFriendId }) => {
       openImagePicker();
     }
   };
-  const openImagePicker = async () => {
-    try {
-      const images = await ImagePicker.openPicker({
-        multiple: true,
-        mediaType: "photo",
-      });
-      const imagesData = createFormDataImages(images);
-      const data = await uploadFile({ data: imagesData, type: "image" });
 
-      dispatch(
-        sendMessage({
-          channelId,
-          imageUrls: data.fileUrls,
-          type: MessageType.IMAGE,
-        })
-      );
-    } catch (er) {
-      console.log("error", er);
+  const handleBlur = () => {
+    setLeftIconVisible(true);
+    Animated.timing(animation, {
+      toValue: inputWidth,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const dispatchMediaMessage = (messageType, messageData) => {
+    const messagePayload =
+      messageType === MessageType.VIDEO
+        ? { channelId, videos: messageData, type: MessageType.VIDEO }
+        : { channelId, images: messageData, type: MessageType.IMAGE };
+
+    dispatch(sendMessage(messagePayload));
+  };
+
+  const handleMediaSelection = async (options, messageType, fileProcessor) => {
+    try {
+      const media = await ImagePicker.openPicker(options);
+      const mediaFormData = fileProcessor(media);
+      const { fileIds } = await uploadFile({
+        data: mediaFormData,
+        type: messageType,
+      });
+      const { fileUrls } = await getSignedUrl({ fileIds });
+      const messageData = fileIds.map((fileId, index) => {
+        return {
+          name: fileId,
+          url: fileUrls[index],
+        };
+      });
+      console.log("messageData", messageData);
+      dispatchMediaMessage(messageType, messageData);
+    } catch (error) {
+      console.log(`Error when selecting ${messageType.toLowerCase()}:`, error);
     } finally {
       setBottomMenuVisible(false);
     }
   };
-  const openVideoPicker = async () => {
-    try {
-      const video = await ImagePicker.openPicker({
-        mediaType: "video",
-      });
 
-      const videoMessage = createFormDataVideo(video);
-      const data = await uploadFile({ data: videoMessage, type: "video" });
-      dispatch(
-        sendMessage({
-          channelId,
-          videoUrls: [data.fileUrl],
-          type: MessageType.VIDEO,
-        })
-      );
-    } catch (er) {
-      console.log("error when select video", er);
-    } finally {
-      setBottomMenuVisible(false);
-    }
+  const openCamera = () => {
+    handleMediaSelection(
+      { multiple: false, mediaType: "photo" },
+      MessageType.IMAGE,
+      createFormDataImages
+    );
   };
-  const recordVoice = () => {};
+
+  const openImagePicker = () => {
+    handleMediaSelection(
+      { multiple: true, mediaType: "photo" },
+      MessageType.IMAGE,
+      createFormDataImages
+    );
+  };
+
+  const openVideoPicker = () => {
+    handleMediaSelection(
+      { mediaType: "video" },
+      MessageType.VIDEO,
+      createFormDataVideo
+    );
+  };
+
   return (
     <Container>
       <Animated.View
@@ -173,7 +167,7 @@ const InputBar = ({ chatFriendId }) => {
       >
         {leftIconsVisible && (
           <LeftIconContainer>
-            <Icon onPress={handleOpenCamera}>
+            <Icon onPress={openCamera}>
               <EvilIcons
                 name="camera"
                 size={ICON_SIZE}

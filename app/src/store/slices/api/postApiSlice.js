@@ -4,6 +4,7 @@ import { UrlAPI } from "@src/constants";
 import { Blurhash } from "react-native-blurhash";
 import { getSocket } from "@src/utils/socket";
 import { current } from "@reduxjs/toolkit";
+import { transformPostData } from "@src/utils/transformData";
 
 const postRoute = "/post";
 
@@ -16,12 +17,7 @@ export const postApi = createApi({
       query: () => `${postRoute}/all`,
       transformResponse: (response, meta, arg) => {
         const posts = response.data.posts.map((post) => {
-          if (post.image != null) {
-            console.log("post.image", post.image);
-            post.image = `${UrlAPI}\\${post.image}`;
-            console.log("post.image", post.image);
-          }
-          return post;
+          return transformPostData(post);
         });
 
         return { posts };
@@ -85,26 +81,17 @@ export const postApi = createApi({
     getPostByUserId: builder.query({
       query: (userId) => `${postRoute}/${userId}`,
       transformResponse: (response, meta, arg) => {
-        if (response.data) {
-        }
         const tranformedPosts = response.data.posts.map((post) => {
-          if (post.image != null) {
-            post.image = `${UrlAPI}\\${post.image}`;
-          }
-          return post;
+          return transformPostData(post);
         });
-        response.data.tranformedPosts = tranformedPosts;
-        return response.data.posts;
+        return tranformedPosts;
       },
       providesTags: ["Post"],
     }),
     getPostById: builder.query({
       query: (postId) => `${postRoute}/?postId=${postId}`,
       transformResponse: (response, meta, arg) => {
-        if (response.data.post.image) {
-          response.data.post.image = `${UrlAPI}\\${response.data.post.image}`;
-        }
-        return response.data.post;
+        return transformPostData(response.data.post);
       },
       providesTags: ["Post"],
     }),

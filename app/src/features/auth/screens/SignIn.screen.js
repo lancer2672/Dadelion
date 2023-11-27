@@ -63,6 +63,10 @@ const Login = ({ navigation }) => {
     //auto enable save password
     if (true) {
       await AsyncStorage.setItem("token", JSON.stringify(data.token));
+      await AsyncStorage.setItem(
+        "refreshToken",
+        JSON.stringify(data.refreshToken)
+      );
       await AsyncStorage.setItem("username", username);
       await AsyncStorage.setItem("userId", JSON.stringify(data.user._id));
     }

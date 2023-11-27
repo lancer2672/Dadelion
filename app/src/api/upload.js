@@ -11,3 +11,14 @@ export const uploadFile = async ({ type, data }) => {
     console.log("upload request error: ", er);
   }
 };
+
+export const getSignedUrl = async ({ fileIds }) => {
+  try {
+    const res = await axiosClient.post(`upload/get-url`, {
+      fileIds,
+    });
+    return res.data.data;
+  } catch (er) {
+    console.log("error", er);
+  }
+};

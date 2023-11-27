@@ -33,7 +33,6 @@ export default configureStore({
     notification: notification.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
-
     [chatApi.reducerPath]: chatApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
     [friendRequestApi.reducerPath]: friendRequestApi.reducer,
@@ -43,7 +42,6 @@ export default configureStore({
       .concat(userApi.middleware)
       .concat(postApi.middleware)
       .concat(chatApi.middleware)
-
       .concat(friendRequestApi.middleware)
       .concat(notificationApi.middleware)
       .concat(chatMiddleware())

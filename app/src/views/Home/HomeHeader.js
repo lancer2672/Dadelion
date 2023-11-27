@@ -31,10 +31,13 @@ const HomeHeader = ({}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [hasNewNotification, setHasNewNotification] = useState(false);
-  const { data: friendRequests } = useGetFriendRequestsQuery(undefined, {
-    //always make new request
-    refetchOnMountOrArgChange: true,
-  });
+  const { data: friendRequests, refetch } = useGetFriendRequestsQuery(
+    undefined,
+    {
+      //always make new request
+      refetchOnMountOrArgChange: true,
+    }
+  );
   const { data: notifications } = useGetNotificationsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -59,6 +62,10 @@ const HomeHeader = ({}) => {
         console.log("socket new-notification");
         setHasNewNotification(() => true);
       });
+      socket.on("response-friendRequest", () => {
+        console.log("socket refetch friend request");
+        refetch();
+      });
     }
   }, [socket]);
   const handleNavigationUser = () => {
@@ -78,60 +85,30 @@ const HomeHeader = ({}) => {
     dispatch(markSeenNotifications({ friendRequestIds, notificationIds }));
   };
   return (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          marginVertical: 20,
-          marginHorizontal: 24,
-          alignItems: "center",
-        }}
-      >
+    <View style={{}}>
+      <View style={styles.left}>
         <Pressable onPress={handleNavigationUser}>
           <Avatar
             style={{ width: 40, height: 40 }}
             source={{ uri: user.avatar }}
           ></Avatar>
         </Pressable>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 22,
-            marginLeft: 12,
-            fontWeight: 500,
-            color: theme.colors.text.primary,
-          }}
-        >
-          Dandelions
-        </Text>
+        <Text style={styles.heading(theme)}>Dandelions</Text>
 
         <TouchableOpacity
           onPress={navigateToSearchScreen}
-          style={{
-            backgroundColor: colors.white,
-            padding: 8,
-            borderRadius: 25,
-            elevation: 2,
-          }}
+          style={styles.search(theme)}
         >
-          <Feather name="search" size={20} color={colors.black} />
+          <Feather name="search" size={20} color={theme.colors.bg.primary} />
         </TouchableOpacity>
 
         <Spacer position={"left"} size={"large"}></Spacer>
 
         <TouchableOpacity
           onPress={navigateToNotificationScreen}
-          style={{
-            backgroundColor: colors.white,
-            minWidth: 38,
-            padding: 6,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 25,
-            elevation: 2,
-          }}
+          style={styles.bell(theme)}
         >
-          <FontAwesome5 name="bell" size={22} color={colors.black} />
+          <FontAwesome5 name="bell" size={22} color={theme.colors.bg.primary} />
           {hasNewNotification && (
             <Entypo
               style={{ position: "absolute", top: -13, right: -2 }}
@@ -142,8 +119,6 @@ const HomeHeader = ({}) => {
           )}
         </TouchableOpacity>
       </View>
-
-      {/* <CreatePostModal isVisible={isVisidbleCreatePost}></CreatePostModal> */}
     </View>
   );
 };
@@ -168,28 +143,32 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 25,
   },
-
-  avatar: {
-    width: 40,
-    height: 40,
-    resizeMode: "stretch",
-    borderRadius: 50,
-    marginRight: 8,
-  },
-
-  //Modal
-  postCreateContainer: {},
-  centeredView: {
-    backgroundColor: "rgba(1, 1, 1, 0.2)",
-    flex: 1,
+  left: {
+    flexDirection: "row",
+    marginVertical: 20,
+    marginHorizontal: 24,
     alignItems: "center",
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
+  search: (theme) => ({
+    backgroundColor: theme.colors.text.primary,
+    padding: 8,
+    borderRadius: 25,
     elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
+  }),
+  heading: (theme) => ({
+    flex: 1,
+    fontSize: 22,
+    marginLeft: 12,
+    fontWeight: "500",
+    color: theme.colors.text.primary,
+  }),
+  bell: (theme) => ({
+    backgroundColor: theme.colors.text.primary,
+    minWidth: 38,
+    padding: 6,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 25,
+    elevation: 2,
+  }),
 });

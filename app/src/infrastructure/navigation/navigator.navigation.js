@@ -33,6 +33,7 @@ const Navigator = () => {
     skip: !userCredentials.userId,
   });
   useEffect(() => {
+    //listen to update user friend list
     if (socket) {
       socket.on("unfriend", () => {
         refetch();
@@ -47,14 +48,9 @@ const Navigator = () => {
   }, [socket]);
   useEffect(() => {
     if (isSuccess && data) {
-      dispatch(
-        setUser({
-          user: data.user,
-          token: userCredentials.token,
-        })
-      );
-      console.log("user", data.user);
-      initSocket(data.user._id);
+      dispatch(setUser(data));
+      console.log("user", data);
+      initSocket(data._id);
     }
     dispatch(setIsLoading(isFetching));
   }, [isFetching, data]);
@@ -67,7 +63,7 @@ const Navigator = () => {
           keys.map((key) => AsyncStorage.getItem(key))
         );
         console.log("userId", userId);
-        console.log("token", token);
+        console.log("token", JSON.parse(token));
         console.log("tokenVoximplant", tokenVoximplant);
         if (userId) {
           setCredentials({
@@ -76,7 +72,7 @@ const Navigator = () => {
           });
         }
 
-        await loginWithTokenVoximplant(username, tokenVoximplant);
+        // await loginWithTokenVoximplant(username, tokenVoximplant);
       } catch (er) {
         console.log("er", er);
       }

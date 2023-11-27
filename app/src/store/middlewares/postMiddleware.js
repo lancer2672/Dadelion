@@ -10,7 +10,7 @@ const postMiddleware = () => (store) => {
         break;
       }
       case "post/commentPost": {
-        socket.emit("upload-comment", action.payload);
+        socket.emit("comment-post", action.payload);
         break;
       }
     }

@@ -3,6 +3,7 @@ import { baseQueryWithReauth } from "./baseQuery";
 import { getSocket } from "@src/utils/socket";
 import { current } from "@reduxjs/toolkit";
 import { UrlAPI } from "@src/constants";
+import { transformChannelData } from "@src/utils/transformData";
 const chatRoute = "/chat";
 
 export const chatApi = createApi({
@@ -12,18 +13,7 @@ export const chatApi = createApi({
     loadChatRoomMessages: builder.query({
       query: (channelId) => `${chatRoute}/messages/${channelId}`,
       transformResponse: (response, meta, arg) => {
-        response.data.messages = response.data.messages.map((mes) => {
-          const imageUrls = mes.imageUrls
-            ? mes.imageUrls.map((imageUrl) => {
-                return `${UrlAPI}/${imageUrl}`;
-              })
-            : [];
-          return {
-            ...mes,
-            imageUrls,
-          };
-        });
-        return response.data.messages || [];
+        return response.data.messages;
       },
 
       transformErrorResponse: (response, meta, arg) => response.data.message,
@@ -38,24 +28,6 @@ export const chatApi = createApi({
           socket.on("receive-message", ({ newMess, channelId, type }) => {
             console.log("receive message data", { newMess, channelId, type });
             updateCachedData((draft) => {
-              switch (type) {
-                case "image": {
-                  const imagesFullUrl = newMess.imageUrls.map((imageUrl) => {
-                    return `${UrlAPI}/${imageUrl}`;
-                  });
-
-                  newMess = { ...newMess, imageUrls: imagesFullUrl };
-
-                  console.log(
-                    "newMessage imagesFullUrl",
-                    imagesFullUrl,
-                    newMess.imageUrls
-                  );
-                  break;
-                }
-                //other type
-              }
-              console.log("new Mess", newMess);
               draft.unshift(newMess);
             });
           });
@@ -68,7 +40,14 @@ export const chatApi = createApi({
     }),
     getChannels: builder.query({
       query: (userId) => ({ url: `${chatRoute}/channels`, params: userId }),
-      transformResponse: (response, meta, arg) => response.data.channels || [],
+      transformResponse: (response, meta, arg) => {
+        const channels = response.data.channels;
+        const transformedChannel = channels.map((c) => {
+          return transformChannelData(c, arg);
+        });
+
+        return transformedChannel;
+      },
       async onCacheEntryAdded(
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
@@ -78,6 +57,7 @@ export const chatApi = createApi({
           await cacheDataLoaded;
           const socket = getSocket();
           socket.on("new-channel", (newChannel) => {
+            socket.emit("join-channels", [newChannel]);
             updateCachedData((draft) => {
               draft.unshift(newChannel);
             });

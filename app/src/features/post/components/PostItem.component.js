@@ -88,6 +88,7 @@ const PostItem = ({ navigation, post }) => {
     }
   }, [heartPosition]);
 
+  console.log("POstceator", postImage, postCreator);
   const navigatePostDetail = () => {
     dispatch(setSelectedPost(post));
     navigation.navigate("DetailPost", {});

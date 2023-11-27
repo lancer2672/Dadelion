@@ -15,7 +15,8 @@ export const userApi = createApi({
       query: (userId) => `${userRoute}/${userId}`,
       transformResponse: (response, meta, arg) => {
         const transformedUser = transformUserData(response.data.user);
-        return { ...response.data, user: transformedUser };
+        console.log("transformedUser", response.data, transformedUser);
+        return transformedUser;
       },
       providesTags: ["User"],
       async onCacheEntryAdded(
@@ -72,41 +73,6 @@ export const userApi = createApi({
         return listFriend;
       },
     }),
-
-    updateUser: builder.mutation({
-      query: (newUserData) => ({
-        url: `${userRoute}/update`,
-        method: "PUT",
-        body: newUserData,
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
-      }),
-      transformResponse: (response, meta, arg) => {
-        const transformedUser = transformUserData(response.data.user);
-        return { ...response.data, user: transformedUser };
-      },
-      invalidatesTags: ["User"],
-    }),
-    createUser: builder.mutation({
-      query: (userData) => ({
-        url: `/api/auth/register`,
-        method: "POST",
-        body: userData,
-      }),
-      transformResponse: (response, meta, arg) => response.data,
-      transformErrorResponse: (response, meta, arg) => {
-        console.log("response error", response.data);
-        return response.data.message;
-      },
-    }),
-    saveFCMtoken: builder.mutation({
-      query: (token) => ({
-        url: `${userRoute}/save-token`,
-        method: "PUT",
-        body: { token },
-      }),
-    }),
     searchUser: builder.query({
       query: (keyword) => `${userRoute}/search/?q=${keyword}`,
       transformResponse: (response, meta, arg) => {
@@ -139,14 +105,9 @@ export const userApi = createApi({
 });
 
 export const {
-  useCreateUserMutation,
-
   useGetUserByIdQuery,
   useGetListUserMutation,
-  useUpdateUserMutation,
-  useSaveFCMtokenMutation,
   useSearchUserQuery,
-
   useGetAllFriendsQuery,
 
   useGetSearchHistoryQuery,

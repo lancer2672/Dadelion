@@ -76,7 +76,7 @@ export const Tabs = () => {
               />
             );
           },
-          tabBarActiveTintColor: theme.colors.text,
+          tabBarActiveTintColor: theme.colors.text.primary,
           tabBarInactiveTintColor: "gray",
         };
       }}
@@ -95,7 +95,7 @@ export const Tabs = () => {
                 style={{
                   width: 30,
                   height: 30,
-                  tintColor: theme.colors.text,
+                  tintColor: theme.colors.text.primary,
                 }}
               ></Image>
             );

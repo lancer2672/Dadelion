@@ -11,8 +11,9 @@ const authApi = {
         `${UrlAPI}${authRoute}/login`,
         data
       );
-      const transformedUser = transformUserData(response.data.user);
-      return { ...response.data, user: transformedUser };
+      console.log("authApi user", response);
+      const transformedUser = transformUserData(response.data.data.user);
+      return { ...response.data.data, user: transformedUser };
     } catch (error) {
       throw error;
     }
@@ -23,8 +24,8 @@ const authApi = {
       const response = await axiosClient.post(`${UrlAPI}${authRoute}/google`, {
         idToken,
       });
-      const transformedUser = transformUserData(response.data.user);
-      return { ...response.data, user: transformedUser };
+      const transformedUser = transformUserData(response.data.data.user);
+      return transformedUser;
     } catch (error) {
       throw error;
     }

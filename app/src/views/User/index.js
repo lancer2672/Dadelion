@@ -13,9 +13,6 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components/native";
 
 import { userSelector } from "@src/store/selector";
-import { useUpdateUserMutation } from "@src/store/slices/api/userApiSlice";
-import { updateUserState } from "@src/store/slices/userSlice";
-import { colors } from "@src/infrastructure/theme/colors";
 import FeatureTabs from "@src/features/user/components/FeatureTabs.component";
 import {
   UserDescription,
@@ -29,15 +26,16 @@ import {
 import Settings from "@src/features/user/screens/Settings.screen";
 import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 import { useTheme } from "styled-components";
-import { uploadFile } from "@src/api/upload";
+import { getSignedUrl, uploadFile } from "@src/api/upload";
+import { setIsLoading } from "@src/store/slices/appSlice";
+import userApi from "@src/api/user";
+import withLoading from "@src/utils/withLoading";
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);
   const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const [updateUser, { isLoading, data, isSuccess, ...res }] =
-    useUpdateUserMutation();
   const { data: postData } = useGetPostByUserIdQuery(user._id);
   const [avatarUri, setAvatarUri] = useState(null);
   const [selectedImageUri, setSelectedImageUri] = useState(null);
@@ -48,38 +46,46 @@ const User = ({ props, navigation }) => {
   useEffect(() => {
     setAvatarUri(user.avatar);
   }, []);
-  useEffect(() => {
-    if (isSuccess) {
-      setAvatarUri(selectedImageUri);
-      dispatch(updateUserState(data.user));
-    }
-  }, [isSuccess]);
   const updateUserImage = async (isWallpaper, setUri) => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      if (!result.cancelled) {
-        setSelectedImageUri(result.uri);
-        console.log("result.uri", result.uri);
-        const newUserData = new FormData();
-        newUserData.append("image", {
-          uri: result.uri,
-          name: new Date() + "_profile",
-          type: "image/jpg",
+    withLoading(
+      dispatch,
+      async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
         });
 
-        const data = await uploadFile({ type: "image", data: newUserData });
-        console.log("Dataaaaaaa", data);
-        updateUser({ avatar: data.fileUrls[0] });
+        if (!result.cancelled) {
+          setSelectedImageUri(result.uri);
+          console.log("result.uri", result.uri);
+          const newUserData = new FormData();
+          newUserData.append("image", {
+            uri: result.uri,
+            name: new Date() + "_profile",
+            type: "image/jpg",
+          });
+          const { fileIds } = await uploadFile({
+            type: "image",
+            data: newUserData,
+          });
+          const { fileUrls } = await getSignedUrl({ fileIds });
+          userApi.updateUser({
+            avatar: {
+              name: fileIds[0],
+              url: fileUrls[0],
+            },
+          });
+        }
+      },
+      (error) => {
+        showMessage({
+          message: t("updateFailed"),
+          type: "danger",
+        });
       }
-    } catch (err) {
-      console.log("Error selecting image", err);
-    }
+    );
   };
   const handleUpdateAvatar = () => updateUserImage(false, setAvatarUri);
   return (

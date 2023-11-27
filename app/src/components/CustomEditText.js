@@ -22,7 +22,7 @@ const CustomEditText = ({
           editable={editable}
           value={value}
           numberOfLines={1}
-          style={[styles.input, { color: theme.colors.chat.text }]}
+          style={[styles.input, { color: theme.colors.text.primary }]}
           defaultValue={defaultValue}
         ></TextInput>
       </View>

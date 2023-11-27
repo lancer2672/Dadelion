@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import messaging from "@react-native-firebase/messaging";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useSaveFCMtokenMutation } from "@src/store/slices/api/userApiSlice";
 import {
   Notification,
   Settings,
@@ -18,8 +16,6 @@ import {
   ChatRoom,
   Guest,
 } from "./index";
-import { enableCallingService } from "@src/services/calling";
-import { getMessagingToken } from "@src/services/messaging";
 import {
   enableTrackingLocation,
   receiveListLocationListener,
@@ -27,73 +23,50 @@ import {
 import { Tabs } from "./tabs";
 import { getSocket } from "@src/utils/socket";
 import { connectVoximplant } from "@src/voximplant/services/Client";
-import { requestNotificationPermission } from "@src/permissions";
-import {
-  enableForegroundNotification,
-  registerForegroundService,
-} from "@src/services/notifee";
-import messagingNotificationIns from "@src/services/notifee/MessagingNotification";
+import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
+import { joinChannels } from "@src/store/slices/chatSlice";
 import useNotification from "@src/hooks/useNotification";
-import { AppState } from "react-native";
+import { onAppOpened } from "@src/services/notifee/notifee";
+import { userSelector } from "@src/store/selector";
 
 const Stack = createNativeStackNavigator();
 
 export const AppNavigator = () => {
-  const [saveFCMtoken, { error }] = useSaveFCMtokenMutation();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const socket = getSocket();
-  const { setIsBgNotificationEnable } = useNotification();
+  const { user } = useSelector(userSelector);
+  const { enableNotifications } = useNotification();
+  const { isLoading, data = [] } = useGetChannelsQuery(user._id, {
+    refetchOnMountOrArgChange: true,
+  });
   useEffect(() => {
     if (socket) {
       receiveListLocationListener(socket, dispatch);
     }
   }, [socket]);
-
   useEffect(() => {
-    // (async () => {
-    //   try {
-    //     await enableTrackingLocation(dispatch);
-    //   } catch (er) {
-    //     console.log("enableTrackingLocation er", er);
-    //   }
-    // })();
-
-    enableTrackingLocation(dispatch);
-    //notifee
-    requestNotificationPermission();
-    enableForegroundNotification();
-    registerForegroundService();
+    if (!isLoading && data) {
+      //listen to incoming message
+      const channelIds = data.map((channel) => channel._id);
+      dispatch(joinChannels({ channelIds }));
+    }
+  }, [isLoading, data]);
+  useEffect(() => {
     connectVoximplant();
-
-    const onTokenRefresh = getMessagingToken(saveFCMtoken);
-    const unsubscribeVoximplant = enableCallingService(navigation);
-    const unsubscribeRemoteMessaging = messaging().onMessage(
-      async (remoteMessage) => {
-        console.log("A new FCM message arrived!", remoteMessage);
-      }
-    );
+    enableTrackingLocation(dispatch);
+    // const unsubscribeVoximplant = enableCallingService(navigation);
+    const unsubscribeNotification = enableNotifications();
+    onAppOpened()
+      .then(() => console.log("onAppOpened1"))
+      .catch((er) => {
+        console.log("error onAppOpened1", er);
+      });
     return () => {
-      onTokenRefresh();
-      unsubscribeVoximplant();
-      unsubscribeRemoteMessaging();
+      // unsubscribeVoximplant();
+      unsubscribeNotification();
     };
   }, []);
-
-  useEffect(() => {
-    AppState.addEventListener("change", handleAppStateChange);
-  }, []);
-
-  const handleAppStateChange = async (nextAppState) => {
-    console.log("StateChanged", nextAppState);
-    if (nextAppState === "active") {
-      setIsBgNotificationEnable(false);
-    } else {
-      setIsBgNotificationEnable(true);
-
-      messagingNotificationIns.displayNotification();
-    }
-  };
 
   return (
     <Stack.Navigator

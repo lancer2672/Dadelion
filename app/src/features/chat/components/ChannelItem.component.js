@@ -73,7 +73,7 @@ const Channel = ({ navigation, channel }) => {
       setUnseenMessageIds(unseenMsgId);
     }
   }, [dataChannelMsg, chatFriend]);
-
+  console.log("ChannelItem", chatFriend);
   useEffect(() => {
     if (lastMsgData) {
       let note;

@@ -19,7 +19,7 @@ const FriendRequestItem = ({ friendRequest = {} }) => {
   );
   useEffect(() => {
     if (isSuccess && data) {
-      setSender(data.user);
+      setSender(data);
     }
   }, [isLoading, data]);
   const viewProfile = () => {};
@@ -73,11 +73,11 @@ const Container = styled.View`
 `;
 const NotificationContent = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.medium};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 const CreatedAt = styled(Text)`
   font-size: ${(props) => props.theme.fontSizes.medium};
-  color: ${(props) => props.theme.colors.black};
+  color: ${(props) => props.theme.colors.text.primary};
   opacity: 0.5;
 `;
 const ContentContainer = styled.View`
@@ -112,7 +112,7 @@ const StyledButton2 = styled.TouchableOpacity`
 const AcceptText = styled.Text`
   font-weight: 500;
   font-size: 16px;
-  color: ${(props) => props.theme.colors.white};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 const DeclineText = styled.Text`

@@ -10,7 +10,7 @@ export const FastImageBackground = ({
   <View style={style}>
     <FastImage
       fallback={true}
-      source={{ uri: source }}
+      source={source}
       style={[StyleSheet.absoluteFill, imageStyle]}
       resizeMode={FastImage.resizeMode.cover}
     />

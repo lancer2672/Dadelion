@@ -12,10 +12,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 
 import { userSelector } from "@src/store/selector";
-import {
-  useGetUserByIdQuery,
-  useUpdateUserMutation,
-} from "@src/store/slices/api/userApiSlice";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import styled from "styled-components/native";
 import { updateUserState } from "@src/store/slices/userSlice";
 import { colors } from "@src/infrastructure/theme/colors";
@@ -56,26 +53,22 @@ const Guest = ({ props, navigation, route }) => {
     data,
     isLoading: isChecking,
     refetch,
-  } = useCheckFriendStatusQuery(userData?.user?._id, {
+  } = useCheckFriendStatusQuery(userData?._id, {
     skip: status !== "fulfilled" || !userData,
     refetchOnMountOrArgChange: true,
   });
   useEffect(() => {
     if (socket) {
       socket.on("unfriend", () => {
-        console.log("call refetch 1 ");
         refetch();
       });
-
       socket.on(
         "response-friendRequest",
         ({ requestId, responseValue, userIds }) => {
-          console.log("call refetch 2 ");
           refetch();
         }
       );
       socket.on("send-friendRequest", (status) => {
-        console.log("call refetch 3");
         refetch();
       });
     }
@@ -92,7 +85,7 @@ const Guest = ({ props, navigation, route }) => {
 
   useEffect(() => {
     if (getUserSuccess) {
-      setGuest(() => userData.user);
+      setGuest(() => userData);
     }
   }, [isLoadingUser, userData]);
   useEffect(() => {
@@ -100,7 +93,7 @@ const Guest = ({ props, navigation, route }) => {
       const channel = channelData.channel;
       console.log("Guest - channel", channel);
       dispatch(joinChannel({ userBId: guest._id, channelId: channel._id }));
-      dispatch(setSelectedChannel({ ...channel, chatFriend: userData.user }));
+      dispatch(setSelectedChannel({ ...channel }));
       navigation.navigate("ChatRoom");
     }
   }, [isFindOrCreating, channelData]);
@@ -161,7 +154,7 @@ const Guest = ({ props, navigation, route }) => {
             >
               <Text
                 style={{
-                  fontWeight: 500,
+                  fontWeight: "500",
                   fontSize: 16,
                   color: colors.white,
                 }}
@@ -174,7 +167,7 @@ const Guest = ({ props, navigation, route }) => {
             <StyledButton1 onPress={handleJoinChatRoom}>
               <Text
                 style={{
-                  fontWeight: 500,
+                  fontWeight: "500",
                   fontSize: 16,
                   color: "#9971ee",
                 }}

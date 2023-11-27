@@ -48,7 +48,7 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
                 )}
                 {item.type === MessageType.IMAGE && (
                   <ImageMessageItem
-                    imageUrls={item.attrs.imageUrls}
+                    images={item.attrs.images}
                   ></ImageMessageItem>
                 )}
                 {item.type === MessageType.VIDEO && (

@@ -4,15 +4,21 @@ import styled from "styled-components/native";
 import FastImage from "react-native-fast-image";
 import { readBase64 } from "@src/utils/imageHelper";
 import OpenImageModal from "./OpenImageModal.component";
+import { useEffect } from "react";
 
-const ImageMessageItem = ({ imageUrls }) => {
+const ImageMessageItem = ({ images }) => {
   const [selectedImageList, setSelectedImageList] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleOpenImageFullScreen = (imageListUrl, imageUrl) => {
-    setSelectedImageList(() => imageListUrl);
-    setSelectedIndex(() => imageListUrl.findIndex((item) => item === imageUrl));
+  useEffect(() => {
+    const listImageUrl = images.map((image) => image.url);
+    setSelectedImageList(() => listImageUrl);
+  }, []);
+  const handleOpenImageFullScreen = (imageUrl) => {
+    setSelectedIndex(() =>
+      selectedImageList.findIndex((item) => item === imageUrl)
+    );
     if (selectedIndex != -1) {
       setModalVisible(true);
     }
@@ -20,14 +26,15 @@ const ImageMessageItem = ({ imageUrls }) => {
 
   return (
     <View>
-      {imageUrls && imageUrls?.length > 0 && (
+      {images?.length > 0 && (
         <View style={{ flexDirection: "row" }}>
-          {imageUrls.map((imageUrl, index) => {
-            if (index == 0 || (index == 1 && imageUrls.length <= 2)) {
+          {images.map((image, index) => {
+            image;
+            if (index == 0 || (index == 1 && images.length <= 2)) {
               return (
                 <ImageContainer
                   key={`chat-image` + index}
-                  onPress={() => handleOpenImageFullScreen(imageUrls, imageUrl)}
+                  onPress={() => handleOpenImageFullScreen(image.url)}
                 >
                   <FastImage
                     onError={() => {
@@ -46,15 +53,15 @@ const ImageMessageItem = ({ imageUrls }) => {
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                     // source={{ uri: imageUrl }}
-                    source={{ uri: imageUrl }}
+                    source={{ uri: image.url }}
                   ></FastImage>
                 </ImageContainer>
               );
-            } else if (index == 1 && imageUrls.length > 2) {
+            } else if (index == 1 && images.length > 2) {
               return (
                 <ImageContainer
                   key={`chat-image` + index}
-                  onPress={() => handleOpenImageFullScreen(imageUrls, imageUrl)}
+                  onPress={() => handleOpenImageFullScreen(image.url)}
                 >
                   <FastImage
                     onError={() => {
@@ -73,7 +80,7 @@ const ImageMessageItem = ({ imageUrls }) => {
                       backgroundColor: "gray",
                     }}
                     // resizeMode="cover"
-                    source={{ uri: imageUrl }}
+                    source={{ uri: image.url }}
                   ></FastImage>
                   <ImageOverlay>
                     <Text
@@ -83,7 +90,7 @@ const ImageMessageItem = ({ imageUrls }) => {
                         color: "white",
                       }}
                     >
-                      {imageUrls.length - 1}
+                      {images.length - 1}
                     </Text>
                   </ImageOverlay>
                 </ImageContainer>

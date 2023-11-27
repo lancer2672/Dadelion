@@ -37,7 +37,7 @@ export const userSlice = createSlice({
   reducers: {
     //set credentials
     setUser: (state, action) => {
-      state.user = action.payload.user;
+      state.user = action.payload;
     },
     updateUserState: (state, action) => {
       state.user = action.payload;
