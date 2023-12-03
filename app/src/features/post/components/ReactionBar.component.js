@@ -45,14 +45,14 @@ const ReactionBar = ({ post }) => {
   };
   useEffect(() => {
     //check if user reacted this post
-    const res = post.likes.find((object) => {
-      return object.userId == userState.user._id;
-    });
-    if (res) {
-      setHeart(true);
-    } else {
-      setHeart(false);
-    }
+    // const res = post.likes.find((object) => {
+    //   return object.userId == userState.user._id;
+    // });
+    // if (res) {
+    //   setHeart(true);
+    // } else {
+    //   setHeart(false);
+    // }
     setReactionNumber(post.likes.length);
   }, [post.likes.length]);
 
@@ -89,6 +89,73 @@ const ReactionBar = ({ post }) => {
     setTotalCommentNumber(commentCount);
   }, [post.comments]);
 
+  return (
+    // disable parent long press
+    <ReactSectionContainer onLongPress={null}>
+      <Heart post={post}></Heart>
+
+      <Number>{reactionNumber}</Number>
+
+      <ButtonWrapper onPress={navigateToDetailPost}>
+        <FontAwesome5 name="comment-dots" size={28} color={"white"} />
+      </ButtonWrapper>
+
+      <Number>{totalCommentNumber}</Number>
+      <ButtonWrapper onPress={null}>
+        <Entypo name="dots-three-horizontal" size={28} color={"white"} />
+      </ButtonWrapper>
+    </ReactSectionContainer>
+  );
+};
+
+export const Heart = ({ post }) => {
+  const dispatch = useDispatch();
+  const [heart, setHeart] = useState(false);
+  const userState = useSelector(userSelector);
+  const [isFirstMount, setIsFirstMount] = useState(true);
+  const scaleValue = useRef(new Animated.Value(0)).current;
+  const heartScale = useRef(new Animated.Value(1)).current;
+
+  const handleReact = () => {
+    dispatch(reactPost({ postId: post._id, postCreatorId: post.user }));
+  };
+  useEffect(() => {
+    //check if user reacted this post
+    const res = post.likes.find((object) => {
+      return object.userId == userState.user._id;
+    });
+    if (res) {
+      setHeart(true);
+    } else {
+      setHeart(false);
+    }
+  }, [post.likes.length]);
+
+  const animateHeartScaleToZero = () => {
+    return Animated.timing(heartScale, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true,
+    });
+  };
+
+  const animateHeartScaleToOne = () => {
+    return Animated.spring(heartScale, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: true,
+    });
+  };
+
+  const animateScaleAndOpacity = () => {
+    return Animated.parallel([
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]);
+  };
   useEffect(() => {
     if (!isFirstMount) {
       if (heart) {
@@ -105,8 +172,7 @@ const ReactionBar = ({ post }) => {
   }, [heart]);
 
   return (
-    // disable parent long press
-    <ReactSectionContainer onLongPress={null}>
+    <>
       <View>
         <ButtonWrapper style={{ flexDirection: "row" }} onPress={handleReact}>
           <Animated.View style={{ transform: [{ scale: heartScale }] }}>
@@ -134,17 +200,7 @@ const ReactionBar = ({ post }) => {
           ]}
         ></Animated.View>
       </View>
-
-      <Number>{reactionNumber}</Number>
-      <ButtonWrapper onPress={navigateToDetailPost}>
-        <FontAwesome5 name="comment-dots" size={28} color={"white"} />
-      </ButtonWrapper>
-
-      <Number>{totalCommentNumber}</Number>
-      <ButtonWrapper onPress={null}>
-        <Entypo name="dots-three-horizontal" size={28} color={"white"} />
-      </ButtonWrapper>
-    </ReactSectionContainer>
+    </>
   );
 };
 const ReactSectionContainer = styled(Pressable)`
