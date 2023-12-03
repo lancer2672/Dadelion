@@ -6,8 +6,6 @@ Front-end: React-native, Redux-toolkit, SocketIO
 
 Back-end: ExpressJs, SocketIO, MongoDB
 
-Storage: S3 storage
-
 Service: Voximplant, Firebase messaging, S3 Storage
 ## Project Status
 This project is currently in development. Functionality to display position of users on Google Maps and track it in real-time is in progress
