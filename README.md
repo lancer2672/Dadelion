@@ -6,6 +6,7 @@ Front-end: React-native, Redux-toolkit, SocketIO
 
 Back-end: ExpressJs, SocketIO, MongoDB
 
+Storage: S3 storage
 
 Service: Voximplant, Firebase messaging, S3 Storage
 ## Project Status
