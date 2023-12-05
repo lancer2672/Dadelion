@@ -1,6 +1,7 @@
 ## Dandelion
 A social media app 
 
+<a href="https://github.com/lancer2672/DandelionServer" target="_blank">Dandelion Server</a>
 
 Front-end: React-native, Redux-toolkit, SocketIO
 
