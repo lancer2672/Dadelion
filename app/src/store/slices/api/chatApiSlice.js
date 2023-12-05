@@ -120,7 +120,7 @@ export const chatApi = createApi({
     }),
     findOrCreateChannel: builder.mutation({
       query: (data) => ({
-        url: `${chatRoute}/channel/findOrCreate`,
+        url: `${chatRoute}/channel/find`,
         method: "POST",
         body: data,
       }),

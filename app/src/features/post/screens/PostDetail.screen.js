@@ -188,7 +188,7 @@ const DetailPost = ({ route }) => {
           }}
           resizeMode={FastImage.resizeMode.contain}
         >
-          <View style={{ backgroundColor: "tomato" }}>
+          <View style={{}}>
             <UserInfoContainer>
               <Avatar
                 width={70}
