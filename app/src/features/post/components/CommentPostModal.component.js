@@ -52,7 +52,7 @@ const CommentPostModal = ({ isVisible, onClose, isFocusInput }) => {
           padding: 12,
         }}
       >
-        <Text>Comment</Text>
+        <Text style={{ fontWeight: "500", fontSize: 20 }}>Comment</Text>
         <Pressable
           onPress={onClose}
           style={{ position: "absolute", right: 12 }}
@@ -79,6 +79,14 @@ const CommentPostModal = ({ isVisible, onClose, isFocusInput }) => {
         </CommentContainer>
       </ScrollView>
       {/* </View> */}
+      <View
+        style={{
+          width: "100%",
+          height: 1,
+          backgroundColor: "gray",
+          marginBottom: 0,
+        }}
+      ></View>
       <InputBar autoFocus={isFocusInput} postId={selectedPost._id} />
     </View>
   );
@@ -93,7 +101,6 @@ const Container = styled(View)`
 
 const CommentContainer = styled(View)`
   flex: 1;
-  background-color: gray;
 `;
 
 export default memo(CommentPostModal);

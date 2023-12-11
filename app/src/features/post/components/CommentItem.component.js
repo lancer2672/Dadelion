@@ -106,6 +106,7 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
       style={{
         paddingTop: 4,
         marginTop: 8,
+
         paddingBottom: 10,
         // flexGrow: 1,
         height: "auto",
@@ -137,9 +138,9 @@ const Comment = ({ comment, parentId, totalChildHeightRef }) => {
             >
               <Text
                 style={{
-                  opacity: 0.8,
+                  opacity: 0.5,
                   fontWeight: "bold",
-                  color: theme.colors.text.primary,
+                  color: theme.colors.bg.primary,
                 }}
               >
                 {t("reply")}
@@ -205,13 +206,13 @@ const UserName = styled(Text)`
   font-weight: ${(props) => props.theme.fontWeights.medium};
   margin-right: 8px;
   margin-bottom: 4px;
-  color: ${(props) => props.theme.colors.text.primary};
+  color: ${(props) => props.theme.colors.bg.primary};
 `;
 const CreateTime = styled(Text)`
-  color: ${(props) => props.theme.colors.text.primary};
+  color: ${(props) => props.theme.colors.bg.primary};
 `;
 const CommentContent = styled(Text)`
-  color: ${(props) => props.theme.colors.text.primary};
+  color: ${(props) => props.theme.colors.bg.primary};
   line-height: 22px;
 `;
 

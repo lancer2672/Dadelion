@@ -15,12 +15,13 @@ export const Avatar = (props) => {
     setAvatarSrc(require("../../assets/imgs/DefaultAvatar.png"));
   };
   return (
-    <View>
+    <View style={{}}>
       <Image
         defaultSource={require("../../assets/imgs/DefaultAvatar.png")}
         {...props}
         style={[{ borderRadius: 1000, width: 50, height: 50 }, props.style]}
         source={avatarSrc}
+        resizeMode="contain"
         onError={handleError}
       />
       {props.isOnline == 1 && (
