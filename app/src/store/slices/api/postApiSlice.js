@@ -4,7 +4,7 @@ import { UrlAPI } from "@src/constants";
 import { Blurhash } from "react-native-blurhash";
 import { getSocket } from "@src/utils/socket";
 import { current } from "@reduxjs/toolkit";
-import { transformPostData } from "@src/utils/transformData";
+import { transformPostsData } from "@src/utils/transformData";
 
 const postRoute = "/post";
 
@@ -15,11 +15,8 @@ export const postApi = createApi({
   endpoints: (builder) => ({
     getAllPosts: builder.query({
       query: () => `${postRoute}/all`,
-      transformResponse: (response, meta, arg) => {
-        const posts = response.data.posts.map((post) => {
-          return transformPostData(post);
-        });
-
+      transformResponse: async (response, meta, arg) => {
+        const posts = await transformPostsData(response.data.posts);
         return { posts };
       },
       async onCacheEntryAdded(
@@ -80,18 +77,17 @@ export const postApi = createApi({
 
     getPostByUserId: builder.query({
       query: (userId) => `${postRoute}/${userId}`,
-      transformResponse: (response, meta, arg) => {
-        const tranformedPosts = response.data.posts.map((post) => {
-          return transformPostData(post);
-        });
-        return tranformedPosts;
+      transformResponse: async (response, meta, arg) => {
+        const posts = await transformPostsData(response.data.posts);
+        return posts;
       },
       providesTags: ["Post"],
     }),
     getPostById: builder.query({
       query: (postId) => `${postRoute}/?postId=${postId}`,
-      transformResponse: (response, meta, arg) => {
-        return transformPostData(response.data.post);
+      transformResponse: async (response, meta, arg) => {
+        const post = await transformPostsData([response.data.post]);
+        return post[0];
       },
       providesTags: ["Post"],
     }),

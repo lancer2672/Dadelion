@@ -26,7 +26,7 @@ import { readBase64 } from "@src/utils/imageHelper";
 import { useTheme } from "styled-components";
 import ImagePicker from "react-native-image-crop-picker";
 import { useTranslation } from "react-i18next";
-import { getSignedUrl, uploadFile } from "@src/api/upload";
+import { uploadFile } from "@src/api/upload";
 import {
   createFormDataImages,
   createFormDataVideo,
@@ -110,15 +110,15 @@ const InputBar = ({ chatFriendId }) => {
     try {
       const media = await ImagePicker.openPicker(options);
       const mediaFormData = fileProcessor(media);
-      const { fileIds } = await uploadFile({
+      const { files } = await uploadFile({
         data: mediaFormData,
         type: messageType,
       });
-      const { fileUrls } = await getSignedUrl({ fileIds });
-      const messageData = fileIds.map((fileId, index) => {
+
+      const messageData = files.map((file, index) => {
         return {
-          name: fileId,
-          url: fileUrls[index],
+          name: file.id,
+          url: file.url,
         };
       });
       console.log("messageData", messageData);

@@ -17,14 +17,21 @@ import { setSelectedChannel } from "@src/store/slices/chatSlice";
 import { useNavigation } from "@react-navigation/native";
 const ListAvatarName = ({ channels }) => {
   const [isOnline, setIsOnline] = useState(1);
-
+  const [activeFriends, setActiveFriends] = useState([]);
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { user } = useSelector(userSelector);
   const { data } = useGetAllFriendsQuery();
-  console.log(data);
+  console.log("useGetAllFriendsQuery", data);
 
+  useEffect(() => {
+    if (data) {
+      //get active users
+      const list = data.filter((user) => user.isOnline == 1);
+      setActiveFriends(list);
+    }
+  }, [data]);
   const navigateToChatRoom = (friendId) => {
     let channel = channels.find(
       (c) => c.memberIds.includes(user._id) && c.memberIds.includes(friendId)
@@ -35,15 +42,7 @@ const ListAvatarName = ({ channels }) => {
     }
   };
 
-  useEffect(() => {
-    // const t = setTimeout(() => {
-    //   setIsOnline(0);
-    // }, 4000);
-    // return () => {
-    //   if (t) clearTimeout(t);
-    // };
-  }, []);
-  if (!data) return <></>;
+  if (activeFriends.length == 0) return <></>;
   return (
     <FlatList
       style={{

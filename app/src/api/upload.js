@@ -22,3 +22,15 @@ export const getSignedUrl = async ({ fileIds }) => {
     console.log("error", er);
   }
 };
+export const updateUrl = async ({ type, fileId, ...data }) => {
+  try {
+    const res = await axiosClient.put(`/upload/update-url`, {
+      type,
+      fileId,
+      ...data,
+    });
+    return res.data.data;
+  } catch (er) {
+    console.log("update url request error: ", er);
+  }
+};

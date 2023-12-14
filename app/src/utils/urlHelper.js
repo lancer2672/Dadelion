@@ -1,5 +1,8 @@
-const getExpirationTimestamp = (signedUrl) => {
-  const urlParams = new URLSearchParams(new URL(signedUrl).search);
+export const isUrlExpired = ({ url }) => {
+  if (!url) {
+    return null;
+  }
+  const urlParams = new URLSearchParams(new URL(url).search);
 
   const generatedTime = urlParams.get("X-Amz-Date");
   const expiresIn = urlParams.get("X-Amz-Expires");
@@ -18,10 +21,11 @@ const getExpirationTimestamp = (signedUrl) => {
   const expiryDate = new Date(generatedDate.getTime() + expiresIn * 1000);
 
   console.log(`URL will expire at ${expiryDate}`);
+  return expiryDate.getTime() < Date.now();
 };
 // Example usage
 const signedUrl =
-  "https://dandelionbucket.s3.ap-southeast-1.amazonaws.com/5639d0ffddcdc6f856e5e256ff52cecb017cf4d50df39b91b44421090ea6d25f?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAQD2S5ARFGOZIBWU5%2F20231125%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231125T015827Z&X-Amz-Expires=3600&X-Amz-Signature=a2d95e252afc2e2b64d9f4931bf388d823f0d08c6a3ebf7f48e9c6be554c2dd8&X-Amz-SignedHeaders=host&x-id=GetObject";
+  "https://dandelionbucket.s3.ap-southeast-1.amazonaws.com/7633b085ac4220ad104c66248fb2e5d9db75cf8b13aab009134c356393c1a652?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAQD2S5ARFGOZIBWU5%2F20231211%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231211T184638Z&X-Amz-Expires=3600&X-Amz-Signature=a65e6215d063a4ff40bff6e1e61b9a603e69656ba22de96bcc2ee85b840ce9cf&X-Amz-SignedHeaders=host&x-id=GetObject";
 
-const expirationTimestamp = getExpirationTimestamp(signedUrl);
+const expirationTimestamp = isUrlExpired({ url: signedUrl });
 console.log("Expiration Timestamp:", expirationTimestamp);

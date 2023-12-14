@@ -26,7 +26,7 @@ import {
 import Settings from "@src/features/user/screens/Settings.screen";
 import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 import { useTheme } from "styled-components";
-import { getSignedUrl, uploadFile } from "@src/api/upload";
+import { uploadFile } from "@src/api/upload";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import userApi from "@src/api/user";
 import withLoading from "@src/utils/withLoading";
@@ -66,15 +66,15 @@ const User = ({ props, navigation }) => {
             name: new Date() + "_profile",
             type: "image/jpg",
           });
-          const { fileIds } = await uploadFile({
+          const { files } = await uploadFile({
             type: "image",
             data: newUserData,
           });
-          const { fileUrls } = await getSignedUrl({ fileIds });
+
           userApi.updateUser({
             avatar: {
-              name: fileIds[0],
-              url: fileUrls[0],
+              name: files[0].id,
+              url: files[0].url,
             },
           });
         }

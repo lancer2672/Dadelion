@@ -1,6 +1,6 @@
 import axiosClient from "@src/config/axiosClient";
 import { UrlAPI } from "@src/constants";
-import { transformUserData } from "@src/utils/transformData";
+import { transformUsersData } from "@src/utils/transformData";
 
 const userRoute = "/user";
 
@@ -11,8 +11,8 @@ const userApi = {
         `${UrlAPI}${userRoute}/update`,
         data
       );
-      const transformedUser = transformUserData(response.data.user);
-      return { ...response.data, user: transformedUser };
+      const transformedUser = await transformUsersData([response.data.user]);
+      return { ...response.data, user: transformedUser[0] };
     } catch (error) {
       throw error;
     }

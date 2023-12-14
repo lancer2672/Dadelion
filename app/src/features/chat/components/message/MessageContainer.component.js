@@ -24,6 +24,11 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
         />
       )}
       <FlatList
+        onEndReached={() => {
+          console.log("onEndReachedItem");
+        }}
+        inverted
+        onEndReachedThreshold={0.5}
         data={messages}
         renderItem={({ item }) => (
           <MessageWrapper isMyMessage={isMyMessage}>
@@ -53,7 +58,7 @@ const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
                 )}
                 {item.type === MessageType.VIDEO && (
                   <VideoMessageItem
-                    videoUrls={item.attrs.videoUrls}
+                    videos={item.attrs.videos}
                   ></VideoMessageItem>
                 )}
                 {item.type === MessageType.CALL && (
@@ -103,4 +108,4 @@ const Message = styled(Text).attrs((props) => {
   font-size: 15px;
 `;
 
-export default memo(MessageContainer);
+export default MessageContainer;

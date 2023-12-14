@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
-import { transformUserData } from "@src/utils/transformData";
+import { transformUsersData } from "@src/utils/transformData";
 import { getSocket } from "@src/utils/socket";
 import { current } from "@reduxjs/toolkit";
 
@@ -13,10 +13,10 @@ export const userApi = createApi({
   endpoints: (builder) => ({
     getUserById: builder.query({
       query: (userId) => `${userRoute}/${userId}`,
-      transformResponse: (response, meta, arg) => {
-        const transformedUser = transformUserData(response.data.user);
+      transformResponse: async (response, meta, arg) => {
+        const transformedUser = await transformUsersData([response.data.user]);
         console.log("transformedUser", response.data, transformedUser);
-        return transformedUser;
+        return transformedUser[0];
       },
       providesTags: ["User"],
       async onCacheEntryAdded(
@@ -57,33 +57,31 @@ export const userApi = createApi({
         method: "POST",
         body: { listIds },
       }),
-      transformResponse: (response, meta, arg) => {
-        response.data.users = response.data.users.map((user) => {
-          return transformUserData(user);
-        });
-        return response.data.users;
+      transformResponse: async (response, meta, arg) => {
+        // response.data.users = response.data.users.map((user) => {
+        //   return transformUsersData(user);
+        // });
+        return await transformUsersData(response.data.users);
       },
     }),
     getAllFriends: builder.query({
       query: () => `${userRoute}/friend/get-all`,
-      transformResponse: (response, meta, arg) => {
-        const listFriend = response.data.friends.map((friend) =>
-          transformUserData(friend)
-        );
-        return listFriend;
+      transformResponse: async (response, meta, arg) => {
+        return await transformUsersData(response.data.friends);
       },
     }),
     searchUser: builder.query({
       query: (keyword) => `${userRoute}/search/?q=${keyword}`,
-      transformResponse: (response, meta, arg) => {
-        return response.data.map((user) => transformUserData(user));
+      transformResponse: async (response, meta, arg) => {
+        return await transformUsersData(response.data);
       },
     }),
     getSearchHistory: builder.query({
       query: () => `${userRoute}/search-history/recent`,
-      transformResponse: (response, meta, arg) => {
-        return response.data.map((user) => transformUserData(user));
+      transformResponse: async (response, meta, arg) => {
+        return await transformUsersData(response.data);
       },
+
       providesTags: ["SearchHistory"],
     }),
     addUserToSearchHistory: builder.mutation({

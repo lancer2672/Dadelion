@@ -121,9 +121,15 @@ const DetailPost = ({ route }) => {
       );
     });
   }, [socket]);
-  // useLayoutEffect(() => {
-  //   flatlistRef.current.scrollToIndex({ animated: false, index: 1 });
-  // }, []);
+  useLayoutEffect(() => {
+    const selectedItemIndex = data.posts.findIndex(
+      (post) => post._id === selectedPost._id
+    );
+    console.log("selectedItemIndex", selectedItemIndex);
+    if (selectedItemIndex) {
+      flatlistRef.current.scrollToIndex({ animated: false, index: 1 });
+    }
+  }, []);
   return (
     <FlatList
       style={{}}
@@ -135,7 +141,7 @@ const DetailPost = ({ route }) => {
         offset: SCREEN_HEIGHT * index,
         index,
       })}
-      initialScrollIndex={1}
+      // initialScrollIndex={1}
       scrollEnabled={isScrollEnabled}
       pagingEnabled={true}
       onScrollToIndexFailed={(info) => {

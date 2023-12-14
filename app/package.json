@@ -70,6 +70,7 @@
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-textinput-effects": "^0.6.3",
+    "react-native-url-polyfill": "^2.0.0",
     "react-native-video": "^5.2.1",
     "react-native-voximplant": "^1.40.0-beta",
     "react-native-web": "~0.18.11",

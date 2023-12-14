@@ -25,7 +25,7 @@ import {
 import { Avatar } from "@src/components/Avatar";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { useTheme } from "styled-components";
-import { getSignedUrl, uploadFile } from "@src/api/upload";
+import { uploadFile } from "@src/api/upload";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const CreatePost = ({ navigation }) => {
@@ -47,11 +47,10 @@ const CreatePost = ({ navigation }) => {
       name: "post-image" + new Date() + "_profile",
       type: "image/jpg",
     });
-    const { fileIds } = await uploadFile({ type: "image", data: newPostData });
-    const { fileUrls } = await getSignedUrl({ fileIds });
-    console.log("Create post upload img  data", data, newPostData);
+    const { files } = await uploadFile({ type: "image", data: newPostData });
+    console.log("Create post upload img  data", files, newPostData);
     createPost({
-      image: { name: fileIds[0], url: fileUrls[0] },
+      image: { name: files[0].id, url: files[0].url },
       description: description,
     });
   };

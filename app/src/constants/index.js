@@ -1,4 +1,4 @@
-const UrlAPI = "http://192.168.108.104:3000";
+const UrlAPI = "http://10.0.28.206:3000";
 // export const UrlAPI = "https://dandelion-server.onrender.com";
 const MessageType = {
   TEXT: "text",
@@ -11,5 +11,9 @@ const NotificationType = {
   POST: "post",
   FRIEND_REQUEST: "friend-request",
 };
-
-export { NotificationType, MessageType, UrlAPI };
+const UrlType = {
+  MESSAGE: "message",
+  POST: "post",
+  USER: "user",
+};
+export { NotificationType, MessageType, UrlType, UrlAPI };

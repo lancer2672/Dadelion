@@ -1,6 +1,6 @@
 import axiosClient from "@src/config/axiosClient";
 import { UrlAPI } from "@src/constants";
-import { transformUserData } from "@src/utils/transformData";
+import { transformUsersData } from "@src/utils/transformData";
 
 const authRoute = "/api/auth";
 
@@ -12,8 +12,10 @@ const authApi = {
         data
       );
       console.log("authApi user", response);
-      const transformedUser = transformUserData(response.data.data.user);
-      return { ...response.data.data, user: transformedUser };
+      const transformedUser = await transformUsersData([
+        response.data.data.user,
+      ]);
+      return { ...response.data.data, user: transformedUser[0] };
     } catch (error) {
       throw error;
     }
@@ -24,8 +26,10 @@ const authApi = {
       const response = await axiosClient.post(`${UrlAPI}${authRoute}/google`, {
         idToken,
       });
-      const transformedUser = transformUserData(response.data.data.user);
-      return transformedUser;
+      const transformedUser = await transformUsersData([
+        response.data.data.user,
+      ]);
+      return transformedUser[0];
     } catch (error) {
       throw error;
     }

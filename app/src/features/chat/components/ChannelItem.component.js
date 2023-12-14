@@ -30,7 +30,6 @@ const Channel = ({ navigation, channel }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { user } = useSelector(userSelector);
-
   const [lastMessage, setLastMessage] = useState({});
   const [unseenMessageIds, setUnseenMessageIds] = useState([]);
 
@@ -39,7 +38,11 @@ const Channel = ({ navigation, channel }) => {
       refetchOnMountOrArgChange: true,
     });
 
-  const { data: dataChannelMsg } = useLoadChatRoomMessagesQuery(channelId);
+  const { data: dataChannelMsg } = useLoadChatRoomMessagesQuery({
+    channelId,
+    skip: 0,
+    limit: 1,
+  });
   const { data: chatFriend } = useGetUserByIdQuery(channel.chatFriendId, {
     skip: !channel.chatFriendId,
   });
@@ -69,7 +72,6 @@ const Channel = ({ navigation, channel }) => {
         unseenMsgId.push(dataChannelMsg[index]._id);
         index++;
       }
-
       setUnseenMessageIds(unseenMsgId);
     }
   }, [dataChannelMsg, chatFriend]);
