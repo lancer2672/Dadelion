@@ -11,11 +11,7 @@ const authApi = {
         `${UrlAPI}${authRoute}/login`,
         data
       );
-      console.log("authApi user", response);
-      const transformedUser = await transformUsersData([
-        response.data.data.user,
-      ]);
-      return { ...response.data.data, user: transformedUser[0] };
+      return response.data.data;
     } catch (error) {
       throw error;
     }

@@ -9,9 +9,10 @@ import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 const Friend = ({ navigation, friend }) => {
   const { user } = useSelector(userSelector);
+  console.log("friend", friend);
   const navigateToFriendProfile = () => {
     if (user._id !== friend.userId) {
-      navigation.navigate("Guest", { guestId: friend.userId });
+      navigation.navigate("Guest", { guestId: friend._id });
     } else {
       navigation.navigate("User");
     }

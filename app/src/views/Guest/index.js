@@ -102,7 +102,7 @@ const Guest = ({ props, navigation, route }) => {
     dispatch(sendFriendRequest({ senderId: user._id, receiverId: guestId }));
   };
   const handleUnfriend = () => {
-    dispatch(unfriend({ friendId: guestId }));
+    dispatch(unfriend({ userId: user._id, friendId: guestId }));
   };
   const handleJoinChatRoom = () => {
     if (guest) {

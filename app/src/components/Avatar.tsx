@@ -1,8 +1,7 @@
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, View } from "react-native";
-import styled from "styled-components/native";
-
+import { Badge } from "react-native-elements";
 export const Avatar = (props) => {
   const [avatarSrc, setAvatarSrc] = useState(
     props.source.uri
@@ -25,15 +24,10 @@ export const Avatar = (props) => {
         onError={handleError}
       />
       {props.isOnline == 1 && (
-        <View
-          style={{
-            position: "absolute",
-            right: "-35%",
-            bottom: "-35%",
-          }}
-        >
-          <Entypo name="dot-single" size={52} color="green" />
-        </View>
+        <Badge
+          status="success"
+          containerStyle={{ position: "absolute", top: 0, right: 6 }}
+        />
       )}
     </View>
   );

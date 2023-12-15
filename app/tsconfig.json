@@ -1,11 +1,11 @@
 // https://code.visualstudio.com/docs/languages/jsconfig
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@assets": ["./src/assets"],
-      "@src": ["./src"],
-      "@utils": ["./src/utils"]
+      "@assets": ["src/assets"],
+      "@src/*": ["src/*"],
+      "@utils": ["src/utils"]
     },
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

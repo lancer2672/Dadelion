@@ -10,20 +10,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import styled from "styled-components/native";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 import { Avatar } from "@src/components/Avatar";
 import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
-import { showMessage, hideMessage } from "react-native-flash-message";
-
-import CustomEditText from "@src/components/CustomEditText";
-import { colors } from "@src/infrastructure/theme/colors";
-import { useState, useEffect } from "react";
-
-import GenderSelection from "../components/GenderSelection.component";
 import { useGetAllFriendsQuery } from "@src/store/slices/api/userApiSlice";
-import { setIsLoading } from "@src/store/slices/appSlice";
 import { useTheme } from "styled-components";
 import Friend from "../components/Friend.component";
 import { useRoute } from "@react-navigation/native";
@@ -32,7 +22,6 @@ const dayjs = require("dayjs");
 
 const FriendList = ({ navigation }) => {
   const { t } = useTranslation();
-  const { userId } = useRoute().params;
   const { isLoading, data } = useGetAllFriendsQuery();
   const theme = useTheme();
   const dispatch = useDispatch();

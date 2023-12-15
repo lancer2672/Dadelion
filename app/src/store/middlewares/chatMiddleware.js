@@ -46,8 +46,7 @@ const chatMiddleware = () => (store) => {
           break;
         }
         case "chat/unfriend": {
-          const { friendId } = action.payload;
-          socket.emit("unfriend", { friendId });
+          socket.emit("unfriend", action.payload);
           break;
         }
         case "user/logout/fulfilled": {

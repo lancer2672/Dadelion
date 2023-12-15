@@ -10,7 +10,6 @@ import styled from "styled-components/native";
 
 import ListAvatarName from "../components/ListAvatarName.component";
 import ListChannel from "../components/ListChannel.component";
-import { colors } from "@src/infrastructure/theme/colors";
 import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
 import { useTheme } from "styled-components";
@@ -20,13 +19,18 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
 import useNotification from "@src/hooks/useNotification";
+import { getSocket } from "@src/utils/socket";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import SideMenu from "../components/SideMenu.component";
 
 const ChatScreen = ({ navigation }) => {
   const { user } = useSelector(userSelector);
   const { t } = useTranslation();
+  const socket = getSocket();
   const theme = useTheme();
   const { setIsBgNotificationEnable } = useNotification();
   const [channels, setChannels] = useState();
+  const [sideMenuVisible, setSideMenuVisible] = useState(false);
   const {
     isLoading,
     data = [],
@@ -35,12 +39,23 @@ const ChatScreen = ({ navigation }) => {
     refetchOnMountOrArgChange: true,
   });
 
+  const resetSearch = () => {
+    setChannels(() => data.filter((c) => c.isInWaitingList == false));
+  };
+  console.log("List Channel Data", data);
   useEffect(() => {
     if (!isLoading && data) {
       setChannels(() => data.filter((c) => c.isInWaitingList == false));
     }
   }, [isLoading, data]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on("unfriend", () => {
+        refetch();
+      });
+    }
+  }, [socket]);
   useFocusEffect(
     React.useCallback(() => {
       setIsBgNotificationEnable(false);
@@ -49,11 +64,6 @@ const ChatScreen = ({ navigation }) => {
       };
     }, [])
   );
-
-  const resetSearch = () => {
-    setChannels(() => data.filter((c) => c.isInWaitingList == false));
-  };
-  console.log("List Channel Data", data);
   return (
     <View
       style={{
@@ -63,7 +73,20 @@ const ChatScreen = ({ navigation }) => {
         justifyContent: "flex-start",
       }}
     >
-      <Heading>{t("chat")}</Heading>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Heading>{t("chat")}</Heading>
+        <TouchableOpacity
+          onPress={() => {
+            setSideMenuVisible(true);
+          }}
+        >
+          <MaterialCommunityIcons
+            name="menu"
+            size={32}
+            color={theme.colors.text.primary}
+          />
+        </TouchableOpacity>
+      </View>
       <SearchChannel
         channels={channels}
         resetSearch={resetSearch}
@@ -71,13 +94,19 @@ const ChatScreen = ({ navigation }) => {
       ></SearchChannel>
       <ListAvatarName channels={data}></ListAvatarName>
       <ListChannel channels={channels}></ListChannel>
-      {/* <ChatTabs navigation={navigation}></ChatTabs> */}
+      <SideMenu
+        isVisible={sideMenuVisible}
+        onClose={() => {
+          setSideMenuVisible(false);
+        }}
+      ></SideMenu>
     </View>
   );
 };
 const Heading = styled(Text)`
   font-size: 32px;
   font-weight: 500;
+  flex: 1;
   color: ${(props) => props.theme.colors.text.primary};
 `;
 

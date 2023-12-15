@@ -32,6 +32,7 @@ import { useRef } from "react";
 
 import authApi from "@src/api/auth";
 import withLoading from "@src/utils/withLoading";
+import { transformUsersData } from "@src/utils/transformData";
 
 GoogleSignin.configure({
   webClientId: WEB_API_KEY,
@@ -57,9 +58,8 @@ const Login = ({ navigation }) => {
   const refInputPassword = useRef();
 
   const handleLoginSuccess = async (data) => {
-    dispatch(setIsLoading(true));
     console.log("handleLoginSuccess", data);
-    dispatch(setUser(data.user));
+    dispatch(setIsLoading(true));
     //auto enable save password
     if (true) {
       await AsyncStorage.setItem("token", JSON.stringify(data.token));
@@ -70,21 +70,23 @@ const Login = ({ navigation }) => {
       await AsyncStorage.setItem("username", username);
       await AsyncStorage.setItem("userId", JSON.stringify(data.user._id));
     }
-    initSocket(data.user._id);
+    const transformedUser = await transformUsersData([data.user]);
+    dispatch(setUser(transformedUser));
+    initSocket(transformedUser._id);
     await handleLoginVoximplant();
   };
 
   const handleLogin = async () => {
     refInputName.current.blur();
     refInputPassword.current.blur();
-    console.log(Object.keys(validationErrors).length);
     if (Object.keys(validationErrors).length !== 0) return;
 
     withLoading(
       dispatch,
       async () => {
-        data = await authApi.login({ email: username, password });
-        await handleLoginSuccess(data);
+        const data = await authApi.login({ email: username, password });
+
+        handleLoginSuccess(data);
       },
       (error) => {
         setError(error);
