@@ -10,13 +10,18 @@ import i18next from "@src/locales/i18n";
 
 import Navigator from "./src/infrastructure/navigation/navigator.navigation";
 import store from "./src/store";
-import { connectVoximplant } from "@src/voximplant/services/Client";
 import { requestNotificationPermission } from "@src/permissions";
 import ThemeProviderComponent from "@src/infrastructure/theme/context";
+import {
+  mediaDevices,
+  RTCPeerConnection,
+  RTCView,
+  RTCIceCandidate,
+  RTCSessionDescription,
+} from "react-native-webrtc";
 
 export default function App() {
   useEffect(() => {
-    connectVoximplant();
     requestNotificationPermission();
   }, []);
   return (

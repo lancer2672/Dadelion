@@ -3,7 +3,6 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authApi from "@src/api/auth";
 import { getSocket } from "@src/utils/socket";
-import { Voximplant } from "react-native-voximplant";
 
 const initialState = {
   user: null,
@@ -12,13 +11,8 @@ const initialState = {
 export const logoutUser = createAsyncThunk("user/logout", async () => {
   try {
     const socket = getSocket();
-    await AsyncStorage.multiRemove([
-      "userId",
-      "token",
-      "username",
-      "tokenVoximplant",
-    ]);
-    await Voximplant.getInstance().disconnect();
+    await AsyncStorage.multiRemove(["userId", "token", "username"]);
+
     const isSignedIn = await GoogleSignin.isSignedIn();
     if (isSignedIn) {
       await GoogleSignin.revokeAccess();

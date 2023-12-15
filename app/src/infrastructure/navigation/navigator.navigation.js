@@ -12,10 +12,6 @@ import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
 import { getSocket, initSocket } from "@src/utils/socket";
-import {
-  loginVoximplant,
-  loginWithTokenVoximplant,
-} from "@src/voximplant/services/Client";
 StatusBar.setBackgroundColor("black");
 const Navigator = () => {
   const userState = useSelector(userSelector);
@@ -58,21 +54,18 @@ const Navigator = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const keys = ["userId", "token", "username", "tokenVoximplant"];
-        const [userId, token, username, tokenVoximplant] = await Promise.all(
+        const keys = ["userId", "token", "username"];
+        const [userId, token, username] = await Promise.all(
           keys.map((key) => AsyncStorage.getItem(key))
         );
         console.log("userId", userId);
         console.log("token", JSON.parse(token));
-        console.log("tokenVoximplant", tokenVoximplant);
         if (userId) {
           setCredentials({
             userId: JSON.parse(userId),
             token: JSON.parse(token),
           });
         }
-
-        // await loginWithTokenVoximplant(username, tokenVoximplant);
       } catch (er) {
         console.log("er", er);
       }

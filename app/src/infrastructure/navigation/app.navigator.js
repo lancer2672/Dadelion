@@ -22,7 +22,6 @@ import {
 } from "@src/services/location";
 import { Tabs } from "./tabs";
 import { getSocket } from "@src/utils/socket";
-import { connectVoximplant } from "@src/voximplant/services/Client";
 import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
 import { joinChannels } from "@src/store/slices/chatSlice";
 import useNotification from "@src/hooks/useNotification";
@@ -53,9 +52,7 @@ export const AppNavigator = () => {
     }
   }, [isLoading, data]);
   useEffect(() => {
-    connectVoximplant();
     enableTrackingLocation(dispatch);
-    // const unsubscribeVoximplant = enableCallingService(navigation);
     const unsubscribeNotification = enableNotifications();
     onAppOpened()
       .then(() => console.log("onAppOpened1"))
@@ -63,7 +60,6 @@ export const AppNavigator = () => {
         console.log("error onAppOpened1", er);
       });
     return () => {
-      // unsubscribeVoximplant();
       unsubscribeNotification();
     };
   }, []);

@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { Voximplant } from "react-native-voximplant";
 import { useDispatch, useSelector } from "react-redux";
 
 const CallActionBox = ({ call, callingUserId, channelId }) => {
@@ -50,12 +49,7 @@ const CallActionBox = ({ call, callingUserId, channelId }) => {
       navigation.goBack();
     }
   };
-  const onReverseCamera = () => {
-    const cameraInstance = Voximplant.Hardware.CameraManager.getInstance();
-    if (isCameraOn)
-      cameraInstance.switchCamera(Voximplant.Hardware.CameraType.BACK);
-    else cameraInstance.switchCamera(Voximplant.Hardware.CameraType.FRONT);
-  };
+  const onReverseCamera = () => {};
   const onToggleMicrophone = () => {
     setIsMicOn((currentValue) => {
       const newValue = !currentValue;

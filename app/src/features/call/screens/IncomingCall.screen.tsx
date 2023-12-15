@@ -10,7 +10,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import { Voximplant } from "react-native-voximplant";
 import { useSelector } from "react-redux";
 import { MotiView } from "moti";
 import { Easing } from "react-native-reanimated";
@@ -20,23 +19,17 @@ const WAVE_SIZE = 68;
 const WAVE_COLOR = "#2e7bff";
 const IncomingCallScreen = () => {
   const [caller, setCaller] = useState("");
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const route = useRoute();
   const { user } = useSelector(userSelector);
-  const { incomingCall, callingUserAvatar, callingUserId, channelId } =
-    route.params;
+  // const { incomingCall, callingUserAvatar, callingUserId, channelId } =
+  //   route.params;
   useEffect(() => {
-    setCaller(incomingCall?.getEndpoints()[0].displayName);
-    incomingCall?.on(Voximplant.CallEvents.Disconnected, (callEvent) => {
-      navigation.navigate("Home");
-    });
-    return () => {
-      incomingCall?.off(Voximplant.CallEvents.Disconnected);
-    };
+    // setCaller(incomingCall?.getEndpoints()[0].displayName);
   }, []);
 
   const onDecline = () => {
-    incomingCall?.decline();
+    // incomingCall?.decline();
   };
 
   const onAccept = () => {
@@ -49,7 +42,7 @@ const IncomingCallScreen = () => {
   };
   return (
     <ImageBackground
-      source={callingUserAvatar && { uri: callingUserAvatar }}
+      source={{ uri: null }}
       style={styles.bg}
       resizeMode="cover"
     >

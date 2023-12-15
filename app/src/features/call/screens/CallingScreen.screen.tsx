@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useReducer } from "react";
 import { View, Text, StyleSheet, Pressable, Platform } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Voximplant } from "react-native-voximplant";
 import { Ionicons } from "@expo/vector-icons";
 import { requestCallingPermission } from "@src/permissions";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +17,6 @@ const CallingScreen = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(userSelector);
   const { selectedChannel } = useSelector(chatSelector);
-  const voximplant = Voximplant.getInstance();
   const endpoint = useRef(null);
 
   // const { currentCall} = useSelector(callSelector);
@@ -54,7 +52,6 @@ const CallingScreen = () => {
         return;
       }
     }
-    callRef.current = await voximplant.call(chatFriend.username, callSettings);
     subscribeToCallEvents();
   };
   const answerCall = async () => {
@@ -63,51 +60,8 @@ const CallingScreen = () => {
     subscribeToEndpointEvent();
     callRef.current.answer(callSettings);
   };
-  const subscribeToEndpointEvent = async () => {
-    endpoint.current.on(
-      Voximplant.EndpointEvents.RemoteVideoStreamAdded,
-      (endpointEvent) => {
-        setRemoteVideoStreamId(endpointEvent.videoStream.id);
-      }
-    );
-  };
-  const subscribeToCallEvents = () => {
-    callRef.current.on(Voximplant.CallEvents.Failed, (callEvent) => {
-      dispatch(
-        sendMessage({
-          type: MessageType.CALL,
-          channelId: selectedChannel._id,
-          senderId: user._id,
-          duration: 0,
-        })
-      );
-      navigation.goBack();
-    });
-    callRef.current.on(Voximplant.CallEvents.ProgressToneStart, (callEvent) => {
-      setCallStatus("Calling...");
-    });
-    callRef.current.on(Voximplant.CallEvents.Connected, (callEvent) => {
-      setCallStatus("Connected");
-    });
-    callRef.current.on(
-      Voximplant.CallEvents.Disconnected,
-      async (callEvent) => {
-        //Call.getDuration(): call is no more unavailable, already ended or failed
-        console.log("disconnected", callRef.current);
-        navigation.navigate("Home");
-      }
-    );
-    callRef.current.on(
-      Voximplant.CallEvents.LocalVideoStreamAdded,
-      (callEvent) => {
-        setLocalVideoStreamId(callEvent.videoStream.id);
-      }
-    );
-    callRef.current.on(Voximplant.CallEvents.EndpointAdded, (callEvent) => {
-      endpoint.current = callEvent.endpoint;
-      subscribeToEndpointEvent();
-    });
-  };
+  const subscribeToEndpointEvent = async () => {};
+  const subscribeToCallEvents = () => {};
   useEffect(() => {
     if (isIncomingCall) {
       answerCall();
@@ -116,11 +70,6 @@ const CallingScreen = () => {
     }
     return () => {
       if (callRef.current) {
-        callRef.current.off(Voximplant.CallEvents.Failed);
-        callRef.current.off(Voximplant.CallEvents.ProgressToneStart);
-        callRef.current.off(Voximplant.CallEvents.Connected);
-        callRef.current.off(Voximplant.CallEvents.Disconnected);
-        callRef.current.off(Voximplant.CallEvents.LocalVideoStreamAdded);
       }
     };
   }, []);
@@ -129,16 +78,6 @@ const CallingScreen = () => {
       <Pressable onPress={null} style={styles.backButton}>
         <Ionicons name="chevron-back" color="white" size={25} />
       </Pressable>
-
-      <Voximplant.VideoView
-        videoStreamId={remoteVideoStreamId}
-        style={styles.remoteVideo}
-      />
-
-      <Voximplant.VideoView
-        videoStreamId={localVideoStreamId}
-        style={styles.localVideo}
-      />
 
       <View style={styles.cameraPreview}>
         <Text style={styles.name}>

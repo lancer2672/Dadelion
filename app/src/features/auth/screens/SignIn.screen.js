@@ -26,7 +26,6 @@ import { setIsLoading } from "@src/store/slices/appSlice";
 import { initSocket } from "@src/utils/socket";
 import { Avatar } from "@src/components/Avatar";
 import { WEB_API_KEY } from "@env";
-import { loginVoximplant } from "@src/voximplant/services/Client";
 import { TouchableOpacity } from "react-native";
 import { useRef } from "react";
 
@@ -73,7 +72,6 @@ const Login = ({ navigation }) => {
     const transformedUser = await transformUsersData([data.user]);
     dispatch(setUser(transformedUser));
     initSocket(transformedUser._id);
-    await handleLoginVoximplant();
   };
 
   const handleLogin = async () => {
@@ -110,19 +108,7 @@ const Login = ({ navigation }) => {
   const handleSendEmailResetPassword = () => {
     navigation.navigate("ForgotPassword", {});
   };
-  const handleLoginVoximplant = async () => {
-    try {
-      const tokenVoximplant = await loginVoximplant(
-        data.user.email,
-        data.user.voximplantPassword
-      );
-      if (tokenVoximplant) {
-        await AsyncStorage.setItem("tokenVoximplant", tokenVoximplant);
-      }
-    } catch (er) {
-      console.log("Voximplant login error", er);
-    }
-  };
+
   const navigateToRegister1Screen = () => {
     // setError(null);
     navigation.navigate("Register1", {});
