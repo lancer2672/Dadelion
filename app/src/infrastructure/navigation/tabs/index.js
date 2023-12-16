@@ -6,9 +6,10 @@ import { useTheme } from "styled-components";
 import User from "@src/views/User";
 import Home from "@src/views/Home";
 import Map from "@src/features/map/screens/Mapscreen";
-import ChatScreen from "@src/features/chat/screens/chat.screen";
+import ChatPage from "@src/features/chat/pages/Chat.page";
 import CreatePost from "@src/features/post/screens/CreatePost.screen";
 import { Image, Pressable, View, StyleSheet } from "react-native";
+import ChatHome from "@src/features/chat/screens/ChatHome.screen";
 const CreatePostButton = ({ children, onPress }) => {
   const theme = useTheme();
   return (
@@ -117,7 +118,7 @@ export const Tabs = () => {
           },
         }}
       />
-      <Tab.Screen name="Chat" component={ChatScreen} />
+      <Tab.Screen name="Chat" component={ChatHome} />
       <Tab.Screen name="User" component={User} />
     </Tab.Navigator>
   );

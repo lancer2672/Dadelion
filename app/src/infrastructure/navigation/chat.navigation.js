@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useEffect } from "react";
 
-import ChatScreen from "@src/features/chat/screens/chat.screen";
-import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import ChatHome from "@src/features/chat/screens/ChatHome.screen";
+import ChatRoom from "@src/features/chat/screens/ChatRoom.screen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,12 +23,12 @@ export const ChatNavigator = ({ navigation, route }) => {
 
   return (
     <Stack.Navigator
-      initialRouteName="Chat"
+      initialRouteName="ChatHome"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="ChatHome" component={ChatHome} />
       <Stack.Screen name="ChatRoom" component={ChatRoom} />
     </Stack.Navigator>
   );

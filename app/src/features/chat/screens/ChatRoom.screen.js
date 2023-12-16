@@ -34,10 +34,16 @@ const ChatRoom = () => {
 
   useEffect(() => {
     dispatch(joinRoom({ channelId: selectedChannel._id }));
-    socket.on("typing", (channelId, chatFriendId, isTyping) => {
-      setIsTyping(() => isTyping);
-    });
-  }, [selectedChannel]);
+
+    if (socket) {
+      socket.on("typing", (channelId, chatFriendId, isTyping) => {
+        setIsTyping(() => isTyping);
+      });
+      return () => {
+        socket.off("typing");
+      };
+    }
+  }, [selectedChannel, socket]);
 
   return (
     <Container>

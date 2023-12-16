@@ -106,20 +106,26 @@ const DetailPost = ({ route }) => {
     }
   }, [selectedPost.likes]);
   useEffect(() => {
-    socket.on("new-comment", (data) => {
-      console.log("new comment postdetail", data);
-      dispatch(updateSelectedPost({ type: "comment", ...data }));
-    });
-    socket.on("react-post", (postId, reactUserId, isAddedToList) => {
-      dispatch(
-        updateSelectedPost({
-          type: "react",
-          postId,
-          reactUserId,
-          isAddedToList,
-        })
-      );
-    });
+    if (socket) {
+      socket.on("new-comment", (data) => {
+        console.log("new comment postdetail", data);
+        dispatch(updateSelectedPost({ type: "comment", ...data }));
+      });
+      socket.on("react-post", (postId, reactUserId, isAddedToList) => {
+        dispatch(
+          updateSelectedPost({
+            type: "react",
+            postId,
+            reactUserId,
+            isAddedToList,
+          })
+        );
+      });
+      return () => {
+        socket.off("new-comment");
+        socket.off("react-post");
+      };
+    }
   }, [socket]);
   useLayoutEffect(() => {
     const selectedItemIndex = data.posts.findIndex(

@@ -40,6 +40,10 @@ const Navigator = () => {
           refetch();
         }
       );
+      return () => {
+        socket.off("unfriend");
+        socket.off("response-friendRequest");
+      };
     }
   }, [socket]);
   useEffect(() => {

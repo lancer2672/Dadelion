@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import styled from "styled-components/native";
 
@@ -23,7 +17,7 @@ import { getSocket } from "@src/utils/socket";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import SideMenu from "../components/SideMenu.component";
 
-const ChatScreen = ({ navigation }) => {
+const WaitingChannel = ({}) => {
   const { user } = useSelector(userSelector);
   const { t } = useTranslation();
   const socket = getSocket();
@@ -54,8 +48,12 @@ const ChatScreen = ({ navigation }) => {
       socket.on("unfriend", () => {
         refetch();
       });
+      return () => {
+        socket.off("unfriend");
+      };
     }
   }, [socket]);
+
   useFocusEffect(
     React.useCallback(() => {
       setIsBgNotificationEnable(false);
@@ -74,7 +72,7 @@ const ChatScreen = ({ navigation }) => {
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Heading>{t("chat")}</Heading>
+        <Heading>Tin nhắn chờ</Heading>
         <TouchableOpacity
           onPress={() => {
             setSideMenuVisible(true);
@@ -110,4 +108,4 @@ const Heading = styled(Text)`
   color: ${(props) => props.theme.colors.text.primary};
 `;
 
-export default ChatScreen;
+export default WaitingChannel;

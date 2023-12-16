@@ -52,4 +52,9 @@ export const receiveListLocationListener = (socket, dispatch) => {
   socket.on("stop-tracking", (userId) => {
     dispatch(removeFriendLocation(userId));
   });
+  return () => {
+    socket.off("start-tracking");
+    socket.off("send-location");
+    socket.off("stop-tracking");
+  };
 };

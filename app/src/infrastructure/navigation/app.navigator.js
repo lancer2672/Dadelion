@@ -41,7 +41,10 @@ export const AppNavigator = () => {
   });
   useEffect(() => {
     if (socket) {
-      receiveListLocationListener(socket, dispatch);
+      const removeListener = receiveListLocationListener(socket, dispatch);
+      return () => {
+        removeListener();
+      };
     }
   }, [socket]);
   useEffect(() => {
