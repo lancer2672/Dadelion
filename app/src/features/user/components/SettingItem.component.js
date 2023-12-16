@@ -1,9 +1,6 @@
-import { View, Text, Pressable } from "react-native";
-import React from "react";
 import { Entypo } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
-import { Switch } from "react-native";
 import { useState } from "react";
+import { Switch, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "styled-components";
 const SettingItem = ({
   name,

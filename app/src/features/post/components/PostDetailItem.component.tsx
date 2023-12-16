@@ -1,39 +1,32 @@
+import { FontAwesome5 } from "@expo/vector-icons";
+import { memo, useEffect, useRef, useState } from "react";
 import {
-  Image,
-  TouchableOpacity,
+  Dimensions,
   Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  Dimensions,
 } from "react-native";
-import React, { useState, useRef, useEffect, memo } from "react";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-import styled from "styled-components/native";
-import { useDispatch, useSelector } from "react-redux";
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
   runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
+import styled from "styled-components/native";
 
-import { postSelector, userSelector } from "@src/store/selector";
 import ReadMore from "@fawazahmed/react-native-read-more";
-import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
-import { useTheme } from "styled-components";
-import { reactPost, updateSelectedPost } from "@src/store/slices/postSlice";
-import { getSocket } from "@src/utils/socket";
 import { Avatar } from "@src/components/Avatar";
-import FastImage from "react-native-fast-image";
-import CommentItemComponent from "../components/CommentItem.component";
 import { FastImageBackground } from "@src/components/image";
-import CommentPostModal from "../components/CommentPostModal.component";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { Heart } from "../components/ReactionBar.component";
+import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
+import FastImage from "react-native-fast-image";
 import GestureRecognizer, {
   swipeDirections,
 } from "react-native-swipe-gestures";
-import { useRoute } from "@react-navigation/native";
+import { useTheme } from "styled-components";
+import CommentPostModal from "../components/CommentPostModal.component";
+import { Heart } from "../components/ReactionBar.component";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;

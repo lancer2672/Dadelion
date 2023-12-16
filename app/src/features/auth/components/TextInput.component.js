@@ -1,5 +1,5 @@
-import React, { memo, useState, forwardRef } from "react";
-import { StyleSheet, Dimensions } from "react-native";
+import { forwardRef, memo, useState } from "react";
+import { Dimensions, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;

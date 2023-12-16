@@ -1,20 +1,18 @@
+import { useNavigation } from "@react-navigation/native";
+import Avatar from "@src/components/Avatar";
+import { userSelector } from "@src/store/selector";
+import { useGetAllFriendsQuery } from "@src/store/slices/api/userApiSlice";
+import { setSelectedChannel } from "@src/store/slices/chatSlice";
+import { useEffect, useState } from "react";
 import {
+  FlatList,
   StyleSheet,
   Text,
-  View,
-  FlatList,
   TouchableOpacity,
-  Pressable,
+  View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { Spacer } from "@src/components/spacer/spacer.component";
-import Avatar from "@src/components/Avatar";
-import { useGetAllFriendsQuery } from "@src/store/slices/api/userApiSlice";
-import { useTheme } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
-import { setSelectedChannel } from "@src/store/slices/chatSlice";
-import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "styled-components";
 const ListAvatarName = ({ channels }) => {
   const [isOnline, setIsOnline] = useState(1);
   const [activeFriends, setActiveFriends] = useState([]);

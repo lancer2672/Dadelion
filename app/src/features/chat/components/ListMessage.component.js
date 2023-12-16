@@ -1,24 +1,9 @@
-import {
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  Pressable,
-  View,
-} from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import MessageContainer from "./message/MessageContainer.component";
-import { useSelector } from "react-redux";
 import { chatSelector, userSelector } from "@src/store/selector";
 import { useLoadChatRoomMessagesQuery } from "@src/store/slices/api/chatApiSlice";
-import ImageDialog from "@src/components/dialogs/ImageDialog.component";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
+import MessageContainer from "./message/MessageContainer.component";
 
 const LIMIT_MESSAGE = 20;
 const ListUserMessages = ({ chatFriend }) => {

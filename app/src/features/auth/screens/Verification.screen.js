@@ -1,16 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { TouchableOpacity } from "react-native";
 import AuthContainer from "../components/AuthContainer.component";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import { setIsLoading } from "@src/store/slices/appSlice";
-import { showMessage } from "react-native-flash-message";
-import { useTranslation } from "react-i18next";
 import authApi from "@src/api/auth";
+import { setIsLoading } from "@src/store/slices/appSlice";
 import withLoading from "@src/utils/withLoading";
+import { useTranslation } from "react-i18next";
+import { showMessage } from "react-native-flash-message";
+import { useDispatch } from "react-redux";
 
 const PinItem = React.forwardRef(
   ({ value, setValue, nextItem, prevItem }, ref) => (

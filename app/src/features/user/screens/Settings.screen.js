@@ -1,24 +1,22 @@
-import { FlatList, Modal, Text, TouchableOpacity, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import styled from "styled-components/native";
-import { useTheme } from "styled-components";
 import i18next from "i18next";
+import React, { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FlatList, Linking, Text, TouchableOpacity, View } from "react-native";
 import * as Animatable from "react-native-animatable";
-import messaging from "@react-native-firebase/messaging";
-import { Linking } from "react-native";
+import { useTheme } from "styled-components";
+import styled from "styled-components/native";
 
-import SettingItem from "../components/SettingItem.component";
 import { Avatar } from "@src/components/Avatar";
+import { userSelector } from "@src/store/selector";
 import { logoutUser } from "@src/store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
+import SettingItem from "../components/SettingItem.component";
 
-import LanguageSelection from "../components/LanguageSelection.component";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ThemeContext } from "@src/infrastructure/theme/context";
 import { useNavigation } from "@react-navigation/native";
+import { ThemeContext } from "@src/infrastructure/theme/context";
+import LanguageSelection from "../components/LanguageSelection.component";
 
 const Settings = () => {
   const navigation = useNavigation();

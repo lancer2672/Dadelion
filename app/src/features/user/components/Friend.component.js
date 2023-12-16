@@ -1,12 +1,9 @@
-import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
-import styled from "styled-components/native";
-import { Spacer } from "@src/components/spacer/spacer.component";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { theme } from "@src/infrastructure/theme";
 import { Avatar } from "@src/components/Avatar";
-import { useSelector } from "react-redux";
+import { Spacer } from "@src/components/spacer/spacer.component";
 import { userSelector } from "@src/store/selector";
+import { Text, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
+import styled from "styled-components/native";
 const Friend = ({ navigation, friend }) => {
   const { user } = useSelector(userSelector);
   console.log("friend", friend);

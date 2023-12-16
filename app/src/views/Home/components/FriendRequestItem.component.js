@@ -1,14 +1,14 @@
-import { Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components/native";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Text } from "react-native";
+import styled from "styled-components/native";
 
 import { Avatar } from "@src/components/Avatar";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
+import { responseFriendRequest } from "@src/store/slices/chatSlice";
 import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
-import { responseFriendRequest } from "@src/store/slices/chatSlice";
 
 const FriendRequestItem = ({ friendRequest = {} }) => {
   const [sender, setSender] = useState({});

@@ -1,10 +1,8 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import React from "react";
+import { FlatList } from "react-native";
 
-import Channel from "./ChannelItem.component";
-import { colors } from "@src/infrastructure/theme/colors";
-import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "styled-components";
+import Channel from "./ChannelItem.component";
 const ListChannel = ({ channels }) => {
   const theme = useTheme();
   const navigation = useNavigation();

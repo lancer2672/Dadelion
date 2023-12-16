@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Switch, Text } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import Avatar from "@src/components/Avatar";
+import { userSelector } from "@src/store/selector";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
+import { Divider, TouchableRipple } from "react-native-paper";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import styled, { useTheme } from "styled-components/native";
-import Avatar from "@src/components/Avatar";
 import { useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
-import { Divider, TouchableRipple } from "react-native-paper";
-import { Feather } from "@expo/vector-icons";
+import { useTheme } from "styled-components/native";
 
 const SideMenu = ({ isVisible, onClose }) => {
   const [isHideScreen, setHideMusicScreen] = useState(false);

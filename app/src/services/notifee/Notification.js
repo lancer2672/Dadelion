@@ -1,12 +1,6 @@
-import { AppState, Alert } from "react-native";
 import notifee, {
-  TriggerType,
-  TimeUnit,
-  EventType,
-  AndroidImportance,
-  RepeatFrequency,
-  AndroidStyle,
   AndroidGroupAlertBehavior,
+  AndroidImportance,
 } from "@notifee/react-native";
 class Notification {
   static enable = true;

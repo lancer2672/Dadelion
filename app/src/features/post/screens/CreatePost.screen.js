@@ -1,31 +1,24 @@
-import {
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  View,
-  Dimensions,
-  Pressable,
-  ActivityIndicator,
-  ImageBackground,
-} from "react-native";
-import React, { useState, useContext, useEffect } from "react";
-import styled from "styled-components/native";
-import ImagePicker from "react-native-image-crop-picker";
 import { Spacer } from "@src/components/spacer/spacer.component";
-
-import { Seperator, BackButton, Header, UserName } from "../shared-components";
-import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
+import { useEffect, useState } from "react";
 import {
-  useCreatePostMutation,
-  // useReactPostMutation
-} from "@src/store/slices/api/postApiSlice";
-import { Avatar } from "@src/components/Avatar";
-import { setIsLoading } from "@src/store/slices/appSlice";
-import { useTheme } from "styled-components";
+  Dimensions,
+  ImageBackground,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import ImagePicker from "react-native-image-crop-picker";
+import styled from "styled-components/native";
+
 import { uploadFile } from "@src/api/upload";
+import { Avatar } from "@src/components/Avatar";
+import { userSelector } from "@src/store/selector";
+import { useCreatePostMutation } from "@src/store/slices/api/postApiSlice";
+import { setIsLoading } from "@src/store/slices/appSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "styled-components";
+import { Header, Seperator, UserName } from "../shared-components";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const CreatePost = ({ navigation }) => {

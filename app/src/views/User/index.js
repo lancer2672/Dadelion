@@ -1,35 +1,27 @@
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/native";
 
-import { userSelector } from "@src/store/selector";
-import FeatureTabs from "@src/features/user/components/FeatureTabs.component";
-import {
-  UserDescription,
-  Name,
-  HeaderContent,
-  BottomHeader,
-  ItemValue,
-  ItemLabel,
-  ItemContainer,
-} from "../sharedStyledComponents";
-import Settings from "@src/features/user/screens/Settings.screen";
-import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
-import { useTheme } from "styled-components";
 import { uploadFile } from "@src/api/upload";
-import { setIsLoading } from "@src/store/slices/appSlice";
 import userApi from "@src/api/user";
+import FeatureTabs from "@src/features/user/components/FeatureTabs.component";
+import { userSelector } from "@src/store/selector";
+import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 import withLoading from "@src/utils/withLoading";
+import { useTheme } from "styled-components";
+import {
+  BottomHeader,
+  HeaderContent,
+  ItemContainer,
+  ItemLabel,
+  ItemValue,
+  Name,
+  UserDescription,
+} from "../sharedStyledComponents";
 
 const User = ({ props, navigation }) => {
   const { user = {} } = useSelector(userSelector);

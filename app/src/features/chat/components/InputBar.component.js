@@ -1,37 +1,32 @@
 import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Animated,
-  TextInput,
-  TouchableWithoutFeedback,
-  Pressable,
-  Modal,
-} from "react-native";
-import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components/native";
-import {
   EvilIcons,
-  MaterialCommunityIcons,
   Ionicons,
-  Feather,
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { launchCameraAsync } from "expo-image-picker";
-import { chatSelector, userSelector } from "@src/store/selector";
-import { useDispatch, useSelector } from "react-redux";
-import { colors } from "@src/infrastructure/theme/colors";
-import { sendMessage, typing } from "@src/store/slices/chatSlice";
-import { readBase64 } from "@src/utils/imageHelper";
-import { useTheme } from "styled-components";
-import ImagePicker from "react-native-image-crop-picker";
-import { useTranslation } from "react-i18next";
 import { uploadFile } from "@src/api/upload";
+import { MessageType } from "@src/constants";
+import { chatSelector, userSelector } from "@src/store/selector";
+import { sendMessage, typing } from "@src/store/slices/chatSlice";
 import {
   createFormDataImages,
   createFormDataVideo,
 } from "@src/utils/formDataHelper";
-import { MessageType } from "@src/constants";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  Animated,
+  Modal,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import ImagePicker from "react-native-image-crop-picker";
+import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "styled-components";
+import styled from "styled-components/native";
 
 const ICON_SIZE = 28;
 const InputBar = ({ chatFriendId }) => {

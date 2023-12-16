@@ -1,36 +1,16 @@
-import {
-  LayoutAnimation,
-  UIManager,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  Animated,
-} from "react-native";
-import React, {
-  useEffect,
-  useState,
-  memo,
-  useContext,
-  useCallback,
-} from "react";
-import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { Animated, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
-import ReadMore from "@fawazahmed/react-native-read-more";
 
-import { UrlAPI } from "@src/constants";
-
-import { CommentMenu } from "./CommentMenuOptionscomponent";
-import { useDispatch, useSelector } from "react-redux";
-import { postSelector, userSelector } from "@src/store/selector";
-import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
-import { useTheme } from "styled-components";
-import { useTranslation } from "react-i18next";
-import { setRepliedComment } from "@src/store/slices/postSlice";
-import { useRef } from "react";
 import { Avatar } from "@src/components/Avatar";
+import { userSelector } from "@src/store/selector";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
+import { setRepliedComment } from "@src/store/slices/postSlice";
+import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
+import { useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "styled-components";
 const dayjs = require("dayjs");
 const VIEW_MORE_HEIGHT = 24;
 

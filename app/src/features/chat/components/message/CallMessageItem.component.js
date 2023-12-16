@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "styled-components";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { callingTimeFormatter } from "@src/utils/timeFormatter";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useTheme } from "styled-components";
 
 const CallMessageItem = ({ callHistory }) => {
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
-import { Image, View, Text, Pressable, TouchableOpacity } from "react-native";
-import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "styled-components";
+import styled from "styled-components/native";
 
 export const Seperator = styled(View)`
   border-width: 1px;

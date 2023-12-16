@@ -1,10 +1,8 @@
-import { StyleSheet, Image, Pressable, Text, View } from "react-native";
-import React, { useState, memo } from "react";
-import styled from "styled-components/native";
+import { useEffect, useState } from "react";
+import { Pressable, Text, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { readBase64 } from "@src/utils/imageHelper";
+import styled from "styled-components/native";
 import OpenImageModal from "./OpenImageModal.component";
-import { useEffect } from "react";
 
 const ImageMessageItem = ({ images }) => {
   const [selectedImageList, setSelectedImageList] = useState(null);

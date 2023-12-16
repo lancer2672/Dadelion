@@ -1,28 +1,21 @@
-import { Alert, View } from "react-native";
-import { useState, useContext, useEffect } from "react";
-import React from "react";
+import { useState } from "react";
+import { View } from "react-native";
 
+import authApi from "@src/api/auth";
+import userApi from "@src/api/user";
+import withLoading from "@src/utils/withLoading";
+import { useDispatch } from "react-redux";
 import { Spacer } from "../../../components/spacer/spacer.component";
-import {
-  AuthButton,
-  Error,
-  AuthButtonContent,
-} from "../components/authentication.style";
-import AuthContainer from "../components/AuthContainer.component";
-import InputText from "../components/TextInput.component";
 import { Text } from "../../../components/typography/text.component";
 import { accountSchema } from "../../../utils/validationSchemas";
+import { handleValidateField } from "../../../utils/validator";
+import AuthContainer from "../components/AuthContainer.component";
+import InputText from "../components/TextInput.component";
 import {
-  handleValidateField,
-  handleValidateObject,
-} from "../../../utils/validator";
-import { ActivityIndicator } from "react-native-paper";
-import { useCreateUserMutation } from "@src/store/slices/api/userApiSlice";
-import { useDispatch } from "react-redux";
-import { setIsLoading } from "@src/store/slices/appSlice";
-import userApi from "@src/api/user";
-import authApi from "@src/api/auth";
-import withLoading from "@src/utils/withLoading";
+  AuthButton,
+  AuthButtonContent,
+  Error,
+} from "../components/authentication.style";
 
 const RegisterScreen2 = ({ navigation, route }) => {
   const { firstname, lastname, dateOfBirth } = route.params;

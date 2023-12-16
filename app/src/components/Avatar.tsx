@@ -1,4 +1,3 @@
-import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, View } from "react-native";
 import { Badge } from "react-native-elements";

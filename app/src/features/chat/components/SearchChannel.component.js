@@ -1,12 +1,12 @@
-import { Text, View, ActivityIndicator, FlatList } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
 import { Searchbar, Snackbar } from "react-native-paper";
 import styled from "styled-components/native";
 
-import { useTranslation } from "react-i18next";
-import { useGetListUserMutation } from "@src/store/slices/api/userApiSlice";
-import { useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
+import { useGetListUserMutation } from "@src/store/slices/api/userApiSlice";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 const SearchChannel = ({ channels = [], resetSearch, setChannels }) => {
   const { t } = useTranslation();

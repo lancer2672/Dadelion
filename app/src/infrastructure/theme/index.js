@@ -1,7 +1,7 @@
 import { colors, darkColors } from "./colors";
-import { space, lineHeights } from "./spacing";
-import { sizes, buttonSizes } from "./sizes";
-import { fonts, fontWeights, fontSizes } from "./fonts";
+import { fontSizes, fontWeights, fonts } from "./fonts";
+import { buttonSizes, sizes } from "./sizes";
+import { lineHeights, space } from "./spacing";
 
 export const theme = {
   colors,

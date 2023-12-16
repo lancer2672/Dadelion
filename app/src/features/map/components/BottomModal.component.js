@@ -1,12 +1,11 @@
 import {
-  StyleSheet,
+  Button,
   Modal,
+  StyleSheet,
   Text,
   TouchableWithoutFeedback,
-  Button,
   View,
 } from "react-native";
-import React from "react";
 const BottomModal = ({ visible, onClose }) => {
   return (
     <Modal

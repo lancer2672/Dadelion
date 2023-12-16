@@ -1,18 +1,10 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
-import React, { useEffect } from "react";
-import styled from "styled-components/native";
+import { View } from "react-native";
 
+import { useState } from "react";
+import { useTheme } from "styled-components";
 import ListAvatarName from "../components/ListAvatarName.component";
 import ListChannel from "../components/ListChannel.component";
-import { useTheme } from "styled-components";
 import SearchChannel from "../components/SearchChannel.component";
-import { useState } from "react";
 import SideMenu from "../components/SideMenu.component";
 
 const ChatPage = ({ friendChannels }) => {

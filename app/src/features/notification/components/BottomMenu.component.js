@@ -1,11 +1,14 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
-import { Modal } from "react-native";
-import { TouchableWithoutFeedback } from "react-native";
-import { useTheme } from "styled-components";
-import { useTranslation } from "react-i18next";
 import { useDeleteNotificationMutation } from "@src/store/slices/api/notificationApiSlice";
-import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { useTheme } from "styled-components";
 
 const BottomMenu = ({ visible, onClose, notificationId }) => {
   const theme = useTheme();

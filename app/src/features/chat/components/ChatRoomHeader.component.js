@@ -1,15 +1,15 @@
-import React, { memo, useEffect, useRef } from "react";
-import styled from "styled-components/native";
-import { Ionicons, FontAwesome, Entypo, Feather } from "@expo/vector-icons";
-import { Avatar } from "../../../components/Avatar";
-import { Alert, TouchableOpacity, View } from "react-native";
-import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
-import { useTheme } from "styled-components";
-import { useSelector } from "react-redux";
-import { chatSelector, userSelector } from "@src/store/selector";
-import { useTranslation } from "react-i18next";
+import { Entypo, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { chatSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
+import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import { Alert, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
+import { useTheme } from "styled-components";
+import styled from "styled-components/native";
+import { Avatar } from "../../../components/Avatar";
 
 const ChatRoomHeader = () => {
   const { user } = useSelector(userSelector);

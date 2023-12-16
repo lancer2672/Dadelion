@@ -1,7 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { UrlAPI } from "@src/constants";
 import { logoutUser } from "../userSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: UrlAPI,

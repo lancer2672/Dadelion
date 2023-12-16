@@ -1,16 +1,14 @@
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { useEffect, useState } from "react";
 import {
+  Animated,
   Dimensions,
   StyleSheet,
-  Text,
-  View,
-  Animated,
   TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { TabView, SceneMap } from "react-native-tab-view";
-import UserPost from "./UserPost.component";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useTheme } from "styled-components";
+import UserPost from "./UserPost.component";
 
 const TAB_ITEM_WIDTH = Dimensions.get("window").width / 2;
 const Tab = createMaterialTopTabNavigator();

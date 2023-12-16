@@ -1,30 +1,21 @@
-import {
-  FlatList,
-  Modal,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { AntDesign, Entypo } from "@expo/vector-icons";
-import styled from "styled-components/native";
+import { AntDesign } from "@expo/vector-icons";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useTranslation } from "react-i18next";
+import { ScrollView, Text, View } from "react-native";
+import styled from "styled-components/native";
 
 import { Avatar } from "@src/components/Avatar";
-import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "@src/store/selector";
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message";
+import { useDispatch, useSelector } from "react-redux";
 
 import CustomEditText from "@src/components/CustomEditText";
-import { colors } from "@src/infrastructure/theme/colors";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-import GenderSelection from "../components/GenderSelection.component";
-import { useTheme } from "styled-components";
-import withLoading from "@src/utils/withLoading";
 import userApi from "@src/api/user";
+import withLoading from "@src/utils/withLoading";
+import { useTheme } from "styled-components";
+import GenderSelection from "../components/GenderSelection.component";
 
 const dayjs = require("dayjs");
 

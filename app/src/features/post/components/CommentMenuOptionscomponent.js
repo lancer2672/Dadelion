@@ -1,13 +1,13 @@
-import React, {  } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import {} from "react";
 import { Text } from "react-native";
 import {
   Menu,
-  MenuOptions,
-  renderers,
   MenuOption,
+  MenuOptions,
   MenuTrigger,
+  renderers,
 } from "react-native-popup-menu";
-import { MaterialIcons } from "@expo/vector-icons";
 
 import { useDeleteCommentMutation } from "@src/store/slices/api/postApiSlice";
 export const CommentMenu = ({ postId, commentId }) => {

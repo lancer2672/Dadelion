@@ -1,8 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQueryWithReauth } from "./baseQuery";
-import { transformUsersData } from "@src/utils/transformData";
 import { getSocket } from "@src/utils/socket";
-import { current } from "@reduxjs/toolkit";
+import { transformUsersData } from "@src/utils/transformData";
+import { baseQueryWithReauth } from "./baseQuery";
 
 const userRoute = "/user";
 

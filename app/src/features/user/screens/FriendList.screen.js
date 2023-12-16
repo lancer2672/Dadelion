@@ -1,22 +1,12 @@
-import {
-  FlatList,
-  Modal,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React from "react";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 
-import { Avatar } from "@src/components/Avatar";
-import { useDispatch, useSelector } from "react-redux";
 import { useGetAllFriendsQuery } from "@src/store/slices/api/userApiSlice";
+import { useDispatch } from "react-redux";
 import { useTheme } from "styled-components";
 import Friend from "../components/Friend.component";
-import { useRoute } from "@react-navigation/native";
 
 const dayjs = require("dayjs");
 

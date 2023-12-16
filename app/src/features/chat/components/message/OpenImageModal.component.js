@@ -1,22 +1,19 @@
-import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  FlatList,
-  ImageBackground,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
-import React, { useState, useRef } from "react";
-import { Modal } from "react-native";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import Swiper from "react-native-swiper";
+import {
+  FlatList,
+  Image,
+  Modal,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { showMessage } from "react-native-flash-message";
+import Swiper from "react-native-swiper";
 
 import { downloadMediaFile } from "@src/utils/downloads";
-import { useEffect } from "react";
 
 const OpenImageModal = ({
   visible,

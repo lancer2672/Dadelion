@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet } from "react-native";
 
 import { BackgroundImage, Logo, Slogan } from "./authentication.style";
 

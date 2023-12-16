@@ -1,4 +1,4 @@
-import { Platform, PermissionsAndroid } from "react-native";
+import { PermissionsAndroid, Platform } from "react-native";
 export async function mediaFileStoragePermission() {
   const getCheckPermissionPromise = () => {
     if (Platform.Version >= 33) {

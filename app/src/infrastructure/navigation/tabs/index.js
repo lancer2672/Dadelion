@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTheme } from "styled-components";
 
-import User from "@src/views/User";
-import Home from "@src/views/Home";
-import Map from "@src/features/map/screens/Mapscreen";
-import ChatPage from "@src/features/chat/pages/Chat.page";
-import CreatePost from "@src/features/post/screens/CreatePost.screen";
-import { Image, Pressable, View, StyleSheet } from "react-native";
 import ChatHome from "@src/features/chat/screens/ChatHome.screen";
+import Map from "@src/features/map/screens/Mapscreen";
+import CreatePost from "@src/features/post/screens/CreatePost.screen";
+import Home from "@src/views/Home";
+import User from "@src/views/User";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 const CreatePostButton = ({ children, onPress }) => {
   const theme = useTheme();
   return (

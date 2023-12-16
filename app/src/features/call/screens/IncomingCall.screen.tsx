@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { userSelector } from "@src/store/selector";
+import { MotiView } from "moti";
+import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   ImageBackground,
   Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { Easing } from "react-native-reanimated";
 import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
-import { MotiView } from "moti";
-import { Easing } from "react-native-reanimated";
-import { userSelector } from "@src/store/selector";
 
 const WAVE_SIZE = 68;
 const WAVE_COLOR = "#2e7bff";

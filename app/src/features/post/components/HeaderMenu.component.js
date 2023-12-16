@@ -1,17 +1,17 @@
-import React, { useContext, useEffect } from "react";
+import { Feather } from "@expo/vector-icons";
+import { useEffect } from "react";
 import { Text } from "react-native";
 import {
   Menu,
-  MenuOptions,
-  renderers,
   MenuOption,
+  MenuOptions,
   MenuTrigger,
+  renderers,
 } from "react-native-popup-menu";
-import { Feather } from "@expo/vector-icons";
 
 import { useDeletePostMutation } from "@src/store/slices/api/postApiSlice";
-import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { useDispatch } from "react-redux";
 
 export const HeaderMenu = ({ postId, setModalVisible, postCreatorId }) => {
   const [deletePost, { isSuccess, isLoading }] = useDeletePostMutation();

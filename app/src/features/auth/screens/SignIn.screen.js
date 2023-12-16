@@ -1,37 +1,31 @@
-import { View, Keyboard, Pressable, Image, StyleSheet } from "react-native";
-import React, { useState, useEffect } from "react";
-import * as Progress from "react-native-progress";
+import { useState } from "react";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
-import {
-  AuthButton,
-  Error,
-  AuthButtonContent,
-} from "../components/authentication.style";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
-import auth from "@react-native-firebase/auth";
-import InputText from "@src/features/auth/components/TextInput.component";
-import { useTheme } from "styled-components";
-import AuthContainer from "../components/AuthContainer.component";
-import { Text } from "@src/components/typography/text.component";
+import { WEB_API_KEY } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { Avatar } from "@src/components/Avatar";
 import { Spacer } from "@src/components/spacer/spacer.component";
+import { Text } from "@src/components/typography/text.component";
+import InputText from "@src/features/auth/components/TextInput.component";
+import { setIsLoading } from "@src/store/slices/appSlice";
+import { setUser } from "@src/store/slices/userSlice";
+import { initSocket } from "@src/utils/socket";
 import { accountSchema } from "@src/utils/validationSchemas";
 import { handleValidateField } from "@src/utils/validator";
-import { setUser, update } from "@src/store/slices/userSlice";
-import { useDispatch, useSelector } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setIsLoading } from "@src/store/slices/appSlice";
-import { initSocket } from "@src/utils/socket";
-import { Avatar } from "@src/components/Avatar";
-import { WEB_API_KEY } from "@env";
-import { TouchableOpacity } from "react-native";
 import { useRef } from "react";
+import { TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
+import AuthContainer from "../components/AuthContainer.component";
+import {
+  AuthButton,
+  AuthButtonContent,
+  Error,
+} from "../components/authentication.style";
 
 import authApi from "@src/api/auth";
-import withLoading from "@src/utils/withLoading";
 import { transformUsersData } from "@src/utils/transformData";
+import withLoading from "@src/utils/withLoading";
 
 GoogleSignin.configure({
   webClientId: WEB_API_KEY,

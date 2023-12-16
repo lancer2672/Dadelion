@@ -1,19 +1,10 @@
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  Pressable,
-  Image,
-  View,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
-import { useTheme } from "styled-components";
-import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { setSelectedPost } from "@src/store/slices/postSlice";
+import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { useTheme } from "styled-components";
 
 const UserPost = ({ route }) => {
   const { userId } = route.params;

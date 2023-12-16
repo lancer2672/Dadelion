@@ -1,20 +1,20 @@
-import { Text, View, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 
-import ListAvatarName from "../components/ListAvatarName.component";
-import ListChannel from "../components/ListChannel.component";
-import { useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
-import { useTheme } from "styled-components";
-import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
-import SearchChannel from "../components/SearchChannel.component";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import useNotification from "@src/hooks/useNotification";
+import { userSelector } from "@src/store/selector";
+import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
 import { getSocket } from "@src/utils/socket";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { useTheme } from "styled-components";
+import ListAvatarName from "../components/ListAvatarName.component";
+import ListChannel from "../components/ListChannel.component";
+import SearchChannel from "../components/SearchChannel.component";
 import SideMenu from "../components/SideMenu.component";
 
 const WaitingChannel = ({}) => {

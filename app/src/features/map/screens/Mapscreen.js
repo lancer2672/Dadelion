@@ -1,10 +1,9 @@
+import { locationSelector, userSelector } from "@src/store/selector";
+import { useState } from "react";
 import { View } from "react-native";
-import React, { useState, useEffect } from "react";
-import MapView, { Callout, PROVIDER_GOOGLE } from "react-native-maps";
-import { getSocket } from "@src/utils/socket";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import AvatarMarker from "../components/AvatarMarker.component";
-import { locationSelector, userSelector } from "@src/store/selector";
 import BottomModal from "../components/BottomModal.component";
 
 const Map = () => {

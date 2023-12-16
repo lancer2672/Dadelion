@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import {
-  Pressable,
   Image,
   Modal,
   StyleSheet,
@@ -7,30 +7,26 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 
-import { userSelector } from "@src/store/selector";
-import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import styled from "styled-components/native";
-import { updateUserState } from "@src/store/slices/userSlice";
-import { colors } from "@src/infrastructure/theme/colors";
-import UserPost from "@src/features/user/components/UserPost.component";
+import { Avatar } from "@src/components/Avatar";
 import FeatureTabs from "@src/features/user/components/FeatureTabs.component";
-import { useTranslation } from "react-i18next";
+import { colors } from "@src/infrastructure/theme/colors";
+import { userSelector } from "@src/store/selector";
+import { useFindOrCreateChannelMutation } from "@src/store/slices/api/chatApiSlice";
+import { useCheckFriendStatusQuery } from "@src/store/slices/api/friendRequestApiSlice";
+import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import {
   joinChannel,
   sendFriendRequest,
   setSelectedChannel,
   unfriend,
 } from "@src/store/slices/chatSlice";
-import { useCheckFriendStatusQuery } from "@src/store/slices/api/friendRequestApiSlice";
-import { useFindOrCreateChannelMutation } from "@src/store/slices/api/chatApiSlice";
-import { useTheme } from "styled-components";
 import { getSocket } from "@src/utils/socket";
-import { useGetPostByUserIdQuery } from "@src/store/slices/api/postApiSlice";
-import { Avatar } from "@src/components/Avatar";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "styled-components";
+import styled from "styled-components/native";
 
 const Guest = ({ props, navigation, route }) => {
   const theme = useTheme();

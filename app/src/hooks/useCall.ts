@@ -1,11 +1,10 @@
 import { getSocket } from "@src/utils/socket";
 import { useEffect, useRef, useState } from "react";
 import {
-  mediaDevices,
-  RTCPeerConnection,
-  RTCView,
   RTCIceCandidate,
+  RTCPeerConnection,
   RTCSessionDescription,
+  mediaDevices,
 } from "react-native-webrtc";
 
 const useCall = () => {

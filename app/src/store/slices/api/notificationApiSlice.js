@@ -1,8 +1,7 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQueryWithReauth } from "./baseQuery";
-import { getSocket } from "@src/utils/socket";
 import { current } from "@reduxjs/toolkit";
-import { UrlAPI } from "@src/constants";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { getSocket } from "@src/utils/socket";
+import { baseQueryWithReauth } from "./baseQuery";
 const notificationRoute = "/notification";
 
 export const notificationApi = createApi({

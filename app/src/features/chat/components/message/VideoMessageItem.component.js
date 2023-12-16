@@ -1,23 +1,21 @@
+import { Feather, FontAwesome } from "@expo/vector-icons";
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import Slider from "@react-native-community/slider";
+import { mediaFileStoragePermission } from "@src/permissions";
+import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
+  Platform,
+  Pressable,
   StyleSheet,
   Text,
-  View,
-  Image,
   TouchableOpacity,
-  Platform,
+  View,
 } from "react-native";
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import Video from "react-native-video";
-import Slider from "@react-native-community/slider";
-import { Feather, Ionicons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "styled-components";
-import { Pressable } from "react-native";
-import RNFetchBlob from "rn-fetch-blob";
 import { showMessage } from "react-native-flash-message";
-import { mediaFileStoragePermission } from "@src/permissions";
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import Video from "react-native-video";
+import RNFetchBlob from "rn-fetch-blob";
+import { useTheme } from "styled-components";
 
 const VideoMessageItem = ({ videos }) => {
   const theme = useTheme();

@@ -1,32 +1,29 @@
 import messaging from "@react-native-firebase/messaging";
+import { useNavigation } from "@react-navigation/native";
+import { requestNotificationPermission } from "@src/permissions";
 import {
   getMessagingToken,
   handleOnNotificationOpenedApp,
 } from "@src/services/messaging";
-import { requestNotificationPermission } from "@src/permissions";
-import { addActionListener, onAppOpened } from "@src/services/notifee/notifee";
 import messagingNotificationIns from "@src/services/notifee/MessagingNotification";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { addActionListener } from "@src/services/notifee/notifee";
 import { userSelector } from "@src/store/selector";
 import {
   responseFriendRequest,
   sendMessage,
   setSelectedChannel,
 } from "@src/store/slices/chatSlice";
-import { useLinkTo, useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { MessageType, NotificationType } from "@src/constants";
 import userApi from "@src/api/user";
-import {
-  useFindOrCreateChannelMutation,
-  useGetChannelsQuery,
-} from "@src/store/slices/api/chatApiSlice";
+import { MessageType, NotificationType } from "@src/constants";
+import friendRequestNotificationIns from "@src/services/notifee/FriendRequestNotification";
+import Notification from "@src/services/notifee/Notification";
 import postNotificationIns from "@src/services/notifee/PostNotification";
+import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
 import { useGetAllPostsQuery } from "@src/store/slices/api/postApiSlice";
 import { setSelectedPost } from "@src/store/slices/postSlice";
-import Notification from "@src/services/notifee/Notification";
-import friendRequestNotificationIns from "@src/services/notifee/FriendRequestNotification";
 
 const notificationClassIns = {
   [NotificationType.CHAT]: messagingNotificationIns,

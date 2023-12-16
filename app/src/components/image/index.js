@@ -1,5 +1,5 @@
+import { StyleSheet, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { View, StyleSheet } from "react-native";
 
 export const FastImageBackground = ({
   children,

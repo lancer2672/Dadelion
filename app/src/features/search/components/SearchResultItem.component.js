@@ -1,15 +1,13 @@
-import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
-import styled from "styled-components/native";
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import { Avatar } from "@src/components/Avatar";
 import { Spacer } from "@src/components/spacer/spacer.component";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { useTheme } from "styled-components";
 import {
   useAddUserToSearchHistoryMutation,
   useRemoveUserFromSearchHistoryMutation,
 } from "@src/store/slices/api/userApiSlice";
-import { Avatar } from "@src/components/Avatar";
+import { Text, TouchableOpacity, View } from "react-native";
+import { useTheme } from "styled-components";
+import styled from "styled-components/native";
 
 const SearchResultItem = ({ navigation, user, isFriend }) => {
   const theme = useTheme();

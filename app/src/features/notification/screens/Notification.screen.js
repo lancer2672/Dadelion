@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
-import { View, Modal, TouchableOpacity, Text, FlatList } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
-import styled from "styled-components/native";
-import NotificationItem from "../components/NotificationItem.component";
-import FriendRequestItem from "../../../views/Home/components/FriendRequestItem.component";
 import { useGetFriendRequestsQuery } from "@src/store/slices/api/friendRequestApiSlice";
-import { useTheme } from "styled-components";
 import { useGetNotificationsQuery } from "@src/store/slices/api/notificationApiSlice";
+import { useTranslation } from "react-i18next";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { useTheme } from "styled-components";
+import styled from "styled-components/native";
+import FriendRequestItem from "../../../views/Home/components/FriendRequestItem.component";
+import NotificationItem from "../components/NotificationItem.component";
 
 const Notification = ({ navigation }) => {
   const { t } = useTranslation();

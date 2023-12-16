@@ -1,11 +1,6 @@
-import { NotificationType, UrlAPI } from "@src/constants";
+import notifee, { AndroidImportance } from "@notifee/react-native";
+import { UrlAPI } from "@src/constants";
 import Notification from "./Notification";
-import notifee, {
-  AndroidStyle,
-  AndroidImportance,
-  AndroidGroupAlertBehavior,
-} from "@notifee/react-native";
-import { formatNamesWithAnd } from "@src/utils/textFormatter";
 
 const PARENT_NOTIFICATION_ID = "parentFriendRequestNotification";
 const NOTIFICATION_CHANNEL = "friendRequestNotification";

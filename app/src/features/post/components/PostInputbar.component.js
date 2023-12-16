@@ -1,22 +1,13 @@
-import {
-  Keyboard,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
+import { Keyboard, TextInput, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 
-// import { useCommentPostMutation } from "@src/store/slices/api/postApiSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { commentPost, setRepliedComment } from "@src/store/slices/postSlice";
+// import  { useCommentPostMutation } from "@src/store/slices/api/postApiSlice";
 import { postSelector, userSelector } from "@src/store/selector";
-import { useRef } from "react";
+import { commentPost, setRepliedComment } from "@src/store/slices/postSlice";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const InputBar = ({ autoFocus }) => {
   const dispatch = useDispatch();

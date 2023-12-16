@@ -1,28 +1,26 @@
-import {
-  Text,
-  Image,
-  View,
-  Pressable,
-  Dimensions,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Animated,
-} from "react-native";
-import React, { useState, useEffect, useRef, memo } from "react";
-import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
+import { memo, useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import styled from "styled-components/native";
 
-import { useDispatch, useSelector } from "react-redux";
-import { postSelector, userSelector } from "@src/store/selector";
-import { BackgroundImage } from "@src/features/auth/components/authentication.style";
-import ReactionBar from "./ReactionBar.component";
+import { AntDesign } from "@expo/vector-icons";
 import { Avatar } from "@src/components/Avatar";
-import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
+import { FastImageBackground } from "@src/components/image";
+import { BackgroundImage } from "@src/features/auth/components/authentication.style";
+import { userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { reactPost, setSelectedPost } from "@src/store/slices/postSlice";
-import { FastImageBackground } from "@src/components/image";
-import { AntDesign } from "@expo/vector-icons";
+import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
+import { useDispatch, useSelector } from "react-redux";
 import PostItemDescription from "./PostItemDescription.component";
+import ReactionBar from "./ReactionBar.component";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_WIDTH_WITH_MARGIN_L_R_12 = SCREEN_WIDTH - 24;

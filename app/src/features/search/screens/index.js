@@ -1,18 +1,17 @@
-import { Text, View, ActivityIndicator, FlatList } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { Searchbar, Snackbar } from "react-native-paper";
 import styled from "styled-components/native";
 
-import { useTranslation } from "react-i18next";
+import { userSelector } from "@src/store/selector";
 import {
   useGetSearchHistoryQuery,
   useSearchUserQuery,
-  userApi,
 } from "@src/store/slices/api/userApiSlice";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "styled-components";
 import SearchResultItem from "../components/SearchResultItem.component";
-import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
 
 const Search = ({ navigation }) => {
   const theme = useTheme();

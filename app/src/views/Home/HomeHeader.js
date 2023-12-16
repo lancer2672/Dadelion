@@ -1,27 +1,23 @@
+import { Entypo, Feather, FontAwesome5 } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import {
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Modal,
-  Text,
-  View,
   Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useEffect, useState, useContext } from "react";
-import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
 
-import CreatePost from "@src/features/post/screens/CreatePost.screen";
-import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
-import { colors } from "@src/infrastructure/theme/colors";
-import { Spacer } from "@src/components/spacer/spacer.component";
-import { useTheme } from "styled-components";
-import { Avatar } from "@src/components/Avatar";
 import { useNavigation } from "@react-navigation/native";
+import { Avatar } from "@src/components/Avatar";
+import { Spacer } from "@src/components/spacer/spacer.component";
+import { userSelector } from "@src/store/selector";
 import { useGetFriendRequestsQuery } from "@src/store/slices/api/friendRequestApiSlice";
 import { useGetNotificationsQuery } from "@src/store/slices/api/notificationApiSlice";
 import { markSeenNotifications } from "@src/store/slices/notificationSlice";
 import { getSocket } from "@src/utils/socket";
+import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "styled-components";
 
 const HomeHeader = ({}) => {
   const userState = useSelector(userSelector);

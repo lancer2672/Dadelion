@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   FlatList,
   Modal,
@@ -7,10 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
-import { Foundation } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
-import { useState } from "react";
 
 const LanguageSelection = ({
   visible,

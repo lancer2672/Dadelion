@@ -1,8 +1,6 @@
-import { UrlAPI } from "@src/constants";
-import { isUrlExpired } from "./urlHelper";
 import { updateUrl } from "@src/api/upload";
-import { UrlType } from "@src/constants";
-import { MessageType } from "@src/constants";
+import { MessageType, UrlType } from "@src/constants";
+import { isUrlExpired } from "./urlHelper";
 
 export const transformUsersData = async (users) => {
   return Promise.all(

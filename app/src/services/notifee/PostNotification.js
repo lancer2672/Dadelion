@@ -1,11 +1,11 @@
-import { NotificationType, UrlAPI } from "@src/constants";
-import Notification from "./Notification";
 import notifee, {
-  AndroidStyle,
-  AndroidImportance,
   AndroidGroupAlertBehavior,
+  AndroidImportance,
+  AndroidStyle,
 } from "@notifee/react-native";
+import { NotificationType } from "@src/constants";
 import { formatNamesWithAnd } from "@src/utils/textFormatter";
+import Notification from "./Notification";
 
 const PARENT_NOTIFICATION_ID = "parentPostNotification";
 const NOTIFICATION_CHANNEL = "postNotification";

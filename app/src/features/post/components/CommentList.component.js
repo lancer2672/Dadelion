@@ -1,9 +1,6 @@
-import { StyleSheet, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet } from "react-native";
 
 import Comment from "./CommentItem.component";
-import { Spacer } from "@src/components/spacer/spacer.component";
-import { FlashList } from "@shopify/flash-list";
 
 const CommentList = ({ postId, comments }) => {
   console.log("comments", comments);

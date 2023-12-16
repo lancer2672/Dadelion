@@ -1,15 +1,13 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
-import AuthContainer from "../components/AuthContainer.component";
-import InputText from "../components/TextInput.component";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { setIsLoading } from "@src/store/slices/appSlice";
-import { showMessage } from "react-native-flash-message";
-import { useTranslation } from "react-i18next";
 import { useRoute } from "@react-navigation/native";
 import authApi from "@src/api/auth";
 import withLoading from "@src/utils/withLoading";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { showMessage } from "react-native-flash-message";
+import { useDispatch } from "react-redux";
+import AuthContainer from "../components/AuthContainer.component";
+import InputText from "../components/TextInput.component";
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState();

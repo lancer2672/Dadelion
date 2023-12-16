@@ -1,13 +1,12 @@
-import { Text, View, FlatList } from "react-native";
-import React, { useState, memo } from "react";
-import styled from "styled-components/native";
-import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
-import { useTheme } from "styled-components";
-import CallMessageItem from "./CallMessageItem.component";
-import VideoMessageItem from "./VideoMessageItem.component";
-import ImageMessageItem from "./ImageMessageItem.component";
 import Avatar from "@src/components/Avatar";
 import { MessageType } from "@src/constants";
+import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
+import { FlatList, Text, View } from "react-native";
+import { useTheme } from "styled-components";
+import styled from "styled-components/native";
+import CallMessageItem from "./CallMessageItem.component";
+import ImageMessageItem from "./ImageMessageItem.component";
+import VideoMessageItem from "./VideoMessageItem.component";
 
 const MessageContainer = ({ chatFriend = {}, isMyMessage, messages }) => {
   const theme = useTheme();

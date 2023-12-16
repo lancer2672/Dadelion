@@ -1,26 +1,20 @@
+import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { memo, useEffect, useRef, useState } from "react";
 import {
+  Pressable,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  Pressable,
+  View,
 } from "react-native";
-import React, { useState, useEffect, memo, useRef } from "react";
-import {
-  Fontisto,
-  AntDesign,
-  FontAwesome5,
-  Ionicons,
-  Entypo,
-} from "@expo/vector-icons";
 import styled from "styled-components/native";
-// import { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "@src/store/selector";
-import { useTheme } from "styled-components";
-import { reactPost, setSelectedPost } from "@src/store/slices/postSlice";
+// import  { useReactPostMutation } from "@src/store/slices/api/postApiSlice";
 import { useNavigation } from "@react-navigation/native";
+import { userSelector } from "@src/store/selector";
+import { reactPost, setSelectedPost } from "@src/store/slices/postSlice";
 import { Animated } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "styled-components";
 
 const ReactionBar = ({ post }) => {
   const theme = useTheme();

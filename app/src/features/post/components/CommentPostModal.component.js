@@ -1,25 +1,13 @@
-import { Modal, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState, memo, useRef, useEffect } from "react";
+import { memo } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import styled from "styled-components/native";
-import ReadMore from "@fawazahmed/react-native-read-more";
-import Animated, {
-  useSharedValue,
-  withSpring,
-  useAnimatedStyle,
-  useAnimatedGestureHandler,
-} from "react-native-reanimated";
 
-import InputBar from "./PostInputbar.component";
-import CommentItemComponent from "./CommentItem.component";
-import { useSelector } from "react-redux";
-import { postSelector } from "@src/store/selector";
 import { AntDesign } from "@expo/vector-icons";
+import { postSelector } from "@src/store/selector";
 import { Pressable } from "react-native";
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-  State,
-} from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
+import CommentItemComponent from "./CommentItem.component";
+import InputBar from "./PostInputbar.component";
 
 const CommentPostModal = ({ isVisible, onClose, isFocusInput }) => {
   const { selectedPost } = useSelector(postSelector);

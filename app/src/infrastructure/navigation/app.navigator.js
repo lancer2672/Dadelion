@@ -1,32 +1,32 @@
-import React, { useEffect } from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  Notification,
-  Settings,
-  EditProfile,
-  Search,
-  FriendList,
-  IncomingCallScreen,
-  CallingScreen,
-  ResetPassword,
-  DetailPost,
-  ChatRoom,
-  Guest,
-} from "./index";
+import useNotification from "@src/hooks/useNotification";
 import {
   enableTrackingLocation,
   receiveListLocationListener,
 } from "@src/services/location";
-import { Tabs } from "./tabs";
-import { getSocket } from "@src/utils/socket";
-import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
-import { joinChannels } from "@src/store/slices/chatSlice";
-import useNotification from "@src/hooks/useNotification";
 import { onAppOpened } from "@src/services/notifee/notifee";
 import { userSelector } from "@src/store/selector";
+import { useGetChannelsQuery } from "@src/store/slices/api/chatApiSlice";
+import { joinChannels } from "@src/store/slices/chatSlice";
+import { getSocket } from "@src/utils/socket";
+import {
+  CallingScreen,
+  ChatRoom,
+  DetailPost,
+  EditProfile,
+  FriendList,
+  Guest,
+  IncomingCallScreen,
+  Notification,
+  ResetPassword,
+  Search,
+  Settings,
+} from "./index";
+import { Tabs } from "./tabs";
 
 const Stack = createNativeStackNavigator();
 

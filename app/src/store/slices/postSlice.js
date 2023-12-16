@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getSocket } from "@src/utils/socket";
 
 const initialState = {
   selectedPost: null,

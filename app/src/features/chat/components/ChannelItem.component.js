@@ -1,28 +1,20 @@
-import {
-  StyleSheet,
-  Text,
-  Image,
-  Modal,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import styled from "styled-components/native";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Entypo } from "@expo/vector-icons";
+import styled from "styled-components/native";
 
 import { Avatar } from "@src/components/Avatar";
+import { MessageType } from "@src/constants";
 import { userSelector } from "@src/store/selector";
-import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
 import {
   useGetLastMessageQuery,
   useLoadChatRoomMessagesQuery,
 } from "@src/store/slices/api/chatApiSlice";
-import { useTheme } from "styled-components";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { setSelectedChannel } from "@src/store/slices/chatSlice";
-import { MessageType } from "@src/constants";
+import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
+import { useTheme } from "styled-components";
 
 const Channel = ({ navigation, channel }) => {
   const { _id: channelId, memberIds } = channel;

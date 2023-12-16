@@ -1,16 +1,13 @@
-import React, { useEffect, useState, useRef, useReducer } from "react";
-import { View, Text, StyleSheet, Pressable, Platform } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { requestCallingPermission } from "@src/permissions";
+import { chatSelector, userSelector } from "@src/store/selector";
+import { useEffect, useRef, useState } from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { callSelector, chatSelector, userSelector } from "@src/store/selector";
 
-import CallActionBox from "../components/CallActionBox.component";
-import { setCall } from "@src/store/slices/callSlice";
-import { sendMessage } from "@src/store/slices/chatSlice";
-import { MessageType } from "@src/constants";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
+import CallActionBox from "../components/CallActionBox.component";
 const CallingScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();

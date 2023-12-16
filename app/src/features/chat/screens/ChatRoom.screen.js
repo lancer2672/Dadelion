@@ -1,18 +1,18 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
 import styled from "styled-components/native";
 
+import { chatSelector, userSelector } from "@src/store/selector";
+import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
+import { joinRoom } from "@src/store/slices/chatSlice";
+import { getSocket } from "@src/utils/socket";
+import { useTranslation } from "react-i18next";
+import AnimatedEllipsis from "react-native-animated-ellipsis";
+import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "styled-components";
+import ChatRoomHeader from "../components/ChatRoomHeader.component";
 import InputBar from "../components/InputBar.component";
 import ListUserMessages from "../components/ListMessage.component";
-import ChatRoomHeader from "../components/ChatRoomHeader.component";
-import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { chatSelector, userSelector } from "@src/store/selector";
-import AnimatedEllipsis from "react-native-animated-ellipsis";
-import { useTranslation } from "react-i18next";
-import { joinRoom, typing } from "@src/store/slices/chatSlice";
-import { getSocket } from "@src/utils/socket";
-import { useTheme } from "styled-components";
 
 const ChatRoom = () => {
   const { user } = useSelector(userSelector);

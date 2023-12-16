@@ -1,5 +1,5 @@
+import { memo } from "react";
 import { Text, View } from "react-native";
-import React, { memo } from "react";
 import { Checkbox } from "react-native-paper";
 import styled from "styled-components/native";
 

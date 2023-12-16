@@ -1,23 +1,23 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import { userSlice } from "./slices/userSlice";
 import { appSlice } from "./slices/appSlice";
-import { postSlice } from "./slices/postSlice";
 import { callSlice } from "./slices/callSlice";
-import { notification } from "./slices/notificationSlice";
 import { chatSlice } from "./slices/chatSlice";
 import { locationSlice } from "./slices/location.Slice";
+import { notification } from "./slices/notificationSlice";
+import { postSlice } from "./slices/postSlice";
+import { userSlice } from "./slices/userSlice";
 
-import { userApi } from "./slices/api/userApiSlice";
-import { postApi } from "./slices/api/postApiSlice";
 import { chatApi } from "./slices/api/chatApiSlice";
-import { notificationApi } from "./slices/api/notificationApiSlice";
 import { friendRequestApi } from "./slices/api/friendRequestApiSlice";
+import { notificationApi } from "./slices/api/notificationApiSlice";
+import { postApi } from "./slices/api/postApiSlice";
+import { userApi } from "./slices/api/userApiSlice";
 
 import chatMiddleware from "./middlewares/chatMiddleware";
-import postMiddleware from "./middlewares/postMiddleware";
-import notificationMiddleware from "./middlewares/notificationMiddleware";
 import locationMiddleware from "./middlewares/locationMiddleware";
+import notificationMiddleware from "./middlewares/notificationMiddleware";
+import postMiddleware from "./middlewares/postMiddleware";
 
 import { createLogger } from "redux-logger";
 

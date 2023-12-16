@@ -1,12 +1,12 @@
-import { StyleSheet, FlatList, Text, View } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
-import PostItem from "../components/PostItem.component";
-import { Spacer } from "@src/components/spacer/spacer.component";
-import { useGetAllPostsQuery } from "@src/store/slices/api/postApiSlice";
-import { useDispatch } from "react-redux";
-import { setIsLoading } from "@src/store/slices/appSlice";
 import { useNavigation } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
+import { Spacer } from "@src/components/spacer/spacer.component";
+import { useGetAllPostsQuery } from "@src/store/slices/api/postApiSlice";
+import { setIsLoading } from "@src/store/slices/appSlice";
+import { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
+import PostItem from "../components/PostItem.component";
 const Post = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();

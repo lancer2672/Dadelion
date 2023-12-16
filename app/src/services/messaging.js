@@ -40,4 +40,4 @@ const handleOnNotificationOpenedApp = () => {
   });
 };
 
-export { handleOnNotificationOpenedApp, getMessagingToken };
+export { getMessagingToken, handleOnNotificationOpenedApp };

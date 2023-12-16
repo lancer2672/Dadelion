@@ -1,27 +1,25 @@
-import { useEffect, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  TextInput,
-} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
-import { useGetFriendRequestsQuery } from "@src/store/slices/api/friendRequestApiSlice";
-import { useTheme } from "styled-components";
-import { useGetNotificationsQuery } from "@src/store/slices/api/notificationApiSlice";
+import { useNavigation } from "@react-navigation/native";
+import authApi from "@src/api/auth";
+import { Error } from "@src/features/auth/components/authentication.style";
+import { accountSchema } from "@src/utils/validationSchemas";
 import {
   handleValidateField,
   handleValidateObject,
 } from "@src/utils/validator";
-import { accountSchema } from "@src/utils/validationSchemas";
-import { Error } from "@src/features/auth/components/authentication.style";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import { showMessage } from "react-native-flash-message";
-import authApi from "@src/api/auth";
 import withLoading from "@src/utils/withLoading";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { showMessage } from "react-native-flash-message";
+import { useDispatch } from "react-redux";
+import { useTheme } from "styled-components";
 
 const ResetPassword = () => {
   const navigation = useNavigation();

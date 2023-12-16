@@ -1,6 +1,4 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import React from "react";
-import { TouchableOpacity } from "react-native";
 import { useTheme } from "styled-components";
 
 const CustomEditText = ({

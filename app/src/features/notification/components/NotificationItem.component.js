@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import styled from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
+import { useState } from "react";
+import { Image, Text, TouchableOpacity } from "react-native";
+import styled from "styled-components/native";
 
-import { useTranslation } from "react-i18next";
-import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
-import { useGetPostByIdQuery } from "@src/store/slices/api/postApiSlice";
-import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import { useDeleteNotificationMutation } from "@src/store/slices/api/notificationApiSlice";
+import { useGetPostByIdQuery } from "@src/store/slices/api/postApiSlice";
+import { commentCreatedTimeFormater } from "@src/utils/timeFormatter";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "styled-components";
 import BottomMenu from "./BottomMenu.component";
 
 const NotificationItem = ({ notification }) => {

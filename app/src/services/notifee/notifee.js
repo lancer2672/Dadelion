@@ -1,13 +1,4 @@
-import { AppState, Alert } from "react-native";
-import notifee, {
-  TriggerType,
-  TimeUnit,
-  EventType,
-  AndroidImportance,
-  RepeatFrequency,
-  AndroidStyle,
-} from "@notifee/react-native";
-import { NotificationType } from "@src/constants";
+import notifee, { EventType } from "@notifee/react-native";
 
 export async function onAppOpened(handleNavigation) {
   const initialNotification = await notifee.getInitialNotification();

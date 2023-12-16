@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { memo } from "react";
-import styled from "styled-components/native";
 import ReadMore from "@fawazahmed/react-native-read-more";
+import { memo } from "react";
+import { StyleSheet, Text } from "react-native";
+import styled from "styled-components/native";
 
 const PostItemDescription = ({ description }) => {
   return (

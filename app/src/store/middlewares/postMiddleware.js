@@ -1,5 +1,4 @@
 import { getSocket } from "@src/utils/socket";
-import { updateSelectedPost } from "../slices/postSlice";
 
 const postMiddleware = () => (store) => {
   return (next) => (action) => {

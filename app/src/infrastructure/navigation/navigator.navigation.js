@@ -1,17 +1,17 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import { ActivityIndicator, StatusBar, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, ActivityIndicator, StatusBar } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 
-import { AuthNavigator } from "./auth.navigator";
-import { AppNavigator } from "./app.navigator";
 import { appSelector, userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
-import { setUser } from "@src/store/slices/userSlice";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { setUser } from "@src/store/slices/userSlice";
 import { getSocket, initSocket } from "@src/utils/socket";
+import { AppNavigator } from "./app.navigator";
+import { AuthNavigator } from "./auth.navigator";
 StatusBar.setBackgroundColor("black");
 const Navigator = () => {
   const userState = useSelector(userSelector);

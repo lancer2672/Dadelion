@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { MessageType } from "@src/constants";
-import { callSelector, chatSelector, userSelector } from "@src/store/selector";
+import { chatSelector, userSelector } from "@src/store/selector";
 import { sendMessage } from "@src/store/slices/chatSlice";
-import React, { useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";

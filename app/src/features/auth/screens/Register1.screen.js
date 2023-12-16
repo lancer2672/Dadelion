@@ -1,17 +1,17 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState, useEffect } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useEffect, useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 
+import { Spacer } from "@src/components/spacer/spacer.component";
+import { ageLimit, nameSchema } from "@src/utils/validationSchemas";
+import { handleValidateField } from "@src/utils/validator";
 import AuthContainer from "../components/AuthContainer.component";
 import InputText from "../components/TextInput.component";
 import {
-  Error,
   AuthButton,
   AuthButtonContent,
+  Error,
 } from "../components/authentication.style";
-import { Spacer } from "@src/components/spacer/spacer.component";
-import { handleValidateField } from "@src/utils/validator";
-import { nameSchema, ageLimit } from "@src/utils/validationSchemas";
 
 const dayjs = require("dayjs");
 const RegisterScreen1 = ({ navigation }) => {

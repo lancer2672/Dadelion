@@ -1,24 +1,18 @@
-import React, { useEffect, useLayoutEffect, useState, useContext } from "react";
+import { AntDesign } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import {
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Text,
-  View,
-  Dimensions,
-  TextInput,
-  Button,
   ImageBackground,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import styled from "styled-components/native";
-import { AntDesign } from "@expo/vector-icons";
 
-import { Spacer } from "@src/components/spacer/spacer.component";
-
-import { Header, Seperator, Avatar, UserName } from "../shared-components";
 import { useUpdatePostMutation } from "@src/store/slices/api/postApiSlice";
-import { useDispatch } from "react-redux";
 import { setIsLoading } from "@src/store/slices/appSlice";
+import { useDispatch } from "react-redux";
+import { Avatar, Header, Seperator, UserName } from "../shared-components";
 
 const dayjs = require("dayjs");
 
