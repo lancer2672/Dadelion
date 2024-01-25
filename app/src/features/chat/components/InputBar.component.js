@@ -70,7 +70,7 @@ const InputBar = ({ chatFriendId }) => {
     dispatch(
       sendMessage({
         channelId,
-        newMessage: text,
+        attrs: { message: text },
         type: MessageType.TEXT,
       })
     );
@@ -95,8 +95,16 @@ const InputBar = ({ chatFriendId }) => {
   const dispatchMediaMessage = (messageType, messageData) => {
     const messagePayload =
       messageType === MessageType.VIDEO
-        ? { channelId, videos: messageData, type: MessageType.VIDEO }
-        : { channelId, images: messageData, type: MessageType.IMAGE };
+        ? {
+            channelId,
+            attrs: { videos: messageData },
+            type: MessageType.VIDEO,
+          }
+        : {
+            channelId,
+            attrs: { images: messageData },
+            type: MessageType.IMAGE,
+          };
 
     dispatch(sendMessage(messagePayload));
   };

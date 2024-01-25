@@ -118,7 +118,7 @@ const useNotification = () => {
     dispatch(
       sendMessage({
         channelId: notificationId,
-        newMessage: userInput,
+        attrs: { message: userInput },
         type: MessageType.TEXT,
       })
     );

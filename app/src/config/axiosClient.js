@@ -12,7 +12,7 @@ axiosClient.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem("token");
     if (token) {
-      config.headers["Authorization"] = `Bearer ${JSON.parse(token)}`;
+      config.headers["Authorization"] = `${JSON.parse(token)}`;
     }
     return config;
   },
@@ -35,7 +35,7 @@ axiosClient.interceptors.request.use(
         );
         // retry the initial query with new token
         originalRequest.headers["Authorization"] =
-          "Bearer " + refreshResult.data.accessToken;
+          refreshResult.data.accessToken;
         return axiosClient(originalRequest);
       } else {
         await authApi.logout();

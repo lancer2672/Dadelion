@@ -11,9 +11,9 @@ export const postSlice = createSlice({
     //handled in middleware
     reactPost: (state, action) => {},
     commentPost: (state, action) => {},
+
     setSelectedPost: (state, action) => {
       state.selectedPost = action.payload;
-      console.log("SET SELECTED POST CALLED", action.payload);
     },
 
     updateSelectedPost: (state, action) => {

@@ -8,7 +8,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: async (headers, { getState }) => {
     const token = await AsyncStorage.getItem("token");
     if (token) {
-      headers.set("Authorization", `Bearer ${JSON.parse(token)}`);
+      headers.set("Authorization", `${JSON.parse(token)}`);
     }
     return headers;
   },
@@ -40,7 +40,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       // retry the initial query with new token
       args.headers = {
         ...args.headers,
-        Authorization: `Bearer ${refreshResult.data.accessToken}`,
+        Authorization: `${refreshResult.data.accessToken}`,
       };
       result = await baseQuery(args, api, extraOptions);
     } else {
