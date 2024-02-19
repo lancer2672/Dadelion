@@ -40,6 +40,7 @@ GoogleSignin.configure({
   ],
 });
 
+const testID = "login";
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
@@ -60,7 +61,6 @@ const Login = ({ navigation }) => {
         "refreshToken",
         JSON.stringify(data.refreshToken)
       );
-      await AsyncStorage.setItem("username", username);
       await AsyncStorage.setItem("userId", JSON.stringify(data.user._id));
     }
     const transformedUser = await transformUsersData([data.user]);
@@ -81,7 +81,7 @@ const Login = ({ navigation }) => {
         handleLoginSuccess(data);
       },
       (error) => {
-        setError(error);
+        setError("Đăng nhập thất bại");
       }
     );
   };
@@ -105,10 +105,10 @@ const Login = ({ navigation }) => {
 
   const navigateToRegister1Screen = () => {
     // setError(null);
-    navigation.navigate("Register1", {});
+    navigation.navigate("Register");
   };
   return (
-    <AuthContainer>
+    <AuthContainer testID={testID}>
       {false ? (
         <View>
           <Avatar style={{ width: 80, height: 80 }}></Avatar>
@@ -117,7 +117,7 @@ const Login = ({ navigation }) => {
           </Text>
         </View>
       ) : (
-        <View>
+        <View style={{ width: "100%", paddingHorizontal: 16 }}>
           <InputText
             ref={refInputName}
             iconLeft={"account"}
@@ -143,27 +143,10 @@ const Login = ({ navigation }) => {
             iconLeft={"lock"}
             passwordType
             setText={setPassword}
-            // onBlur={() =>
-            //   handleValidateField(
-            //     accountSchema,
-            //     "password",
-            //     password,
-            //     validationErrors,
-            //     setValidationErrors
-            //   )
-            // }
-            // hasValidationError={validationErrors.password}
             placeholder={"Mật khẩu"}
           ></InputText>
-          {/* {validationErrors.password && (
-            <Error variant="error">{validationErrors.password}</Error>
-          )} */}
         </View>
       )}
-      {/* <RememberPassword
-        savePassword={savePassword}
-        onIconPress={toggleSavePasswordCheck}
-      ></RememberPassword> */}
       <View
         style={{
           marginTop: 12,
@@ -173,7 +156,10 @@ const Login = ({ navigation }) => {
         <TouchableOpacity onPress={handleSendEmailResetPassword}>
           <Text style={{ fontSize: 16, color: "white" }}>Quên mật khẩu ?</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={navigateToRegister1Screen}>
+        <TouchableOpacity
+          testID={`${testID}.register_btn`}
+          onPress={navigateToRegister1Screen}
+        >
           <Text
             style={{
               marginLeft: 48,

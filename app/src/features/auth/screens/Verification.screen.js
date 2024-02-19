@@ -51,7 +51,6 @@ const Verification = () => {
   const [pin4, setPin4] = useState("");
   const [pin5, setPin5] = useState("");
   const [pin6, setPin6] = useState("");
-  const [isFirstMount, setIsFirstMount] = useState(true);
   const [seconds, setSeconds] = useState(60);
   const code = useRef("");
 
@@ -74,7 +73,7 @@ const Verification = () => {
         if (isResetPassword) {
           navigation.navigate("ForgotPassword", { isVerified: true });
         } else {
-          navigation.navigate("Login");
+          navigation.navigate("PersonalInfo", { email });
         }
       },
       (error) => {
@@ -85,6 +84,7 @@ const Verification = () => {
       }
     );
   };
+  //counter
   useEffect(() => {
     if (seconds > 0) {
       const timer = setTimeout(() => {
