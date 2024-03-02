@@ -57,7 +57,7 @@ export const Tabs = () => {
                   size={24}
                   color={
                     focused
-                      ? theme.colors.text.secondary
+                      ? theme.colors.white[100]
                       : theme.colors.text.primary
                   }
                 />
@@ -68,9 +68,7 @@ export const Tabs = () => {
                 name={iconName}
                 size={size}
                 color={
-                  focused
-                    ? theme.colors.text.secondary
-                    : theme.colors.text.primary
+                  focused ? theme.colors.white[100] : theme.colors.text.primary
                 }
               />
             );

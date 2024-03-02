@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import { ActivityIndicator, StatusBar, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,16 @@ import { getSocket, initSocket } from "@src/utils/socket";
 import { AppNavigator } from "./app.navigator";
 import { AuthNavigator } from "./auth.navigator";
 StatusBar.setBackgroundColor("black");
+
+export const navigationRef = createRef();
+
+export function navigate(name, params) {
+  navigationRef.current?.navigate(name, params);
+}
+export function goBack(name, params) {
+  navigationRef.current?.goBack();
+}
+
 const Navigator = () => {
   const userState = useSelector(userSelector);
   const appState = useSelector(appSelector);
@@ -47,6 +57,7 @@ const Navigator = () => {
     }
   }, [socket]);
   useEffect(() => {
+    console.log("already, trying to login", { isSuccess, data, error });
     if (isSuccess && data) {
       dispatch(setUser(data));
       console.log("user", data);
@@ -58,8 +69,8 @@ const Navigator = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const keys = ["userId", "token", "username"];
-        const [userId, token, username] = await Promise.all(
+        const keys = ["userId", "token"];
+        const [userId, token] = await Promise.all(
           keys.map((key) => AsyncStorage.getItem(key))
         );
         console.log("userId", userId);
@@ -77,7 +88,7 @@ const Navigator = () => {
     getUser();
   }, []);
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       {userState.user ? (
         <SafeAreaView
           style={{

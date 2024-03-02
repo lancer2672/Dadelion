@@ -1,24 +1,41 @@
+export const generalColor = {
+  white: {
+    100: "#fff",
+  },
+  black: {
+    100: "#000",
+  },
+  other: {
+    yellow: "#cfeb1c",
+  },
+};
+
 export const colors = {
+  ...generalColor,
   bg: {
     primary: "#f6f9ff",
-    secondary: "#b3afab",
+    secondary: "#3498db",
+    tertiary: "#3c50c7",
   },
   text: {
     primary: "#000000",
     secondary: "#5068f2",
-    error: "#e35d5d",
+    error: "#b85454",
     success: "#138000",
   },
 };
+
 export const darkColors = {
+  ...generalColor,
   bg: {
     primary: "#000",
     secondary: "#1c1c1c",
+    tertiary: "#3c50c7",
   },
   text: {
     primary: "#fff",
     secondary: "#5068f2",
-    error: "#e35d5d",
+    error: "#b85454",
     success: "#138000",
   },
 };

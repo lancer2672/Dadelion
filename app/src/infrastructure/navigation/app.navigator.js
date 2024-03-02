@@ -27,6 +27,9 @@ import {
   Settings,
 } from "./index";
 import { Tabs } from "./tabs";
+import { AUTH_ROUTE } from "./route";
+import HomeMovie from "@src/features/film/HomeMovie.screen";
+import MovieDetail from "@src/features/film/FilmDetail.screen";
 
 const Stack = createNativeStackNavigator();
 
@@ -70,10 +73,11 @@ export const AppNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="AppTabs"
+      initialRouteName={AUTH_ROUTE.MOVIE}
     >
       <Stack.Screen name="AppTabs" component={Tabs} />
 
+      {/* chat */}
       <Stack.Screen name="DetailPost" component={DetailPost} />
       <Stack.Screen name="ChatRoom" component={ChatRoom} />
       <Stack.Screen name="Notification" component={Notification} />
@@ -85,9 +89,12 @@ export const AppNavigator = () => {
 
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="FriendList" component={FriendList} />
-
+      {/* call */}
       <Stack.Screen name="IncomingCall" component={IncomingCallScreen} />
       <Stack.Screen name="CallingScreen" component={CallingScreen} />
+
+      <Stack.Screen name={AUTH_ROUTE.MOVIE} component={HomeMovie} />
+      <Stack.Screen name={AUTH_ROUTE.MOVIE_DETAIL} component={MovieDetail} />
     </Stack.Navigator>
   );
 };
