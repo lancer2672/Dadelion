@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { WEB_API_KEY } from "@env";
@@ -51,6 +51,14 @@ const Login = ({ navigation }) => {
   const refInputName = useRef();
   const refInputPassword = useRef();
 
+  useEffect(() => {
+    resetForm();
+  }, []);
+  const resetForm = () => {
+    setUsername("");
+    setPassword("");
+    setError(null);
+  };
   const handleLoginSuccess = async (data) => {
     console.log("handleLoginSuccess", data);
     dispatch(setIsLoading(true));

@@ -130,25 +130,7 @@ const PersonalInfo = ({}) => {
               }}
               onCancel={() => setShowDatePicker(false)}
             ></AppDatePicker>
-            {/* {showDatePicker && (
-              <RNDateTimePicker
-                maximumDate={new Date()}
-                mode="date"
-                onChange={(e, date) => {
-                  if (e.type == "set") {
-                    console.log("selectedDate", date);
-                    console.log("selectedDate", date.getTime());
-                    handleChange("firstName")("hi");
-                  }
-                  setShowDatePicker(() => false);
-                }}
-                value={
-                  //   values.dateOfBirth ? new Date(values.dateOfBirth) : new Date()
-                  new Date()
-                }
-              ></RNDateTimePicker>
-            )} */}
-
+          
             {error && <Error variant="error">{error}</Error>}
 
             <Spacer variant="bottom" size="huge"></Spacer>

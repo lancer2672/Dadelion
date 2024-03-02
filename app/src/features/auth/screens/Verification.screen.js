@@ -68,7 +68,6 @@ const Verification = () => {
       async () => {
         const data = { code: code.current, password, isResetPassword };
         await authApi.verifyEmail(data);
-
         //navigate back
         if (isResetPassword) {
           navigation.navigate("ForgotPassword", { isVerified: true });
