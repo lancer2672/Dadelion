@@ -15,11 +15,13 @@ export const transformUsersData = async (users) => {
         user.avatar.url = newAvatar.url;
         console.log("isAvatarExpired", newAvatar.url);
       }
-      console.log("user.avatar", user.avatar);
+      console.log("transformUsersData user", user);
       return {
         ...user,
         avatarName: user.avatar?.name || null,
         avatar: user.avatar?.url || null,
+        nickname: `${user.lastname} ${user.firstname}`,
+        dateOfBirth: user.dateOfBirth && Number(user.dateOfBirth),
       };
     })
   );

@@ -60,3 +60,11 @@ export const callingTimeFormatter = (duration) => {
   let days = hours / 24;
   return `${Math.floor(days)} ngày`;
 };
+
+export const dateOfBirthFormat = (timestamp) => {
+  if (!timestamp) return "";
+  return dayjs(new Date(Number(timestamp))).format("DD-MM-YYYY");
+};
+export const dateToTimeStamp = (date) => {
+  return date.getTime();
+};

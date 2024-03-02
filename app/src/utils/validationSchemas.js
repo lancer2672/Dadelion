@@ -44,5 +44,34 @@ export const nameSchema = object({
       "Last name cannot contain special characters"
     ),
 });
+export const credentialSchema = object({
+  password: string()
+    .min(8, "Password must be at least 8 characters long")
+    .required("Password cannot be empty")
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d).+$/,
+      "Password must contain at least one uppercase letter and one digit"
+    ),
+  email: string()
+    .email("Invalid email address")
+    .required("Email cannot be empty"),
+});
+export const personalInfo = object({
+  firstname: string()
+    .required("First name cannot be empty")
+    .trim("First name cannot contain spaces")
+    .matches(
+      /^[^\d!@#$%^&*()_+=[\]{};':"\\|,.<>/?]*$/,
+      "First name cannot contain special characters"
+    ),
+  lastname: string()
+    .required("Last name cannot be empty")
+    .trim("Last name cannot contain spaces")
+    .matches(
+      /^[^\d!@#$%^&*()_+=[\]{};':"\\|,.<>/?]*$/,
+      "Last name cannot contain special characters"
+    ),
+  dateOfBirth: string().required("Date of birth cannot be empty"),
+});
 
 export const ageLimit = 13;
