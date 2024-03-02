@@ -1,12 +1,22 @@
 import { Feather } from "@expo/vector-icons";
 import Avatar from "@src/components/Avatar";
+import textStyle from "@src/components/typography/text.style";
+import { navigate } from "@src/infrastructure/navigation/navigator.navigation";
+import { AUTH_ROUTE } from "@src/infrastructure/navigation/route";
 import { userSelector } from "@src/store/selector";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Modal from "react-native-modal";
 import { Divider, TouchableRipple } from "react-native-paper";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector } from "react-redux";
 import { useTheme } from "styled-components/native";
 
@@ -42,6 +52,23 @@ const SideMenu = ({ isVisible, onClose }) => {
       onClick: () => {},
     },
   ];
+  const otherMenu = [
+    {
+      leftIcon: (
+        <MaterialCommunityIcons
+          name="movie-open-settings-outline"
+          size={24}
+          color={theme.colors.text.primary}
+        />
+        // <Feather name="settings" size={24} color={theme.colors.text.primary} />
+      ),
+      text: "Xem phim",
+      onClick: () => {
+        navigate(AUTH_ROUTE.MOVIE);
+      },
+    },
+  ];
+
   useEffect(() => {}, []);
   return (
     <Modal
@@ -117,6 +144,20 @@ const SideMenu = ({ isVisible, onClose }) => {
         {menu.map((m, index) => {
           return <SideBarItem key={index} {...m}></SideBarItem>;
         })}
+        <Text style={[textStyle.h[1]]}>Khác</Text>
+        <Divider
+          style={{
+            width: "100%",
+            alignSelf: "center",
+            marginVertical: 8,
+            borderColor: "red",
+            height: 4,
+            borderRadius: 12,
+          }}
+        />
+        {otherMenu.map((m, index) => {
+          return <SideBarItem key={`other-${index}`} {...m}></SideBarItem>;
+        })}
       </View>
     </Modal>
   );
@@ -125,7 +166,7 @@ const SideMenu = ({ isVisible, onClose }) => {
 const SideBarItem = ({ text, onClick, leftIcon }) => {
   const theme = useTheme();
   return (
-    <TouchableRipple onPress={onClick} rippleColor="rgba(0, 0, 0, .32)">
+    <Pressable onPress={onClick} rippleColor="rgba(0, 0, 0, .32)">
       <View
         style={[
           itemStyles.container,
@@ -137,7 +178,7 @@ const SideBarItem = ({ text, onClick, leftIcon }) => {
           {text}
         </Text>
       </View>
-    </TouchableRipple>
+    </Pressable>
   );
 };
 const itemStyles = StyleSheet.create({

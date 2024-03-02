@@ -18,7 +18,10 @@ const SearchChannel = ({ channels = [], resetSearch, setChannels }) => {
     const chatMemberIds = channels.map((c) => {
       return c.memberIds.filter((id) => id != user._id);
     });
-    getListUser(chatMemberIds);
+    console.log("getListUser", chatMemberIds);
+    if (chatMemberIds.length > 0) {
+      getListUser(chatMemberIds);
+    }
   }, [channels]);
 
   const [searchKeyword, setSearchKeyword] = useState("");
