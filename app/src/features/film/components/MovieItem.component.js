@@ -36,7 +36,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  img: {},
+  img: {
+    width: 48,
+    backgroundColor: "red",
+    height: 48,
+    borderRadius: 8,
+  },
   content: {
     flex: 1,
   },

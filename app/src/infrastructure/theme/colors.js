@@ -6,7 +6,8 @@ export const generalColor = {
     100: "#000",
   },
   other: {
-    yellow: "#cfeb1c",
+    yellow: "#e1fa25",
+    bluepurple: "#514eb6",
   },
 };
 
