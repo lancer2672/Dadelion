@@ -46,6 +46,7 @@ const authApi = {
   },
 
   sendVerificationEmail: async (data) => {
+    console.log("sendVerificationEmail", data);
     try {
       const response = await axiosClient.post(
         `${UrlAPI}${authRoute}/send-email-verification`,

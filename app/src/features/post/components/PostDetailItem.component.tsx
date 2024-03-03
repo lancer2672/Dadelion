@@ -17,7 +17,7 @@ import styled from "styled-components/native";
 
 import ReadMore from "@fawazahmed/react-native-read-more";
 import { Avatar } from "@src/components/Avatar";
-import { FastImageBackground } from "@src/components/image";
+import { FastImageBackground } from "@src/components/image/FastBgImage.component";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
 import { postCreatedTimeFormatter } from "@src/utils/timeFormatter";
 import FastImage from "react-native-fast-image";

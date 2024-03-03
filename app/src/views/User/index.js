@@ -38,7 +38,7 @@ const User = ({ props, navigation }) => {
   useEffect(() => {
     setAvatarUri(user.avatar);
   }, []);
-  const updateUserImage = async (isWallpaper, setUri) => {
+  const handleUpdateAvatar = async () => {
     withLoading(
       dispatch,
       async () => {
@@ -79,7 +79,6 @@ const User = ({ props, navigation }) => {
       }
     );
   };
-  const handleUpdateAvatar = () => updateUserImage(false, setAvatarUri);
   return (
     <Container>
       <HeaderContainer>
@@ -123,7 +122,7 @@ const User = ({ props, navigation }) => {
             <ItemLabel>{t("post")}</ItemLabel>
           </ItemContainer>
           <ItemContainer onPress={navigateToFriendListScreen}>
-            <ItemValue>{user.friends.length}</ItemValue>
+            <ItemValue>{user.friends?.length || 0}</ItemValue>
             <ItemLabel>{t("friend")}</ItemLabel>
           </ItemContainer>
         </BottomHeader>
@@ -136,7 +135,7 @@ const User = ({ props, navigation }) => {
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${(props) => props.theme.colors.bg.secondary};
+  background-color: ${(props) => props.theme.colors.white[100]};
 `;
 const HeaderContainer = styled.View`
   height: 300px;
@@ -154,7 +153,7 @@ const Header = styled.View`
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   overflow: hidden;
-  background-color: ${(props) => props.theme.colors.bg.primary};
+  background-color: ${(props) => props.theme.colors.white[100]};
   elevation: 5;
   padding-bottom: 24px;
   padding-top: 12px;

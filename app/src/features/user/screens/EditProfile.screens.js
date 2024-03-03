@@ -197,7 +197,7 @@ const BackButton = styled.TouchableOpacity`
   padding-vertical: 4px;
 `;
 const SaveBtn = styled.TouchableOpacity`
-  background-color: gray;
+  background-color: ${(props) => props.theme.colors.bg.tertiary};
   padding: 8px;
   border-radius: 8px;
 `;
@@ -205,11 +205,11 @@ const SaveBtnText = styled.Text`
   text-align: center;
   font-size: 20px;
   font-weight: 500;
-  color: ${(props) => props.theme.colors.text.primary};
+  color: ${(props) => props.theme.colors.white[100]};
 `;
 const Heading = styled.Text`
   font-weight: bold;
   font-size: ${(props) => props.theme.fontSizes.h5};
-  color: ${(props) => props.theme.colors.bg.primary};
+  color: ${(props) => props.theme.colors.black[100]};
 `;
 export default EditProfile;

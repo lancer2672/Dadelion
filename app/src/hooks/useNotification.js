@@ -13,7 +13,7 @@ import {
   sendMessage,
   setSelectedChannel,
 } from "@src/store/slices/chatSlice";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import userApi from "@src/api/user";
@@ -37,48 +37,37 @@ const useNotification = () => {
   const { data: channels } = useGetChannelsQuery(user._id);
   const { data: postData } = useGetAllPostsQuery();
 
-  const setIsBgNotificationEnable = (isEnabled) => {
+  const setIsBgNotificationEnable = useCallback((isEnabled) => {
     Notification.enable = isEnabled;
-  };
+  }, []);
   console.log("posts", postData);
   useEffect(() => {
     if (user) {
-      (async () => {
-        messagingNotificationIns.addUserInfor(user);
-      })();
+      messagingNotificationIns.addUserInfor(user);
     }
   }, [user]);
 
-  const handleIncomingNotification = async (remoteMessage) => {
-    const messageData = JSON.parse(remoteMessage.data.data);
-    const { type, avatar, message, notificationId, nickname, createdAt } =
-      messageData;
-    console.log("handleIncomingNotification", messageData);
+  const handleIncomingNotification = useCallback(
+    async (remoteMessage) => {
+      const messageData = JSON.parse(remoteMessage.data.data);
+      const { type, notificationId } = messageData;
 
-    checIfExistNotificationItem(messageData);
-    switch (type) {
-      case NotificationType.CHAT: {
-        const newMessage = {
-          user: { avatar, nickname },
-          body: message,
-          createdAt,
-        };
-        notificationClassIns[type].addMessage({
-          channelId: notificationId,
-          message: newMessage,
-        });
-        break;
+      checIfExistNotificationItem(messageData);
+
+      const handlers = {
+        [NotificationType.CHAT]: () => handleChatNotification(messageData),
+        [NotificationType.POST]: () => handlePostNotification(messageData),
+        // Add more handlers for other types if needed
+      };
+
+      const handler = handlers[type];
+      if (handler) {
+        await handler();
+        await notificationClassIns[type].displayNotification(notificationId);
       }
-      case NotificationType.POST: {
-        notificationClassIns[type].addPrefixNickname({
-          postId: notificationId,
-          nickname,
-        });
-        break;
-      }
-    }
-    await notificationClassIns[type].displayNotification(notificationId);
-  };
+    },
+    [channels, postData, user]
+  );
 
   const checIfExistNotificationItem = (messageData) => {
     const { type, avatar, message, notificationId, nickname, createdAt } =

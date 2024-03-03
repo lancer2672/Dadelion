@@ -168,7 +168,7 @@ const SettingCategory = styled.Text`
 const LogoutButton = styled.TouchableOpacity`
   border-radius: 4px;
   padding-vertical: 4px;
-  background-color: gray;
+  background-color: ${(props) => props.theme.colors.bg.tertiary}; ;
 `;
 const IconContainer = styled.View`
   border-radius: 8px;
@@ -180,7 +180,7 @@ const LogoutText = styled.Text`
   text-align: center;
   padding-vertical: 4px;
   font-weight: 500;
-  color: ${(props) => props.theme.colors.text.primary};
+  color: ${(props) => props.theme.colors.white[100]};
   font-size: ${(props) => props.theme.fontSizes.large};
 `;
 const Header = styled.View`

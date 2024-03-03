@@ -39,7 +39,7 @@ export const AppNavigator = () => {
   const socket = getSocket();
   const { user } = useSelector(userSelector);
   const { enableNotifications } = useNotification();
-  const { isLoading, data = [] } = useGetChannelsQuery(user._id, {
+  const { isLoading, data = [] } = useGetChannelsQuery(user?._id, {
     refetchOnMountOrArgChange: true,
   });
   useEffect(() => {

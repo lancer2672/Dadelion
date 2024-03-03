@@ -15,7 +15,6 @@ import { navigate } from "@src/infrastructure/navigation/navigator.navigation";
 import { AUTH_ROUTE } from "@src/infrastructure/navigation/route";
 import DropDownComponent from "@src/components/dropdown/DropDown.component";
 import MovieItem from "./MovieItem.component";
-import { FlashList } from "@shopify/flash-list";
 
 const mockMovieGenres = [
   {
@@ -39,30 +38,26 @@ const parse = () => {
     };
   });
 };
-const MovieList = ({ genre, data }) => {
+const MovieListSuggest = ({ genre, data }) => {
   const [selectedGenre, setSelectedGenre] = useState();
   console.log("selectedGenre", selectedGenre);
   return (
     <View style={styles.container}>
-      <DropDownComponent
-        label={"Thể loại"}
-        style={{ paddingHorizontal: 12 }}
-        values={parse(mockMovieGenres)}
-        onSelect={setSelectedGenre}
-        selectedItem={selectedGenre}
-      ></DropDownComponent>
-      <FlashList
-        estimatedItemSize={60}
-        nestedScrollEnabled
-        showsVerticalScrollIndicator={false}
+      <Text
+        style={[
+          textStyle.h[2],
+          { marginBottom: 6, marginLeft: 12, fontWeight: "bold" },
+        ]}
+      >
+        Mới ra mắt
+      </Text>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
         onEndReached={undefined}
         data={[1, 2, 3]}
         renderItem={({ item }) => {
-          return (
-            <View style={{ marginVertical: 8 }}>
-              <MovieItem movie={item}></MovieItem>
-            </View>
-          );
+          return <MovieItem movie={item}></MovieItem>;
         }}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -82,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MovieList;
+export default MovieListSuggest;

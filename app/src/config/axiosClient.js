@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import authApi from "@src/api/auth";
 import { UrlAPI } from "@src/constants";
 import axios from "axios";
+import { SERVER_API_KEY } from "@env";
 
 const baseURL = UrlAPI;
 
@@ -10,10 +11,16 @@ const axiosClient = axios.create({
 });
 axiosClient.interceptors.request.use(
   async (config) => {
+    config.headers["x-api-key"] = SERVER_API_KEY;
     const token = await AsyncStorage.getItem("token");
     if (token) {
       config.headers["Authorization"] = `${JSON.parse(token)}`;
     }
+    const userId = await AsyncStorage.getItem("userId");
+    if (userId) {
+      config.headers["x-client-id"] = JSON.parse(userId);
+    }
+
     return config;
   },
   async (error) => {

@@ -12,7 +12,7 @@ import styled from "styled-components/native";
 
 import { AntDesign } from "@expo/vector-icons";
 import { Avatar } from "@src/components/Avatar";
-import { FastImageBackground } from "@src/components/image";
+import { FastImageBackground } from "@src/components/image/FastBgImage.component";
 import { BackgroundImage } from "@src/features/auth/components/authentication.style";
 import { userSelector } from "@src/store/selector";
 import { useGetUserByIdQuery } from "@src/store/slices/api/userApiSlice";
