@@ -12,7 +12,11 @@ Service: Voximplant, Firebase messaging, S3 Storage
 
 ## Project Status
 
-This project is currently in development. Functionality to display position of users on Google Maps and track it in real-time is in progress
+This project is currently in development. 
+
+- Migrate from monolith architecture to microservice architecture. 
+
+- Implement functionality to display position of users on Google Maps and track it in real-time is in progress
 
 ## Features
 
