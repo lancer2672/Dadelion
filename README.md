@@ -30,8 +30,9 @@ This project is currently in development.
 
 ### Front End
 
-- Utilizing Components and Hooks
+- Utilizing Components and H
 - State Management with useContext hook and Redux Toolkit (RTK)
+- Animation: bottom modal, heart react animation
 - Optimization Techniques:
   - Using Flashlist + FastImage to improve performance
   - Using Memo Hook to avoid unnecessary re-renders
