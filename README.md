@@ -1,3 +1,5 @@
+> This project is currently in the process of migrating from monolith to microservice architecture
+> 
 ## Dandelion
 
 A social media app
