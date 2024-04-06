@@ -10,6 +10,7 @@ import { userSlice } from "./slices/userSlice";
 
 import { chatApi } from "./slices/api/chatApiSlice";
 import { friendRequestApi } from "./slices/api/friendRequestApiSlice";
+import { movieApi } from "./slices/api/movieApiSlice";
 import { notificationApi } from "./slices/api/notificationApiSlice";
 import { postApi } from "./slices/api/postApiSlice";
 import { userApi } from "./slices/api/userApiSlice";
@@ -34,6 +35,7 @@ export default configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
+    [movieApi.reducerPath]: movieApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
     [friendRequestApi.reducerPath]: friendRequestApi.reducer,
   },
@@ -44,6 +46,7 @@ export default configureStore({
       .concat(chatApi.middleware)
       .concat(friendRequestApi.middleware)
       .concat(notificationApi.middleware)
+      .concat(movieApi.middleware)
       .concat(chatMiddleware())
       .concat(notificationMiddleware())
       .concat(locationMiddleware())

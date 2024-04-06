@@ -34,7 +34,9 @@ const useNotification = () => {
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { data: channels } = useGetChannelsQuery(user._id);
+  const { data: channels } = useGetChannelsQuery(user?._id, {
+    skip: user?._id === null,
+  });
   const { data: postData } = useGetAllPostsQuery();
 
   const setIsBgNotificationEnable = useCallback((isEnabled) => {

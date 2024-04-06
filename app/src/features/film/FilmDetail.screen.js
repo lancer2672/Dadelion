@@ -1,14 +1,4 @@
 import {
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React from "react";
-import { goBack } from "@src/infrastructure/navigation/navigator.navigation";
-import {
   Entypo,
   FontAwesome,
   Fontisto,
@@ -16,15 +6,61 @@ import {
   MaterialCommunityIcons,
   Octicons,
 } from "@expo/vector-icons";
-import { theme } from "@src/infrastructure/theme";
-import textStyle from "@src/components/typography/text.style";
 import ReadMore from "@fawazahmed/react-native-read-more";
+import { useRoute } from "@react-navigation/native";
+import textStyle from "@src/components/typography/text.style";
+import { goBack } from "@src/infrastructure/navigation/navigator.navigation";
+import { theme } from "@src/infrastructure/theme";
+import {
+  Image,
+  ImageBackground,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { Image } from "react-native";
-import { ScrollView } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
+const movieData = {
+  id: 1,
+  title: "Movie 1",
+  duration: 120,
+  description: "This is a description for Movie 1.",
+  actor_avatars: ["https://picsum.photos/200", "https://picsum.photos/200"],
+  trailer: "path/to/trailer1.mp4",
+  file_path:
+    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  thumbnail: "https://picsum.photos/200",
+  views: 1000,
+  stars: 4,
+  created_at: "2024-03-03T11:20:56.706415Z",
+  movie_id: 1,
+  genre_id: 1,
+};
 const MovieDetail = () => {
+  //genre? ifnot fetch
+  const movie = useRoute().params ? {} : movieData;
+
+  // fetch('http://yourserver.com/movie/stream?movieUrl=http://example.com/yourmovie.mp4')
+  // .then(response => {
+  //   if (!response.ok) {
+  //     throw new Error("HTTP error " + response.status);
+  //   }
+  //   return response.blob();
+  // })
+  // .then(blob => {
+  //   // Tại đây, blob là dữ liệu file bạn muốn stream.
+  //   // Bạn có thể xử lý blob tùy thuộc vào nhu cầu của bạn.
+  //   // Ví dụ, bạn có thể chuyển nó thành URL và sử dụng trong thẻ <Video> hoặc tương tự.
+  //   var url = URL.createObjectURL(blob);
+  //   // Sử dụng url này để phát video
+  // })
+  // .catch(e => {
+  //   console.error("An error occurred while fetching the file:", e);
+  // });
   return (
     <ScrollView
       style={{ backgroundColor: theme.colors.bg.primary }}
@@ -59,7 +95,7 @@ const MovieDetail = () => {
               <Text
                 style={[textStyle.h[1], { color: theme.colors.white[100] }]}
               >
-                Tên phim
+                {movie?.title}
               </Text>
               <View style={styles.row}>
                 <Fontisto
@@ -73,7 +109,8 @@ const MovieDetail = () => {
                     { color: theme.colors.white[100], marginHorizontal: 8 },
                   ]}
                 >
-                  4.3 (53)
+                  {movie?.stars}
+                  {} (53)
                 </Text>
               </View>
             </View>
@@ -96,7 +133,7 @@ const MovieDetail = () => {
           </View>
           <View style={styles.innerView}>
             <Octicons name="stopwatch" size={24} color="black" />
-            <Text style={{ marginLeft: 4 }}>140 minutes</Text>
+            <Text style={{ marginLeft: 4 }}>{movie?.duration} minutes</Text>
           </View>
           <View style={styles.innerView}>
             <MaterialCommunityIcons
@@ -110,18 +147,7 @@ const MovieDetail = () => {
         <View style={{ marginVertical: 12 }}>
           <Text style={textStyle.h[2]}>Giới thiệu</Text>
           <ReadMore seeMoreText="Xem thêm" numberOfLines={4}>
-            <Text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-              quis sem sed neque mattis condimentum id ut magna. Sed arcu ipsum,
-              porttitor sed scelerisque eu, placerat quis lectus. Etiam maximus
-              libero ut pharetra feugiat. Praesent congue, lorem id tristique
-              vulputate, libero velit ornare lectus, quis tincidunt nisi velit
-              vel mi. Nulla suscipit justo non ipsum scelerisque mollis.
-              Suspendisse hendrerit urna et velit pretium tempus. Proin commodo
-              euismod magna ac molestie. Proin maximus consectetur est hendrerit
-              porttitor. Pellentesque sed lectus in mauris scelerisque lobortis.
-              Mauris interdum mattis vulputate.
-            </Text>
+            <Text>{movie?.description}</Text>
           </ReadMore>
         </View>
         <View style={{ marginVertical: 12 }}>
@@ -130,7 +156,7 @@ const MovieDetail = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             onEndReached={undefined}
-            data={[1, 2, 3]}
+            data={movie?.actor_avatars || []}
             renderItem={({ item }) => {
               return (
                 <Image
@@ -140,7 +166,7 @@ const MovieDetail = () => {
                     borderRadius: 60,
                     marginHorizontal: 8,
                   }}
-                  source={{ uri: "https://picsum.photos/200" }}
+                  source={{ uri: item }}
                 ></Image>
               );
             }}

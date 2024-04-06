@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createRef, useEffect, useState } from "react";
 import { ActivityIndicator, StatusBar, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
 import { appSelector, userSelector } from "@src/store/selector";
@@ -11,7 +10,6 @@ import { setIsLoading } from "@src/store/slices/appSlice";
 import { setUser } from "@src/store/slices/userSlice";
 import { getSocket, initSocket } from "@src/utils/socket";
 import { AppNavigator } from "./app.navigator";
-import { AuthNavigator } from "./auth.navigator";
 StatusBar.setBackgroundColor("black");
 
 export const navigationRef = createRef();
@@ -92,7 +90,8 @@ const Navigator = () => {
   }, []);
   return (
     <NavigationContainer ref={navigationRef}>
-      {userState.user ? (
+         <AppNavigator></AppNavigator>
+      {/* {userState.user ? (
         <SafeAreaView
           style={{
             flex: 1,
@@ -104,7 +103,7 @@ const Navigator = () => {
         </SafeAreaView>
       ) : (
         <AuthNavigator></AuthNavigator>
-      )}
+      )} */}
       {appState.isLoading && (
         <View
           style={{

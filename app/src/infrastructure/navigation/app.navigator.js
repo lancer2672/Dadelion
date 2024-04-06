@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import MovieDetail from "@src/features/film/FilmDetail.screen";
+import HomeMovie from "@src/features/film/HomeMovie.screen";
 import useNotification from "@src/hooks/useNotification";
 import {
   enableTrackingLocation,
@@ -26,10 +28,8 @@ import {
   Search,
   Settings,
 } from "./index";
-import { Tabs } from "./tabs";
 import { AUTH_ROUTE } from "./route";
-import HomeMovie from "@src/features/film/HomeMovie.screen";
-import MovieDetail from "@src/features/film/FilmDetail.screen";
+import { Tabs } from "./tabs";
 
 const Stack = createNativeStackNavigator();
 
@@ -82,7 +82,7 @@ export const AppNavigator = () => {
       <Stack.Screen name="ChatRoom" component={ChatRoom} />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="Guest" component={Guest} />
-
+      
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />

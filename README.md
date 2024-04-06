@@ -39,6 +39,7 @@ This project is currently in development. Functionality to display position of u
 - Experiences when working with socketIO and Web Server
 - How to use middleware (request validation, handle errors, upload)
 - Setup S3 Storage & handle upload file
+- Optimize query speed by using indexes
 
 ## Project Screen Shots
 

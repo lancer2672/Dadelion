@@ -26,11 +26,11 @@ const MovieItem = ({ movie }) => {
         <Image style={itemStyles.img} />
         <View style={itemStyles.content}>
           <Text>Genre</Text>
-          <Text style={textStyle.h[2]}>Movie Name</Text>
+          <Text style={textStyle.h[2]}>{movie.title}</Text>
           <View style={itemStyles.row}>
             <View style={itemStyles.row}>
               <Octicons name="stopwatch" size={18} color="black" />
-              <Text style={itemStyles.text}>140 minutes</Text>
+              <Text style={itemStyles.text}>{movie.duration} minutes</Text>
             </View>
             <View style={itemStyles.row}>
               <Fontisto
@@ -38,7 +38,7 @@ const MovieItem = ({ movie }) => {
                 size={18}
                 color={theme.colors.other.yellow}
               />
-              <Text style={itemStyles.text}>4.3</Text>
+              <Text style={itemStyles.text}>{movie.stars}</Text>
               <Text>(53)</Text>
             </View>
           </View>

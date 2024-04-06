@@ -39,7 +39,42 @@ const parse = () => {
     };
   });
 };
-const MovieList = ({ genre, data }) => {
+
+let data = [
+  {
+    id: 1,
+    title: "Movie 1",
+    duration: 120,
+    description: "This is a description for Movie 1.",
+    actor_avatars: ["https://picsum.photos/200", "https://picsum.photos/200"],
+    trailer: "path/to/trailer1.mp4",
+    file_path:
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    thumbnail: "https://picsum.photos/200",
+    views: 1000,
+    stars: 4,
+    created_at: "2024-03-03T11:20:56.706415Z",
+    movie_id: 1,
+    genre_id: 1,
+  },
+  {
+    id: 2,
+    title: "Movie 2",
+    duration: 150,
+    description: "This is a description for Movie 2.",
+    actor_avatars: ["https://picsum.photos/200", "https://picsum.photos/200"],
+    trailer: "path/to/trailer2.mp4",
+    file_path:
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    thumbnail: "https://picsum.photos/200",
+    views: 2000,
+    stars: 5,
+    created_at: "2024-03-04T11:20:56.706415Z",
+    movie_id: 2,
+    genre_id: 2,
+  },
+];
+const MovieList = ({ genre }) => {
   const [selectedGenre, setSelectedGenre] = useState();
   console.log("selectedGenre", selectedGenre);
   return (
@@ -56,7 +91,7 @@ const MovieList = ({ genre, data }) => {
         nestedScrollEnabled
         showsVerticalScrollIndicator={false}
         onEndReached={undefined}
-        data={[1, 2, 3]}
+        data={data}
         renderItem={({ item }) => {
           return (
             <View style={{ marginVertical: 8 }}>

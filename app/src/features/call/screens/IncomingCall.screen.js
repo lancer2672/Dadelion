@@ -19,7 +19,7 @@ const WAVE_SIZE = 68;
 const WAVE_COLOR = "#2e7bff";
 const IncomingCallScreen = () => {
   const [caller, setCaller] = useState("");
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
   const route = useRoute();
   const { user } = useSelector(userSelector);
   // const { incomingCall, callingUserAvatar, callingUserId, channelId } =
