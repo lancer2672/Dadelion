@@ -82,7 +82,7 @@ export const AppNavigator = () => {
       <Stack.Screen name="ChatRoom" component={ChatRoom} />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="Guest" component={Guest} />
-      
+
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />

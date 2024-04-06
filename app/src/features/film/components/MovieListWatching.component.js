@@ -1,6 +1,9 @@
 import { Dimensions, StyleSheet, View } from "react-native";
 
 import { FlashList } from "@shopify/flash-list";
+import textStyle from "@src/components/typography/text.style";
+import { useGetMoviesWatchingQuery } from "@src/store/slices/api/movieApiSlice";
+import { Text } from "react-native";
 import MovieItem from "./MovieItem.component";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -26,38 +29,57 @@ const sampleData = [
   },
 ];
 const MovieListWatching = ({}) => {
+  const {
+    data = [],
+    isLoading,
+    error,
+  } = useGetMoviesWatchingQuery({ userId: 2, offset: 0, limit: 5 });
+  if (error) {
+    console.log("MovieListWatching", error);
+  }
+  console.log("MovieListWatching", data.watched_duration);
+  if (data.length === 0) {
+    return <></>;
+  }
   return (
     <View style={styles.container}>
-      <FlashList
-        estimatedItemSize={SCREEN_WIDTH - 40}
-        nestedScrollEnabled
-        style={{ marginHorizontal: 20 }}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        onEndReached={undefined}
-        data={sampleData}
-        renderItem={({ item }) => {
-          return (
-            <View style={{ marginVertical: 8 }}>
-              <MovieItem movie={item}></MovieItem>
-            </View>
-          );
-        }}
-        keyExtractor={(item, index) => `watching-movie-${index.toString()}`}
-      />
+      <Text
+        style={[
+          textStyle.h[2],
+          { marginBottom: 6, marginLeft: 12, fontWeight: "bold" },
+        ]}
+      >
+        Xem tiếp
+      </Text>
+      <View style={{ flex: 1 }}>
+        <FlashList
+          estimatedItemSize={SCREEN_WIDTH}
+          nestedScrollEnabled
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          onEndReached={undefined}
+          data={data}
+          renderItem={({ item }) => {
+            console.log("RENDERITEM", item);
+            return (
+              <MovieItem
+                movie={item}
+                watchedDuration={item.watched_duration}
+              ></MovieItem>
+            );
+          }}
+          keyExtractor={(item, index) => `watching-movie-${index.toString()}`}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: 100,
-    marginTop: 22,
-  },
-  item: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    marginTop: 4,
+    // height: 200,
+    justifyContent: "center",
   },
 });
 

@@ -1,21 +1,9 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  FlatList,
-  Pressable,
-} from "react-native";
-import { Fontisto, Octicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
 
-import textStyle from "@src/components/typography/text.style";
-import { theme } from "@src/infrastructure/theme";
-import { navigate } from "@src/infrastructure/navigation/navigator.navigation";
-import { AUTH_ROUTE } from "@src/infrastructure/navigation/route";
+import { FlashList } from "@shopify/flash-list";
 import DropDownComponent from "@src/components/dropdown/DropDown.component";
 import MovieItem from "./MovieItem.component";
-import { FlashList } from "@shopify/flash-list";
 
 const mockMovieGenres = [
   {

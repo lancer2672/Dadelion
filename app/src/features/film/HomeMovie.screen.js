@@ -4,8 +4,7 @@ import { navigate } from "@src/infrastructure/navigation/navigator.navigation";
 import { AUTH_ROUTE } from "@src/infrastructure/navigation/route";
 import { theme } from "@src/infrastructure/theme";
 import { useGetListMoviesQuery } from "@src/store/slices/api/movieApiSlice";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Dimensions,
   ImageBackground,
@@ -20,8 +19,8 @@ import LinearGradient from "react-native-linear-gradient";
 import { Searchbar } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 import MovieList from "./components/MovieList.component";
-import MovieListSuggest from "./components/MovieListSuggest.component";
 import MovieListWatching from "./components/MovieListWatching.component";
+import MovieVideo from "./components/MovieVideo.component";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -61,12 +60,13 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 // ];
 
 const HomeMovie = () => {
+  return <MovieVideo></MovieVideo>;
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.bg.primary }}>
       <ScrollView>
         <FilmCarousel></FilmCarousel>
         <MovieListWatching></MovieListWatching>
-        <MovieListSuggest></MovieListSuggest>
+        {/* <MovieListSuggest></MovieListSuggest> */}
         <MovieList></MovieList>
       </ScrollView>
     </View>
@@ -81,28 +81,13 @@ const FilmCarousel = () => {
     data: movies = [],
     isLoading,
     error,
-  } = useGetListMoviesQuery({ skip: 0, limit: 10 });
-
-  useEffect(() => {
-    axios
-      .get("http://172.29.142.149:8080/movies", {
-        params: {
-          limit: 10,
-          skip: 0,
-        },
-      })
-      .then((res) => {
-        console.log("RES", res);
-      })
-      .catch((er) => {
-        console.log("er", er);
-      });
-  }, []);
+  } = useGetListMoviesQuery({ offset: 0, limit: 5 });
   if (error) {
     console.log("error", error);
   }
   console.log("MOVIES", movies);
   const renderItem = ({ item, index }) => {
+    console.log("Item", item);
     return (
       <Pressable
         onPress={() => {
