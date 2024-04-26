@@ -10,10 +10,10 @@ posts, call, comment and reply each other, using microservice architecture.
 - MainService: Responsible for implementing authentication, chat features, 
 post and user management, using Redis to cache post data and user messages.
 Apply some desgin patterns.
-- APIGateway (replaced by AWS EKS): Authentication, dynamic routing.
-- NotifiationService: Implement RabbitMQ to subscribe and handle Dead 
+- <a href="https://github.com/lancer2672/Dandelion_Gateway" target="_blank">API Gateway</a> (replaced by AWS EKS): Authentication, dynamic routing, request limitter.
+- <a href="https://github.com/lancer2672/DandelionServer_Noti" target="_blank">Notification Server</a>: Implement RabbitMQ to subscribe and handle Dead 
 Letter Exchange messages, send notifications using FCM.
-- MovieService: Implemented gRPC (unary and server-side streaming) to 
+- <a href="https://github.com/lancer2672/DandelionServer_Go" target="_blank">Movie Server</a>: Implemented gRPC (unary and server-side streaming) to 
 handle both HTTP and gRPC requests.
 
 Technology:
