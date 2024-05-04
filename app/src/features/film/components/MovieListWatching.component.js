@@ -37,7 +37,7 @@ const MovieListWatching = ({}) => {
   if (error) {
     console.log("MovieListWatching", error);
   }
-  console.log("MovieListWatching", data.watched_duration);
+  console.log("MovieListWatching", data);
   if (data.length === 0) {
     return <></>;
   }

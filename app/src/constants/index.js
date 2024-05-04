@@ -1,4 +1,4 @@
-const UrlAPI = "http://172.29.142.149:7878";
+const UrlAPI = "http://10.0.23.4:8082";
 // export const UrlAPI = "https://dandelion-server.onrender.com";
 
 const MessageType = {
